@@ -1,0 +1,25 @@
+{
+	"templateName": "cleanfolio",
+	"theme": { "primary": "#4A90E2", "font": "Inter" },
+	"layout": [
+		{ "component": "HeroA", "props": { "title": "Hi, I'm Hassan!" } },
+		{
+			"component": "ShowcaseA",
+			"props": {
+				"projects": [
+					{
+						"name": "Project One",
+						"description": "A cool project.",
+						"link": "#"
+					},
+					{
+						"name": "Project Two",
+						"description": "Another cool project.",
+						"link": "#"
+					}
+				]
+			}
+		},
+		{ "component": "ContactFormA", "props": {} }
+	]
+}
