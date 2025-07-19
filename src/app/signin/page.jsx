@@ -42,22 +42,13 @@ export default function Signin() {
 		const data = await res.json();
 		setLoading(false);
 		if (res.ok) {
-			if (data.user && data.user.verified === false) {
-				alert("Please verify your account first.");
-				return;
-			}
 			if (data.user) {
 				router.push("/dashboard");
 			} else {
 				setError("Unexpected response from server. Please try again.");
 			}
 		} else {
-			if (
-				data &&
-				data.error === "Please verify your email before signing in."
-			) {
-				alert("Please verify your account first.");
-			} else if (data && data.error) {
+			if (data && data.error) {
 				setError(data.error);
 			} else {
 				setError("Signin failed");

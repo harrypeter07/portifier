@@ -34,7 +34,7 @@ export default function Signup() {
 		const data = await res.json();
 		setLoading(false);
 		if (res.ok) {
-			setSuccess("Check your email to verify your account!");
+			setSuccess("Signup successful! You can now sign in.");
 			setForm({ name: "", email: "", password: "" });
 		} else {
 			setError(data.error || "Signup failed");
