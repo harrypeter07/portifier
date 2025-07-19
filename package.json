@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.1",
     "next": "^15.3.4",
     "nodemailer": "^7.0.4",
+    "pdf-parse": "^1.1.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
