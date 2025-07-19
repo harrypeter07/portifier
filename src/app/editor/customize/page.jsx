@@ -54,11 +54,27 @@ export default function CustomizePage() {
 		});
 		setSaving(true);
 		setSuccess("");
-		setTimeout(() => {
-			setSaving(false);
-			setSuccess("Saved! (Mock)");
-			// router.push("/editor/preview"); // Optionally go to preview/finish
-		}, 1000);
+		try {
+			const res = await fetch("/api/portfolio/save", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ layout, content: localContent }),
+			});
+			const data = await res.json();
+			if (res.ok && data.success) {
+				setSuccess(
+					"Portfolio saved! View your portfolio on your profile page."
+				);
+				// Optionally: router.push(`/dashboard`);
+			} else {
+				setSuccess("");
+				alert(data.error || "Failed to save portfolio");
+			}
+		} catch (err) {
+			setSuccess("");
+			alert("Failed to save portfolio");
+		}
+		setSaving(false);
 	}
 
 	return (
