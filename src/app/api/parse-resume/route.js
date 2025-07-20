@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { parseResumeWithGemini } from "../../../lib/gemini";
 
-export const runtime = "edge";
-
 export async function POST(req) {
 	const formData = await req.formData();
 	const file = formData.get("resume");

@@ -1,33 +1,73 @@
-import { componentMap } from "../../data/componentMap";
+"use client";
+import { useEffect, useState } from "react";
+import { componentMap } from "@/data/componentMap";
+import { motion } from "framer-motion";
 
-async function getPortfolioConfigFromDB(username) {
-	const res = await fetch(
-		`${
-			process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-		}/api/portfolio/get?username=${username}`,
-		{ cache: "no-store" }
-	);
-	if (!res.ok) return null;
-	const data = await res.json();
-	return data.portfolio;
-}
+export default function PortfolioPage({ params }) {
+	const [portfolio, setPortfolio] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 
-export default async function CustomPortfolioPage({ params }) {
-	const config = await getPortfolioConfigFromDB(params.username);
+	useEffect(() => {
+		async function fetchPortfolio() {
+			try {
+				const res = await fetch(
+					`/api/portfolio/get?username=${params.username}`
+				);
+				if (res.ok) {
+					const data = await res.json();
+					setPortfolio(data.portfolio);
+				} else {
+					setError("Portfolio not found");
+				}
+			} catch (err) {
+				setError("Failed to load portfolio");
+			} finally {
+				setLoading(false);
+			}
+		}
 
-	if (!config) {
-		return <div>Portfolio not found.</div>;
+		fetchPortfolio();
+	}, [params.username]);
+
+	if (loading) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<div className="text-xl">Loading portfolio...</div>
+			</div>
+		);
 	}
 
+	if (error || !portfolio) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<div className="text-xl text-red-600">
+					{error || "Portfolio not found"}
+				</div>
+			</div>
+		);
+	}
+
+	const { layout, content } = portfolio;
+
 	return (
-		<>
-			<style>{`:root { --primary: ${config.theme.primary}; }`}</style>
-			<main>
-				{config.layout.map((block, i) => {
-					const Component = componentMap[block.component];
-					return Component ? <Component key={i} {...block.props} /> : null;
-				})}
-			</main>
-		</>
+		<div className="min-h-screen bg-white dark:bg-gray-900">
+			{/* Render each section based on layout */}
+			{Object.entries(layout).map(([section, componentName], index) => {
+				const Component = componentMap[componentName];
+				if (!Component) return null;
+
+				return (
+					<motion.div
+						key={section}
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: index * 0.1 }}
+					>
+						<Component {...(content[section] || {})} />
+					</motion.div>
+				);
+			})}
+		</div>
 	);
 }
