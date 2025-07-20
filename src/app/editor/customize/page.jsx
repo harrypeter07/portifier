@@ -1,5 +1,5 @@
 "use client";
-import { useLayoutStore } from "../../../../store/layoutStore";
+import { useLayoutStore } from "@/store/layoutStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -55,10 +55,17 @@ export default function CustomizePage() {
 		setSaving(true);
 		setSuccess("");
 		try {
+			// Get email from contact section or use a default
+			const userEmail = localContent.contact?.email || "demo@example.com";
+
 			const res = await fetch("/api/portfolio/save", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ layout, content: localContent }),
+				body: JSON.stringify({
+					layout,
+					content: localContent,
+					email: userEmail,
+				}),
 			});
 			const data = await res.json();
 			if (res.ok && data.success) {

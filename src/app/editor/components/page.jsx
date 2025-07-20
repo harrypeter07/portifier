@@ -1,5 +1,5 @@
 "use client";
-import { useLayoutStore } from "../../../store/layoutStore";
+import { useLayoutStore } from "@/store/layoutStore";
 import { componentMap } from "@/data/componentMap";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

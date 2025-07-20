@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useLayoutStore } from "../../../store/layoutStore";
+import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 
 const PREBUILT_TEMPLATES = [

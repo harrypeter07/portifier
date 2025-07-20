@@ -1,243 +1,259 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Check for API key
-if (!process.env.GEMINI_API_KEY) {
-	console.warn("GEMINI_API_KEY not found in environment variables");
-}
+const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY);
 
-const ai = new GoogleGenAI({
-	apiKey: process.env.GEMINI_API_KEY || "dummy-key",
-});
+export async function parseResumeWithGemini(buffer) {
+	if (!process.env.GEMINI_API_KEY) {
+		console.log("⚠️  No Google API key found, using mock data");
+		return getMockData();
+	}
 
-/**
- * Extracts text from a PDF buffer using Gemini API
- */
-async function extractTextFromPDF(pdfBuffer) {
 	try {
-		const contents = [
-			{ text: "Extract all text from this PDF document" },
+		console.log("🤖 Calling Gemini API for resume parsing...");
+
+		const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+
+		// Convert buffer to base64
+		const base64Data = buffer.toString("base64");
+
+		// Simple prompt to extract all text content
+		const prompt = `
+    Extract ALL text content from this resume PDF. Return the text exactly as it appears in the document, preserving the structure and formatting.
+
+    Include ALL sections such as:
+    - Personal information (name, contact details, location)
+    - Summary/Objective
+    - Education details
+    - Work experience
+    - Skills (technical and soft skills)
+    - Projects
+    - Achievements/Awards
+    - Certifications
+    - Languages
+    - Hobbies/Interests
+    - Any other sections present
+
+    Return the complete text content in a clean, readable format.
+    `;
+
+		const result = await model.generateContent([
+			prompt,
 			{
 				inlineData: {
 					mimeType: "application/pdf",
-					data: pdfBuffer.toString("base64"),
+					data: base64Data,
 				},
 			},
-		];
+		]);
 
-		const response = await ai.models.generateContent({
-			model: "gemini-2.5-flash",
-			contents: contents,
-		});
+		const response = await result.response;
+		const extractedText = response.text();
 
-		return response.text;
-	} catch (error) {
-		throw new Error(`Failed to parse PDF: ${error.message}`);
-	}
-}
+		console.log("📋 Raw Extracted Text from PDF:");
+		console.log("=".repeat(50));
+		console.log(extractedText);
+		console.log("=".repeat(50));
 
-/**
- * Calls Gemini API to extract structured resume data from text
- * Returns a dynamic object with fields for portfolio use
- */
-export async function parseResumeWithGemini(pdfBuffer) {
-	// If no API key, return mock data for testing
-	if (!process.env.GEMINI_API_KEY) {
-		console.log("Using mock data for testing (no GEMINI_API_KEY found)");
+		// Now parse the extracted text into structured data
+		const structuredData = parseExtractedText(extractedText);
+
 		return {
-			raw: {
-				name: "John Doe",
-				title: "Software Developer",
-				summary: "Experienced developer with expertise in React and Node.js",
-				skills: ["React", "Node.js", "JavaScript", "TypeScript"],
-				experience: [
-					{
-						company: "Tech Corp",
-						role: "Senior Developer",
-						start: "2022",
-						end: "Present",
-						description: "Led development team",
-					},
-				],
-				education: [
-					{
-						institution: "University",
-						degree: "Computer Science",
-						start: "2018",
-						end: "2022",
-						description: "Bachelor's degree",
-					},
-				],
-				projects: [
-					{
-						name: "Portfolio App",
-						description: "A modern portfolio builder",
-						tech: ["React", "Next.js"],
-						link: "https://github.com/johndoe/portfolio",
-					},
-				],
-				contact: {
-					email: "john@example.com",
-					phone: "+1234567890",
-					linkedin: "https://linkedin.com/in/johndoe",
-					github: "https://github.com/johndoe",
-					website: "https://johndoe.dev",
-				},
-			},
-			content: {
-				hero: {
-					title: "John Doe",
-					subtitle: "Software Developer",
-					summary: "Experienced developer with expertise in React and Node.js",
-				},
-				about: {
-					summary: "Experienced developer with expertise in React and Node.js",
-					languages: ["English", "Spanish"],
-					certifications: [],
-					awards: [],
-				},
-				skills: {
-					skills: ["React", "Node.js", "JavaScript", "TypeScript"],
-				},
-				experience: {
-					experience: [
-						{
-							company: "Tech Corp",
-							role: "Senior Developer",
-							start: "2022",
-							end: "Present",
-							description: "Led development team",
-						},
-					],
-				},
-				education: {
-					education: [
-						{
-							institution: "University",
-							degree: "Computer Science",
-							start: "2018",
-							end: "2022",
-							description: "Bachelor's degree",
-						},
-					],
-				},
-				projects: {
-					projects: [
-						{
-							name: "Portfolio App",
-							description: "A modern portfolio builder",
-							tech: ["React", "Next.js"],
-							link: "https://github.com/johndoe/portfolio",
-						},
-					],
-				},
-				contact: {
-					email: "john@example.com",
-					phone: "+1234567890",
-					linkedin: "https://linkedin.com/in/johndoe",
-					github: "https://github.com/johndoe",
-					website: "https://johndoe.dev",
-				},
-				footer: {
-					text: "",
-				},
-			},
+			content: structuredData,
 		};
+	} catch (error) {
+		console.error("❌ Error calling Gemini API:", error);
+		console.log("🔄 Falling back to mock data");
+		return getMockData();
 	}
-
-	// 1. Extract text from PDF using Gemini
-	const pdfText = await extractTextFromPDF(pdfBuffer);
-
-	// 2. Build a prompt for Gemini to extract structured resume data
-	const prompt = `Extract all possible structured fields from this resume text as JSON. Use this schema:
-{
-  name: string, // Full name
-  title: string, // Professional title or headline
-  summary: string, // Short summary or objective
-  skills: string[], // List of skills
-  experience: [
-    { company: string, role: string, start: string, end: string, description: string }
-  ],
-  education: [
-    { institution: string, degree: string, start: string, end: string, description: string }
-  ],
-  projects: [
-    { name: string, description: string, tech: string[], link: string }
-  ],
-  certifications: [
-    { name: string, issuer: string, date: string }
-  ],
-  awards: [
-    { name: string, issuer: string, date: string }
-  ],
-  languages: string[],
-  contact: {
-    email: string,
-    phone: string,
-    linkedin: string,
-    github: string,
-    website: string
-  },
-  footer: string // Any footer or additional info
 }
-If a field is missing, use null, empty string, or empty array. Only return valid JSON.`;
 
-	// 3. Call Gemini API to parse the extracted text
-	const result = await ai.models.generateContent({
-		model: "gemini-2.5-flash",
-		contents: [{ text: prompt + "\n\n" + pdfText }],
-	});
+function parseExtractedText(text) {
+	console.log("🔍 Parsing extracted text into structured data...");
 
-	let jsonText = result.text;
+	const lines = text
+		.split("\n")
+		.map((line) => line.trim())
+		.filter((line) => line);
 
-	// 4. Parse and normalize the JSON
-	let parsed;
-	try {
-		// Remove code block markers if present
-		jsonText = jsonText.replace(/^```json|```$/g, "").trim();
-		parsed = JSON.parse(jsonText);
-	} catch (err) {
-		throw new Error("Failed to parse Gemini response as JSON: " + err.message);
-	}
-
-	// 5. Map to dynamic portfolio format
-	const content = {
-		hero: {
-			title: parsed.name || "",
-			subtitle: parsed.title || "",
-			summary: parsed.summary || "",
-		},
-		about: {
-			summary: parsed.summary || "",
-			languages: parsed.languages || [],
-			certifications: parsed.certifications || [],
-			awards: parsed.awards || [],
-		},
-		skills: {
-			skills: parsed.skills || [],
-		},
-		experience: {
-			experience: parsed.experience || [],
-		},
-		education: {
-			education: parsed.education || [],
-		},
-		projects: {
-			projects: parsed.projects || [],
-		},
-		contact: {
-			email: parsed.contact?.email || "",
-			phone: parsed.contact?.phone || "",
-			linkedin: parsed.contact?.linkedin || "",
-			github: parsed.contact?.github || "",
-			website: parsed.contact?.website || "",
-		},
-		footer: {
-			text: parsed.footer || "",
-		},
+	const data = {
+		hero: { title: "", subtitle: "" },
+		about: { summary: "" },
+		experience: { jobs: [] },
+		education: { degrees: [] },
+		skills: { technical: [], soft: [] },
+		showcase: { projects: "" },
+		contact: { email: "", phone: "", location: "", linkedin: "" },
+		achievements: { awards: [] },
+		languages: [],
+		hobbies: [],
 	};
 
+	let currentSection = "";
+	let currentContent = [];
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+		const upperLine = line.toUpperCase();
+
+		// Detect sections
+		if (upperLine.includes("SUMMARY") || upperLine.includes("OBJECTIVE")) {
+			currentSection = "summary";
+			currentContent = [];
+		} else if (upperLine.includes("EDUCATION")) {
+			currentSection = "education";
+			currentContent = [];
+		} else if (upperLine.includes("EXPERIENCE") || upperLine.includes("WORK")) {
+			currentSection = "experience";
+			currentContent = [];
+		} else if (
+			upperLine.includes("SKILLS") ||
+			upperLine.includes("TECHNICAL")
+		) {
+			currentSection = "skills";
+			currentContent = [];
+		} else if (upperLine.includes("PROJECTS")) {
+			currentSection = "projects";
+			currentContent = [];
+		} else if (
+			upperLine.includes("ACHIEVEMENTS") ||
+			upperLine.includes("AWARDS")
+		) {
+			currentSection = "achievements";
+			currentContent = [];
+		} else if (upperLine.includes("LANGUAGES")) {
+			currentSection = "languages";
+			currentContent = [];
+		} else if (
+			upperLine.includes("HOBBIES") ||
+			upperLine.includes("INTERESTS")
+		) {
+			currentSection = "hobbies";
+			currentContent = [];
+		} else if (
+			upperLine.includes("CONTACT") ||
+			upperLine.includes("EMAIL") ||
+			upperLine.includes("PHONE")
+		) {
+			currentSection = "contact";
+			currentContent = [];
+		} else {
+			// Add content to current section
+			if (currentSection && line) {
+				currentContent.push(line);
+			}
+		}
+
+		// Process contact information (usually at top)
+		if (line.includes("@") && !data.contact.email) {
+			data.contact.email = line;
+		}
+		if (line.match(/\d{10}/) && !data.contact.phone) {
+			data.contact.phone = line;
+		}
+		if (
+			line.includes(",") &&
+			(line.includes("MH") || line.includes("Maharashtra")) &&
+			!data.contact.location
+		) {
+			data.contact.location = line;
+		}
+
+		// Process name (usually first line or prominent)
+		if (
+			!data.hero.title &&
+			line.length > 3 &&
+			line.length < 50 &&
+			!line.includes("@") &&
+			!line.match(/\d/)
+		) {
+			data.hero.title = line;
+		}
+	}
+
+	// Process collected content
+	if (currentSection === "summary" && currentContent.length > 0) {
+		data.about.summary = currentContent.join(" ");
+	} else if (currentSection === "education" && currentContent.length > 0) {
+		data.education.degrees = currentContent.map((edu) => ({
+			degree: edu,
+			institution: "",
+			year: "",
+		}));
+	} else if (currentSection === "skills" && currentContent.length > 0) {
+		const skillsText = currentContent.join(" ");
+		const skills = skillsText
+			.split(/[,•]/)
+			.map((s) => s.trim())
+			.filter((s) => s);
+		data.skills.technical = skills;
+	} else if (currentSection === "projects" && currentContent.length > 0) {
+		data.showcase.projects = currentContent.join(" ");
+	} else if (currentSection === "achievements" && currentContent.length > 0) {
+		data.achievements.awards = currentContent;
+	} else if (currentSection === "languages" && currentContent.length > 0) {
+		data.languages = currentContent;
+	} else if (currentSection === "hobbies" && currentContent.length > 0) {
+		data.hobbies = currentContent;
+	}
+
+	console.log("📊 Parsed structured data:");
+	console.log(JSON.stringify(data, null, 2));
+
+	return data;
+}
+
+function getMockData() {
+	console.log("🎭 Using mock resume data");
 	return {
-		raw: parsed,
-		content,
+		content: {
+			hero: {
+				title: "Hi, I'm Hassan",
+				subtitle: "Full Stack Developer",
+			},
+			about: {
+				summary:
+					"Experienced developer with 3+ years building web applications. Passionate about clean code and user experience.",
+			},
+			experience: {
+				jobs: [
+					{
+						title: "Senior Developer",
+						company: "Tech Corp",
+						duration: "2022-2024",
+						description:
+							"Led development of multiple web applications using React and Node.js",
+					},
+					{
+						title: "Junior Developer",
+						company: "Startup Inc",
+						duration: "2020-2022",
+						description:
+							"Built responsive websites and maintained existing codebase",
+					},
+				],
+			},
+			education: {
+				degrees: [
+					{
+						degree: "Bachelor of Computer Science",
+						institution: "University of Technology",
+						year: "2020",
+					},
+				],
+			},
+			skills: {
+				technical: ["JavaScript", "React", "Node.js", "Python", "MongoDB"],
+				soft: ["Team Leadership", "Problem Solving", "Communication"],
+			},
+			showcase: {
+				projects: "E-commerce platform, Task management app, Portfolio website",
+			},
+			contact: {
+				email: "hassan@example.com",
+				phone: "+1-555-0123",
+				location: "New York, NY",
+				linkedin: "linkedin.com/in/hassan",
+			},
+		},
 	};
 }
