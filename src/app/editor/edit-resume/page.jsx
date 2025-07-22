@@ -147,24 +147,24 @@ export default function EditResumePage() {
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Personal Information</h2>
 						<div className="grid grid-cols-1 gap-4">
-									<input
-										type="text"
-										placeholder="Full Name"
-										value={formData.hero?.title || ""}
-										onChange={(e) =4
-											handleInputChange("hero", "title", e.target.value)
-										}
-										className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/5
-									<input
-										type="text"
-										placeholder="Professional Title (e.g., Software Developer)"
-										value={formData.hero?.subtitle || ""}
-										onChange={(e) =4
-											handleInputChange("hero", "subtitle", e.target.value)
-										}
-										className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/5
+							<input
+								type="text"
+								placeholder="Full Name"
+								value={formData.hero?.title || ""}
+								onChange={(e) =>
+									handleInputChange("hero", "title", e.target.value)
+								}
+								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<input
+								type="text"
+								placeholder="Professional Title (e.g., Software Developer)"
+								value={formData.hero?.subtitle || ""}
+								onChange={(e) =>
+									handleInputChange("hero", "subtitle", e.target.value)
+								}
+								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
 						</div>
 					</div>
 
@@ -175,16 +175,16 @@ export default function EditResumePage() {
 							<input
 								type="email"
 								placeholder="Email Address"
-								value={formData.contact.email}
-								onChange={(e) =>
+								value={formData.contact?.email || ""}
+								onChange={(e) => {
 									handleInputChange("contact", "email", e.target.value)
-								}
+								}}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
 							/>
 							<input
 								type="tel"
 								placeholder="Phone Number"
-								value={formData.contact.phone}
+								value={formData.contact?.phone || ""}
 								onChange={(e) =>
 									handleInputChange("contact", "phone", e.target.value)
 								}
@@ -193,7 +193,7 @@ export default function EditResumePage() {
 							<input
 								type="text"
 								placeholder="Location (City, Country)"
-								value={formData.contact.location}
+								value={formData.contact?.location || ""}
 								onChange={(e) =>
 									handleInputChange("contact", "location", e.target.value)
 								}
@@ -202,7 +202,7 @@ export default function EditResumePage() {
 							<input
 								type="url"
 								placeholder="LinkedIn Profile"
-								value={formData.contact.linkedin}
+								value={formData.contact?.linkedin || ""}
 								onChange={(e) =>
 									handleInputChange("contact", "linkedin", e.target.value)
 								}
@@ -216,7 +216,7 @@ export default function EditResumePage() {
 						<h2 className="text-xl font-semibold mb-4">Professional Summary</h2>
 						<textarea
 							placeholder="Write a brief professional summary about yourself..."
-							value={formData.about.summary}
+							value={formData.about?.summary || ""}
 							onChange={(e) =>
 								handleInputChange("about", "summary", e.target.value)
 							}
@@ -228,7 +228,7 @@ export default function EditResumePage() {
 					{/* Experience */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Work Experience</h2>
-						{formData.experience.jobs.map((job, index) => (
+						{(formData.experience?.jobs || []).map((job, index) =>
 							<div
 								key={index}
 								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
@@ -237,7 +237,7 @@ export default function EditResumePage() {
 									<input
 										type="text"
 										placeholder="Job Title"
-										value={job.title}
+										value={job?.title || ""}
 										onChange={(e) =>
 											handleArrayChange("experience", "jobs", index, {
 												...job,
@@ -249,7 +249,7 @@ export default function EditResumePage() {
 									<input
 										type="text"
 										placeholder="Company Name"
-										value={job.company}
+										value={job?.company || ""}
 										onChange={(e) =>
 											handleArrayChange("experience", "jobs", index, {
 												...job,
@@ -261,7 +261,7 @@ export default function EditResumePage() {
 									<input
 										type="text"
 										placeholder="Duration (e.g., Jan 2020 - Dec 2022)"
-										value={job.duration}
+										value={job?.duration || ""}
 										onChange={(e) =>
 											handleArrayChange("experience", "jobs", index, {
 												...job,
@@ -272,7 +272,7 @@ export default function EditResumePage() {
 									/>
 									<textarea
 										placeholder="Job Description"
-										value={job.description}
+										value={job?.description || ""}
 										onChange={(e) =>
 											handleArrayChange("experience", "jobs", index, {
 												...job,
@@ -291,7 +291,7 @@ export default function EditResumePage() {
 									Remove Job
 								</button>
 							</div>
-						))}
+							))}
 						<button
 							type="button"
 							onClick={addJob}
@@ -304,7 +304,7 @@ export default function EditResumePage() {
 					{/* Education */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Education</h2>
-						{formData.education.degrees.map((degree, index) => (
+						{(formData.education?.degrees || []).map((degree, index) =>
 							<div
 								key={index}
 								className="mb-4 p-4 border rounded-lg dark:border-gray-600"
@@ -313,7 +313,7 @@ export default function EditResumePage() {
 									<input
 										type="text"
 										placeholder="Degree (e.g., Bachelor of Computer Science)"
-										value={degree.degree}
+										value={degree?.degree || ""}
 										onChange={(e) =>
 											handleArrayChange("education", "degrees", index, {
 												...degree,
@@ -325,7 +325,7 @@ export default function EditResumePage() {
 									<input
 										type="text"
 										placeholder="Institution Name"
-										value={degree.institution}
+										value={degree?.institution || ""}
 										onChange={(e) =>
 											handleArrayChange("education", "degrees", index, {
 												...degree,
@@ -337,7 +337,7 @@ export default function EditResumePage() {
 									<input
 										type="text"
 										placeholder="Year (e.g., 2020-2024)"
-										value={degree.year}
+										value={degree?.year || ""}
 										onChange={(e) =>
 											handleArrayChange("education", "degrees", index, {
 												...degree,
@@ -355,7 +355,7 @@ export default function EditResumePage() {
 									Remove Education
 								</button>
 							</div>
-						))}
+						)}
 						<button
 							type="button"
 							onClick={addDegree}
@@ -374,7 +374,7 @@ export default function EditResumePage() {
 							</label>
 							<textarea
 								placeholder="e.g., JavaScript, React, Python, SQL"
-								value={formData.skills.technical.join(", ")}
+								value={(formData.skills?.technical || []).join(", ")}
 								onChange={(e) =>
 									handleInputChange(
 										"skills",
@@ -395,7 +395,7 @@ export default function EditResumePage() {
 							</label>
 							<textarea
 								placeholder="e.g., Team Leadership, Communication, Problem Solving"
-								value={formData.skills.soft.join(", ")}
+								value={(formData.skills?.soft || []).join(", ")}
 								onChange={(e) =>
 									handleInputChange(
 										"skills",
@@ -417,7 +417,7 @@ export default function EditResumePage() {
 						<h2 className="text-xl font-semibold mb-4">Projects</h2>
 						<textarea
 							placeholder="Describe your key projects..."
-							value={formData.showcase.projects}
+							value={formData.showcase?.projects || ""}
 							onChange={(e) =>
 								handleInputChange("showcase", "projects", e.target.value)
 							}
@@ -431,7 +431,7 @@ export default function EditResumePage() {
 						<h2 className="text-xl font-semibold mb-4">Languages</h2>
 						<textarea
 							placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
-							value={formData.languages.join(", ")}
+							value={(formData.languages || []).join(", ")}
 							onChange={(e) =>
 								setFormData((prev) => ({
 									...prev,
@@ -476,19 +476,19 @@ export default function EditResumePage() {
 					</div>
 					<div className="p-4">
 						{layout && Object.entries(layout).length > 0 ? (
-			{Object.entries(layout).map(([section, componentName]) =	003b {
-				const Component = componentMap[componentName];
-				if (!Component) return null;
+							Object.entries(layout).map(([section, componentName]) => {
+								const Component = componentMap[componentName];
+								if (!Component) return null;
 
-				// Handle different data structures for different components
-				let componentProps = formData[section] || {};
+								// Handle different data structures for different components
+								let componentProps = formData[section] || {};
 
-				// Ensure no null values for inputs
-				Object.keys(componentProps).forEach(key => {
-					if (componentProps[key] === null) {
-						componentProps[key] = "";
-					}
-				});
+								// Ensure no null values for inputs
+								Object.keys(componentProps).forEach(key => {
+									if (componentProps[key] === null || componentProps[key] === undefined) {
+										componentProps[key] = "";
+									}
+								});
 
 								// For projects section, handle the new schema structure
 								if (section === "projects" && formData[section]?.items) {
