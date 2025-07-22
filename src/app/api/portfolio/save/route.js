@@ -30,7 +30,8 @@ export async function POST(req) {
 				);
 				const newUser = new User({
 					email,
-					username: email.split("@")[0],
+					name: email.split("@")[0],
+					password: "demo" + Date.now(), // Temporary password
 					verified: true, // Skip verification for demo
 				});
 				await newUser.save();
@@ -45,7 +46,8 @@ export async function POST(req) {
 			} else {
 				const newDemoUser = new User({
 					email: "demo@example.com",
-					username: "demo",
+					name: "Demo User",
+					password: "demo" + Date.now(), // Temporary password
 					verified: true,
 				});
 				await newDemoUser.save();

@@ -1,128 +1,143 @@
 import { NextResponse } from "next/server";
-import { parseResumeWithGemini } from "@/lib/gemini";
+import { parseResumeWithGemini, createPortfolioSchema } from "@/lib/gemini";
 
 export async function POST(req) {
-	try {
-		const formData = await req.formData();
-		const file = formData.get("resume");
+  try {
+    const formData = await req.formData();
+    const file = formData.get("resume");
+    const schemaType = formData.get("portfolioType") || "developer"; // developer, designer, marketing, etc.
+    const customSchemaJson = formData.get("customSchema"); // Optional custom schema
 
-		if (!file) {
-			return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-		}
+    if (!file) {
+      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    }
 
-		const bytes = await file.arrayBuffer();
-		const buffer = Buffer.from(bytes);
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-		console.log("📄 Processing PDF resume...");
-		console.log("📊 File size:", buffer.length, "bytes");
-		console.log("📋 File name:", file.name);
+    console.log("📄 Processing PDF resume...");
+    console.log("📊 File size:", buffer.length, "bytes");
+    console.log("📋 File name:", file.name);
+    console.log("🎯 Portfolio type:", schemaType);
 
-		const result = await parseResumeWithGemini(buffer);
+    // Determine which schema to use
+    let schema;
+    if (customSchemaJson) {
+      try {
+        schema = JSON.parse(customSchemaJson);
+        console.log("📝 Using custom schema provided by client");
+      } catch (error) {
+        console.error("❌ Invalid custom schema JSON:", error);
+        schema = createPortfolioSchema(schemaType);
+      }
+    } else {
+      schema = createPortfolioSchema(schemaType);
+    }
 
-		console.log("\n🎯 EXTRACTED RESUME DATA:");
-		console.log("=".repeat(50));
-		console.log("📝 Personal Information:");
-		console.log("   Name:", result.content?.hero?.title || "Not found");
-		console.log("   Title:", result.content?.hero?.subtitle || "Not found");
-		console.log("   Email:", result.content?.contact?.email || "Not found");
-		console.log("   Phone:", result.content?.contact?.phone || "Not found");
-		console.log(
-			"   Location:",
-			result.content?.contact?.location || "Not found"
-		);
-		console.log(
-			"   LinkedIn:",
-			result.content?.contact?.linkedin || "Not found"
-		);
+    console.log("🗜️ Using schema structure:");
+    console.log(JSON.stringify(schema, null, 2));
 
-		console.log("\n💼 Professional Summary:");
-		console.log("   Bio:", result.content?.about?.summary || "Not found");
+    const result = await parseResumeWithGemini(buffer, schema);
 
-		console.log("\n🏆 Experience:");
-		if (
-			result.content?.experience?.jobs &&
-			result.content.experience.jobs.length > 0
-		) {
-			result.content.experience.jobs.forEach((job, index) => {
-				console.log(
-					`   ${index + 1}. ${job.title} at ${job.company} (${job.duration})`
-				);
-				console.log(`      ${job.description}`);
-			});
-		} else {
-			console.log("   No experience data found");
-		}
+    // Enhanced logging based on actual schema structure
+    console.log("\n🎯 EXTRACTED RESUME DATA:");
+    console.log("=".repeat(50));
+    
+    logExtractedData(result.content, result.schema);
 
-		console.log("\n🎓 Education:");
-		if (
-			result.content?.education?.degrees &&
-			result.content.education.degrees.length > 0
-		) {
-			result.content.education.degrees.forEach((degree, index) => {
-				console.log(
-					`   ${index + 1}. ${degree.degree} from ${degree.institution} (${
-						degree.year
-					})`
-				);
-			});
-		} else {
-			console.log("   No education data found");
-		}
+    console.log("\n" + "=".repeat(50));
+    console.log("✅ Resume parsing completed successfully!");
+    console.log("📊 Schema fields processed:", countSchemaFields(result.schema));
 
-		console.log("\n🛠️ Skills:");
-		if (
-			result.content?.skills?.technical &&
-			result.content.skills.technical.length > 0
-		) {
-			console.log("   Technical:", result.content.skills.technical.join(", "));
-		}
-		if (result.content?.skills?.soft && result.content.skills.soft.length > 0) {
-			console.log("   Soft Skills:", result.content.skills.soft.join(", "));
-		}
+    return NextResponse.json({
+      success: true,
+      content: result.content,
+      schema: result.schema,
+      metadata: {
+        fileName: file.name,
+        fileSize: buffer.length,
+        portfolioType: schemaType,
+        fieldsExtracted: countNonEmptyFields(result.content)
+      }
+    });
+    
+  } catch (error) {
+    console.error("❌ Error parsing resume:", error);
+    return NextResponse.json({ 
+      success: false,
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
+  }
+}
 
-		console.log("\n🚀 Projects:");
-		if (result.content?.showcase?.projects) {
-			console.log("   Projects:", result.content.showcase.projects);
-		} else {
-			console.log("   No projects data found");
-		}
+// Helper function to log extracted data based on schema
+function logExtractedData(data, schema, prefix = "") {
+  for (const [key, value] of Object.entries(schema)) {
+    const dataValue = data[key];
+    
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      console.log(`${prefix}📁 ${key.toUpperCase()}:`);
+      if (dataValue && typeof dataValue === 'object') {
+        logExtractedData(dataValue, value, prefix + "   ");
+      } else {
+        console.log(`${prefix}   No data found`);
+      }
+    } else if (Array.isArray(value)) {
+      console.log(`${prefix}📋 ${key.toUpperCase()}:`);
+      if (Array.isArray(dataValue) && dataValue.length > 0) {
+        dataValue.forEach((item, index) => {
+          if (typeof item === 'object') {
+            console.log(`${prefix}   ${index + 1}.`, JSON.stringify(item, null, 2));
+          } else {
+            console.log(`${prefix}   ${index + 1}. ${item}`);
+          }
+        });
+      } else {
+        console.log(`${prefix}   No items found`);
+      }
+    } else {
+      console.log(`${prefix}📝 ${key}:`, dataValue || "Not found");
+    }
+  }
+}
 
-		console.log("\n🏅 Achievements:");
-		if (
-			result.content?.achievements?.awards &&
-			result.content.achievements.awards.length > 0
-		) {
-			result.content.achievements.awards.forEach((award, index) => {
-				console.log(`   ${index + 1}. ${award}`);
-			});
-		} else {
-			console.log("   No achievements data found");
-		}
+// Count total schema fields
+function countSchemaFields(schema) {
+  let count = 0;
+  
+  function countFields(obj) {
+    for (const value of Object.values(obj)) {
+      if (typeof value === 'object' && !Array.isArray(value)) {
+        countFields(value);
+      } else {
+        count++;
+      }
+    }
+  }
+  
+  countFields(schema);
+  return count;
+}
 
-		console.log("\n🗣️ Languages:");
-		if (result.content?.languages && result.content.languages.length > 0) {
-			console.log("   Languages:", result.content.languages.join(", "));
-		} else {
-			console.log("   No languages data found");
-		}
-
-		console.log("\n🎨 Hobbies:");
-		if (result.content?.hobbies && result.content.hobbies.length > 0) {
-			console.log("   Hobbies:", result.content.hobbies.join(", "));
-		} else {
-			console.log("   No hobbies data found");
-		}
-
-		console.log("\n" + "=".repeat(50));
-		console.log("✅ Resume parsing completed successfully!");
-		console.log(
-			"📊 Total sections extracted:",
-			Object.keys(result.content || {}).length
-		);
-
-		return NextResponse.json(result);
-	} catch (error) {
-		console.error("❌ Error parsing resume:", error);
-		return NextResponse.json({ error: error.message }, { status: 500 });
-	}
+// Count non-empty fields in extracted data
+function countNonEmptyFields(data) {
+  let count = 0;
+  
+  function countNonEmpty(obj) {
+    for (const value of Object.values(obj)) {
+      if (value === null || value === undefined || value === "") {
+        continue;
+      } else if (Array.isArray(value)) {
+        if (value.length > 0) count++;
+      } else if (typeof value === 'object') {
+        countNonEmpty(value);
+      } else {
+        count++;
+      }
+    }
+  }
+  
+  countNonEmpty(data);
+  return count;
 }

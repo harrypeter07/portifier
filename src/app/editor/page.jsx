@@ -2,21 +2,30 @@
 import { useState } from "react";
 import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
+import { componentMap } from "@/data/componentMap";
 
 const PREBUILT_TEMPLATES = [
 	{
-		name: "Cleanfolio",
+		name: "Professional Portfolio",
 		layout: {
 			hero: "HeroA",
 			about: "AboutA",
-			showcase: "ShowcaseA",
+			experience: "ExperienceA",
+			education: "EducationA",
+			skills: "SkillsA",
+			projects: "ShowcaseA",
+			achievements: "AchievementsA",
 			contact: "ContactFormA",
 		},
 		content: {
-			hero: { title: "Hi, I'm [Name]", subtitle: "Web Developer" },
-			about: { summary: "A passionate developer..." },
-			showcase: { projects: "" },
-			contact: { email: "", linkedin: "" },
+			hero: { title: "Your Name", subtitle: "Your Professional Title" },
+			about: { summary: "Your professional summary..." },
+			experience: { jobs: [] },
+			education: { degrees: [] },
+			skills: { technical: [], soft: [], languages: [] },
+			projects: { items: [] },
+			achievements: { awards: [], certifications: [], publications: [] },
+			contact: { email: "", phone: "", linkedin: "", github: "" },
 		},
 	},
 	// Add more templates as needed
@@ -27,7 +36,20 @@ export default function ResumeUploadPage() {
 	const [parsed, setParsed] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
-	const { reset, setLayout, setContent } = useLayoutStore();
+	const [portfolioType, setPortfolioType] = useState('developer');
+	const { 
+		reset, 
+		setLayout, 
+		setContent, 
+		setParsedData, 
+		setAllContent, 
+		setAllLayout,
+		applyTemplate,
+		setCurrentTemplate,
+		parsedData,
+		content,
+		restoreFromParsed 
+	} = useLayoutStore();
 	const router = useRouter();
 
 	async function handleFileChange(e) {
@@ -43,6 +65,7 @@ export default function ResumeUploadPage() {
 		setParsed(null);
 		const formData = new FormData();
 		formData.append("resume", file);
+		formData.append("portfolioType", portfolioType);
 		try {
 			const res = await fetch("/api/parse-resume", {
 				method: "POST",
@@ -50,13 +73,29 @@ export default function ResumeUploadPage() {
 			});
 			if (!res.ok) throw new Error("Failed to parse resume");
 			const data = await res.json();
+			
+			// Check if parsing was successful
+			if (!data.success) {
+				throw new Error(data.error || "Failed to parse resume");
+			}
+			
 			setParsed(data);
+			
+			// Log metadata for debugging
+			console.log("📊 Parsing metadata:", data.metadata);
+			
 			// Store parsed info in Zustand for later steps
 			reset();
+			
+			// Set default layout
+			const defaultTemplate = PREBUILT_TEMPLATES[0];
+			setAllLayout(defaultTemplate.layout);
+			setCurrentTemplate(defaultTemplate);
+			
+			// Store parsed content and backup
 			if (data.content) {
-				Object.entries(data.content).forEach(([section, values]) => {
-					setContent(section, values);
-				});
+				setAllContent(data.content);
+				setParsedData(data.content); // Backup for later restoration
 			}
 		} catch (err) {
 			setError(err.message);
@@ -66,13 +105,8 @@ export default function ResumeUploadPage() {
 	}
 
 	function handleTemplateSelect(template) {
-		reset();
-		Object.entries(template.layout).forEach(([section, comp]) =>
-			setLayout(section, comp)
-		);
-		Object.entries(template.content).forEach(([section, values]) =>
-			setContent(section, values)
-		);
+		// Apply template while preserving parsed data
+		applyTemplate(template);
 		router.push("/editor/customize");
 	}
 
@@ -85,60 +119,165 @@ export default function ResumeUploadPage() {
 	}
 
 	return (
-		<div className="min-h-screen flex flex-col items-center justify-center gap-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-			<h1 className="text-2xl font-bold mb-4">Upload Your Resume (PDF)</h1>
-			<input
-				type="file"
-				accept="application/pdf"
-				onChange={handleFileChange}
-				disabled={loading}
-			/>
-			<button
-				className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60"
-				onClick={handleUpload}
-				disabled={!file || loading}
-			>
-				{loading ? "Parsing..." : "Upload & Parse"}
-			</button>
-			{error && <div className="text-red-600">{error}</div>}
-			{parsed && (
-				<div className="w-full max-w-xl bg-white dark:bg-gray-900 p-6 rounded shadow mt-4">
-					<h2 className="text-lg font-semibold mb-2">Resume Parsed!</h2>
-					<div className="flex flex-col gap-4">
-						<button
-							className="bg-green-600 text-white px-4 py-2 rounded font-semibold"
-							onClick={handlePreview}
-						>
-							Preview Portfolio
-						</button>
-						<button
-							className="bg-blue-600 text-white px-4 py-2 rounded font-semibold"
-							onClick={handleCustomBuilder}
-						>
-							Custom Builder
-						</button>
-						<div className="font-semibold text-gray-700 dark:text-gray-200">
-							Or use a prebuilt template:
-						</div>
-						<div className="flex gap-4">
-							{PREBUILT_TEMPLATES.map((tpl) => (
-								<div
-									key={tpl.name}
-									className="border rounded p-4 flex flex-col items-center bg-gray-50 dark:bg-gray-800"
-								>
-									<div className="font-bold mb-2">{tpl.name}</div>
+		<div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+			{/* Left Panel - Upload and Template Selection */}
+			<div className="w-1/2 p-8 overflow-y-auto">
+				<h1 className="text-2xl font-bold mb-4">Upload Your Resume (PDF)</h1>
+				{parsedData && (
+					<div className="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-3 mb-4">
+						<p className="text-green-800 dark:text-green-200 text-sm">
+							📁 Your resume data is saved and will persist across pages.
+						</p>
+					</div>
+				)}
+				
+				{/* Portfolio Type Selector */}
+				<div className="mb-4">
+					<label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+						Portfolio Type
+					</label>
+					<select
+						value={portfolioType}
+						onChange={(e) => setPortfolioType(e.target.value)}
+						className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+						disabled={loading}
+					>
+						<option value="developer">👨‍💻 Developer/Engineer</option>
+						<option value="designer">🎨 Designer/Creative</option>
+						<option value="marketing">📈 Marketing/Business</option>
+					</select>
+					<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+						Choose the type that best matches your profession for optimized parsing
+					</p>
+				</div>
+				
+				<input
+					type="file"
+					accept="application/pdf"
+					onChange={handleFileChange}
+					disabled={loading}
+					className="mb-4"
+				/>
+				<button
+					className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60 mb-4 block"
+					onClick={handleUpload}
+					disabled={!file || loading}
+				>
+					{loading ? "Parsing..." : "Upload & Parse"}
+				</button>
+				{error && <div className="text-red-600 mb-4">{error}</div>}
+				{parsed && (
+					<div className="bg-white dark:bg-gray-900 p-6 rounded shadow">
+						<h2 className="text-lg font-semibold mb-4">
+							Resume Parsed! 
+							{parsed.metadata && (
+								<span className="text-sm font-normal text-green-600 dark:text-green-400">
+									({parsed.metadata.fieldsExtracted} fields extracted)
+								</span>
+							)}
+						</h2>
+						<div className="flex flex-col gap-4">
+							<div className="flex gap-4">
 									<button
-										className="bg-blue-600 text-white px-3 py-1 rounded mt-2"
-										onClick={() => handleTemplateSelect(tpl)}
+										className="bg-amber-600 text-white px-4 py-2 rounded font-semibold flex-1"
+										onClick={() => router.push("/editor/edit-resume")}
 									>
-										Use Template
+										Edit Details
 									</button>
-								</div>
-							))}
+									<button
+										className="bg-green-600 text-white px-4 py-2 rounded font-semibold flex-1"
+										onClick={handlePreview}
+									>
+										Preview Portfolio
+									</button>
+									<button
+										className="bg-blue-600 text-white px-4 py-2 rounded font-semibold flex-1"
+										onClick={handleCustomBuilder}
+									>
+										Custom Builder
+									</button>
+							</div>
+							<div className="font-semibold text-gray-700 dark:text-gray-200 mt-4">
+								Or use a prebuilt template:
+							</div>
+							<div className="grid grid-cols-2 gap-4">
+								{PREBUILT_TEMPLATES.map((tpl) => (
+									<div
+										key={tpl.name}
+										className="border rounded p-4 flex flex-col items-center bg-gray-50 dark:bg-gray-800"
+									>
+										<div className="font-bold mb-2">{tpl.name}</div>
+										<button
+											className="bg-blue-600 text-white px-3 py-1 rounded mt-2"
+											onClick={() => handleTemplateSelect(tpl)}
+										>
+											Use Template
+										</button>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
+				)}
+			</div>
+
+			{/* Right Panel - Live Preview */}
+			<div className="w-1/2 h-screen overflow-y-auto border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+				<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
+					<h2 className="text-xl font-semibold">Live Preview</h2>
 				</div>
-			)}
+				<div className="p-4">
+					{parsed &&
+						Object.entries(PREBUILT_TEMPLATES[0].layout).map(
+							([section, componentName]) => {
+								const Component = componentMap[componentName];
+								if (!Component) return null;
+								
+								// Handle different data structures for different components
+								let componentProps = parsed.content?.[section] || {};
+								
+								// For projects section, handle the new schema structure
+								if (section === 'projects' && parsed.content?.[section]?.items) {
+									componentProps = { items: parsed.content[section].items };
+								}
+								
+								// For skills section, flatten the structure
+								if (section === 'skills' && parsed.content?.[section]) {
+									componentProps = {
+										technical: parsed.content[section].technical || [],
+										soft: parsed.content[section].soft || [],
+										languages: parsed.content[section].languages || []
+									};
+								}
+								
+								// For achievements section, flatten the structure
+								if (section === 'achievements' && parsed.content?.[section]) {
+									componentProps = {
+										awards: parsed.content[section].awards || [],
+										certifications: parsed.content[section].certifications || [],
+										publications: parsed.content[section].publications || []
+									};
+								}
+								
+								// For experience section, flatten the structure
+								if (section === 'experience' && parsed.content?.[section]?.jobs) {
+									componentProps = { jobs: parsed.content[section].jobs };
+								}
+								
+								// For education section, flatten the structure
+								if (section === 'education' && parsed.content?.[section]?.degrees) {
+									componentProps = { degrees: parsed.content[section].degrees };
+								}
+								
+								return (
+									<div key={section} className="mb-8 last:mb-0">
+										<Component {...componentProps} />
+									</div>
+								);
+							}
+						)}
+				</div>
+			</div>
 		</div>
 	);
 }

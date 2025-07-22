@@ -2,6 +2,7 @@
 import { useLayoutStore } from "@/store/layoutStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { componentMap } from "@/data/componentMap";
 
 // Mock parsed resume data (in real app, get from upload step or API)
 const MOCK_RESUME = {
@@ -22,7 +23,7 @@ const FIELD_MAP = {
 };
 
 export default function CustomizePage() {
-	const { layout, content, setContent } = useLayoutStore();
+	const { layout, content, setContent, parsedData, restoreFromParsed, currentTemplate } = useLayoutStore();
 	const [localContent, setLocalContent] = useState({});
 	const [saving, setSaving] = useState(false);
 	const [success, setSuccess] = useState("");
@@ -30,15 +31,21 @@ export default function CustomizePage() {
 
 	// Prefill from resume or Zustand content
 	useEffect(() => {
+		// If no content but we have parsed data, restore it
+		if (Object.keys(content).length === 0 && parsedData) {
+			restoreFromParsed();
+			return;
+		}
+		
 		const initial = {};
 		Object.keys(layout).forEach((section) => {
 			initial[section] = {
 				...MOCK_RESUME[section],
-				...content[section],
+				...content[section], // Parsed/stored content takes priority
 			};
 		});
 		setLocalContent(initial);
-	}, [layout, content]);
+	}, [layout, content, parsedData, restoreFromParsed]);
 
 	function handleChange(section, field, value) {
 		setLocalContent((prev) => ({
@@ -93,54 +100,112 @@ export default function CustomizePage() {
 	}
 
 	return (
-		<div className="min-h-screen flex flex-col items-center justify-center gap-8 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-			<h1 className="text-2xl font-bold mb-4">Customize Your Portfolio</h1>
-			<form
-				className="flex flex-col gap-6 w-full max-w-xl"
-				onSubmit={(e) => {
-					e.preventDefault();
-					handleSave();
-				}}
-			>
-				{Object.keys(layout).map((section) => (
-					<div
-						key={section}
-						className="bg-white dark:bg-gray-900 p-4 rounded shadow"
-					>
-						<div className="font-semibold mb-2 capitalize">
-							{section} ({layout[section]})
+		<div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+			{/* Left side - Form */}
+			<div className="w-1/2 p-8 overflow-y-auto">
+				<h1 className="text-2xl font-bold mb-4">Customize Your Portfolio</h1>
+				<form
+					className="flex flex-col gap-6"
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSave();
+					}}
+				>
+					{Object.keys(layout).map((section) => (
+						<div
+							key={section}
+							className="bg-white dark:bg-gray-900 p-4 rounded shadow"
+						>
+							<div className="font-semibold mb-2 capitalize">
+								{section} ({layout[section]})
+							</div>
+							{FIELD_MAP[section]?.map((field) => (
+								<input
+									key={field.name}
+									className="border p-2 rounded w-full mb-2"
+									placeholder={field.label}
+									value={localContent[section]?.[field.name] || ""}
+									onChange={(e) =>
+										handleChange(section, field.name, e.target.value)
+									}
+								/>
+							))}
 						</div>
-						{FIELD_MAP[section]?.map((field) => (
-							<input
-								key={field.name}
-								className="border p-2 rounded w-full mb-2"
-								placeholder={field.label}
-								value={localContent[section]?.[field.name] || ""}
-								onChange={(e) =>
-									handleChange(section, field.name, e.target.value)
-								}
-							/>
-						))}
+					))}
+					<div className="flex gap-4">
+						<button
+							className="bg-green-600 text-white px-6 py-2 rounded disabled:opacity-60"
+							type="button"
+							onClick={handlePreview}
+						>
+							Preview Portfolio
+						</button>
+						<button
+							className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60"
+							type="submit"
+							disabled={saving}
+						>
+							{saving ? "Saving..." : "Save & Finish"}
+						</button>
 					</div>
-				))}
-				<div className="flex gap-4">
-					<button
-						className="bg-green-600 text-white px-6 py-2 rounded disabled:opacity-60"
-						type="button"
-						onClick={handlePreview}
-					>
-						Preview Portfolio
-					</button>
-					<button
-						className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60"
-						type="submit"
-						disabled={saving}
-					>
-						{saving ? "Saving..." : "Save & Finish"}
-					</button>
+					{success && <div className="text-green-600">{success}</div>}
+				</form>
+			</div>
+
+			{/* Right side - Live Preview */}
+			<div className="w-1/2 h-screen overflow-y-auto border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+				<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
+					<h2 className="text-xl font-semibold">Live Preview</h2>
 				</div>
-				{success && <div className="text-green-600">{success}</div>}
-			</form>
+				<div className="p-4">
+					{Object.entries(layout).map(([section, componentName]) => {
+						const Component = componentMap[componentName];
+						if (!Component) return null;
+
+						// Handle different data structures for different components
+						let componentProps = localContent[section] || {};
+						
+						// For projects section, handle the new schema structure
+						if (section === 'projects' && localContent[section]?.items) {
+							componentProps = { items: localContent[section].items };
+						}
+						
+						// For skills section, flatten the structure
+						if (section === 'skills' && localContent[section]) {
+							componentProps = {
+								technical: localContent[section].technical || [],
+								soft: localContent[section].soft || [],
+								languages: localContent[section].languages || []
+							};
+						}
+						
+						// For achievements section, flatten the structure
+						if (section === 'achievements' && localContent[section]) {
+							componentProps = {
+								awards: localContent[section].awards || [],
+								certifications: localContent[section].certifications || [],
+								publications: localContent[section].publications || []
+							};
+						}
+						
+						// For experience section, flatten the structure
+						if (section === 'experience' && localContent[section]?.jobs) {
+							componentProps = { jobs: localContent[section].jobs };
+						}
+						
+						// For education section, flatten the structure
+						if (section === 'education' && localContent[section]?.degrees) {
+							componentProps = { degrees: localContent[section].degrees };
+						}
+
+						return (
+							<div key={section} className="mb-8 last:mb-0">
+								<Component {...componentProps} />
+							</div>
+						);
+					});
+				</div>
+			</div>
 		</div>
 	);
 }

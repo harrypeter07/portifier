@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@google/genai": "^1.10.0",
     "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.23.6",

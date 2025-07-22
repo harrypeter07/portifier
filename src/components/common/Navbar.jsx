@@ -13,7 +13,7 @@ const navLinks = [
 export default function Navbar() {
 	const pathname = usePathname();
 	return (
-		<nav className="flex gap-6 py-4 px-8 border-b bg-white/80 backdrop-blur sticky top-0 z-10">
+		<nav className="flex gap-6 py-4 px-8 border-b bg-gray/40 backdrop-blur sticky top-0 z-10">
 			{navLinks.map((link) => (
 				<Link
 					key={link.href}

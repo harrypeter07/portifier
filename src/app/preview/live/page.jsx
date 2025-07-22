@@ -3,10 +3,18 @@ import { useLayoutStore } from "@/store/layoutStore";
 import { componentMap } from "@/data/componentMap";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function LivePreviewPage() {
-	const { layout, content } = useLayoutStore();
+	const { layout, content, parsedData, restoreFromParsed } = useLayoutStore();
 	const router = useRouter();
+	
+	// Restore parsed data if content is empty
+	useEffect(() => {
+		if (Object.keys(content).length === 0 && parsedData) {
+			restoreFromParsed();
+		}
+	}, [content, parsedData, restoreFromParsed]);
 
 	function handleSave() {
 		router.push("/editor/customize");
@@ -54,6 +62,42 @@ export default function LivePreviewPage() {
 						const Component = componentMap[componentName];
 						if (!Component) return null;
 
+						// Handle different data structures for different components
+						let componentProps = content[section] || {};
+						
+						// For projects section, handle the new schema structure
+						if (section === 'projects' && content[section]?.items) {
+							componentProps = { items: content[section].items };
+						}
+						
+						// For skills section, flatten the structure
+						if (section === 'skills' && content[section]) {
+							componentProps = {
+								technical: content[section].technical || [],
+								soft: content[section].soft || [],
+								languages: content[section].languages || []
+							};
+						}
+						
+						// For achievements section, flatten the structure
+						if (section === 'achievements' && content[section]) {
+							componentProps = {
+								awards: content[section].awards || [],
+								certifications: content[section].certifications || [],
+								publications: content[section].publications || []
+							};
+						}
+						
+						// For experience section, flatten the structure
+						if (section === 'experience' && content[section]?.jobs) {
+							componentProps = { jobs: content[section].jobs };
+						}
+						
+						// For education section, flatten the structure
+						if (section === 'education' && content[section]?.degrees) {
+							componentProps = { degrees: content[section].degrees };
+						}
+
 						return (
 							<motion.div
 								key={section}
@@ -62,7 +106,7 @@ export default function LivePreviewPage() {
 								transition={{ delay: 0.1 }}
 								className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
 							>
-								<Component {...(content[section] || {})} />
+								<Component {...componentProps} />
 							</motion.div>
 						);
 					})}
