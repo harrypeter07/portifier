@@ -291,7 +291,7 @@ export default function EditResumePage() {
 									Remove Job
 								</button>
 							</div>
-							))}
+							)}
 						<button
 							type="button"
 							onClick={addJob}
@@ -355,7 +355,7 @@ export default function EditResumePage() {
 									Remove Education
 								</button>
 							</div>
-						)}
+							)}
 						<button
 							type="button"
 							onClick={addDegree}
