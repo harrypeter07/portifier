@@ -237,6 +237,11 @@ export default function ResumeUploadPage() {
 								// Handle different data structures for different components
 								let componentProps = parsed.content?.[section] || {};
 
+								// For hero section, use personal data directly
+								if (section === "hero" && parsed.content?.personal) {
+									componentProps = parsed.content.personal;
+								}
+
 								// For projects section, handle the new schema structure
 								if (
 									section === "projects" &&
