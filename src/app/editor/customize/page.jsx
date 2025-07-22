@@ -14,19 +14,23 @@ const MOCK_RESUME = {
 
 const FIELD_MAP = {
 	hero: [
-		{ name: "title", label: "Title" },
-		{ name: "subtitle", label: "Subtitle" },
+		{ name: "firstName", label: "First Name", path: "personal.firstName" },
+		{ name: "lastName", label: "Last Name", path: "personal.lastName" },
+		{ name: "title", label: "Professional Title", path: "personal.title" },
+		{ name: "tagline", label: "Tagline", path: "personal.tagline" },
 	],
-	about: [{ name: "summary", label: "Bio" }],
-	showcase: [{ name: "projects", label: "Projects (comma separated)" }],
-	contact: [{ name: "email", label: "Contact Email" }],
+	about: [{ name: "summary", label: "Bio", path: "about.summary" }],
+	showcase: [{ name: "projects", label: "Projects (comma separated)", path: "projects.items" }],
+	contact: [{ name: "email", label: "Contact Email", path: "personal.email" }],
 };
 
 export default function CustomizePage() {
 	const {
 		layout,
 		content,
+		portfolioData,
 		setContent,
+		updatePortfolioData,
 		parsedData,
 		restoreFromParsed,
 		currentTemplate,
@@ -46,19 +50,40 @@ export default function CustomizePage() {
 
 		const initial = {};
 		Object.keys(layout).forEach((section) => {
+			// Initialize section data from portfolioData or fallback to mock/content
+			const sectionData = {};
+			
+			// Get field values from portfolioData using the field paths
+			FIELD_MAP[section]?.forEach((field) => {
+				const pathKeys = field.path.split('.');
+				let value = portfolioData;
+				for (const key of pathKeys) {
+					value = value?.[key];
+				}
+				sectionData[field.name] = value || '';
+			});
+			
 			initial[section] = {
-				...MOCK_RESUME[section],
-				...content[section], // Parsed/stored content takes priority
+				...MOCK_RESUME[section], // Mock data as fallback
+				...content[section], // Legacy content
+				...sectionData, // Portfolio data takes priority
 			};
 		});
 		setLocalContent(initial);
-	}, [layout, content, parsedData, restoreFromParsed]);
+	}, [layout, content, portfolioData, parsedData, restoreFromParsed]);
 
 	function handleChange(section, field, value) {
+		// Update local content for form display
 		setLocalContent((prev) => ({
 			...prev,
 			[section]: { ...prev[section], [field]: value },
 		}));
+		
+		// Update portfolioData in store
+		const fieldMapping = FIELD_MAP[section]?.find(f => f.name === field);
+		if (fieldMapping?.path) {
+			updatePortfolioData(fieldMapping.path, value);
+		}
 	}
 
 	async function handleSave() {
@@ -72,15 +97,16 @@ export default function CustomizePage() {
 			// Get email from contact section or use a default
 			const userEmail = localContent.contact?.email || "demo@example.com";
 
-			const res = await fetch("/api/portfolio/save", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					layout,
-					content: localContent,
-					email: userEmail,
-				}),
-			});
+		const res = await fetch("/api/portfolio/save", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				layout,
+				content: localContent,
+				portfolioData, // Include the updated portfolio data
+				email: userEmail,
+			}),
+		});
 			const data = await res.json();
 			if (res.ok && data.success) {
 				setSuccess(
@@ -172,10 +198,15 @@ export default function CustomizePage() {
 						// Handle different data structures for different components
 						let componentProps = localContent[section] || {};
 
-						// For projects section, handle the new schema structure
-						if (section === "projects" && localContent[section]?.items) {
-							componentProps = { items: localContent[section].items };
-						}
+// For hero section, pass portfolioData directly
+if (section === "hero") {
+    componentProps = portfolioData;
+}
+
+// For projects section, handle the new schema structure
+if (section === "projects" && localContent[section]?.items) {
+    componentProps = { items: localContent[section].items };
+}
 
 						// For skills section, flatten the structure
 						if (section === "skills" && localContent[section]) {

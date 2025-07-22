@@ -48,7 +48,10 @@ export default function PortfolioPage({ params }) {
 		);
 	}
 
-	const { layout, content } = portfolio;
+	const { layout, content, portfolioData } = portfolio;
+	
+	// Use portfolioData if available, fallback to content
+	const dataToUse = portfolioData || {};
 
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
@@ -57,6 +60,66 @@ export default function PortfolioPage({ params }) {
 				const Component = componentMap[componentName];
 				if (!Component) return null;
 
+				// Generate component props based on section and data structure
+				let componentProps = content[section] || {};
+				
+				// If we have portfolioData, use it instead
+				if (portfolioData) {
+					switch (section) {
+						case "hero":
+							componentProps = dataToUse;
+							break;
+						case "about":
+							componentProps = {
+								summary: dataToUse.about?.summary || "",
+								data: dataToUse,
+							};
+							break;
+						case "projects":
+							componentProps = {
+								items: dataToUse.projects?.items || [],
+								data: dataToUse,
+							};
+							break;
+						case "skills":
+							componentProps = {
+								technical: dataToUse.skills?.technical || [],
+								soft: dataToUse.skills?.soft || [],
+								languages: dataToUse.skills?.languages || [],
+								data: dataToUse,
+							};
+							break;
+						case "experience":
+							componentProps = {
+								jobs: dataToUse.experience?.jobs || [],
+								data: dataToUse,
+							};
+							break;
+						case "education":
+							componentProps = {
+								degrees: dataToUse.education?.degrees || [],
+								data: dataToUse,
+							};
+							break;
+						case "achievements":
+							componentProps = {
+								awards: dataToUse.achievements?.awards || [],
+								certifications: dataToUse.achievements?.certifications || [],
+								publications: dataToUse.achievements?.publications || [],
+								data: dataToUse,
+							};
+							break;
+						case "contact":
+							componentProps = {
+								email: dataToUse.personal?.email || dataToUse.contact?.email || "",
+								phone: dataToUse.personal?.phone || dataToUse.contact?.phone || "",
+								linkedin: dataToUse.personal?.social?.linkedin || "",
+								data: dataToUse,
+							};
+							break;
+					}
+				}
+
 				return (
 					<motion.div
 						key={section}
@@ -64,7 +127,7 @@ export default function PortfolioPage({ params }) {
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: index * 0.1 }}
 					>
-						<Component {...(content[section] || {})} />
+						<Component {...componentProps} />
 					</motion.div>
 				);
 			})}

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 
 export default function LivePreviewPage() {
-	const { layout, content, parsedData, restoreFromParsed } = useLayoutStore();
+	const { layout, content, portfolioData, parsedData, restoreFromParsed } = useLayoutStore();
 	const router = useRouter();
 
 	// Restore parsed data if content is empty
@@ -62,40 +62,74 @@ export default function LivePreviewPage() {
 						const Component = componentMap[componentName];
 						if (!Component) return null;
 
-						// Handle different data structures for different components
-						let componentProps = content[section] || {};
+						// Use portfolioData for rendering components
+						let componentProps = {};
+
+						// For hero section, pass portfolioData directly
+						if (section === "hero") {
+							componentProps = portfolioData;
+						}
+
+						// For about section
+						if (section === "about") {
+							componentProps = {
+								summary: portfolioData.about?.summary || "",
+								data: portfolioData,
+							};
+						}
 
 						// For projects section, handle the new schema structure
-						if (section === "projects" && content[section]?.items) {
-							componentProps = { items: content[section].items };
+						if (section === "projects") {
+							componentProps = { 
+								items: portfolioData.projects?.items || [],
+								data: portfolioData,
+							};
 						}
 
 						// For skills section, flatten the structure
-						if (section === "skills" && content[section]) {
+						if (section === "skills") {
 							componentProps = {
-								technical: content[section].technical || [],
-								soft: content[section].soft || [],
-								languages: content[section].languages || [],
+								technical: portfolioData.skills?.technical || [],
+								soft: portfolioData.skills?.soft || [],
+								languages: portfolioData.skills?.languages || [],
+								data: portfolioData,
 							};
 						}
 
 						// For achievements section, flatten the structure
-						if (section === "achievements" && content[section]) {
+						if (section === "achievements") {
 							componentProps = {
-								awards: content[section].awards || [],
-								certifications: content[section].certifications || [],
-								publications: content[section].publications || [],
+								awards: portfolioData.achievements?.awards || [],
+								certifications: portfolioData.achievements?.certifications || [],
+								publications: portfolioData.achievements?.publications || [],
+								data: portfolioData,
 							};
 						}
 
-						// For experience section, flatten the structure
-						if (section === "experience" && content[section]?.jobs) {
-							componentProps = { jobs: content[section].jobs };
+						// For experience section
+						if (section === "experience") {
+							componentProps = { 
+								jobs: portfolioData.experience?.jobs || [],
+								data: portfolioData,
+							};
 						}
 
-						// For education section, flatten the structure
-						if (section === "education" && content[section]?.degrees) {
-							componentProps = { degrees: content[section].degrees };
+						// For education section
+						if (section === "education") {
+							componentProps = { 
+								degrees: portfolioData.education?.degrees || [],
+								data: portfolioData,
+							};
+						}
+
+						// For contact section
+						if (section === "contact") {
+							componentProps = {
+								email: portfolioData.personal?.email || portfolioData.contact?.email || "",
+								phone: portfolioData.personal?.phone || portfolioData.contact?.phone || "",
+								linkedin: portfolioData.personal?.social?.linkedin || "",
+								data: portfolioData,
+							};
 						}
 
 						return (
@@ -123,16 +157,20 @@ export default function LivePreviewPage() {
 							</pre>
 						</div>
 						<div>
-							<strong>Content Preview:</strong>
+							<strong>Portfolio Data Preview:</strong>
 							<div className="mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs max-h-40 overflow-y-auto">
-								{Object.entries(content).map(([section, data]) => (
-									<div key={section} className="mb-2">
-										<strong className="capitalize">{section}:</strong>
-										<div className="text-gray-600 dark:text-gray-400">
-											{JSON.stringify(data, null, 2)}
-										</div>
+								<div className="mb-2">
+									<strong>Personal:</strong>
+									<div className="text-gray-600 dark:text-gray-400">
+										{JSON.stringify(portfolioData.personal, null, 2)}
 									</div>
-								))}
+								</div>
+								<div className="mb-2">
+									<strong>About:</strong>
+									<div className="text-gray-600 dark:text-gray-400">
+										{JSON.stringify(portfolioData.about, null, 2)}
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

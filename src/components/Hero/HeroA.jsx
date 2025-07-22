@@ -1,11 +1,20 @@
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 
-export default function HeroA({ data = EMPTY_PORTFOLIO }) {
+export default function HeroA({ data = EMPTY_PORTFOLIO, ...personalData }) {
+	// Handle both data structures: new schema format and direct personal data
+	const personal = data?.personal || personalData || {};
+	console.log("HeroA Data:", { data, personalData, personal });
+	
+	// Handle legacy structure where data might be direct personal data
+	const actualPersonal = personal.firstName ? personal : data;
+	
+	console.log("HeroA Actual Personal:", actualPersonal);
+
 	const fullName =
-		`${data.personal.firstName} ${data.personal.lastName}`.trim() ||
+		`${actualPersonal.firstName || ''} ${actualPersonal.lastName || ''}`.trim() ||
 		"Your Name";
-	const title = data.personal.title || "Professional Title";
-	const tagline = data.personal.tagline;
+	const title = actualPersonal.title || actualPersonal.subtitle || "Professional Title";
+	const tagline = actualPersonal.tagline;
 
 	return (
 		<section className="py-16 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white">

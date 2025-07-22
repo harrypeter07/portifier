@@ -33,7 +33,7 @@ export default function EditResumePage() {
 			restoreFromParsed();
 			return;
 		}
-
+		console.log('Initial content:', content);
 		// Initialize with existing content or defaults
 		setFormData({
 			hero: content.hero || { title: "", subtitle: "" },
@@ -52,6 +52,7 @@ export default function EditResumePage() {
 			languages: content.languages || [],
 			hobbies: content.hobbies || [],
 		});
+		console.log('Form data initialized:', formData);
 	}, [content, parsedData, restoreFromParsed]);
 
 	const handleInputChange = (section, field, value) => {
@@ -146,24 +147,24 @@ export default function EditResumePage() {
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Personal Information</h2>
 						<div className="grid grid-cols-1 gap-4">
-							<input
-								type="text"
-								placeholder="Full Name"
-								value={formData.hero.title}
-								onChange={(e) =>
-									handleInputChange("hero", "title", e.target.value)
-								}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<input
-								type="text"
-								placeholder="Professional Title (e.g., Software Developer)"
-								value={formData.hero.subtitle}
-								onChange={(e) =>
-									handleInputChange("hero", "subtitle", e.target.value)
-								}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
+									<input
+										type="text"
+										placeholder="Full Name"
+										value={formData.hero?.title || ""}
+										onChange={(e) =4
+											handleInputChange("hero", "title", e.target.value)
+										}
+										className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/5
+									<input
+										type="text"
+										placeholder="Professional Title (e.g., Software Developer)"
+										value={formData.hero?.subtitle || ""}
+										onChange={(e) =4
+											handleInputChange("hero", "subtitle", e.target.value)
+										}
+										className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/5
 						</div>
 					</div>
 
@@ -475,12 +476,19 @@ export default function EditResumePage() {
 					</div>
 					<div className="p-4">
 						{layout && Object.entries(layout).length > 0 ? (
-							Object.entries(layout).map(([section, componentName]) => {
-								const Component = componentMap[componentName];
-								if (!Component) return null;
+			{Object.entries(layout).map(([section, componentName]) =	003b {
+				const Component = componentMap[componentName];
+				if (!Component) return null;
 
-								// Handle different data structures for different components
-								let componentProps = formData[section] || {};
+				// Handle different data structures for different components
+				let componentProps = formData[section] || {};
+
+				// Ensure no null values for inputs
+				Object.keys(componentProps).forEach(key => {
+					if (componentProps[key] === null) {
+						componentProps[key] = "";
+					}
+				});
 
 								// For projects section, handle the new schema structure
 								if (section === "projects" && formData[section]?.items) {

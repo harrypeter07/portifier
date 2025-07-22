@@ -1,11 +1,12 @@
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 
 export default function HeroB({ data = EMPTY_PORTFOLIO }) {
+	const personal = data?.personal || {}
 	const fullName =
-		`${data.personal.firstName} ${data.personal.lastName}`.trim() ||
+		`${personal.firstName || ''} ${personal.lastName || ''}`.trim() ||
 		"Your Name";
-	const title = data.personal.title || "Professional Title";
-	const tagline = data.personal.tagline;
+	const title = personal.title || "Professional Title";
+	const tagline = personal.tagline;
 
 	return (
 		<section className="py-16 text-center bg-gray-100 dark:bg-gray-800">
