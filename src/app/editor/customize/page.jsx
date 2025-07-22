@@ -203,7 +203,7 @@ export default function CustomizePage() {
 								<Component {...componentProps} />
 							</div>
 						);
-					});
+					})}
 				</div>
 			</div>
 		</div>
