@@ -1,8 +1,8 @@
 // Template Management System for Portfolio Builder
 // Provides scalable template configurations with full schema support
 
-import { EMPTY_PORTFOLIO } from '@/data/schemas/portfolioSchema';
-import { getRecommendedLayout } from '@/data/componentMap';
+import { EMPTY_PORTFOLIO } from '@/components/Skills/data/schemas/portfolioSchema';
+import { getRecommendedLayout } from '@/components/Skills/data/componentMap';
 
 // Template configurations with complete schema data
 export const PORTFOLIO_TEMPLATES = {

@@ -29,6 +29,17 @@ export async function POST(req) {
 	const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
 		expiresIn: "7d",
 	});
+	// Set cookie with proper attributes based on environment
+	const isProduction = process.env.NODE_ENV === 'production';
+	const cookieOptions = [
+		`token=${token}`,
+		'HttpOnly',
+		'Path=/',
+		'Max-Age=604800', // 7 days
+		'SameSite=Lax', // Allow same-site requests and top-level navigation
+		...(isProduction ? ['Secure'] : []) // Only use Secure in production (HTTPS)
+	].join('; ');
+
 	return new Response(
 		JSON.stringify({
 			user: { name: user.name, email: user.email, verified: user.verified },
@@ -36,7 +47,7 @@ export async function POST(req) {
 		{
 			status: 200,
 			headers: {
-				"Set-Cookie": `token=${token}; HttpOnly; Path=/; Max-Age=604800`,
+				"Set-Cookie": cookieOptions,
 			},
 		}
 	);

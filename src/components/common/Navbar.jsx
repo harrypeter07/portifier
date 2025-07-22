@@ -1,12 +1,11 @@
-'use client';
+"use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const publicNavLinks = [
-	{ href: "/", label: "Home", icon: "🏠" },
-	{ href: "/signup", label: "Sign Up", icon: "👤" },
-	{ href: "/signin", label: "Sign In", icon: "🔑" },
+	{ href: "/signin", label: "Sign In", icon: "🚪" },
+	{ href: "/signup", label: "Sign Up", icon: "📝" },
 ];
 
 const authenticatedNavLinks = [
@@ -26,27 +25,23 @@ export default function Navbar() {
 
 	// Check authentication status
 	useEffect(() => {
-	const checkAuth = async () => {
+		const checkAuth = async () => {
 			try {
-				const token = localStorage.getItem('authToken');
-				if (token) {
-					const response = await fetch('/api/auth/me', {
-						headers: {
-							'Authorization': `Bearer ${token}`
-						}
-					});
-					if (response.ok) {
-						const userData = await response.json();
-						setUser(userData.user);
-					} else {
-						localStorage.removeItem('authToken');
-					}
+				// Call the auth API - cookies are automatically included
+				const response = await fetch("/api/auth/me", {
+					credentials: "include", // Ensure cookies are sent
+				});
+
+				if (response.ok) {
+					const userData = await response.json();
+					setUser(userData.user);
 				} else {
-					// No token found
-					setLoading(false);
+					// Not authenticated or token expired
+					setUser(null);
 				}
 			} catch (error) {
-				console.log('Auth check failed:', error);
+				console.log("Auth check failed:", error);
+				setUser(null);
 			} finally {
 				setLoading(false);
 			}
@@ -69,7 +64,6 @@ export default function Navbar() {
 			// Continue with client-side logout even if API fails
 		} finally {
 			// Clear client-side auth state
-			localStorage.removeItem("authToken");
 			setUser(null);
 			setDropdownOpen(false);
 			router.push("/");
@@ -77,6 +71,28 @@ export default function Navbar() {
 	};
 
 	const navLinks = user ? authenticatedNavLinks : publicNavLinks;
+	if (loading) {
+		return (
+			<nav className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div className="flex justify-between items-center h-16">
+						{/* Placeholder for logo */}
+						<div className="flex items-center space-x-2">
+							<div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+							<div className="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+						</div>
+						{/* Placeholder for nav links */}
+						<div className="hidden md:flex items-center space-x-1">
+							<div className="w-20 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+							<div className="w-20 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+						</div>
+						{/* Placeholder for user section */}
+						<div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+					</div>
+				</div>
+			</nav>
+		);
+	}
 
 	return (
 		<nav className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
@@ -131,15 +147,25 @@ export default function Navbar() {
 									) : (
 										<div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center ring-2 ring-gray-200 dark:ring-gray-600 group-hover:ring-blue-500 transition-all duration-200">
 											<span className="text-white font-medium text-sm">
-												{user.name?.charAt(0)?.toUpperCase() || 'U'}
+												{user.name?.charAt(0)?.toUpperCase() || "U"}
 											</span>
 										</div>
 									)}
 									<span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200">
-										{user.name || 'User'}
+										{user.name || "User"}
 									</span>
-									<svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+									<svg
+										className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-all duration-200"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M19 9l-7 7-7-7"
+										/>
 									</svg>
 								</button>
 
@@ -147,25 +173,38 @@ export default function Navbar() {
 								{dropdownOpen && (
 									<div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-5 duration-200">
 										<div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-											<p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
-											<p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+											<p className="text-sm font-medium text-gray-900 dark:text-white">
+												{user.name}
+											</p>
+											<p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+												{user.email}
+											</p>
 										</div>
-										
-										<Link href="/dashboard" className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+
+										<Link
+											href="/dashboard"
+											className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+										>
 											<span className="mr-3">📊</span>
 											Dashboard
 										</Link>
-										
-										<Link href="/editor" className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+
+										<Link
+											href="/editor"
+											className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+										>
 											<span className="mr-3">✏️</span>
 											Create Portfolio
 										</Link>
-										
-										<Link href="/settings" className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+
+										<Link
+											href="/settings"
+											className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+										>
 											<span className="mr-3">⚙️</span>
 											Settings
 										</Link>
-										
+
 										<div className="border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
 											<button
 												onClick={handleLogout}
@@ -181,12 +220,6 @@ export default function Navbar() {
 						) : (
 							<div className="flex items-center space-x-3">
 								<Link
-									href="/signin"
-									className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors duration-200"
-								>
-									Sign In
-								</Link>
-								<Link
 									href="/signup"
 									className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
 								>
@@ -200,8 +233,22 @@ export default function Navbar() {
 							onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
 							className="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
 						>
-							<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+							<svg
+								className="w-6 h-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d={
+										mobileMenuOpen
+											? "M6 18L18 6M6 6l12 12"
+											: "M4 6h16M4 12h16M4 18h16"
+									}
+								/>
 							</svg>
 						</button>
 					</div>
@@ -226,23 +273,33 @@ export default function Navbar() {
 									<span>{link.label}</span>
 								</Link>
 							))}
-							
+
 							{user && (
 								<div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
 									<div className="flex items-center space-x-3 px-3 py-2 mb-3">
 										{user.avatar ? (
-											<img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full object-cover" />
+											<img
+												src={user.avatar}
+												alt={user.name}
+												className="w-10 h-10 rounded-full object-cover"
+											/>
 										) : (
 											<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-												<span className="text-white font-medium">{user.name?.charAt(0)?.toUpperCase() || 'U'}</span>
+												<span className="text-white font-medium">
+													{user.name?.charAt(0)?.toUpperCase() || "U"}
+												</span>
 											</div>
 										)}
 										<div>
-											<p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
-											<p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+											<p className="text-sm font-medium text-gray-900 dark:text-white">
+												{user.name}
+											</p>
+											<p className="text-xs text-gray-500 dark:text-gray-400">
+												{user.email}
+											</p>
 										</div>
 									</div>
-									
+
 									<button
 										onClick={handleLogout}
 										className="flex items-center space-x-3 w-full px-3 py-2 text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
@@ -253,8 +310,8 @@ export default function Navbar() {
 								</div>
 							)}
 						</div>
-				</div>
-			)}
+					</div>
+				)}
 			</div>
 		</nav>
 	);

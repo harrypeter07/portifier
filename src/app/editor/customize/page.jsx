@@ -23,7 +23,14 @@ const FIELD_MAP = {
 };
 
 export default function CustomizePage() {
-	const { layout, content, setContent, parsedData, restoreFromParsed, currentTemplate } = useLayoutStore();
+	const {
+		layout,
+		content,
+		setContent,
+		parsedData,
+		restoreFromParsed,
+		currentTemplate,
+	} = useLayoutStore();
 	const [localContent, setLocalContent] = useState({});
 	const [saving, setSaving] = useState(false);
 	const [success, setSuccess] = useState("");
@@ -36,7 +43,7 @@ export default function CustomizePage() {
 			restoreFromParsed();
 			return;
 		}
-		
+
 		const initial = {};
 		Object.keys(layout).forEach((section) => {
 			initial[section] = {
@@ -164,37 +171,37 @@ export default function CustomizePage() {
 
 						// Handle different data structures for different components
 						let componentProps = localContent[section] || {};
-						
+
 						// For projects section, handle the new schema structure
-						if (section === 'projects' && localContent[section]?.items) {
+						if (section === "projects" && localContent[section]?.items) {
 							componentProps = { items: localContent[section].items };
 						}
-						
+
 						// For skills section, flatten the structure
-						if (section === 'skills' && localContent[section]) {
+						if (section === "skills" && localContent[section]) {
 							componentProps = {
 								technical: localContent[section].technical || [],
 								soft: localContent[section].soft || [],
-								languages: localContent[section].languages || []
+								languages: localContent[section].languages || [],
 							};
 						}
-						
+
 						// For achievements section, flatten the structure
-						if (section === 'achievements' && localContent[section]) {
+						if (section === "achievements" && localContent[section]) {
 							componentProps = {
 								awards: localContent[section].awards || [],
 								certifications: localContent[section].certifications || [],
-								publications: localContent[section].publications || []
+								publications: localContent[section].publications || [],
 							};
 						}
-						
+
 						// For experience section, flatten the structure
-						if (section === 'experience' && localContent[section]?.jobs) {
+						if (section === "experience" && localContent[section]?.jobs) {
 							componentProps = { jobs: localContent[section].jobs };
 						}
-						
+
 						// For education section, flatten the structure
-						if (section === 'education' && localContent[section]?.degrees) {
+						if (section === "education" && localContent[section]?.degrees) {
 							componentProps = { degrees: localContent[section].degrees };
 						}
 

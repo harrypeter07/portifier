@@ -8,7 +8,7 @@ import { useEffect } from "react";
 export default function LivePreviewPage() {
 	const { layout, content, parsedData, restoreFromParsed } = useLayoutStore();
 	const router = useRouter();
-	
+
 	// Restore parsed data if content is empty
 	useEffect(() => {
 		if (Object.keys(content).length === 0 && parsedData) {
@@ -64,37 +64,37 @@ export default function LivePreviewPage() {
 
 						// Handle different data structures for different components
 						let componentProps = content[section] || {};
-						
+
 						// For projects section, handle the new schema structure
-						if (section === 'projects' && content[section]?.items) {
+						if (section === "projects" && content[section]?.items) {
 							componentProps = { items: content[section].items };
 						}
-						
+
 						// For skills section, flatten the structure
-						if (section === 'skills' && content[section]) {
+						if (section === "skills" && content[section]) {
 							componentProps = {
 								technical: content[section].technical || [],
 								soft: content[section].soft || [],
-								languages: content[section].languages || []
+								languages: content[section].languages || [],
 							};
 						}
-						
+
 						// For achievements section, flatten the structure
-						if (section === 'achievements' && content[section]) {
+						if (section === "achievements" && content[section]) {
 							componentProps = {
 								awards: content[section].awards || [],
 								certifications: content[section].certifications || [],
-								publications: content[section].publications || []
+								publications: content[section].publications || [],
 							};
 						}
-						
+
 						// For experience section, flatten the structure
-						if (section === 'experience' && content[section]?.jobs) {
+						if (section === "experience" && content[section]?.jobs) {
 							componentProps = { jobs: content[section].jobs };
 						}
-						
+
 						// For education section, flatten the structure
-						if (section === 'education' && content[section]?.degrees) {
+						if (section === "education" && content[section]?.degrees) {
 							componentProps = { degrees: content[section].degrees };
 						}
 

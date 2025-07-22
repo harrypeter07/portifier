@@ -1,25 +1,35 @@
-import { EMPTY_PORTFOLIO } from '@/data/schemas/portfolioSchema';
+import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 
-export default function SkillsA({ technical = [], soft = [], languages = [], data = EMPTY_PORTFOLIO }) {
+export default function SkillsA({
+	technical = [],
+	soft = [],
+	languages = [],
+	data = EMPTY_PORTFOLIO,
+}) {
 	// Use new schema data if available, fallback to legacy props
 	const skillsData = data.skills || {};
 	const technicalSkills = skillsData.technical || [];
 	const softSkills = skillsData.soft || [];
 	const languageSkills = skillsData.languages || [];
-	
-	// Fallback to legacy props if new schema data is not available
-	const displayTechnical = technicalSkills.length > 0 ? technicalSkills : (technical || []);
-	const displaySoft = softSkills.length > 0 ? softSkills : (soft || []);
-	const displayLanguages = languageSkills.length > 0 ? languageSkills : (languages || []);
 
-	const hasSkills = (displayTechnical.length > 0) || 
-					 (displaySoft.length > 0) || 
-					 (displayLanguages.length > 0);
+	// Fallback to legacy props if new schema data is not available
+	const displayTechnical =
+		technicalSkills.length > 0 ? technicalSkills : technical || [];
+	const displaySoft = softSkills.length > 0 ? softSkills : soft || [];
+	const displayLanguages =
+		languageSkills.length > 0 ? languageSkills : languages || [];
+
+	const hasSkills =
+		displayTechnical.length > 0 ||
+		displaySoft.length > 0 ||
+		displayLanguages.length > 0;
 
 	if (!hasSkills) {
 		return (
 			<section className="py-12 px-6">
-				<h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Skills</h2>
+				<h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+					Skills
+				</h2>
 				<div className="text-center py-8">
 					<p className="text-gray-500">No skills information available.</p>
 				</div>
@@ -30,7 +40,7 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 	// Component for displaying technical skill categories with detailed information
 	const TechnicalSkillCategory = ({ categoryData }) => {
 		if (!categoryData?.skills || categoryData.skills.length === 0) return null;
-		
+
 		return (
 			<div className="mb-8">
 				<h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
@@ -48,27 +58,34 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 									{skill.name}
 								</span>
 								{skill.certified && (
-									<span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">✓</span>
+									<span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+										✓
+									</span>
 								)}
 							</div>
 							{skill.level && (
 								<div className="flex items-center gap-2">
 									<div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-										<div 
+										<div
 											className={`h-2 rounded-full ${
-												skill.level === 'expert' ? 'bg-green-500 w-full' :
-												skill.level === 'advanced' ? 'bg-blue-500 w-4/5' :
-												skill.level === 'intermediate' ? 'bg-yellow-500 w-3/5' :
-												'bg-red-500 w-2/5'
+												skill.level === "expert"
+													? "bg-green-500 w-full"
+													: skill.level === "advanced"
+													? "bg-blue-500 w-4/5"
+													: skill.level === "intermediate"
+													? "bg-yellow-500 w-3/5"
+													: "bg-red-500 w-2/5"
 											}`}
 										></div>
 									</div>
-									<span className="text-xs text-gray-500 capitalize">{skill.level}</span>
+									<span className="text-xs text-gray-500 capitalize">
+										{skill.level}
+									</span>
 								</div>
 							)}
 							{skill.years > 0 && (
 								<p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-									{skill.years} year{skill.years > 1 ? 's' : ''} experience
+									{skill.years} year{skill.years > 1 ? "s" : ""} experience
 								</p>
 							)}
 						</div>
@@ -81,7 +98,7 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 	// Component for displaying simple skill categories (legacy support)
 	const SimpleSkillCategory = ({ title, skills, colorClass, icon }) => {
 		if (!skills || skills.length === 0) return null;
-		
+
 		return (
 			<div className="mb-8">
 				<h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
@@ -91,7 +108,7 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 				<div className="flex flex-wrap gap-2">
 					{skills.map((skill, index) => {
 						// Handle both string and object formats
-						const skillName = typeof skill === 'string' ? skill : skill.name;
+						const skillName = typeof skill === "string" ? skill : skill.name;
 						return (
 							<span
 								key={index}
@@ -109,7 +126,7 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 	// Component for displaying soft skills with descriptions
 	const SoftSkillCategory = ({ skills }) => {
 		if (!skills || skills.length === 0) return null;
-		
+
 		return (
 			<div className="mb-8">
 				<h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
@@ -118,7 +135,8 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 				</h3>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					{skills.map((skill, index) => {
-						const skillData = typeof skill === 'string' ? { name: skill } : skill;
+						const skillData =
+							typeof skill === "string" ? { name: skill } : skill;
 						return (
 							<div
 								key={index}
@@ -150,7 +168,7 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 	// Component for displaying language skills with proficiency
 	const LanguageSkillCategory = ({ skills }) => {
 		if (!skills || skills.length === 0) return null;
-		
+
 		return (
 			<div className="mb-8">
 				<h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
@@ -159,7 +177,10 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 				</h3>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 					{skills.map((language, index) => {
-						const langData = typeof language === 'string' ? { name: language, proficiency: 'conversational' } : language;
+						const langData =
+							typeof language === "string"
+								? { name: language, proficiency: "conversational" }
+								: language;
 						return (
 							<div
 								key={index}
@@ -188,7 +209,9 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 
 	return (
 		<section className="py-12 px-6">
-			<h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Skills</h2>
+			<h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+				Skills
+			</h2>
 			<div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border dark:border-gray-700 space-y-6">
 				{/* Technical Skills - New schema format */}
 				{displayTechnical.length > 0 && Array.isArray(displayTechnical[0]) && (
@@ -200,7 +223,7 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 						colorClass="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
 					/>
 				)}
-				
+
 				{/* Technical Skills - New schema format with categories */}
 				{displayTechnical.length > 0 && displayTechnical[0]?.category && (
 					<div>
@@ -209,24 +232,25 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 						))}
 					</div>
 				)}
-				
+
 				{/* Handle simple technical skills array */}
-				{displayTechnical.length > 0 && typeof displayTechnical[0] === 'string' && (
-					<SimpleSkillCategory
-						title="Technical Skills"
-						skills={displayTechnical}
-						icon="⚙️"
-						colorClass="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
-					/>
-				)}
-				
+				{displayTechnical.length > 0 &&
+					typeof displayTechnical[0] === "string" && (
+						<SimpleSkillCategory
+							title="Technical Skills"
+							skills={displayTechnical}
+							icon="⚙️"
+							colorClass="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
+						/>
+					)}
+
 				{/* Soft Skills */}
 				{displaySoft.length > 0 && displaySoft[0]?.name && (
 					<SoftSkillCategory skills={displaySoft} />
 				)}
-				
+
 				{/* Handle simple soft skills array */}
-				{displaySoft.length > 0 && typeof displaySoft[0] === 'string' && (
+				{displaySoft.length > 0 && typeof displaySoft[0] === "string" && (
 					<SimpleSkillCategory
 						title="Soft Skills"
 						skills={displaySoft}
@@ -234,21 +258,22 @@ export default function SkillsA({ technical = [], soft = [], languages = [], dat
 						colorClass="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
 					/>
 				)}
-				
+
 				{/* Languages */}
 				{displayLanguages.length > 0 && displayLanguages[0]?.name && (
 					<LanguageSkillCategory skills={displayLanguages} />
 				)}
-				
+
 				{/* Handle simple languages array */}
-				{displayLanguages.length > 0 && typeof displayLanguages[0] === 'string' && (
-					<SimpleSkillCategory
-						title="Languages"
-						skills={displayLanguages}
-						icon="🌐"
-						colorClass="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
-					/>
-				)}
+				{displayLanguages.length > 0 &&
+					typeof displayLanguages[0] === "string" && (
+						<SimpleSkillCategory
+							title="Languages"
+							skills={displayLanguages}
+							icon="🌐"
+							colorClass="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
+						/>
+					)}
 			</div>
 		</section>
 	);

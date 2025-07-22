@@ -36,19 +36,19 @@ export default function ResumeUploadPage() {
 	const [parsed, setParsed] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
-	const [portfolioType, setPortfolioType] = useState('developer');
-	const { 
-		reset, 
-		setLayout, 
-		setContent, 
-		setParsedData, 
-		setAllContent, 
+	const [portfolioType, setPortfolioType] = useState("developer");
+	const {
+		reset,
+		setLayout,
+		setContent,
+		setParsedData,
+		setAllContent,
 		setAllLayout,
 		applyTemplate,
 		setCurrentTemplate,
 		parsedData,
 		content,
-		restoreFromParsed 
+		restoreFromParsed,
 	} = useLayoutStore();
 	const router = useRouter();
 
@@ -73,25 +73,25 @@ export default function ResumeUploadPage() {
 			});
 			if (!res.ok) throw new Error("Failed to parse resume");
 			const data = await res.json();
-			
+
 			// Check if parsing was successful
 			if (!data.success) {
 				throw new Error(data.error || "Failed to parse resume");
 			}
-			
+
 			setParsed(data);
-			
+
 			// Log metadata for debugging
 			console.log("📊 Parsing metadata:", data.metadata);
-			
+
 			// Store parsed info in Zustand for later steps
 			reset();
-			
+
 			// Set default layout
 			const defaultTemplate = PREBUILT_TEMPLATES[0];
 			setAllLayout(defaultTemplate.layout);
 			setCurrentTemplate(defaultTemplate);
-			
+
 			// Store parsed content and backup
 			if (data.content) {
 				setAllContent(data.content);
@@ -130,7 +130,7 @@ export default function ResumeUploadPage() {
 						</p>
 					</div>
 				)}
-				
+
 				{/* Portfolio Type Selector */}
 				<div className="mb-4">
 					<label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
@@ -147,10 +147,11 @@ export default function ResumeUploadPage() {
 						<option value="marketing">📈 Marketing/Business</option>
 					</select>
 					<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-						Choose the type that best matches your profession for optimized parsing
+						Choose the type that best matches your profession for optimized
+						parsing
 					</p>
 				</div>
-				
+
 				<input
 					type="file"
 					accept="application/pdf"
@@ -169,7 +170,7 @@ export default function ResumeUploadPage() {
 				{parsed && (
 					<div className="bg-white dark:bg-gray-900 p-6 rounded shadow">
 						<h2 className="text-lg font-semibold mb-4">
-							Resume Parsed! 
+							Resume Parsed!
 							{parsed.metadata && (
 								<span className="text-sm font-normal text-green-600 dark:text-green-400">
 									({parsed.metadata.fieldsExtracted} fields extracted)
@@ -178,24 +179,24 @@ export default function ResumeUploadPage() {
 						</h2>
 						<div className="flex flex-col gap-4">
 							<div className="flex gap-4">
-									<button
-										className="bg-amber-600 text-white px-4 py-2 rounded font-semibold flex-1"
-										onClick={() => router.push("/editor/edit-resume")}
-									>
-										Edit Details
-									</button>
-									<button
-										className="bg-green-600 text-white px-4 py-2 rounded font-semibold flex-1"
-										onClick={handlePreview}
-									>
-										Preview Portfolio
-									</button>
-									<button
-										className="bg-blue-600 text-white px-4 py-2 rounded font-semibold flex-1"
-										onClick={handleCustomBuilder}
-									>
-										Custom Builder
-									</button>
+								<button
+									className="bg-amber-600 text-white px-4 py-2 rounded font-semibold flex-1"
+									onClick={() => router.push("/editor/edit-resume")}
+								>
+									Edit Details
+								</button>
+								<button
+									className="bg-green-600 text-white px-4 py-2 rounded font-semibold flex-1"
+									onClick={handlePreview}
+								>
+									Preview Portfolio
+								</button>
+								<button
+									className="bg-blue-600 text-white px-4 py-2 rounded font-semibold flex-1"
+									onClick={handleCustomBuilder}
+								>
+									Custom Builder
+								</button>
 							</div>
 							<div className="font-semibold text-gray-700 dark:text-gray-200 mt-4">
 								Or use a prebuilt template:
@@ -232,43 +233,53 @@ export default function ResumeUploadPage() {
 							([section, componentName]) => {
 								const Component = componentMap[componentName];
 								if (!Component) return null;
-								
+
 								// Handle different data structures for different components
 								let componentProps = parsed.content?.[section] || {};
-								
+
 								// For projects section, handle the new schema structure
-								if (section === 'projects' && parsed.content?.[section]?.items) {
+								if (
+									section === "projects" &&
+									parsed.content?.[section]?.items
+								) {
 									componentProps = { items: parsed.content[section].items };
 								}
-								
+
 								// For skills section, flatten the structure
-								if (section === 'skills' && parsed.content?.[section]) {
+								if (section === "skills" && parsed.content?.[section]) {
 									componentProps = {
 										technical: parsed.content[section].technical || [],
 										soft: parsed.content[section].soft || [],
-										languages: parsed.content[section].languages || []
+										languages: parsed.content[section].languages || [],
 									};
 								}
-								
+
 								// For achievements section, flatten the structure
-								if (section === 'achievements' && parsed.content?.[section]) {
+								if (section === "achievements" && parsed.content?.[section]) {
 									componentProps = {
 										awards: parsed.content[section].awards || [],
-										certifications: parsed.content[section].certifications || [],
-										publications: parsed.content[section].publications || []
+										certifications:
+											parsed.content[section].certifications || [],
+										publications: parsed.content[section].publications || [],
 									};
 								}
-								
+
 								// For experience section, flatten the structure
-								if (section === 'experience' && parsed.content?.[section]?.jobs) {
+								if (
+									section === "experience" &&
+									parsed.content?.[section]?.jobs
+								) {
 									componentProps = { jobs: parsed.content[section].jobs };
 								}
-								
+
 								// For education section, flatten the structure
-								if (section === 'education' && parsed.content?.[section]?.degrees) {
+								if (
+									section === "education" &&
+									parsed.content?.[section]?.degrees
+								) {
 									componentProps = { degrees: parsed.content[section].degrees };
 								}
-								
+
 								return (
 									<div key={section} className="mb-8 last:mb-0">
 										<Component {...componentProps} />
