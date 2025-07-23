@@ -248,9 +248,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ### Member 3: Omsingh Bais — Theming, Public Website, and Deployment
 
 - Implement a robust theming system (light/dark, color pickers, font choices, etc.).
-- Build a public landing page explaining the product, with demo links and documentation.
-- Set up authentication, user accounts, and portfolio publishing (if not already done).
-- Prepare the app for deployment (Vercel, Netlify, etc.), including SEO and performance optimizations.
+- Adding AI improvements option button for every sections in editing sections of portfolio page.
+- Giving editing and updating option even after the save of portfolio by the user
+- Adding UI improvements like loading compoenets , error messages to user and making application dynamic (scalable ).
 - Write and maintain documentation (README, user guides, contribution guides).
 
 ---
