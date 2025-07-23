@@ -225,3 +225,32 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 # p o r t i f i e r
+
+## Team & Task Breakdown
+
+### Member 1: Harshal Pande — Templates & Components Expansion
+
+- Add new full-page portfolio templates (see Full-Page Portfolio Templates section above).
+- Add new section components (e.g., more Hero, Projects, About, Contact, etc.).
+- Ensure each new component is well-documented and mapped in `componentMap.js`.
+- Create sample data for each template for demo purposes.
+- (Optional) Write tests or storybook stories for new components.
+
+### Member 2: Hassan Mansuri — UI/UX Polish & Animations
+
+- Refine the editor UI for clarity and ease of use.
+- Add smooth transitions and animations (e.g., section transitions, button effects, animated previews).
+- Polish the live preview and published portfolio UI.
+- Ensure mobile responsiveness and accessibility (a11y).
+- Add helpful tooltips, onboarding, and error messages.
+- Work with Harshal to ensure new components/templates are visually consistent.
+
+### Member 3: Omsingh Bais — Theming, Public Website, and Deployment
+
+- Implement a robust theming system (light/dark, color pickers, font choices, etc.).
+- Build a public landing page explaining the product, with demo links and documentation.
+- Set up authentication, user accounts, and portfolio publishing (if not already done).
+- Prepare the app for deployment (Vercel, Netlify, etc.), including SEO and performance optimizations.
+- Write and maintain documentation (README, user guides, contribution guides).
+
+---
