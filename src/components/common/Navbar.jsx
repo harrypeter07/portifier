@@ -4,8 +4,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const publicNavLinks = [
-	{ href: "/signin", label: "Sign In", icon: "🚪" },
-	{ href: "/signup", label: "Sign Up", icon: "📝" },
+	{ href: "/auth/signin", label: "Sign In", icon: "🚪" },
+	{ href: "/auth/signup", label: "Sign Up", icon: "📝" },
 ];
 
 const authenticatedNavLinks = [
@@ -220,7 +220,7 @@ export default function Navbar() {
 						) : (
 							<div className="flex items-center space-x-3">
 								<Link
-									href="/signup"
+									href="/auth/signup"
 									className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
 								>
 									Get Started

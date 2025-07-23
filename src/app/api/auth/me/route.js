@@ -1,5 +1,5 @@
-import dbConnect from "../../../../lib/mongodb";
-import auth from "../../../../lib/auth";
+import dbConnect from "@/lib/mongodb";
+import auth from "@/lib/auth";
 
 export async function GET(req) {
 	await dbConnect();

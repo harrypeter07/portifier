@@ -13,7 +13,7 @@ export default function Dashboard() {
 				const data = await res.json();
 				setUser(data.user);
 			} else {
-				router.push("/signin");
+				router.push("/auth/signin");
 			}
 		}
 		fetchUser();

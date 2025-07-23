@@ -1,5 +1,5 @@
-import dbConnect from "../../../../lib/mongodb";
-import User from "../../../../models/User";
+import dbConnect from "@/lib/mongodb";
+import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";

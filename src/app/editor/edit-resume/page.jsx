@@ -33,7 +33,6 @@ export default function EditResumePage() {
 			restoreFromParsed();
 			return;
 		}
-		console.log('Initial content:', content);
 		// Initialize with existing content or defaults
 		setFormData({
 			hero: content.hero || { title: "", subtitle: "" },
@@ -49,10 +48,16 @@ export default function EditResumePage() {
 			skills: content.skills || { technical: [], soft: [] },
 			showcase: content.showcase || { projects: "" },
 			achievements: content.achievements || { awards: [] },
-			languages: content.languages || [],
+			languages: Array.isArray(content.languages)
+				? content.languages.map(String)
+				: typeof content.languages === "string"
+				? content.languages
+						.split(",")
+						.map((s) => s.trim())
+						.filter(Boolean)
+				: [],
 			hobbies: content.hobbies || [],
 		});
-		console.log('Form data initialized:', formData);
 	}, [content, parsedData, restoreFromParsed]);
 
 	const handleInputChange = (section, field, value) => {
@@ -177,7 +182,7 @@ export default function EditResumePage() {
 								placeholder="Email Address"
 								value={formData.contact?.email || ""}
 								onChange={(e) => {
-									handleInputChange("contact", "email", e.target.value)
+									handleInputChange("contact", "email", e.target.value);
 								}}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
 							/>
@@ -228,7 +233,7 @@ export default function EditResumePage() {
 					{/* Experience */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Work Experience</h2>
-						{(formData.experience?.jobs || []).map((job, index) =>
+						{(formData.experience?.jobs || []).map((job, index) => (
 							<div
 								key={index}
 								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
@@ -291,7 +296,7 @@ export default function EditResumePage() {
 									Remove Job
 								</button>
 							</div>
-							)}
+						))}
 						<button
 							type="button"
 							onClick={addJob}
@@ -304,7 +309,7 @@ export default function EditResumePage() {
 					{/* Education */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Education</h2>
-						{(formData.education?.degrees || []).map((degree, index) =>
+						{(formData.education?.degrees || []).map((degree, index) => (
 							<div
 								key={index}
 								className="mb-4 p-4 border rounded-lg dark:border-gray-600"
@@ -355,7 +360,7 @@ export default function EditResumePage() {
 									Remove Education
 								</button>
 							</div>
-							)}
+						))}
 						<button
 							type="button"
 							onClick={addDegree}
@@ -480,12 +485,13 @@ export default function EditResumePage() {
 								const Component = componentMap[componentName];
 								if (!Component) return null;
 
-								// Handle different data structures for different components
 								let componentProps = formData[section] || {};
-
 								// Ensure no null values for inputs
-								Object.keys(componentProps).forEach(key => {
-									if (componentProps[key] === null || componentProps[key] === undefined) {
+								Object.keys(componentProps).forEach((key) => {
+									if (
+										componentProps[key] === null ||
+										componentProps[key] === undefined
+									) {
 										componentProps[key] = "";
 									}
 								});
@@ -494,7 +500,6 @@ export default function EditResumePage() {
 								if (section === "projects" && formData[section]?.items) {
 									componentProps = { items: formData[section].items };
 								}
-
 								// For skills section, flatten the structure
 								if (section === "skills" && formData[section]) {
 									componentProps = {
@@ -503,7 +508,6 @@ export default function EditResumePage() {
 										languages: formData[section].languages || [],
 									};
 								}
-
 								// For achievements section, flatten the structure
 								if (section === "achievements" && formData[section]) {
 									componentProps = {
@@ -512,15 +516,21 @@ export default function EditResumePage() {
 										publications: formData[section].publications || [],
 									};
 								}
-
 								// For experience section, flatten the structure
 								if (section === "experience" && formData[section]?.jobs) {
 									componentProps = { jobs: formData[section].jobs };
 								}
-
 								// For education section, flatten the structure
 								if (section === "education" && formData[section]?.degrees) {
 									componentProps = { degrees: formData[section].degrees };
+								}
+
+								if (section === "hero") {
+									return (
+										<div key={section} className="mb-8 last:mb-0">
+											<Component data={formData.hero} />
+										</div>
+									);
 								}
 
 								return (

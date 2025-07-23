@@ -1,5 +1,5 @@
-import dbConnect from "../../../../lib/mongodb";
-import User from "../../../../models/User";
+import dbConnect from "@/lib/mongodb";
+import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -30,15 +30,15 @@ export async function POST(req) {
 		expiresIn: "7d",
 	});
 	// Set cookie with proper attributes based on environment
-	const isProduction = process.env.NODE_ENV === 'production';
+	const isProduction = process.env.NODE_ENV === "production";
 	const cookieOptions = [
 		`token=${token}`,
-		'HttpOnly',
-		'Path=/',
-		'Max-Age=604800', // 7 days
-		'SameSite=Lax', // Allow same-site requests and top-level navigation
-		...(isProduction ? ['Secure'] : []) // Only use Secure in production (HTTPS)
-	].join('; ');
+		"HttpOnly",
+		"Path=/",
+		"Max-Age=604800", // 7 days
+		"SameSite=Lax", // Allow same-site requests and top-level navigation
+		...(isProduction ? ["Secure"] : []), // Only use Secure in production (HTTPS)
+	].join("; ");
 
 	return new Response(
 		JSON.stringify({

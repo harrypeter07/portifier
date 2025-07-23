@@ -14,7 +14,6 @@ export async function POST(req) {
 
 	try {
 		const requestData = await req.json();
-		console.log("📥 Received save request:", Object.keys(requestData));
 
 		// Handle both new schema format and legacy format
 		const {
@@ -41,21 +40,17 @@ export async function POST(req) {
 		if (portfolioData) {
 			// New schema format - use directly
 			finalPortfolioData = portfolioData;
-			console.log("📊 Using new schema format");
 		} else if (content) {
 			// Legacy format - transform to new schema
 			finalPortfolioData = transformLegacyDataToSchema(content, layout);
-			console.log("🔄 Transformed legacy format to new schema");
 		} else {
 			// No data provided - use empty portfolio
 			finalPortfolioData = JSON.parse(JSON.stringify(EMPTY_PORTFOLIO));
-			console.log("📝 Using empty portfolio template");
 		}
 
 		// Validate portfolio data
 		const validation = validatePortfolioData(finalPortfolioData);
 		if (!validation.isValid) {
-			console.log("⚠️  Portfolio validation warnings:", validation.errors);
 			// Continue saving but log warnings
 		}
 
@@ -70,10 +65,8 @@ export async function POST(req) {
 			const user = await User.findOne({ email: userEmail });
 			if (user) {
 				userId = user._id;
-				console.log("👤 Found existing user:", userEmail);
 			} else {
 				// Create a temporary user if not found (for demo purposes)
-				console.log("👤 Creating new user for email:", userEmail);
 				const newUser = new User({
 					email: userEmail,
 					name: finalPortfolioData.personal?.firstName
@@ -87,7 +80,6 @@ export async function POST(req) {
 			}
 		} else {
 			// Fallback: use a default user ID for demo
-			console.log("⚠️  No email provided, using demo user");
 			const demoUser = await User.findOne({ email: "demo@example.com" });
 			if (demoUser) {
 				userId = demoUser._id;
@@ -118,11 +110,6 @@ export async function POST(req) {
 		if (username) updateData.username = username;
 		if (slug) updateData.slug = slug;
 
-		console.log(
-			"💾 Saving portfolio with update data keys:",
-			Object.keys(updateData)
-		);
-
 		// Upsert portfolio for user
 		const portfolio = await Portfolio.findOneAndUpdate({ userId }, updateData, {
 			upsert: true,
@@ -132,14 +119,6 @@ export async function POST(req) {
 
 		// Calculate completeness
 		const completeness = portfolio.calculateCompleteness();
-
-		console.log(`✅ Portfolio saved successfully for user: ${userId}`);
-		console.log(`📊 Portfolio completeness: ${completeness}%`);
-		console.log(
-			`🔗 Portfolio will be accessible at: /${
-				portfolio.username || portfolio.slug || portfolio._id
-			}`
-		);
 
 		return NextResponse.json({
 			success: true,
@@ -152,7 +131,6 @@ export async function POST(req) {
 			},
 		});
 	} catch (err) {
-		console.error("❌ Error saving portfolio:", err);
 		return NextResponse.json({ error: err.message }, { status: 500 });
 	}
 }
