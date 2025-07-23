@@ -20,7 +20,7 @@ export default function EditResumePage() {
 		experience: { jobs: [] },
 		education: { degrees: [] },
 		skills: { technical: [], soft: [] },
-		showcase: { projects: "" },
+		projects: { items: [] },
 		achievements: { awards: [] },
 		languages: [],
 		hobbies: [],
@@ -46,7 +46,7 @@ export default function EditResumePage() {
 			experience: content.experience || { jobs: [] },
 			education: content.education || { degrees: [] },
 			skills: content.skills || { technical: [], soft: [] },
-			showcase: content.showcase || { projects: "" },
+			projects: content.projects || { items: [] },
 			achievements: content.achievements || { awards: [] },
 			languages: Array.isArray(content.languages)
 				? content.languages.map(String)
@@ -117,6 +117,44 @@ export default function EditResumePage() {
 			institution: "",
 			year: "",
 		});
+	};
+
+	const handleProjectChange = (index, field, value) => {
+		setFormData((prev) => ({
+			...prev,
+			projects: {
+				...prev.projects,
+				items: prev.projects.items.map((item, i) =>
+					i === index ? { ...item, [field]: value } : item
+				),
+			},
+		}));
+	};
+	const addProject = () => {
+		setFormData((prev) => ({
+			...prev,
+			projects: {
+				...prev.projects,
+				items: [
+					...prev.projects.items,
+					{
+						title: "",
+						description: "",
+						github: "",
+						url: "",
+					},
+				],
+			},
+		}));
+	};
+	const removeProject = (index) => {
+		setFormData((prev) => ({
+			...prev,
+			projects: {
+				...prev.projects,
+				items: prev.projects.items.filter((_, i) => i !== index),
+			},
+		}));
 	};
 
 	const handleSave = () => {
@@ -420,15 +458,65 @@ export default function EditResumePage() {
 					{/* Projects */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Projects</h2>
-						<textarea
-							placeholder="Describe your key projects..."
-							value={formData.showcase?.projects || ""}
-							onChange={(e) =>
-								handleInputChange("showcase", "projects", e.target.value)
-							}
-							rows={4}
-							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-						/>
+						{(formData.projects?.items || []).map((project, index) => (
+							<div
+								key={index}
+								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
+							>
+								<div className="grid grid-cols-1 gap-3 mb-3">
+									<input
+										type="text"
+										placeholder="Project Title"
+										value={project?.title || ""}
+										onChange={(e) =>
+											handleProjectChange(index, "title", e.target.value)
+										}
+										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<textarea
+										placeholder="Project Description"
+										value={project?.description || ""}
+										onChange={(e) =>
+											handleProjectChange(index, "description", e.target.value)
+										}
+										rows={2}
+										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<input
+										type="url"
+										placeholder="GitHub Link"
+										value={project?.github || ""}
+										onChange={(e) =>
+											handleProjectChange(index, "github", e.target.value)
+										}
+										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<input
+										type="url"
+										placeholder="Live URL"
+										value={project?.url || ""}
+										onChange={(e) =>
+											handleProjectChange(index, "url", e.target.value)
+										}
+										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+								</div>
+								<button
+									type="button"
+									onClick={() => removeProject(index)}
+									className="text-red-600 hover:text-red-800"
+								>
+									Remove Project
+								</button>
+							</div>
+						))}
+						<button
+							type="button"
+							onClick={addProject}
+							className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+						>
+							Add Project
+						</button>
 					</div>
 
 					{/* Languages */}
@@ -484,21 +572,27 @@ export default function EditResumePage() {
 							Object.entries(layout).map(([section, componentName]) => {
 								const Component = componentMap[componentName];
 								if (!Component) return null;
-
 								let componentProps = formData[section] || {};
 								// Ensure no null values for inputs
-								Object.keys(componentProps).forEach((key) => {
-									if (
-										componentProps[key] === null ||
-										componentProps[key] === undefined
-									) {
-										componentProps[key] = "";
-									}
-								});
-
+								if (componentProps && typeof componentProps === "object") {
+									Object.keys(componentProps).forEach((key) => {
+										if (
+											componentProps[key] === null ||
+											componentProps[key] === undefined
+										) {
+											componentProps[key] = "";
+										}
+									});
+								}
 								// For projects section, handle the new schema structure
 								if (section === "projects" && formData[section]?.items) {
-									componentProps = { items: formData[section].items };
+									// Map 'title' to 'name' for ShowcaseA compatibility
+									componentProps = {
+										items: formData[section].items.map((item) => ({
+											...item,
+											name: item.title || "",
+										})),
+									};
 								}
 								// For skills section, flatten the structure
 								if (section === "skills" && formData[section]) {
@@ -524,7 +618,6 @@ export default function EditResumePage() {
 								if (section === "education" && formData[section]?.degrees) {
 									componentProps = { degrees: formData[section].degrees };
 								}
-
 								if (section === "hero") {
 									return (
 										<div key={section} className="mb-8 last:mb-0">
@@ -532,7 +625,6 @@ export default function EditResumePage() {
 										</div>
 									);
 								}
-
 								return (
 									<div key={section} className="mb-8 last:mb-0">
 										<Component {...componentProps} />
