@@ -114,6 +114,97 @@ src/
 - **Preview:** Reads from Zustand and passes the correct props to each section/component.
 - **Component Map:** Ensures the right React component is used for each section, based on the current layout/template.
 
+### 6. Adding Full-Page Portfolio Templates
+
+You can use fully coded, single-page portfolio templates (not just section components) in your system. Here’s how:
+
+#### A. Where to Add Full Templates
+
+- Place your full template component in `src/components/FullTemplates/` (recommended) or as a page in `src/app/templates/`.
+- Example:
+  ```
+  src/components/FullTemplates/
+    CleanfolioFull.jsx
+    AnimatedPortfolio.jsx
+    ...
+  ```
+
+#### B. Registering the Template
+
+- In `src/data/templates/templateManager.js`, add an entry for your full template:
+  ```js
+  import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
+  // ...
+  export const PORTFOLIO_TEMPLATES = {
+  	cleanfolio: {
+  		id: "cleanfolio",
+  		name: "Cleanfolio (Full Page)",
+  		type: "full", // mark as full template
+  		component: CleanfolioFull, // reference the full template component
+  		// ...other fields
+  	},
+  	// ...other templates
+  };
+  ```
+
+#### C. How Full Templates Get Data
+
+- Your full template component should accept a single `data` prop (the entire portfolio data object matching your schema):
+  ```jsx
+  export default function CleanfolioFull({ data }) {
+  	// Use data.hero, data.projects, data.skills, etc.
+  	return (
+  		<main>
+  			<header>{data.hero.title}</header>
+  			{/* ...render all sections using data... */}
+  		</main>
+  	);
+  }
+  ```
+- When rendering a full template, pass the entire portfolio data from Zustand:
+
+  ```jsx
+  import { useLayoutStore } from "@/store/layoutStore";
+  import { getTemplate } from "@/data/templates/templateManager";
+
+  const { portfolioData, currentTemplate } = useLayoutStore();
+  const TemplateComponent = currentTemplate?.component;
+
+  return TemplateComponent ? (
+  	<TemplateComponent data={portfolioData} />
+  ) : (
+  	<div>Select a template</div>
+  );
+  ```
+
+#### D. Customization
+
+- The user customizes their data in the editor as usual.
+- The full template component should use the data fields (not hardcoded content), so any changes in the editor are reflected in the preview and final output.
+- For per-section overrides, add logic in your full template to optionally render a different component if specified.
+
+#### E. Supporting Both Section-Based and Full-Page Templates
+
+- In your template manager, distinguish between:
+  - **Section-based templates:** Use the `layout` object to map sections to components.
+  - **Full-page templates:** Use a `component` field to render the whole page at once.
+- In your editor/preview logic, check the template type:
+  ```js
+  if (currentTemplate.type === "full" && currentTemplate.component) {
+  	// Render the full template with all data
+  	return <currentTemplate.component data={portfolioData} />;
+  } else {
+  	// Render section-based layout as before
+  }
+  ```
+
+#### F. Summary Table
+
+| Type               | Where to Add Code                                                    | How Data is Passed       | How to Register in TemplateManager |
+| ------------------ | -------------------------------------------------------------------- | ------------------------ | ---------------------------------- |
+| Section Component  | `src/components/Section/SectionX.jsx`                                | As props to each section | In `componentMap.js` and `layout`  |
+| Full Page Template | `src/components/FullTemplates/TemplateX.jsx` or `src/app/templates/` | As a single `data` prop  | As `component` in templateManager  |
+
 ---
 
 For further customization or questions, see the code comments or ask your team lead.
