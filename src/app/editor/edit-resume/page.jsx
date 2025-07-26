@@ -177,6 +177,43 @@ export default function EditResumePage() {
 		router.push("/preview/live");
 	};
 
+	// Add AIHelpButton component at the top
+	function AIHelpButton({ section, field, value, onAIResult, label }) {
+		// Placeholder for AI call
+		const [loading, setLoading] = useState(false);
+		const [error, setError] = useState("");
+
+		async function handleClick() {
+			setLoading(true);
+			setError("");
+			try {
+				// TODO: Replace with real AI call
+				// Simulate AI suggestion
+				const aiSuggestion = `AI suggestion for ${label || field}`;
+				setTimeout(() => {
+					onAIResult(aiSuggestion);
+					setLoading(false);
+				}, 800);
+			} catch (e) {
+				setError("AI suggestion failed");
+				setLoading(false);
+			}
+		}
+
+		return (
+			<button
+				type="button"
+				onClick={handleClick}
+				disabled={loading}
+				title={`Get AI suggestion for ${label || field}`}
+				className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 border border-blue-300 disabled:opacity-60"
+				style={{ verticalAlign: 'middle' }}
+			>
+				{loading ? "..." : "🤖 AI Help"}
+			</button>
+		);
+	}
+
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
 			<div className="flex">
@@ -199,6 +236,13 @@ export default function EditResumePage() {
 								}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
 							/>
+							<AIHelpButton
+								section="hero"
+								field="title"
+								value={formData.hero?.title || ""}
+								label="Full Name"
+								onAIResult={(aiValue) => handleInputChange("hero", "title", aiValue)}
+							/>
 							<input
 								type="text"
 								placeholder="Professional Title (e.g., Software Developer)"
@@ -207,6 +251,13 @@ export default function EditResumePage() {
 									handleInputChange("hero", "subtitle", e.target.value)
 								}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="hero"
+								field="subtitle"
+								value={formData.hero?.subtitle || ""}
+								label="Professional Title"
+								onAIResult={(aiValue) => handleInputChange("hero", "subtitle", aiValue)}
 							/>
 						</div>
 					</div>
@@ -224,6 +275,13 @@ export default function EditResumePage() {
 								}}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
 							/>
+							<AIHelpButton
+								section="contact"
+								field="email"
+								value={formData.contact?.email || ""}
+								label="Email Address"
+								onAIResult={(aiValue) => handleInputChange("contact", "email", aiValue)}
+							/>
 							<input
 								type="tel"
 								placeholder="Phone Number"
@@ -232,6 +290,13 @@ export default function EditResumePage() {
 									handleInputChange("contact", "phone", e.target.value)
 								}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="contact"
+								field="phone"
+								value={formData.contact?.phone || ""}
+								label="Phone Number"
+								onAIResult={(aiValue) => handleInputChange("contact", "phone", aiValue)}
 							/>
 							<input
 								type="text"
@@ -242,6 +307,13 @@ export default function EditResumePage() {
 								}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
 							/>
+							<AIHelpButton
+								section="contact"
+								field="location"
+								value={formData.contact?.location || ""}
+								label="Location"
+								onAIResult={(aiValue) => handleInputChange("contact", "location", aiValue)}
+							/>
 							<input
 								type="url"
 								placeholder="LinkedIn Profile"
@@ -250,6 +322,13 @@ export default function EditResumePage() {
 									handleInputChange("contact", "linkedin", e.target.value)
 								}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="contact"
+								field="linkedin"
+								value={formData.contact?.linkedin || ""}
+								label="LinkedIn Profile"
+								onAIResult={(aiValue) => handleInputChange("contact", "linkedin", aiValue)}
 							/>
 						</div>
 					</div>
@@ -265,6 +344,13 @@ export default function EditResumePage() {
 							}
 							rows={4}
 							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+						/>
+						<AIHelpButton
+							section="about"
+							field="summary"
+							value={formData.about?.summary || ""}
+							label="Professional Summary"
+							onAIResult={(aiValue) => handleInputChange("about", "summary", aiValue)}
 						/>
 					</div>
 
@@ -289,6 +375,15 @@ export default function EditResumePage() {
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
 									/>
+									<AIHelpButton
+										section="experience"
+										field="jobs"
+										index={index}
+										field="title"
+										value={job?.title || ""}
+										label="Job Title"
+										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, title: aiValue })}
+									/>
 									<input
 										type="text"
 										placeholder="Company Name"
@@ -300,6 +395,15 @@ export default function EditResumePage() {
 											})
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="experience"
+										field="jobs"
+										index={index}
+										field="company"
+										value={job?.company || ""}
+										label="Company Name"
+										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, company: aiValue })}
 									/>
 									<input
 										type="text"
@@ -313,6 +417,15 @@ export default function EditResumePage() {
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
 									/>
+									<AIHelpButton
+										section="experience"
+										field="jobs"
+										index={index}
+										field="duration"
+										value={job?.duration || ""}
+										label="Duration"
+										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, duration: aiValue })}
+									/>
 									<textarea
 										placeholder="Job Description"
 										value={job?.description || ""}
@@ -324,6 +437,15 @@ export default function EditResumePage() {
 										}
 										rows={3}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="experience"
+										field="jobs"
+										index={index}
+										field="description"
+										value={job?.description || ""}
+										label="Job Description"
+										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, description: aiValue })}
 									/>
 								</div>
 								<button
@@ -365,6 +487,15 @@ export default function EditResumePage() {
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
 									/>
+									<AIHelpButton
+										section="education"
+										field="degrees"
+										index={index}
+										field="degree"
+										value={degree?.degree || ""}
+										label="Degree"
+										onAIResult={(aiValue) => handleArrayChange("education", "degrees", index, { ...degree, degree: aiValue })}
+									/>
 									<input
 										type="text"
 										placeholder="Institution Name"
@@ -377,6 +508,15 @@ export default function EditResumePage() {
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
 									/>
+									<AIHelpButton
+										section="education"
+										field="degrees"
+										index={index}
+										field="institution"
+										value={degree?.institution || ""}
+										label="Institution Name"
+										onAIResult={(aiValue) => handleArrayChange("education", "degrees", index, { ...degree, institution: aiValue })}
+									/>
 									<input
 										type="text"
 										placeholder="Year (e.g., 2020-2024)"
@@ -388,6 +528,15 @@ export default function EditResumePage() {
 											})
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="education"
+										field="degrees"
+										index={index}
+										field="year"
+										value={degree?.year || ""}
+										label="Year"
+										onAIResult={(aiValue) => handleArrayChange("education", "degrees", index, { ...degree, year: aiValue })}
 									/>
 								</div>
 								<button
@@ -431,6 +580,13 @@ export default function EditResumePage() {
 								rows={3}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
 							/>
+							<AIHelpButton
+								section="skills"
+								field="technical"
+								value={(formData.skills?.technical || []).join(", ")}
+								label="Technical Skills"
+								onAIResult={(aiValue) => handleInputChange("skills", "technical", aiValue.split(",").map(s => s.trim()).filter(s => s))}
+							/>
 						</div>
 						<div>
 							<label className="block text-sm font-medium mb-2">
@@ -451,6 +607,13 @@ export default function EditResumePage() {
 								}
 								rows={3}
 								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="skills"
+								field="soft"
+								value={(formData.skills?.soft || []).join(", ")}
+								label="Soft Skills"
+								onAIResult={(aiValue) => handleInputChange("skills", "soft", aiValue.split(",").map(s => s.trim()).filter(s => s))}
 							/>
 						</div>
 					</div>
@@ -473,6 +636,15 @@ export default function EditResumePage() {
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
 									/>
+									<AIHelpButton
+										section="projects"
+										field="items"
+										index={index}
+										field="title"
+										value={project?.title || ""}
+										label="Project Title"
+										onAIResult={(aiValue) => handleProjectChange(index, "title", aiValue)}
+									/>
 									<textarea
 										placeholder="Project Description"
 										value={project?.description || ""}
@@ -481,6 +653,15 @@ export default function EditResumePage() {
 										}
 										rows={2}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="projects"
+										field="items"
+										index={index}
+										field="description"
+										value={project?.description || ""}
+										label="Project Description"
+										onAIResult={(aiValue) => handleProjectChange(index, "description", aiValue)}
 									/>
 									<input
 										type="url"
@@ -491,6 +672,15 @@ export default function EditResumePage() {
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
 									/>
+									<AIHelpButton
+										section="projects"
+										field="items"
+										index={index}
+										field="github"
+										value={project?.github || ""}
+										label="GitHub Link"
+										onAIResult={(aiValue) => handleProjectChange(index, "github", aiValue)}
+									/>
 									<input
 										type="url"
 										placeholder="Live URL"
@@ -499,6 +689,15 @@ export default function EditResumePage() {
 											handleProjectChange(index, "url", e.target.value)
 										}
 										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="projects"
+										field="items"
+										index={index}
+										field="url"
+										value={project?.url || ""}
+										label="Live URL"
+										onAIResult={(aiValue) => handleProjectChange(index, "url", aiValue)}
 									/>
 								</div>
 								<button
@@ -536,6 +735,13 @@ export default function EditResumePage() {
 							}
 							rows={2}
 							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+						/>
+						<AIHelpButton
+							section="languages"
+							field="languages"
+							value={(formData.languages || []).join(", ")}
+							label="Languages"
+							onAIResult={(aiValue) => setFormData((prev) => ({ ...prev, languages: aiValue.split(",").map(s => s.trim()).filter(s => s) }))}
 						/>
 					</div>
 
