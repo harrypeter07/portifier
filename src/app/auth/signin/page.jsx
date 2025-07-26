@@ -18,6 +18,9 @@ export default function Signin() {
 			if (params.get("verified")) {
 				setVerifiedMsg("Your email has been verified! You can now sign in.");
 			}
+			if (params.get("error")) {
+				setError(params.get("error"));
+			}
 		}
 	}, []);
 
@@ -31,31 +34,7 @@ export default function Signin() {
 		checkLoggedIn();
 	}, [router]);
 
-	async function handleSubmit(e) {
-		e.preventDefault();
-		setError("");
-		setLoading(true);
-		const res = await fetch("/api/auth/signin", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(form),
-		});
-		const data = await res.json();
-		setLoading(false);
-		if (res.ok) {
-			if (data.user) {
-				router.push("/dashboard");
-			} else {
-				setError("Unexpected response from server. Please try again.");
-			}
-		} else {
-			if (data && data.error) {
-				setError(data.error);
-			} else {
-				setError("Signin failed");
-			}
-		}
-	}
+	// Remove handleSubmit and fetch logic
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900 flex items-center justify-center p-4">
@@ -94,8 +73,8 @@ export default function Signin() {
 						</div>
 					)}
 
-					{/* Form */}
-					<form onSubmit={handleSubmit} className="space-y-6">
+					{/* Form - use traditional POST */}
+					<form method="POST" action="/api/auth/signin" className="space-y-6">
 						{/* Email Field */}
 						<div>
 							<label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -109,13 +88,13 @@ export default function Signin() {
 								</div>
 								<input
 									id="email"
+									name="email"
 									required
 									type="email"
 									placeholder="Enter your email"
 									className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
 									value={form.email}
 									onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-									disabled={loading}
 								/>
 							</div>
 						</div>
@@ -133,13 +112,13 @@ export default function Signin() {
 								</div>
 								<input
 									id="password"
+									name="password"
 									required
 									type={showPassword ? "text" : "password"}
 									placeholder="Enter your password"
 									className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
 									value={form.password}
 									onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-									disabled={loading}
 								/>
 								<button
 									type="button"
@@ -172,17 +151,9 @@ export default function Signin() {
 						{/* Submit Button */}
 						<button
 							type="submit"
-							disabled={loading}
-							className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-60 disabled:transform-none disabled:hover:shadow-lg"
+							className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300"
 						>
-							{loading ? (
-								<div className="flex items-center justify-center">
-									<div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
-									Signing In...
-								</div>
-							) : (
-								"Sign In"
-							)}
+							Sign In
 						</button>
 					</form>
 
