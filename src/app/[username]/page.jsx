@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { componentMap } from "@/data/componentMap";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
+import Preview from "@/components/Preview";
 
 export default function PortfolioPage() {
 	const params = useParams();
@@ -56,22 +57,7 @@ export default function PortfolioPage() {
 
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
-			{/* Render each section based on layout */}
-			{Object.entries(layout).map(([section, componentName], index) => {
-				const Component = componentMap[componentName];
-				if (!Component) return null;
-				return (
-					<motion.div
-						key={section}
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ delay: index * 0.1 }}
-						className="mb-8"
-					>
-						<Component data={dataToUse[section]} />
-					</motion.div>
-				);
-			})}
+			<Preview layout={layout} content={content} portfolioData={portfolioData} />
 		</div>
 	);
 }
