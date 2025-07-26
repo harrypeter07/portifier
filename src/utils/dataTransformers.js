@@ -772,9 +772,11 @@ const calculateCompleteness = (data) => {
 	return Math.round((completedWeight / totalWeight) * 100);
 };
 
-export default {
+const DataTransformers = {
 	transformParsedResumeToSchema,
 	transformLegacyDataToSchema,
 	transformSchemaToComponentProps,
 	validatePortfolioData,
 };
+
+export default DataTransformers;

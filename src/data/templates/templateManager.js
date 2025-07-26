@@ -161,7 +161,7 @@ export const validateTemplate = (template) => {
 	};
 };
 
-export default {
+const TemplateManager = {
 	PORTFOLIO_TEMPLATES,
 	getTemplate,
 	getAllTemplates,
@@ -170,3 +170,5 @@ export default {
 	mergeTemplateWithData,
 	validateTemplate,
 };
+
+export default TemplateManager;
