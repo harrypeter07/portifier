@@ -17,11 +17,6 @@ export async function POST(req) {
 		return new Response(JSON.stringify({ error: "User not found" }), {
 			status: 404,
 		});
-	// if (!user.verified)
-	//  return new Response(
-	//      JSON.stringify({ error: "Please verify your email before signing in." }),
-	//      { status: 403 }
-	//  );
 	const valid = await bcrypt.compare(password, user.password);
 	if (!valid)
 		return new Response(JSON.stringify({ error: "Invalid credentials" }), {
@@ -31,8 +26,9 @@ export async function POST(req) {
 		expiresIn: "7d",
 	});
 
-	// Set cookie using Next.js cookies API
-	cookies().set("token", token, {
+	// Await cookies() as required by Next.js dynamic API
+	const cookieStore = await cookies();
+	cookieStore.set("token", token, {
 		httpOnly: true,
 		sameSite: "lax",
 		path: "/",
