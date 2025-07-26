@@ -54,7 +54,7 @@ export default function LivePreviewPage() {
 
 						// For hero section, always use portfolioData
 						if (section === "hero") {
-							componentProps = { data: portfolioData };
+							componentProps = { data: portfolioData.personal };
 						}
 
 						// For about section
