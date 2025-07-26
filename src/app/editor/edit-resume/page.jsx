@@ -15,8 +15,8 @@ export default function EditResumePage() {
 		setAllContent,
 	} = useLayoutStore();
 	const [formData, setFormData] = useState({
-		hero: { title: "", subtitle: "" },
-		about: { summary: "" },
+		hero: { title: "", subtitle: "", tagline: "", availability: "" },
+		about: { summary: "", bio: "", interests: [], personalValues: [], funFacts: [] },
 		contact: { email: "", phone: "", location: "", linkedin: "" },
 		experience: { jobs: [] },
 		education: { degrees: [] },
@@ -36,8 +36,19 @@ export default function EditResumePage() {
 		}
 		// Initialize with existing content or defaults
 		setFormData({
-			hero: content.hero || { title: "", subtitle: "" },
-			about: content.about || { summary: "" },
+			hero: {
+				title: content.hero?.title || "",
+				subtitle: content.hero?.subtitle || "",
+				tagline: content.hero?.tagline || "",
+				availability: content.hero?.availability || "",
+			},
+			about: {
+				summary: content.about?.summary || "",
+				bio: content.about?.bio || "",
+				interests: content.about?.interests || [],
+				personalValues: content.about?.personalValues || [],
+				funFacts: content.about?.funFacts || [],
+			},
 			contact: content.contact || {
 				email: "",
 				phone: "",
@@ -260,6 +271,34 @@ export default function EditResumePage() {
 								label="Professional Title"
 								onAIResult={(aiValue) => handleInputChange("hero", "subtitle", aiValue)}
 							/>
+							<input
+								type="text"
+								placeholder="Tagline (e.g., Passionate Coder, Creative Designer)"
+								value={formData.hero?.tagline || ""}
+								onChange={(e) => handleInputChange("hero", "tagline", e.target.value)}
+								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="hero"
+								field="tagline"
+								value={formData.hero?.tagline || ""}
+								label="Tagline"
+								onAIResult={(aiValue) => handleInputChange("hero", "tagline", aiValue)}
+							/>
+							<input
+								type="text"
+								placeholder="Availability (e.g., Open to work, Freelance only)"
+								value={formData.hero?.availability || ""}
+								onChange={(e) => handleInputChange("hero", "availability", e.target.value)}
+								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="hero"
+								field="availability"
+								value={formData.hero?.availability || ""}
+								label="Availability"
+								onAIResult={(aiValue) => handleInputChange("hero", "availability", aiValue)}
+							/>
 						</div>
 					</div>
 
@@ -334,9 +373,9 @@ export default function EditResumePage() {
 						</div>
 					</div>
 
-					{/* Professional Summary */}
+					{/* Professional Summary & About */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Professional Summary</h2>
+						<h2 className="text-xl font-semibold mb-4">Professional Summary & About</h2>
 						<textarea
 							placeholder="Write a brief professional summary about yourself..."
 							value={formData.about?.summary || ""}
@@ -352,6 +391,62 @@ export default function EditResumePage() {
 							value={formData.about?.summary || ""}
 							label="Professional Summary"
 							onAIResult={(aiValue) => handleInputChange("about", "summary", aiValue)}
+						/>
+						<textarea
+							placeholder="Bio (detailed background, story, or philosophy)"
+							value={formData.about?.bio || ""}
+							onChange={(e) => handleInputChange("about", "bio", e.target.value)}
+							rows={3}
+							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
+						/>
+						<AIHelpButton
+							section="about"
+							field="bio"
+							value={formData.about?.bio || ""}
+							label="Bio"
+							onAIResult={(aiValue) => handleInputChange("about", "bio", aiValue)}
+						/>
+						<input
+							type="text"
+							placeholder="Interests (comma-separated)"
+							value={(formData.about?.interests || []).join(", ")}
+							onChange={(e) => handleInputChange("about", "interests", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
+						/>
+						<AIHelpButton
+							section="about"
+							field="interests"
+							value={(formData.about?.interests || []).join(", ")}
+							label="Interests"
+							onAIResult={(aiValue) => handleInputChange("about", "interests", aiValue.split(",").map(s => s.trim()).filter(Boolean))}
+						/>
+						<input
+							type="text"
+							placeholder="Personal Values (comma-separated)"
+							value={(formData.about?.personalValues || []).join(", ")}
+							onChange={(e) => handleInputChange("about", "personalValues", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
+						/>
+						<AIHelpButton
+							section="about"
+							field="personalValues"
+							value={(formData.about?.personalValues || []).join(", ")}
+							label="Personal Values"
+							onAIResult={(aiValue) => handleInputChange("about", "personalValues", aiValue.split(",").map(s => s.trim()).filter(Boolean))}
+						/>
+						<input
+							type="text"
+							placeholder="Fun Facts (comma-separated)"
+							value={(formData.about?.funFacts || []).join(", ")}
+							onChange={(e) => handleInputChange("about", "funFacts", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
+						/>
+						<AIHelpButton
+							section="about"
+							field="funFacts"
+							value={(formData.about?.funFacts || []).join(", ")}
+							label="Fun Facts"
+							onAIResult={(aiValue) => handleInputChange("about", "funFacts", aiValue.split(",").map(s => s.trim()).filter(Boolean))}
 						/>
 					</div>
 
@@ -804,17 +899,28 @@ export default function EditResumePage() {
 									componentProps = { degrees: formData[section].degrees };
 								}
 								if (section === "hero") {
-									// Map formData.hero.title to firstName for compatibility
 									const heroData = formData.hero || {};
 									const personalData = {
 										firstName: heroData.title || "",
 										lastName: "",
 										subtitle: heroData.subtitle || "",
-										// Add other fields if needed
+										tagline: heroData.tagline || "",
+										availability: heroData.availability || "",
 									};
 									return (
 										<div key={section} className="mb-8 last:mb-0">
 											<Component data={personalData} />
+										</div>
+									);
+								}
+								if (section === "about") {
+									const aboutData = formData.about || {};
+									return (
+										<div key={section} className="mb-8 last:mb-0">
+											<Component
+												summary={aboutData.summary || ""}
+												data={{ about: aboutData }}
+											/>
 										</div>
 									);
 								}
