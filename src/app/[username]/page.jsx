@@ -53,7 +53,7 @@ export default function PortfolioPage() {
 	const { layout, content, portfolioData } = portfolio;
 
 	// Use portfolioData if available, fallback to content
-	const dataToUse = portfolioData || {};
+	// const dataToUse = portfolioData || {};
 
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
