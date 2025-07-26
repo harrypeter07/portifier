@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
+import Preview from "@/components/Preview";
 
 export default function EditResumePage() {
 	const {

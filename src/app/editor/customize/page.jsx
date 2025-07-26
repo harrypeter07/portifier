@@ -3,6 +3,7 @@ import { useLayoutStore } from "@/store/layoutStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
+import Preview from "@/components/Preview";
 
 // Mock parsed resume data (in real app, get from upload step or API)
 const MOCK_RESUME = {
@@ -191,57 +192,7 @@ export default function CustomizePage() {
 					<h2 className="text-xl font-semibold">Live Preview</h2>
 				</div>
 				<div className="p-4">
-					{Object.entries(layout).map(([section, componentName]) => {
-						const Component = componentMap[componentName];
-						if (!Component) return null;
-
-						// Handle different data structures for different components
-						let componentProps = localContent[section] || {};
-
-// For hero section, pass localContent.hero as personal data in the expected structure
-if (section === "hero") {
-    componentProps = { data: { personal: localContent.hero } };
-}
-
-// For projects section, handle the new schema structure
-if (section === "projects" && localContent[section]?.items) {
-    componentProps = { items: localContent[section].items };
-}
-
-						// For skills section, flatten the structure
-						if (section === "skills" && localContent[section]) {
-							componentProps = {
-								technical: localContent[section].technical || [],
-								soft: localContent[section].soft || [],
-								languages: localContent[section].languages || [],
-							};
-						}
-
-						// For achievements section, flatten the structure
-						if (section === "achievements" && localContent[section]) {
-							componentProps = {
-								awards: localContent[section].awards || [],
-								certifications: localContent[section].certifications || [],
-								publications: localContent[section].publications || [],
-							};
-						}
-
-						// For experience section, flatten the structure
-						if (section === "experience" && localContent[section]?.jobs) {
-							componentProps = { jobs: localContent[section].jobs };
-						}
-
-						// For education section, flatten the structure
-						if (section === "education" && localContent[section]?.degrees) {
-							componentProps = { degrees: localContent[section].degrees };
-						}
-
-						return (
-							<div key={section} className="mb-8 last:mb-0">
-								<Component {...componentProps} />
-							</div>
-						);
-					})}
+					<Preview layout={layout} content={localContent} portfolioData={portfolioData} />
 				</div>
 			</div>
 		</div>

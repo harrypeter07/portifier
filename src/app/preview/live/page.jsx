@@ -4,6 +4,7 @@ import { componentMap } from "@/data/componentMap";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
+import Preview from "@/components/Preview";
 
 export default function LivePreviewPage() {
 	const { layout, content, portfolioData, parsedData, restoreFromParsed } = useLayoutStore();

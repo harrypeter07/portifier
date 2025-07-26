@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { componentMap } from "@/data/componentMap";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
+import Preview from "@/components/Preview";
 
 export default function PortfolioPage() {
 	const params = useParams();
@@ -52,7 +53,7 @@ export default function PortfolioPage() {
 	const { layout, content, portfolioData } = portfolio;
 
 	// Use portfolioData if available, fallback to content
-	const dataToUse = portfolioData || {};
+	// const dataToUse = portfolioData || {};
 
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
@@ -69,7 +70,7 @@ export default function PortfolioPage() {
 							transition={{ delay: index * 0.1 }}
 							className="mb-8"
 						>
-							<Component data={dataToUse.personal} />
+							<Component data={portfolioData?.personal} />
 						</motion.div>
 					);
 				}
@@ -81,7 +82,7 @@ export default function PortfolioPage() {
 						transition={{ delay: index * 0.1 }}
 						className="mb-8"
 					>
-						<Component data={dataToUse[section]} />
+						<Component data={portfolioData?.[section]} />
 					</motion.div>
 				);
 			})}
