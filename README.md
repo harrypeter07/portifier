@@ -1,8 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 **Portifier: Next.js Portfolio Builder**
 
-## Getting Started
+<p align="center">
+  <img src="public/next.svg" alt="Next.js Logo" height="40"/>
+  <img src="public/vercel.svg" alt="Vercel Logo" height="40"/>
+  <img src="public/globe.svg" alt="Globe Logo" height="40"/>
+</p>
 
-First, run the development server:
+<p align="center">
+  <b>Build, customize, and deploy beautiful developer portfolios with ease.</b>
+</p>
+
+<p align="center">
+  <a href="https://nextjs.org/">Next.js</a> • <a href="https://vercel.com/">Vercel</a> • <a href="#team--task-breakdown">Team</a>
+</p>
+
+---
+
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](#)
+[![Next.js](https://img.shields.io/badge/Next.js-14-blue?logo=next.js)](https://nextjs.org/)
+[![Made with Zustand](https://img.shields.io/badge/State-Zustand-29b6f6)](https://github.com/pmndrs/zustand)
+
+---
+
+## 📑 **Table of Contents**
+
+- [Getting Started](#getting-started)
+- [Architecture & Customization Guide](#portfolio-builder-architecture--customization-guide)
+- [Directory Structure](#4-directory-structure)
+- [Adding Templates & Components](#3-adding-new-templates-and-components)
+- [Team & Task Breakdown](#team--task-breakdown)
+- [Learn More](#learn-more)
+- [Deploy](#deploy-on-vercel)
+
+---
+
+## 🏁 **Getting Started**
 
 ```bash
 npm run dev
@@ -14,46 +47,36 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+> **Tip:** Edit `app/page.js` to start customizing. The page auto-updates as you edit.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Portfolio Builder Architecture & Customization Guide
+## 🏗️ **Portfolio Builder Architecture & Customization Guide**
 
-### 1. Flow: From Resume Parsing to Portfolio Rendering
+### 1. **Flow: From Resume Parsing to Portfolio Rendering**
 
 - **Resume Parsing:**
   - API: `src/app/api/parse-resume/route.js` parses uploaded resumes using Gemini API (`src/lib/gemini.js`).
   - Returns structured data matching the portfolio schema.
-- **State Management:**
-  - Zustand store (`src/store/layoutStore.js`) holds all portfolio data, template, layout, and content.
-- **Editor:**
-  - `src/app/editor/edit-resume/page.jsx` renders a dynamic form for each section based on the selected template/layout.
-  - Updates the Zustand store as the user edits.
-  - Right panel shows a live preview using the actual portfolio components.
-- **Portfolio Components:**
-  - `src/components/` contains all section components (Hero, About, Projects, etc.).
-  - `src/data/componentMap.js` maps section names to React components.
-- **Templates:**
-  - Defined in `src/data/templates/templateManager.js`.
-  - Each template specifies a layout (which components to use), theme, and sample data.
-- **Schema:**
-  - `src/data/schemas/portfolioSchema.js` defines the full data structure for all portfolio types.
-- **Rendering:**
-  - Live preview and final portfolio use the same logic to render the user’s portfolio.
+- **State Management:** Zustand store (`src/store/layoutStore.js`) holds all portfolio data, template, layout, and content.
+- **Editor:** `src/app/editor/edit-resume/page.jsx` renders a dynamic form for each section based on the selected template/layout. Updates the Zustand store as the user edits. Right panel shows a live preview using the actual portfolio components.
+- **Portfolio Components:** `src/components/` contains all section components (Hero, About, Projects, etc.). `src/data/componentMap.js` maps section names to React components.
+- **Templates:** Defined in `src/data/templates/templateManager.js`. Each template specifies a layout, theme, and sample data.
+- **Schema:** `src/data/schemas/portfolioSchema.js` defines the full data structure for all portfolio types.
+- **Rendering:** Live preview and final portfolio use the same logic to render the user’s portfolio.
 
-### 2. How Data Flows
+### 2. **How Data Flows**
 
 1. Resume is parsed → structured data is returned.
 2. Data is stored in Zustand (`portfolioData`, `content`).
 3. Editor form reads/writes to Zustand.
 4. Live preview and final portfolio use the same data and component mapping.
 
-### 3. Adding New Templates and Components
+### 3. **Adding New Templates and Components**
 
-#### A. Add a Complete Template Portfolio
+#### A. **Add a Complete Template Portfolio**
 
 - **Where:** `src/data/templates/templateManager.js`
 - **How:**
@@ -61,7 +84,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
   2. The `layout` field maps section names to component names (e.g., `"hero": "HeroA"`).
   3. Add a preview image in `/public/templates/` if needed.
 
-#### B. Add New Section Components
+#### B. **Add New Section Components**
 
 - **Where:** `src/components/`
 - **How:**
@@ -69,16 +92,18 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
   2. Export the component.
   3. Add it to `src/data/componentMap.js` so it can be referenced in templates/layouts.
 
-#### C. Let Users Pick Components One by One
+#### C. **Let Users Pick Components One by One**
 
 - **How:**
   1. In your UI, allow users to select which component to use for each section.
   2. Update the `layout` in Zustand to reflect their choices.
   3. The editor and preview will automatically use the selected components.
 
-### 4. Directory Structure
+---
 
-```
+## 🗂️ **Directory Structure**
+
+```text
 src/
   components/
     Hero/
@@ -107,98 +132,76 @@ src/
 - **Add new section components** in the appropriate folder in `components/`.
 - **Map new components** in `componentMap.js`.
 
-### 5. How Data Is Populated and Used
+---
+
+## 🧩 **How Data Is Populated and Used**
 
 - **Parsing:** Data is parsed and set in Zustand.
 - **Form:** Reads and writes to Zustand (`formData` mirrors `content`/`portfolioData`).
 - **Preview:** Reads from Zustand and passes the correct props to each section/component.
 - **Component Map:** Ensures the right React component is used for each section, based on the current layout/template.
 
-### 6. Adding Full-Page Portfolio Templates
+---
+
+## 🎨 **Adding Full-Page Portfolio Templates**
 
 You can use fully coded, single-page portfolio templates (not just section components) in your system. Here’s how:
 
-#### A. Where to Add Full Templates
+#### A. **Where to Add Full Templates**
 
 - Place your full template component in `src/components/FullTemplates/` (recommended) or as a page in `src/app/templates/`.
-- Example:
-  ```
-  src/components/FullTemplates/
-    CleanfolioFull.jsx
-    AnimatedPortfolio.jsx
-    ...
-  ```
 
-#### B. Registering the Template
+#### B. **Registering the Template**
 
 - In `src/data/templates/templateManager.js`, add an entry for your full template:
-  ```js
-  import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
-  // ...
-  export const PORTFOLIO_TEMPLATES = {
-  	cleanfolio: {
-  		id: "cleanfolio",
-  		name: "Cleanfolio (Full Page)",
-  		type: "full", // mark as full template
-  		component: CleanfolioFull, // reference the full template component
-  		// ...other fields
-  	},
-  	// ...other templates
-  };
-  ```
 
-#### C. How Full Templates Get Data
+```js
+import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
+// ...
+export const PORTFOLIO_TEMPLATES = {
+	cleanfolio: {
+		id: "cleanfolio",
+		name: "Cleanfolio (Full Page)",
+		type: "full", // mark as full template
+		component: CleanfolioFull, // reference the full template component
+		// ...other fields
+	},
+	// ...other templates
+};
+```
 
-- Your full template component should accept a single `data` prop (the entire portfolio data object matching your schema):
-  ```jsx
-  export default function CleanfolioFull({ data }) {
-  	// Use data.hero, data.projects, data.skills, etc.
-  	return (
-  		<main>
-  			<header>{data.hero.title}</header>
-  			{/* ...render all sections using data... */}
-  		</main>
-  	);
-  }
-  ```
-- When rendering a full template, pass the entire portfolio data from Zustand:
+#### C. **How Full Templates Get Data**
 
-  ```jsx
-  import { useLayoutStore } from "@/store/layoutStore";
-  import { getTemplate } from "@/data/templates/templateManager";
+```jsx
+export default function CleanfolioFull({ data }) {
+	// Use data.hero, data.projects, data.skills, etc.
+	return (
+		<main>
+			<header>{data.hero.title}</header>
+			{/* ...render all sections using data... */}
+		</main>
+	);
+}
+```
 
-  const { portfolioData, currentTemplate } = useLayoutStore();
-  const TemplateComponent = currentTemplate?.component;
-
-  return TemplateComponent ? (
-  	<TemplateComponent data={portfolioData} />
-  ) : (
-  	<div>Select a template</div>
-  );
-  ```
-
-#### D. Customization
+#### D. **Customization**
 
 - The user customizes their data in the editor as usual.
 - The full template component should use the data fields (not hardcoded content), so any changes in the editor are reflected in the preview and final output.
 - For per-section overrides, add logic in your full template to optionally render a different component if specified.
 
-#### E. Supporting Both Section-Based and Full-Page Templates
+#### E. **Supporting Both Section-Based and Full-Page Templates**
 
-- In your template manager, distinguish between:
-  - **Section-based templates:** Use the `layout` object to map sections to components.
-  - **Full-page templates:** Use a `component` field to render the whole page at once.
-- In your editor/preview logic, check the template type:
-  ```js
-  if (currentTemplate.type === "full" && currentTemplate.component) {
-  	// Render the full template with all data
-  	return <currentTemplate.component data={portfolioData} />;
-  } else {
-  	// Render section-based layout as before
-  }
-  ```
+```js
+if (currentTemplate.type === "full" && currentTemplate.component) {
+	// Render the full template with all data
+	return <currentTemplate.component data={portfolioData} />;
+} else {
+	// Render section-based layout as before
+}
+```
 
-#### F. Summary Table
+#### F. **Summary Table**
 
 | Type               | Where to Add Code                                                    | How Data is Passed       | How to Register in TemplateManager |
 | ------------------ | -------------------------------------------------------------------- | ------------------------ | ---------------------------------- |
@@ -207,50 +210,30 @@ You can use fully coded, single-page portfolio templates (not just section compo
 
 ---
 
-For further customization or questions, see the code comments or ask your team lead.
+## 🧑‍💻 **Team & Task Breakdown**
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-# p o r t i f i e r
-
-## Team & Task Breakdown
-
-### Member 1: Harshal Pande — Templates & Components Expansion
-
-- Add new full-page portfolio templates (see Full-Page Portfolio Templates section above).
-- Add new section components (e.g., more Hero, Projects, About, Contact, etc.).
-- Ensure each new component is well-documented and mapped in `componentMap.js`.
-- Create sample data for each template for demo purposes.
-- (Optional) Write tests or storybook stories for new components.
-
-### Member 2: Hassan Mansuri — UI/UX Polish & Animations
-
-- Refine the editor UI for clarity and ease of use.
-- Add smooth transitions and animations (e.g., section transitions, button effects, animated previews).
-- Polish the live preview and published portfolio UI.
-- Ensure mobile responsiveness and accessibility (a11y).
-- Add helpful tooltips, onboarding, and error messages.
-- Work with Harshal to ensure new components/templates are visually consistent.
-
-### Member 3: Omsingh Bais — Theming, Public Website, and Deployment
-
-- Implement a robust theming system (light/dark, color pickers, font choices, etc.).
-- Adding AI improvements option button for every sections in editing sections of portfolio page.
-- Giving editing and updating option even after the save of portfolio by the user
-- Adding UI improvements like loading compoenets , error messages to user and making application dynamic (scalable ).
-- Write and maintain documentation (README, user guides, contribution guides).
+| Member             | Role                                | Responsibilities                                                                                                                                       |
+| ------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Harshal Pande**  | Templates & Components Expansion    | Add new full-page templates, section components, document and map in `componentMap.js`, create sample data, (optional) write tests/stories             |
+| **Hassan Mansuri** | UI/UX Polish & Animations           | Refine editor UI, add transitions/animations, polish preview, ensure responsiveness & a11y, add tooltips/onboarding, work with Harshal for consistency |
+| **Omsingh Bais**   | Theming, Public Website, Deployment | Implement theming, add AI improvements, allow editing after save, add loading/error UI, maintain docs                                                  |
 
 ---
+
+## 📚 **Learn More**
+
+- [Next.js Documentation](https://nextjs.org/docs) — learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) — interactive Next.js tutorial.
+- [Next.js GitHub](https://github.com/vercel/next.js) — feedback and contributions welcome!
+
+---
+
+## ▲ **Deploy on Vercel**
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+
+See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+> For further customization or questions, see code comments or ask your team lead.
