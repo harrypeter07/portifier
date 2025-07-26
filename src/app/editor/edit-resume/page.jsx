@@ -619,9 +619,17 @@ export default function EditResumePage() {
 									componentProps = { degrees: formData[section].degrees };
 								}
 								if (section === "hero") {
+									// Map formData.hero.title to firstName for compatibility
+									const heroData = formData.hero || {};
+									const personalData = {
+										firstName: heroData.title || "",
+										lastName: "",
+										subtitle: heroData.subtitle || "",
+										// Add other fields if needed
+									};
 									return (
 										<div key={section} className="mb-8 last:mb-0">
-											<Component data={formData.hero} />
+											<Component data={personalData} />
 										</div>
 									);
 								}

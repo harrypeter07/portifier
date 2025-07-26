@@ -53,9 +53,9 @@ export default function LivePreviewPage() {
 						// Use portfolioData for rendering components
 						let componentProps = {};
 
-						// For hero section, pass portfolioData directly
+						// For hero section, pass portfolioData.personal directly
 						if (section === "hero") {
-							componentProps = portfolioData;
+							componentProps = { data: portfolioData.personal };
 						}
 
 						// For about section

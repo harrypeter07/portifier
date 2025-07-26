@@ -60,6 +60,19 @@ export default function PortfolioPage() {
 			{Object.entries(layout).map(([section, componentName], index) => {
 				const Component = componentMap[componentName];
 				if (!Component) return null;
+				if (section === "hero") {
+					return (
+						<motion.div
+							key={section}
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ delay: index * 0.1 }}
+							className="mb-8"
+						>
+							<Component data={dataToUse.personal} />
+						</motion.div>
+					);
+				}
 				return (
 					<motion.div
 						key={section}
