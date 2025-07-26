@@ -234,12 +234,11 @@ export default function ResumeUploadPage() {
 								const Component = componentMap[componentName];
 								if (!Component) return null;
 
-								// Handle different data structures for different components
 								let componentProps = parsed.content?.[section] || {};
 
-								// For hero section, use personal data directly
-								if (section === "hero" && parsed.content?.personal) {
-									componentProps = parsed.content.personal;
+								// For hero section, always use portfolioData
+								if (section === "hero") {
+									componentProps = { data: portfolioData };
 								}
 
 								// For projects section, handle the new schema structure

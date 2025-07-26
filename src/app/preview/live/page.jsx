@@ -50,12 +50,11 @@ export default function LivePreviewPage() {
 						const Component = componentMap[componentName];
 						if (!Component) return null;
 
-						// Use portfolioData for rendering components
 						let componentProps = {};
 
-						// For hero section, pass portfolioData directly
+						// For hero section, always use portfolioData
 						if (section === "hero") {
-							componentProps = portfolioData;
+							componentProps = { data: portfolioData };
 						}
 
 						// For about section

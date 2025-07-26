@@ -195,18 +195,17 @@ export default function CustomizePage() {
 						const Component = componentMap[componentName];
 						if (!Component) return null;
 
-						// Handle different data structures for different components
 						let componentProps = localContent[section] || {};
 
-// For hero section, pass portfolioData directly
-if (section === "hero") {
-    componentProps = portfolioData;
-}
+						// For hero section, always use portfolioData
+						if (section === "hero") {
+							componentProps = { data: portfolioData };
+						}
 
-// For projects section, handle the new schema structure
-if (section === "projects" && localContent[section]?.items) {
-    componentProps = { items: localContent[section].items };
-}
+						// For projects section, handle the new schema structure
+						if (section === "projects" && localContent[section]?.items) {
+							componentProps = { items: localContent[section].items };
+						}
 
 						// For skills section, flatten the structure
 						if (section === "skills" && localContent[section]) {
