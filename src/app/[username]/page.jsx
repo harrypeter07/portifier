@@ -57,7 +57,35 @@ export default function PortfolioPage() {
 
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
-			<Preview layout={layout} content={content} portfolioData={portfolioData} />
+			{/* Render each section based on layout */}
+			{Object.entries(layout).map(([section, componentName], index) => {
+				const Component = componentMap[componentName];
+				if (!Component) return null;
+				if (section === "hero") {
+					return (
+						<motion.div
+							key={section}
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ delay: index * 0.1 }}
+							className="mb-8"
+						>
+							<Component data={portfolioData?.personal} />
+						</motion.div>
+					);
+				}
+				return (
+					<motion.div
+						key={section}
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: index * 0.1 }}
+						className="mb-8"
+					>
+						<Component data={portfolioData?.[section]} />
+					</motion.div>
+				);
+			})}
 		</div>
 	);
 }

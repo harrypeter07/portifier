@@ -46,7 +46,93 @@ export default function LivePreviewPage() {
 					animate={{ opacity: 1, y: 0 }}
 					className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
 				>
-					<Preview layout={layout} content={content} portfolioData={portfolioData} />
+					{/* Render each section based on layout */}
+					{Object.entries(layout).map(([section, componentName]) => {
+						const Component = componentMap[componentName];
+						if (!Component) return null;
+
+						// Use portfolioData for rendering components
+						let componentProps = {};
+
+						// For hero section, pass portfolioData.personal directly
+						if (section === "hero") {
+							componentProps = { data: portfolioData.personal };
+						}
+
+						// For about section
+						if (section === "about") {
+							componentProps = {
+								summary: portfolioData.about?.summary || "",
+								data: portfolioData,
+							};
+						}
+
+						// For projects section, handle the new schema structure
+						if (section === "projects") {
+							componentProps = { 
+								items: portfolioData.projects?.items || [],
+								data: portfolioData,
+							};
+						}
+
+						// For skills section, flatten the structure
+						if (section === "skills") {
+							componentProps = {
+								technical: portfolioData.skills?.technical || [],
+								soft: portfolioData.skills?.soft || [],
+								languages: portfolioData.skills?.languages || [],
+								data: portfolioData,
+							};
+						}
+
+						// For achievements section, flatten the structure
+						if (section === "achievements") {
+							componentProps = {
+								awards: portfolioData.achievements?.awards || [],
+								certifications: portfolioData.achievements?.certifications || [],
+								publications: portfolioData.achievements?.publications || [],
+								data: portfolioData,
+							};
+						}
+
+						// For experience section
+						if (section === "experience") {
+							componentProps = { 
+								jobs: portfolioData.experience?.jobs || [],
+								data: portfolioData,
+							};
+						}
+
+						// For education section
+						if (section === "education") {
+							componentProps = { 
+								degrees: portfolioData.education?.degrees || [],
+								data: portfolioData,
+							};
+						}
+
+						// For contact section
+						if (section === "contact") {
+							componentProps = {
+								email: portfolioData.personal?.email || portfolioData.contact?.email || "",
+								phone: portfolioData.personal?.phone || portfolioData.contact?.phone || "",
+								linkedin: portfolioData.personal?.social?.linkedin || "",
+								data: portfolioData,
+							};
+						}
+
+						return (
+							<motion.div
+								key={section}
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ delay: 0.1 }}
+								className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+							>
+								<Component {...componentProps} />
+							</motion.div>
+						);
+					})}
 				</motion.div>
 
 				{/* Info Panel */}

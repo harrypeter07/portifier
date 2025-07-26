@@ -753,7 +753,85 @@ export default function EditResumePage() {
 						<h2 className="text-xl font-semibold">Live Preview</h2>
 					</div>
 					<div className="p-4">
-						<Preview layout={layout} content={formData} portfolioData={null} />
+						{layout && Object.entries(layout).length > 0 ? (
+							Object.entries(layout).map(([section, componentName]) => {
+								const Component = componentMap[componentName];
+								if (!Component) return null;
+								let componentProps = formData[section] || {};
+								// Ensure no null values for inputs
+								if (componentProps && typeof componentProps === "object") {
+									Object.keys(componentProps).forEach((key) => {
+										if (
+											componentProps[key] === null ||
+											componentProps[key] === undefined
+										) {
+											componentProps[key] = "";
+										}
+									});
+								}
+								// For projects section, handle the new schema structure
+								if (section === "projects" && formData[section]?.items) {
+									// Map 'title' to 'name' for ShowcaseA compatibility
+									componentProps = {
+										items: formData[section].items.map((item) => ({
+											...item,
+											name: item.title || "",
+										})),
+									};
+								}
+								// For skills section, flatten the structure
+								if (section === "skills" && formData[section]) {
+									componentProps = {
+										technical: formData[section].technical || [],
+										soft: formData[section].soft || [],
+										languages: formData[section].languages || [],
+									};
+								}
+								// For achievements section, flatten the structure
+								if (section === "achievements" && formData[section]) {
+									componentProps = {
+										awards: formData[section].awards || [],
+										certifications: formData[section].certifications || [],
+										publications: formData[section].publications || [],
+									};
+								}
+								// For experience section, flatten the structure
+								if (section === "experience" && formData[section]?.jobs) {
+									componentProps = { jobs: formData[section].jobs };
+								}
+								// For education section, flatten the structure
+								if (section === "education" && formData[section]?.degrees) {
+									componentProps = { degrees: formData[section].degrees };
+								}
+								if (section === "hero") {
+									// Map formData.hero.title to firstName for compatibility
+									const heroData = formData.hero || {};
+									const personalData = {
+										firstName: heroData.title || "",
+										lastName: "",
+										subtitle: heroData.subtitle || "",
+										// Add other fields if needed
+									};
+									return (
+										<div key={section} className="mb-8 last:mb-0">
+											<Component data={personalData} />
+										</div>
+									);
+								}
+								return (
+									<div key={section} className="mb-8 last:mb-0">
+										<Component {...componentProps} />
+									</div>
+								);
+							})
+						) : (
+							<div className="text-center py-12">
+								<p className="text-gray-500">
+									No layout selected. Please go back and choose a template
+									first.
+								</p>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
