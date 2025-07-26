@@ -119,9 +119,9 @@ export default function ResumeUploadPage() {
 	}
 
 	return (
-		<div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
 			{/* Left Panel - Upload and Template Selection */}
-			<div className="w-1/2 p-8 overflow-y-auto">
+			<div className="w-full md:w-1/2 p-4 md:p-8 overflow-y-auto">
 				<h1 className="text-2xl font-bold mb-4">Upload Your Resume (PDF)</h1>
 				{parsedData && (
 					<div className="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-3 mb-4">
@@ -223,7 +223,7 @@ export default function ResumeUploadPage() {
 			</div>
 
 			{/* Right Panel - Live Preview */}
-			<div className="w-1/2 h-screen overflow-y-auto border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+			<div className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
 				<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
 					<h2 className="text-xl font-semibold">Live Preview</h2>
 				</div>
