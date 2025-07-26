@@ -198,9 +198,9 @@ export default function CustomizePage() {
 						// Handle different data structures for different components
 						let componentProps = localContent[section] || {};
 
-// For hero section, pass portfolioData directly
+// For hero section, pass localContent.hero as personal data in the expected structure
 if (section === "hero") {
-    componentProps = portfolioData;
+    componentProps = { data: { personal: localContent.hero } };
 }
 
 // For projects section, handle the new schema structure
