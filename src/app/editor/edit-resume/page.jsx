@@ -377,8 +377,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="experience"
-										field="jobs"
-										index={index}
 										field="title"
 										value={job?.title || ""}
 										label="Job Title"
@@ -398,8 +396,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="experience"
-										field="jobs"
-										index={index}
 										field="company"
 										value={job?.company || ""}
 										label="Company Name"
@@ -419,8 +415,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="experience"
-										field="jobs"
-										index={index}
 										field="duration"
 										value={job?.duration || ""}
 										label="Duration"
@@ -440,8 +434,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="experience"
-										field="jobs"
-										index={index}
 										field="description"
 										value={job?.description || ""}
 										label="Job Description"
@@ -489,8 +481,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="education"
-										field="degrees"
-										index={index}
 										field="degree"
 										value={degree?.degree || ""}
 										label="Degree"
@@ -510,8 +500,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="education"
-										field="degrees"
-										index={index}
 										field="institution"
 										value={degree?.institution || ""}
 										label="Institution Name"
@@ -531,8 +519,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="education"
-										field="degrees"
-										index={index}
 										field="year"
 										value={degree?.year || ""}
 										label="Year"
@@ -638,8 +624,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="projects"
-										field="items"
-										index={index}
 										field="title"
 										value={project?.title || ""}
 										label="Project Title"
@@ -656,8 +640,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="projects"
-										field="items"
-										index={index}
 										field="description"
 										value={project?.description || ""}
 										label="Project Description"
@@ -674,8 +656,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="projects"
-										field="items"
-										index={index}
 										field="github"
 										value={project?.github || ""}
 										label="GitHub Link"
@@ -692,8 +672,6 @@ export default function EditResumePage() {
 									/>
 									<AIHelpButton
 										section="projects"
-										field="items"
-										index={index}
 										field="url"
 										value={project?.url || ""}
 										label="Live URL"
