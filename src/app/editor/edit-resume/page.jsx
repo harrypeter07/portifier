@@ -15,7 +15,7 @@ export default function EditResumePage() {
 		setAllContent,
 	} = useLayoutStore();
 	const [formData, setFormData] = useState({
-		hero: { title: "", subtitle: "" },
+		hero: { title: "", subtitle: "", tagline: "" },
 		about: { summary: "" },
 		contact: { email: "", phone: "", location: "", linkedin: "" },
 		experience: { jobs: [] },
@@ -36,7 +36,7 @@ export default function EditResumePage() {
 		}
 		// Initialize with existing content or defaults
 		setFormData({
-			hero: content.hero || { title: "", subtitle: "" },
+			hero: content.hero || { title: "", subtitle: "", tagline: "" },
 			about: content.about || { summary: "" },
 			contact: content.contact || {
 				email: "",
@@ -259,6 +259,22 @@ export default function EditResumePage() {
 								value={formData.hero?.subtitle || ""}
 								label="Professional Title"
 								onAIResult={(aiValue) => handleInputChange("hero", "subtitle", aiValue)}
+							/>
+							<input
+								type="text"
+								placeholder="Tagline (e.g., Passionate about building impactful products)"
+								value={formData.hero?.tagline || ""}
+								onChange={(e) =>
+									handleInputChange("hero", "tagline", e.target.value)
+								}
+								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="hero"
+								field="tagline"
+								value={formData.hero?.tagline || ""}
+								label="Tagline"
+								onAIResult={(aiValue) => handleInputChange("hero", "tagline", aiValue)}
 							/>
 						</div>
 					</div>
@@ -810,6 +826,7 @@ export default function EditResumePage() {
 										firstName: heroData.title || "",
 										lastName: "",
 										subtitle: heroData.subtitle || "",
+										tagline: heroData.tagline || "",
 										// Add other fields if needed
 									};
 									return (
