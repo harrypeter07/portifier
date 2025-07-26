@@ -2,6 +2,7 @@ import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export async function POST(req) {
 	const body = await req.json();
@@ -17,10 +18,10 @@ export async function POST(req) {
 			status: 404,
 		});
 	// if (!user.verified)
-	// 	return new Response(
-	// 		JSON.stringify({ error: "Please verify your email before signing in." }),
-	// 		{ status: 403 }
-	// 	);
+	//  return new Response(
+	//      JSON.stringify({ error: "Please verify your email before signing in." }),
+	//      { status: 403 }
+	//  );
 	const valid = await bcrypt.compare(password, user.password);
 	if (!valid)
 		return new Response(JSON.stringify({ error: "Invalid credentials" }), {
@@ -29,16 +30,15 @@ export async function POST(req) {
 	const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
 		expiresIn: "7d",
 	});
-	// Set cookie with proper attributes based on environment
-	const isProduction = process.env.NODE_ENV === "production";
-	const cookieOptions = [
-		`token=${token}`,
-		"HttpOnly",
-		"Path=/",
-		"Max-Age=604800", // 7 days
-		"SameSite=Lax", // Allow same-site requests and top-level navigation
-		...(isProduction ? ["Secure"] : []), // Only use Secure in production (HTTPS)
-	].join("; ");
+
+	// Set cookie using Next.js cookies API
+	cookies().set("token", token, {
+		httpOnly: true,
+		sameSite: "lax",
+		path: "/",
+		maxAge: 60 * 60 * 24 * 7, // 7 days
+		secure: process.env.NODE_ENV === "production",
+	});
 
 	return new Response(
 		JSON.stringify({
@@ -47,7 +47,7 @@ export async function POST(req) {
 		{
 			status: 200,
 			headers: {
-				"Set-Cookie": cookieOptions,
+				"Content-Type": "application/json",
 			},
 		}
 	);
