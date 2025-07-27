@@ -570,16 +570,16 @@ export default function EditResumePage() {
 										label="Full Name"
 									/>
 								</div>
-								{aiModalOpen && currentAiSection === "hero" && currentAiField === "title" && (
-									<AISuggestionInline
-										isOpen={true}
-										onClose={() => setAiModalOpen(false)}
-										suggestions={aiSuggestions}
-										onSelectSuggestion={handleAISuggestionSelect}
-										fieldName={currentAiLabel || currentAiField}
-										loading={aiLoading}
-									/>
-								)}
+								<AISuggestionInline
+									fieldKey="hero-title"
+									section="hero"
+									field="title"
+									label="Full Name"
+									suggestions={aiSuggestions["hero-title"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["hero-title"] || false}
+									isActive={activeAiField === "hero-title"}
+								/>
 							</div>
 							<div className="flex items-center gap-2">
 								<input
