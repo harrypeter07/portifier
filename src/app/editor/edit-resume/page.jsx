@@ -32,16 +32,33 @@ export default function EditResumePage() {
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log("📝 [EDIT-RESUME] useEffect triggered:", {
+			hasContent: Object.keys(content).length > 0,
+			hasParsedData: !!parsedData,
+			hasPortfolioData: !!portfolioData,
+			contentKeys: Object.keys(content),
+			portfolioDataKeys: portfolioData ? Object.keys(portfolioData) : []
+		});
+
 		// If no content but we have parsed data, restore it first
 		if (Object.keys(content).length === 0 && parsedData) {
+			console.log("📝 [EDIT-RESUME] Restoring from parsed data");
 			restoreFromParsed();
 			return;
 		}
 		
 		// Initialize with existing portfolioData or content (for backwards compatibility)
 		const data = portfolioData || content;
+		console.log("📝 [EDIT-RESUME] Using data source:", {
+			source: portfolioData ? "portfolioData" : "content",
+			dataKeys: Object.keys(data),
+			hasPersonal: !!data.personal,
+			hasHero: !!data.hero,
+			hasAbout: !!data.about,
+			hasContact: !!data.contact
+		});
 		
-		setFormData({
+		const formDataToSet = {
 			hero: {
 				title: data.personal?.firstName && data.personal?.lastName 
 					? `${data.personal.firstName} ${data.personal.lastName}`.trim()
@@ -80,7 +97,33 @@ export default function EditResumePage() {
 							.filter(Boolean)
 					: []),
 			hobbies: data.hobbies || [],
+		};
+
+		console.log("📝 [EDIT-RESUME] Setting form data:", {
+			hero: {
+				title: formDataToSet.hero.title,
+				subtitle: formDataToSet.hero.subtitle,
+				tagline: formDataToSet.hero.tagline,
+				availability: formDataToSet.hero.availability
+			},
+			contact: {
+				email: formDataToSet.contact.email,
+				phone: formDataToSet.contact.phone,
+				location: formDataToSet.contact.location,
+				linkedin: formDataToSet.contact.linkedin
+			},
+			about: {
+				summary: formDataToSet.about.summary,
+				bio: formDataToSet.about.bio
+			},
+			experienceJobs: formDataToSet.experience.jobs?.length || 0,
+			educationDegrees: formDataToSet.education.degrees?.length || 0,
+			skillsTechnical: formDataToSet.skills.technical?.length || 0,
+			projectsItems: formDataToSet.projects.items?.length || 0,
+			languages: formDataToSet.languages?.length || 0
 		});
+
+		setFormData(formDataToSet);
 	}, [content, portfolioData, parsedData, restoreFromParsed]);
 
 	const handleInputChange = (section, field, value) => {
@@ -181,6 +224,17 @@ export default function EditResumePage() {
 	};
 
 	const handleSave = () => {
+		console.log("💾 [EDIT-RESUME] Save triggered with form data:", {
+			hero: formData.hero,
+			contact: formData.contact,
+			about: formData.about,
+			experienceJobs: formData.experience?.jobs?.length || 0,
+			educationDegrees: formData.education?.degrees?.length || 0,
+			skillsTechnical: formData.skills?.technical?.length || 0,
+			projectsItems: formData.projects?.items?.length || 0,
+			languages: formData.languages?.length || 0
+		});
+
 		// Save all form data to new schema format
 		const newPortfolioData = { ...portfolioData };
 		
@@ -192,6 +246,16 @@ export default function EditResumePage() {
 			newPortfolioData.personal.title = formData.hero.subtitle || "";
 			newPortfolioData.personal.tagline = formData.hero.tagline || "";
 			newPortfolioData.personal.availability = formData.hero.availability || "";
+
+			console.log("💾 [EDIT-RESUME] Transformed hero data:", {
+				originalTitle: formData.hero.title,
+				nameParts,
+				firstName: newPortfolioData.personal.firstName,
+				lastName: newPortfolioData.personal.lastName,
+				title: newPortfolioData.personal.title,
+				tagline: newPortfolioData.personal.tagline,
+				availability: newPortfolioData.personal.availability
+			});
 		}
 		
 		if (formData.about) {
@@ -244,6 +308,25 @@ export default function EditResumePage() {
 			}));
 		}
 		
+		console.log("💾 [EDIT-RESUME] Final portfolio data to save:", {
+			personal: {
+				firstName: newPortfolioData.personal.firstName,
+				lastName: newPortfolioData.personal.lastName,
+				title: newPortfolioData.personal.title,
+				email: newPortfolioData.personal.email,
+				phone: newPortfolioData.personal.phone
+			},
+			about: {
+				summary: newPortfolioData.about.summary,
+				bio: newPortfolioData.about.bio
+			},
+			experienceJobs: newPortfolioData.experience.jobs?.length || 0,
+			educationDegrees: newPortfolioData.education.degrees?.length || 0,
+			skillsTechnical: newPortfolioData.skills.technical?.length || 0,
+			projectsItems: newPortfolioData.projects.items?.length || 0,
+			languages: newPortfolioData.skills.languages?.length || 0
+		});
+
 		// Save to store
 		setPortfolioData(newPortfolioData);
 		
@@ -252,11 +335,23 @@ export default function EditResumePage() {
 			setContent(section, data);
 		});
 
+		console.log("💾 [EDIT-RESUME] Data saved to both portfolioData and content stores");
 		// Navigate to customize page
 		router.push("/editor/customize");
 	};
 
 	const handlePreview = () => {
+		console.log("👁️ [EDIT-RESUME] Preview triggered with form data:", {
+			hero: formData.hero,
+			contact: formData.contact,
+			about: formData.about,
+			experienceJobs: formData.experience?.jobs?.length || 0,
+			educationDegrees: formData.education?.degrees?.length || 0,
+			skillsTechnical: formData.skills?.technical?.length || 0,
+			projectsItems: formData.projects?.items?.length || 0,
+			languages: formData.languages?.length || 0
+		});
+
 		// Save data first (same logic as handleSave)
 		const newPortfolioData = { ...portfolioData };
 		
@@ -328,6 +423,7 @@ export default function EditResumePage() {
 			setContent(section, data);
 		});
 
+		console.log("👁️ [EDIT-RESUME] Data saved, navigating to preview");
 		// Navigate to preview
 		router.push("/preview/live");
 	};
@@ -991,10 +1087,12 @@ export default function EditResumePage() {
 						<h2 className="text-xl font-semibold">Live Preview</h2>
 					</div>
 					<div className="p-4">
-						{layout && Object.entries(layout).length > 0 ? (
-							Object.entries(layout).map(([section, componentName]) => {
-								const Component = componentMap[componentName];
-								if (!Component) return null;
+										{layout && Object.entries(layout).length > 0 ? (
+					Object.entries(layout).map(([section, componentName]) => {
+						console.log(`👁️ [EDIT-RESUME-PREVIEW] Rendering section: ${section} with component: ${componentName}`);
+						
+						const Component = componentMap[componentName];
+						if (!Component) return null;
 								let componentProps = formData[section] || {};
 								// Ensure no null values for inputs
 								if (componentProps && typeof componentProps === "object") {
@@ -1041,23 +1139,34 @@ export default function EditResumePage() {
 								if (section === "education" && formData[section]?.degrees) {
 									componentProps = { degrees: formData[section].degrees };
 								}
-												if (section === "hero") {
-					const heroData = formData.hero || {};
-					const nameParts = (heroData.title || "").split(" ");
-					const personalData = {
-						firstName: nameParts[0] || "",
-						lastName: nameParts.slice(1).join(" ") || "",
-						title: heroData.subtitle || "",
-						subtitle: heroData.subtitle || "",
-						tagline: heroData.tagline || "",
-						availability: heroData.availability || "",
-					};
-					return (
-						<div key={section} className="mb-8 last:mb-0">
-							<Component data={{ personal: personalData }} />
-						</div>
-					);
-				}
+																				if (section === "hero") {
+									const heroData = formData.hero || {};
+									const nameParts = (heroData.title || "").split(" ");
+									const personalData = {
+										firstName: nameParts[0] || "",
+										lastName: nameParts.slice(1).join(" ") || "",
+										title: heroData.subtitle || "",
+										subtitle: heroData.subtitle || "",
+										tagline: heroData.tagline || "",
+										availability: heroData.availability || "",
+									};
+									
+									console.log("👁️ [EDIT-RESUME-PREVIEW] Hero section data:", {
+										originalHeroData: heroData,
+										nameParts,
+										personalData,
+										hasFirstName: !!personalData.firstName,
+										hasLastName: !!personalData.lastName,
+										hasTitle: !!personalData.title,
+										hasTagline: !!personalData.tagline
+									});
+									
+									return (
+										<div key={section} className="mb-8 last:mb-0">
+											<Component data={{ personal: personalData }} />
+										</div>
+									);
+								}
 								if (section === "about") {
 									const aboutData = formData.about || {};
 									return (

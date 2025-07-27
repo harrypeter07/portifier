@@ -2,6 +2,21 @@ import { componentMap } from "@/data/componentMap";
 import { motion } from "framer-motion";
 
 export default function Preview({ layout, content, portfolioData }) {
+  console.log("👁️ [PREVIEW] Component received props:", {
+    hasLayout: !!layout,
+    layoutKeys: layout ? Object.keys(layout) : [],
+    hasContent: !!content,
+    contentKeys: content ? Object.keys(content) : [],
+    hasPortfolioData: !!portfolioData,
+    portfolioDataKeys: portfolioData ? Object.keys(portfolioData) : [],
+    personalData: portfolioData?.personal ? {
+      firstName: portfolioData.personal.firstName,
+      lastName: portfolioData.personal.lastName,
+      title: portfolioData.personal.title,
+      email: portfolioData.personal.email
+    } : null
+  });
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -9,6 +24,8 @@ export default function Preview({ layout, content, portfolioData }) {
       className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
     >
       {Object.entries(layout).map(([section, componentName]) => {
+        console.log(`👁️ [PREVIEW] Rendering section: ${section} with component: ${componentName}`);
+        
         const Component = componentMap[componentName];
         if (!Component) return null;
 
@@ -20,6 +37,18 @@ export default function Preview({ layout, content, portfolioData }) {
             : content && content.hero
             ? { data: { personal: content.hero } }
             : {};
+          
+          console.log("👁️ [PREVIEW] Hero section props:", {
+            hasPortfolioData: !!portfolioData?.personal,
+            hasContent: !!content?.hero,
+            componentProps,
+            personalData: componentProps.data?.personal ? {
+              firstName: componentProps.data.personal.firstName,
+              lastName: componentProps.data.personal.lastName,
+              title: componentProps.data.personal.title,
+              tagline: componentProps.data.personal.tagline
+            } : null
+          });
         }
         // For about section
         else if (section === "about") {
