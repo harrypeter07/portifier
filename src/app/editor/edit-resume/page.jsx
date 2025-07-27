@@ -659,86 +659,71 @@ export default function EditResumePage() {
 								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
-									<div className="flex items-center gap-2">
-										<input
-											type="text"
-											placeholder="Job Title"
-											value={job?.title || ""}
-											onChange={(e) =>
-												handleArrayChange("experience", "jobs", index, {
-													...job,
-													title: e.target.value,
-												})
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="experience"
-											field="title"
-											value={job?.title || ""}
-											label="Job Title"
-										/>
-									</div>
-									<div className="flex items-center gap-2">
-										<input
-											type="text"
-											placeholder="Company Name"
-											value={job?.company || ""}
-											onChange={(e) =>
-												handleArrayChange("experience", "jobs", index, {
-													...job,
-													company: e.target.value,
-												})
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="experience"
-											field="company"
-											value={job?.company || ""}
-											label="Company Name"
-										/>
-									</div>
-									<div className="flex items-center gap-2">
-										<input
-											type="text"
-											placeholder="Duration (e.g., Jan 2020 - Dec 2022)"
-											value={job?.duration || ""}
-											onChange={(e) =>
-												handleArrayChange("experience", "jobs", index, {
-													...job,
-													duration: e.target.value,
-												})
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="experience"
-											field="duration"
-											value={job?.duration || ""}
-											label="Duration"
-										/>
-									</div>
-									<div className="flex items-start gap-2">
-										<textarea
-											placeholder="Job Description"
-											value={job?.description || ""}
-											onChange={(e) =>
-												handleArrayChange("experience", "jobs", index, {
-													...job,
-													description: e.target.value,
-												})
-											}
-											rows={3}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="experience"
-											field="description"
-											value={job?.description || ""}
-											label="Job Description"
-										/>
-									</div>
+									<AICompanionField
+										type="input"
+										placeholder="Job Title"
+										value={job?.title || ""}
+										onChange={(value) =>
+											handleArrayChange("experience", "jobs", index, {
+												...job,
+												title: value,
+											})
+										}
+										aiEnabled={isAIEnabled("experience", "title")}
+										aiSection="experience"
+										aiField="title"
+										aiLabel={getAILabel("experience", "title")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="input"
+										placeholder="Company Name"
+										value={job?.company || ""}
+										onChange={(value) =>
+											handleArrayChange("experience", "jobs", index, {
+												...job,
+												company: value,
+											})
+										}
+										aiEnabled={isAIEnabled("experience", "company")}
+										aiSection="experience"
+										aiField="company"
+										aiLabel={getAILabel("experience", "company")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="input"
+										placeholder="Duration (e.g., Jan 2020 - Dec 2022)"
+										value={job?.duration || ""}
+										onChange={(value) =>
+											handleArrayChange("experience", "jobs", index, {
+												...job,
+												duration: value,
+											})
+										}
+										aiEnabled={isAIEnabled("experience", "duration")}
+										aiSection="experience"
+										aiField="duration"
+										aiLabel={getAILabel("experience", "duration")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="textarea"
+										placeholder="Job Description"
+										value={job?.description || ""}
+										onChange={(value) =>
+											handleArrayChange("experience", "jobs", index, {
+												...job,
+												description: value,
+											})
+										}
+										rows={3}
+										aiEnabled={isAIEnabled("experience", "description")}
+										aiSection="experience"
+										aiField="description"
+										aiLabel={getAILabel("experience", "description")}
+										resumeData={formData}
+									/>
 								</div>
 								<button
 									type="button"
@@ -767,66 +752,54 @@ export default function EditResumePage() {
 								className="mb-4 p-4 border rounded-lg dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
-									<div className="flex items-center gap-2">
-										<input
-											type="text"
-											placeholder="Degree (e.g., Bachelor of Computer Science)"
-											value={degree?.degree || ""}
-											onChange={(e) =>
-												handleArrayChange("education", "degrees", index, {
-													...degree,
-													degree: e.target.value,
-												})
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="education"
-											field="degree"
-											value={degree?.degree || ""}
-											label="Degree"
-										/>
-									</div>
-									<div className="flex items-center gap-2">
-										<input
-											type="text"
-											placeholder="Institution Name"
-											value={degree?.institution || ""}
-											onChange={(e) =>
-												handleArrayChange("education", "degrees", index, {
-													...degree,
-													institution: e.target.value,
-												})
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="education"
-											field="institution"
-											value={degree?.institution || ""}
-											label="Institution Name"
-										/>
-									</div>
-									<div className="flex items-center gap-2">
-										<input
-											type="text"
-											placeholder="Year (e.g., 2020-2024)"
-											value={degree?.year || ""}
-											onChange={(e) =>
-												handleArrayChange("education", "degrees", index, {
-													...degree,
-													year: e.target.value,
-												})
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="education"
-											field="year"
-											value={degree?.year || ""}
-											label="Year"
-										/>
-									</div>
+									<AICompanionField
+										type="input"
+										placeholder="Degree (e.g., Bachelor of Computer Science)"
+										value={degree?.degree || ""}
+										onChange={(value) =>
+											handleArrayChange("education", "degrees", index, {
+												...degree,
+												degree: value,
+											})
+										}
+										aiEnabled={isAIEnabled("education", "degree")}
+										aiSection="education"
+										aiField="degree"
+										aiLabel={getAILabel("education", "degree")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="input"
+										placeholder="Institution Name"
+										value={degree?.institution || ""}
+										onChange={(value) =>
+											handleArrayChange("education", "degrees", index, {
+												...degree,
+												institution: value,
+											})
+										}
+										aiEnabled={isAIEnabled("education", "institution")}
+										aiSection="education"
+										aiField="institution"
+										aiLabel={getAILabel("education", "institution")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="input"
+										placeholder="Year (e.g., 2020-2024)"
+										value={degree?.year || ""}
+										onChange={(value) =>
+											handleArrayChange("education", "degrees", index, {
+												...degree,
+												year: value,
+											})
+										}
+										aiEnabled={isAIEnabled("education", "year")}
+										aiSection="education"
+										aiField="year"
+										aiLabel={getAILabel("education", "year")}
+										resumeData={formData}
+									/>
 								</div>
 								<button
 									type="button"
@@ -914,74 +887,59 @@ export default function EditResumePage() {
 								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
-									<div className="flex items-center gap-2">
-										<input
-											type="text"
-											placeholder="Project Title"
-											value={project?.title || ""}
-											onChange={(e) =>
-												handleProjectChange(index, "title", e.target.value)
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="projects"
-											field="title"
-											value={project?.title || ""}
-											label="Project Title"
-										/>
-									</div>
-									<div className="flex items-start gap-2">
-										<textarea
-											placeholder="Project Description"
-											value={project?.description || ""}
-											onChange={(e) =>
-												handleProjectChange(index, "description", e.target.value)
-											}
-											rows={2}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="projects"
-											field="description"
-											value={project?.description || ""}
-											label="Project Description"
-										/>
-									</div>
-									<div className="flex items-center gap-2">
-										<input
-											type="url"
-											placeholder="GitHub Link"
-											value={project?.github || ""}
-											onChange={(e) =>
-												handleProjectChange(index, "github", e.target.value)
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="projects"
-											field="github"
-											value={project?.github || ""}
-											label="GitHub Link"
-										/>
-									</div>
-									<div className="flex items-center gap-2">
-										<input
-											type="url"
-											placeholder="Live URL"
-											value={project?.url || ""}
-											onChange={(e) =>
-												handleProjectChange(index, "url", e.target.value)
-											}
-											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-										/>
-										<AIHelpButton
-											section="projects"
-											field="url"
-											value={project?.url || ""}
-											label="Live URL"
-										/>
-									</div>
+									<AICompanionField
+										type="input"
+										placeholder="Project Title"
+										value={project?.title || ""}
+										onChange={(value) =>
+											handleProjectChange(index, "title", value)
+										}
+										aiEnabled={isAIEnabled("projects", "title")}
+										aiSection="projects"
+										aiField="title"
+										aiLabel={getAILabel("projects", "title")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="textarea"
+										placeholder="Project Description"
+										value={project?.description || ""}
+										onChange={(value) =>
+											handleProjectChange(index, "description", value)
+										}
+										rows={2}
+										aiEnabled={isAIEnabled("projects", "description")}
+										aiSection="projects"
+										aiField="description"
+										aiLabel={getAILabel("projects", "description")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="url"
+										placeholder="GitHub Link"
+										value={project?.github || ""}
+										onChange={(value) =>
+											handleProjectChange(index, "github", value)
+										}
+										aiEnabled={isAIEnabled("projects", "github")}
+										aiSection="projects"
+										aiField="github"
+										aiLabel={getAILabel("projects", "github")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="url"
+										placeholder="Live URL"
+										value={project?.url || ""}
+										onChange={(value) =>
+											handleProjectChange(index, "url", value)
+										}
+										aiEnabled={isAIEnabled("projects", "url")}
+										aiSection="projects"
+										aiField="url"
+										aiLabel={getAILabel("projects", "url")}
+										resumeData={formData}
+									/>
 								</div>
 								<button
 									type="button"
