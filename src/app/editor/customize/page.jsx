@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { componentMap, componentCategories, getRecommendedLayout } from "@/data/componentMap";
 import Preview from "@/components/Preview";
 import { motion, AnimatePresence } from "framer-motion";
+import Modal from "@/components/common/Modal";
 
 // Mock parsed resume data (in real app, get from upload step or API)
 const MOCK_RESUME = {
@@ -241,6 +242,7 @@ export default function CustomizePage() {
 	const [selectedSection, setSelectedSection] = useState(null);
 	const [hoveredComponent, setHoveredComponent] = useState(null);
 	const router = useRouter();
+	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
 
 	// Prefill from resume or Zustand content
 	useEffect(() => {
@@ -377,11 +379,27 @@ export default function CustomizePage() {
 				// router.push(portfolioUrl);
 			} else {
 				setSuccess("");
-				alert(data.error || "Failed to save portfolio");
+				setModal({
+					open: true,
+					title: 'Error',
+					message: data.error || 'Failed to save portfolio',
+					confirmText: 'OK',
+					showCancel: false,
+					error: true,
+					onConfirm: () => setModal(m => ({ ...m, open: false })),
+				});
 			}
 		} catch (err) {
 			setSuccess("");
-			alert("Failed to save portfolio");
+			setModal({
+				open: true,
+				title: 'Error',
+				message: 'Failed to save portfolio',
+				confirmText: 'OK',
+				showCancel: false,
+				error: true,
+				onConfirm: () => setModal(m => ({ ...m, open: false })),
+			});
 		}
 		setSaving(false);
 	}
@@ -698,6 +716,17 @@ export default function CustomizePage() {
 					<Preview layout={localLayout} content={localContent} portfolioData={portfolioData} />
 				</motion.div>
 			</div>
+			<Modal
+				open={modal.open}
+				title={modal.title}
+				message={modal.message}
+				confirmText={modal.confirmText}
+				cancelText={modal.cancelText}
+				showCancel={modal.showCancel}
+				error={modal.error}
+				onConfirm={modal.onConfirm}
+				onCancel={modal.onCancel}
+			/>
 		</div>
 	);
 }

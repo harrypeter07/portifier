@@ -3,12 +3,14 @@ import { useLayoutStore } from "@/store/layoutStore";
 import { componentMap } from "@/data/componentMap";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Preview from "@/components/Preview";
+import Modal from "@/components/common/Modal";
 
 export default function LivePreviewPage() {
 	const { layout, content, portfolioData, parsedData, restoreFromParsed } = useLayoutStore();
 	const router = useRouter();
+	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
 
 	// Restore parsed data if content is empty
 	useEffect(() => {
@@ -30,7 +32,15 @@ export default function LivePreviewPage() {
 			const userData = await userRes.json();
 			
 			if (!userRes.ok) {
-				alert("Please sign in to publish your portfolio");
+				setModal({
+					open: true,
+					title: 'Sign In Required',
+					message: 'Please sign in to publish your portfolio',
+					confirmText: 'OK',
+					showCancel: false,
+					error: true,
+					onConfirm: () => setModal(m => ({ ...m, open: false })),
+				});
 				return;
 			}
 
@@ -47,20 +57,36 @@ export default function LivePreviewPage() {
 			const data = await res.json();
 			if (res.ok && data.success) {
 				const portfolioUrl = data.portfolioUrl;
-				console.log("🎉 [PREVIEW] Portfolio published successfully:", {
-					username: data.username,
-					portfolioUrl: portfolioUrl
+				setModal({
+					open: true,
+					title: 'Success!',
+					message: `🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`,
+					confirmText: 'View Portfolio',
+					showCancel: false,
+					error: false,
+					onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(portfolioUrl); },
 				});
-				
-				// Show success message and redirect
-				alert(`🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`);
-				router.push(portfolioUrl);
 			} else {
-				alert(data.error || "Failed to publish portfolio");
+				setModal({
+					open: true,
+					title: 'Error',
+					message: data.error || 'Failed to publish portfolio',
+					confirmText: 'OK',
+					showCancel: false,
+					error: true,
+					onConfirm: () => setModal(m => ({ ...m, open: false })),
+				});
 			}
 		} catch (err) {
-			console.error("❌ [PREVIEW] Error publishing portfolio:", err);
-			alert("Failed to publish portfolio");
+			setModal({
+				open: true,
+				title: 'Error',
+				message: 'Failed to publish portfolio',
+				confirmText: 'OK',
+				showCancel: false,
+				error: true,
+				onConfirm: () => setModal(m => ({ ...m, open: false })),
+			});
 		}
 	}
 
@@ -203,6 +229,17 @@ export default function LivePreviewPage() {
 					</div>
 				</div>
 			</div>
+			<Modal
+				open={modal.open}
+				title={modal.title}
+				message={modal.message}
+				confirmText={modal.confirmText}
+				cancelText={modal.cancelText}
+				showCancel={modal.showCancel}
+				error={modal.error}
+				onConfirm={modal.onConfirm}
+				onCancel={modal.onCancel}
+			/>
 		</div>
 	);
 }
