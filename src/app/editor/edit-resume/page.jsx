@@ -4,7 +4,7 @@ import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
 import Preview from "@/components/Preview";
-import AISuggestionInline from "@/components/AISuggestionModal";
+import AISuggestionInline from "@/components/AISuggestionInline";
 
 export default function EditResumePage() {
 	const {
