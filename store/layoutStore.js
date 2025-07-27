@@ -63,7 +63,7 @@ export const useLayoutStore = create(
 					personalData: data?.personal ? {
 						firstName: data.personal.firstName,
 						lastName: data.personal.lastName,
-						title: data.personal.title,
+						subtitle: data.personal.subtitle,
 						email: data.personal.email
 					} : null,
 					aboutData: data?.about ? {
@@ -113,7 +113,7 @@ export const useLayoutStore = create(
 					personalData: transformedData?.personal ? {
 						firstName: transformedData.personal.firstName,
 						lastName: transformedData.personal.lastName,
-						title: transformedData.personal.title,
+						subtitle: transformedData.personal.subtitle,
 						email: transformedData.personal.email
 					} : null,
 					aboutData: transformedData?.about ? {
@@ -163,7 +163,7 @@ export const useLayoutStore = create(
 					personalData: transformedData?.personal ? {
 						firstName: transformedData.personal.firstName,
 						lastName: transformedData.personal.lastName,
-						title: transformedData.personal.title,
+						subtitle: transformedData.personal.subtitle,
 						email: transformedData.personal.email
 					} : null,
 					aboutData: transformedData?.about ? {
@@ -234,7 +234,7 @@ export const useLayoutStore = create(
 						personalData: transformedData?.personal ? {
 							firstName: transformedData.personal.firstName,
 							lastName: transformedData.personal.lastName,
-							title: transformedData.personal.title,
+							subtitle: transformedData.personal.subtitle,
 							email: transformedData.personal.email
 						} : null
 					});

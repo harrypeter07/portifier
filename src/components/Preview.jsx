@@ -12,7 +12,7 @@ export default function Preview({ layout, content, portfolioData }) {
     personalData: portfolioData?.personal ? {
       firstName: portfolioData.personal.firstName,
       lastName: portfolioData.personal.lastName,
-      title: portfolioData.personal.title,
+      subtitle: portfolioData.personal.subtitle,
       email: portfolioData.personal.email
     } : null
   });
@@ -45,7 +45,7 @@ export default function Preview({ layout, content, portfolioData }) {
             personalData: componentProps.data?.personal ? {
               firstName: componentProps.data.personal.firstName,
               lastName: componentProps.data.personal.lastName,
-              title: componentProps.data.personal.title,
+              subtitle: componentProps.data.personal.subtitle,
               tagline: componentProps.data.personal.tagline
             } : null
           });

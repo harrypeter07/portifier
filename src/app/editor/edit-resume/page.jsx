@@ -63,7 +63,7 @@ export default function EditResumePage() {
 				title: data.personal?.firstName && data.personal?.lastName 
 					? `${data.personal.firstName} ${data.personal.lastName}`.trim()
 					: data.hero?.title || "",
-				subtitle: data.personal?.title || data.hero?.subtitle || "",
+				subtitle: data.personal?.subtitle || data.hero?.subtitle || "",
 				tagline: data.personal?.tagline || data.hero?.tagline || "",
 				availability: data.personal?.availability || data.hero?.availability || "",
 			},
@@ -243,7 +243,7 @@ export default function EditResumePage() {
 			const nameParts = (formData.hero.title || "").split(" ");
 			newPortfolioData.personal.firstName = nameParts[0] || "";
 			newPortfolioData.personal.lastName = nameParts.slice(1).join(" ") || "";
-			newPortfolioData.personal.title = formData.hero.subtitle || "";
+			newPortfolioData.personal.subtitle = formData.hero.subtitle || "";
 			newPortfolioData.personal.tagline = formData.hero.tagline || "";
 			newPortfolioData.personal.availability = formData.hero.availability || "";
 
@@ -252,7 +252,7 @@ export default function EditResumePage() {
 				nameParts,
 				firstName: newPortfolioData.personal.firstName,
 				lastName: newPortfolioData.personal.lastName,
-				title: newPortfolioData.personal.title,
+				subtitle: newPortfolioData.personal.subtitle,
 				tagline: newPortfolioData.personal.tagline,
 				availability: newPortfolioData.personal.availability
 			});
@@ -312,7 +312,7 @@ export default function EditResumePage() {
 			personal: {
 				firstName: newPortfolioData.personal.firstName,
 				lastName: newPortfolioData.personal.lastName,
-				title: newPortfolioData.personal.title,
+				subtitle: newPortfolioData.personal.subtitle,
 				email: newPortfolioData.personal.email,
 				phone: newPortfolioData.personal.phone
 			},
