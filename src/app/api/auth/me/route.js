@@ -6,7 +6,13 @@ export async function GET(req) {
 	console.log("[ME] Incoming /me request");
 	
 	try {
-		await dbConnect();
+		// Try to connect to database, but don't fail if it doesn't work
+		try {
+			await dbConnect();
+		} catch (dbError) {
+			console.log("[ME] Database connection failed, continuing with auth check");
+		}
+		
 		const user = await auth(req);
 
 		if (!user) {
@@ -17,7 +23,7 @@ export async function GET(req) {
 			);
 		}
 
-		console.log("[ME] Returning user data for:", user.email);
+		console.log("[ME] Returning user data for:", user.email || user.name);
 		return NextResponse.json({
 			user: {
 				id: user._id,
