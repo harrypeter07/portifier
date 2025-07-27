@@ -4,11 +4,12 @@ import { cookies } from "next/headers";
 import dbConnect from "./mongodb";
 import mongoose from "mongoose";
 
-async function auth(req) {
+async function auth() {
 	console.log("[AUTH] Starting authentication check");
-	console.log("[AUTH] Request cookies:", req.cookies.getAll());
+	const cookieStore = cookies();
+	console.log("[AUTH] Request cookies:", cookieStore.getAll());
 	
-	let token = req.cookies.get("token")?.value;
+	let token = cookieStore.get("token")?.value;
 	console.log("[AUTH] Token from cookies:", token ? "EXISTS" : "MISSING");
 	
 	if (!token) {

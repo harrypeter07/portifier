@@ -134,10 +134,6 @@ export default function ResumeUploadPage() {
 		router.push("/editor/customize");
 	}
 
-	function handleCustomBuilder() {
-		router.push("/editor/components");
-	}
-
 	function handlePreview() {
 		router.push("/preview/live");
 	}
@@ -217,7 +213,7 @@ export default function ResumeUploadPage() {
 								</button>
 								<button
 									className="bg-blue-600 text-white px-4 py-2 rounded font-semibold flex-1"
-									onClick={handleCustomBuilder}
+									onClick={handleTemplateSelect}
 								>
 									Custom Builder
 								</button>

@@ -13,7 +13,7 @@ export async function GET(req) {
 			console.log("[ME] Database connection failed, continuing with auth check");
 		}
 		
-		const user = await auth(req);
+		const user = await auth();
 
 		if (!user) {
 			console.log("[ME] No authenticated user found");
