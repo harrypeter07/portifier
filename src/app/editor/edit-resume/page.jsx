@@ -336,8 +336,49 @@ export default function EditResumePage() {
 		});
 
 		console.log("💾 [EDIT-RESUME] Data saved to both portfolioData and content stores");
-		// Navigate to customize page
-		router.push("/editor/customize");
+		
+		// Ask user if they want to publish now or continue editing
+		const shouldPublish = window.confirm("Do you want to publish your portfolio now? Click OK to publish, Cancel to continue editing.");
+		
+		if (shouldPublish) {
+			// Publish the portfolio
+			try {
+				console.log("🚀 [EDIT-RESUME] Publishing portfolio...");
+				
+				const res = await fetch("/api/portfolio/save", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						layout: { hero: "HeroA", about: "AboutA", experience: "ExperienceA", education: "EducationA", skills: "SkillsA", projects: "ShowcaseA", achievements: "AchievementsA", contact: "ContactFormA" },
+						content: formData,
+						portfolioData: newPortfolioData,
+					}),
+				});
+
+				const data = await res.json();
+				if (res.ok && data.success) {
+					const portfolioUrl = data.portfolioUrl;
+					console.log("🎉 [EDIT-RESUME] Portfolio published successfully:", {
+						username: data.username,
+						portfolioUrl: portfolioUrl
+					});
+					
+					// Show success message and redirect
+					alert(`🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`);
+					router.push(portfolioUrl);
+				} else {
+					alert(data.error || "Failed to publish portfolio");
+					router.push("/editor/customize");
+				}
+			} catch (err) {
+				console.error("❌ [EDIT-RESUME] Error publishing portfolio:", err);
+				alert("Failed to publish portfolio");
+				router.push("/editor/customize");
+			}
+		} else {
+			// Navigate to customize page
+			router.push("/editor/customize");
+		}
 	};
 
 	const handlePreview = () => {

@@ -110,10 +110,16 @@ export default function CustomizePage() {
 		});
 			const data = await res.json();
 			if (res.ok && data.success) {
+				const portfolioUrl = data.portfolioUrl;
 				setSuccess(
-					"Portfolio saved! View your portfolio on your profile page."
+					`🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`
 				);
-				// Optionally: router.push(`/dashboard`);
+				console.log("🎉 [CUSTOMIZE] Portfolio published successfully:", {
+					username: data.username,
+					portfolioUrl: portfolioUrl
+				});
+				// Optionally redirect to the portfolio URL
+				// router.push(portfolioUrl);
 			} else {
 				setSuccess("");
 				alert(data.error || "Failed to save portfolio");
@@ -166,6 +172,22 @@ export default function CustomizePage() {
 							))}
 						</div>
 					))}
+					{success && (
+						<div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+							<div className="font-bold">Success!</div>
+							<div className="text-sm">{success}</div>
+							{success.includes("http") && (
+								<a 
+									href={success.split(": ")[1]} 
+									target="_blank" 
+									rel="noopener noreferrer"
+									className="text-blue-600 hover:text-blue-800 underline text-sm mt-2 inline-block"
+								>
+									View Your Portfolio →
+								</a>
+							)}
+						</div>
+					)}
 					<div className="flex gap-4">
 						<button
 							className="bg-green-600 text-white px-6 py-2 rounded disabled:opacity-60"
@@ -179,10 +201,9 @@ export default function CustomizePage() {
 							type="submit"
 							disabled={saving}
 						>
-							{saving ? "Saving..." : "Save & Finish"}
+							{saving ? "Saving..." : "Publish Portfolio"}
 						</button>
 					</div>
-					{success && <div className="text-green-600">{success}</div>}
 				</form>
 			</div>
 

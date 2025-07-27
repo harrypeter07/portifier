@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/mongodb";
 import Portfolio from "@/models/Portfolio";
+import User from "@/models/User";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
@@ -20,7 +21,7 @@ export async function POST(req) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
 
-	const { layout, content } = await req.json();
+	const { layout, content, portfolioData } = await req.json();
 	if (!layout || !content) {
 		return NextResponse.json(
 			{ error: "Missing layout or content" },
@@ -29,14 +30,55 @@ export async function POST(req) {
 	}
 
 	try {
+		// Get user info for username
+		const user = await User.findById(userId);
+		if (!user) {
+			return NextResponse.json({ error: "User not found" }, { status: 404 });
+		}
+
+		console.log("💾 [SAVE] Saving portfolio for user:", {
+			userId: user._id,
+			username: user.username,
+			name: user.name,
+			hasLayout: !!layout,
+			layoutKeys: layout ? Object.keys(layout) : [],
+			hasContent: !!content,
+			hasPortfolioData: !!portfolioData,
+			personalData: portfolioData?.personal ? {
+				firstName: portfolioData.personal.firstName,
+				lastName: portfolioData.personal.lastName,
+				subtitle: portfolioData.personal.subtitle,
+				email: portfolioData.personal.email
+			} : null
+		});
+
 		// Upsert portfolio for user
 		const portfolio = await Portfolio.findOneAndUpdate(
 			{ userId },
-			{ layout, content },
+			{ 
+				layout, 
+				content, 
+				portfolioData,
+				username: user.username,
+				isPublic: true // Make portfolio public when saved
+			},
 			{ upsert: true, new: true, setDefaultsOnInsert: true }
 		);
-		return NextResponse.json({ success: true, portfolio });
+
+		console.log("✅ [SAVE] Portfolio saved successfully:", {
+			portfolioId: portfolio._id,
+			username: user.username,
+			portfolioUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${user.username}`
+		});
+
+		return NextResponse.json({ 
+			success: true, 
+			portfolio,
+			username: user.username,
+			portfolioUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${user.username}`
+		});
 	} catch (err) {
+		console.error("❌ [SAVE] Error saving portfolio:", err);
 		return NextResponse.json({ error: err.message }, { status: 500 });
 	}
 }
