@@ -3,6 +3,7 @@ import Portfolio from "@/models/Portfolio";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
+import mongoose from "mongoose";
 
 export async function POST(req) {
 	await dbConnect();
@@ -13,7 +14,8 @@ export async function POST(req) {
 		if (!cookie) throw new Error("No auth token");
 		const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 		const { payload } = await jwtVerify(cookie, secret);
-		userId = payload.userId;
+		// Convert userId string to ObjectId for database query
+		userId = new mongoose.Types.ObjectId(payload.userId);
 	} catch (err) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
