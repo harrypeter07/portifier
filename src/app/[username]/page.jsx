@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { componentMap } from "@/data/componentMap";
+import PortfolioLoading from "@/components/PortfolioLoading";
 
 export default function PortfolioPage({ params }) {
 	// Next.js 15+ params handling
@@ -28,15 +29,14 @@ export default function PortfolioPage({ params }) {
 		if (username) fetchPortfolio();
 	}, [username]);
 
+	// Dynamically render the selected loading component if present
 	if (loading) {
-		return (
-			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-				<div className="text-center">
-					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-					<p className="text-gray-600 dark:text-gray-300">Loading portfolio...</p>
-				</div>
-			</div>
-		);
+		let LoadingComponent = PortfolioLoading;
+		if (portfolio && portfolio.layout && portfolio.layout.loading) {
+			const loadingCompName = portfolio.layout.loading;
+			LoadingComponent = componentMap[loadingCompName] || PortfolioLoading;
+		}
+		return <LoadingComponent />;
 	}
 	if (error) {
 		return (

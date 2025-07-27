@@ -10,6 +10,7 @@ import SkillsA from "@/components/Skills/SkillsA";
 import ShowcaseA from "@/components/Showcase/ShowcaseA";
 import AchievementsA from "@/components/Achievements/AchievementsA";
 import ContactFormA from "@/components/Contact/ContactFormA";
+import PortfolioLoading from "@/components/PortfolioLoading";
 
 export const componentMap = {
 	HeroA,
@@ -23,6 +24,7 @@ export const componentMap = {
 	ShowcaseA,
 	AchievementsA,
 	ContactFormA,
+	PortfolioLoading,
 };
 
 // Component categories for organized selection
@@ -74,6 +76,12 @@ export const componentCategories = {
 		components: ["ContactFormA"],
 		description: "Contact details and social links",
 		required: true
+	},
+	loading: {
+		label: "Loading Screen",
+		components: ["PortfolioLoading"],
+		description: "Loading spinner or animation while portfolio loads",
+		required: false
 	}
 };
 
