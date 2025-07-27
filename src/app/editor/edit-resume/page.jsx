@@ -671,72 +671,120 @@ export default function EditResumePage() {
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Contact Information</h2>
 						<div className="grid grid-cols-1 gap-4">
-							<div className="flex items-center gap-2">
-								<input
-									type="email"
-									placeholder="Email Address"
-									value={formData.contact?.email || ""}
-									onChange={(e) => {
-										handleInputChange("contact", "email", e.target.value);
-									}}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="email"
+										placeholder="Email Address"
+										value={formData.contact?.email || ""}
+										onChange={(e) => {
+											handleInputChange("contact", "email", e.target.value);
+										}}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="contact"
+										field="email"
+										value={formData.contact?.email || ""}
+										label="Email Address"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="contact-email"
 									section="contact"
 									field="email"
-									value={formData.contact?.email || ""}
 									label="Email Address"
+									suggestions={aiSuggestions["contact-email"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["contact-email"] || false}
+									isActive={activeAiField === "contact-email"}
 								/>
 							</div>
-							<div className="flex items-center gap-2">
-								<input
-									type="tel"
-									placeholder="Phone Number"
-									value={formData.contact?.phone || ""}
-									onChange={(e) =>
-										handleInputChange("contact", "phone", e.target.value)
-									}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="tel"
+										placeholder="Phone Number"
+										value={formData.contact?.phone || ""}
+										onChange={(e) =>
+											handleInputChange("contact", "phone", e.target.value)
+										}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="contact"
+										field="phone"
+										value={formData.contact?.phone || ""}
+										label="Phone Number"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="contact-phone"
 									section="contact"
 									field="phone"
-									value={formData.contact?.phone || ""}
 									label="Phone Number"
+									suggestions={aiSuggestions["contact-phone"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["contact-phone"] || false}
+									isActive={activeAiField === "contact-phone"}
 								/>
 							</div>
-							<div className="flex items-center gap-2">
-								<input
-									type="text"
-									placeholder="Location (City, Country)"
-									value={formData.contact?.location || ""}
-									onChange={(e) =>
-										handleInputChange("contact", "location", e.target.value)
-									}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="text"
+										placeholder="Location (City, Country)"
+										value={formData.contact?.location || ""}
+										onChange={(e) =>
+											handleInputChange("contact", "location", e.target.value)
+										}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="contact"
+										field="location"
+										value={formData.contact?.location || ""}
+										label="Location"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="contact-location"
 									section="contact"
 									field="location"
-									value={formData.contact?.location || ""}
 									label="Location"
+									suggestions={aiSuggestions["contact-location"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["contact-location"] || false}
+									isActive={activeAiField === "contact-location"}
 								/>
 							</div>
-							<div className="flex items-center gap-2">
-								<input
-									type="url"
-									placeholder="LinkedIn Profile"
-									value={formData.contact?.linkedin || ""}
-									onChange={(e) =>
-										handleInputChange("contact", "linkedin", e.target.value)
-									}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="url"
+										placeholder="LinkedIn Profile"
+										value={formData.contact?.linkedin || ""}
+										onChange={(e) =>
+											handleInputChange("contact", "linkedin", e.target.value)
+										}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="contact"
+										field="linkedin"
+										value={formData.contact?.linkedin || ""}
+										label="LinkedIn Profile"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="contact-linkedin"
 									section="contact"
 									field="linkedin"
-									value={formData.contact?.linkedin || ""}
 									label="LinkedIn Profile"
+									suggestions={aiSuggestions["contact-linkedin"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["contact-linkedin"] || false}
+									isActive={activeAiField === "contact-linkedin"}
 								/>
 							</div>
 						</div>
