@@ -2,6 +2,7 @@ import { jwtVerify } from "jose";
 import User from "../models/User";
 import { cookies } from "next/headers";
 import dbConnect from "./mongodb";
+import mongoose from "mongoose";
 
 export default async function auth(req) {
 	console.log("[AUTH] Starting authentication check");
@@ -22,7 +23,9 @@ export default async function auth(req) {
 		console.log("[AUTH] Token verified successfully, payload:", payload);
 		
 		await dbConnect();
-		const user = await User.findById(payload.userId);
+		// Convert userId string back to ObjectId for database query
+		const userId = new mongoose.Types.ObjectId(payload.userId);
+		const user = await User.findById(userId);
 		
 		if (!user) {
 			console.log("[AUTH] User not found in database for ID:", payload.userId);
