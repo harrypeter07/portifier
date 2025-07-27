@@ -5,6 +5,7 @@ import dbConnect from "./mongodb";
 
 export default async function auth(req) {
 	console.log("[AUTH] Starting authentication check");
+	console.log("[AUTH] Request cookies:", req.cookies.getAll());
 	
 	let token = req.cookies.get("token")?.value;
 	console.log("[AUTH] Token from cookies:", token ? "EXISTS" : "MISSING");
