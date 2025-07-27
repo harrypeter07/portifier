@@ -6,6 +6,7 @@ import { componentMap } from "@/data/componentMap";
 import Preview from "@/components/Preview";
 import AICompanionField from "@/components/AICompanionField";
 import { isAIEnabled, getAILabel } from "@/data/aiFieldConfig";
+import Modal from "@/components/common/Modal";
 
 export default function EditResumePage() {
 	const {
@@ -33,6 +34,7 @@ export default function EditResumePage() {
 		hobbies: [],
 	});
 	const router = useRouter();
+	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
 
 	useEffect(() => {
 		console.log("📝 [EDIT-RESUME] useEffect triggered:", {
@@ -340,49 +342,67 @@ export default function EditResumePage() {
 
 		console.log("💾 [EDIT-RESUME] Data saved to both portfolioData and content stores");
 		
-		// Ask user if they want to publish now or continue editing
-		const shouldPublish = window.confirm("Do you want to publish your portfolio now? Click OK to publish, Cancel to continue editing.");
-		
-		if (shouldPublish) {
-			// Publish the portfolio
-			try {
-				console.log("🚀 [EDIT-RESUME] Publishing portfolio...");
-				
-				const res = await fetch("/api/portfolio/save", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						layout: layout, // Use the selected layout from store
-						content: formData,
-						portfolioData: newPortfolioData,
-						resumeId: resumeId, // Associate with resume if available
-					}),
-				});
-
-				const data = await res.json();
-				if (res.ok && data.success) {
-					const portfolioUrl = data.portfolioUrl;
-					console.log("🎉 [EDIT-RESUME] Portfolio published successfully:", {
-						username: data.username,
-						portfolioUrl: portfolioUrl
+		// Show confirmation modal instead of window.confirm
+		setModal({
+			open: true,
+			title: 'Publish Portfolio?',
+			message: 'Do you want to publish your portfolio now? Click OK to publish, Cancel to continue editing.',
+			confirmText: 'Publish',
+			cancelText: 'Continue Editing',
+			showCancel: true,
+			error: false,
+			onConfirm: async () => {
+				setModal(m => ({ ...m, open: false }));
+				try {
+					const res = await fetch("/api/portfolio/save", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							layout: layout,
+							content: formData,
+							portfolioData: newPortfolioData,
+							resumeId: resumeId,
+						}),
 					});
-					
-					// Show success message and redirect
-					alert(`🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`);
-					router.push(portfolioUrl);
-				} else {
-					alert(data.error || "Failed to publish portfolio");
-					router.push("/editor/customize");
+					const data = await res.json();
+					if (res.ok && data.success) {
+						setModal({
+							open: true,
+							title: 'Success!',
+							message: `🎉 Congratulations! Your portfolio is now live at: ${data.portfolioUrl}`,
+							confirmText: 'View Portfolio',
+							showCancel: false,
+							error: false,
+							onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(data.portfolioUrl); },
+						});
+					} else {
+						setModal({
+							open: true,
+							title: 'Error',
+							message: data.error || 'Failed to publish portfolio',
+							confirmText: 'OK',
+							showCancel: false,
+							error: true,
+							onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push("/editor/customize"); },
+						});
+					}
+				} catch (err) {
+					setModal({
+						open: true,
+						title: 'Error',
+						message: 'Failed to publish portfolio',
+						confirmText: 'OK',
+						showCancel: false,
+						error: true,
+						onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push("/editor/customize"); },
+					});
 				}
-			} catch (err) {
-				console.error("❌ [EDIT-RESUME] Error publishing portfolio:", err);
-				alert("Failed to publish portfolio");
+			},
+			onCancel: () => {
+				setModal(m => ({ ...m, open: false }));
 				router.push("/editor/customize");
-			}
-		} else {
-			// Navigate to customize page
-			router.push("/editor/customize");
-		}
+			},
+		});
 	};
 
 	const handlePreview = () => {
@@ -1145,6 +1165,17 @@ export default function EditResumePage() {
 					</div>
 				</div>
 			</div>
+			<Modal
+				open={modal.open}
+				title={modal.title}
+				message={modal.message}
+				confirmText={modal.confirmText}
+				cancelText={modal.cancelText}
+				showCancel={modal.showCancel}
+				error={modal.error}
+				onConfirm={modal.onConfirm}
+				onCancel={modal.onCancel}
+			/>
 		</div>
 	);
 }
