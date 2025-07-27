@@ -82,16 +82,16 @@ export async function POST(req) {
 			updateData.username = user.username || (user.email && user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, ''));
 		}
 
-		// Upsert portfolio for user
-		const portfolio = await Portfolio.findOneAndUpdate(
-			{ userId: user._id }, 
-			updateData, 
-			{
-				upsert: true,
-				new: true,
-				setDefaultsOnInsert: true,
+		// Ensure slug is unique for this user
+		if (slug) {
+			const existing = await Portfolio.findOne({ userId: user._id, slug });
+			if (existing) {
+				return NextResponse.json({ error: "Slug already exists for this user. Please choose a different one." }, { status: 409 });
 			}
-		);
+		}
+
+		// Create a new portfolio for each save
+		const portfolio = await Portfolio.create(updateData);
 
 		// Associate resume with portfolio if resumeId is provided
 		if (resumeId) {
@@ -109,8 +109,8 @@ export async function POST(req) {
 		// Calculate completeness
 		const completeness = portfolio.calculateCompleteness();
 
-		// Generate portfolio URL
-		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${portfolio.username || user.username}`;
+		// Generate portfolio URL with username and portfolioId
+		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/portfolio/${portfolio.username || user.username}/${portfolio._id}`;
 
 		return NextResponse.json({
 			success: true,
@@ -122,6 +122,8 @@ export async function POST(req) {
 				suggestions: validation.warnings || [],
 			},
 			username: portfolio.username || user.username,
+			portfolioId: portfolio._id,
+			slug: portfolio.slug,
 			portfolioUrl: portfolioUrl,
 		});
 	} catch (err) {

@@ -6,6 +6,7 @@ import { componentMap, componentCategories, getRecommendedLayout } from "@/data/
 import Preview from "@/components/Preview";
 import { motion, AnimatePresence } from "framer-motion";
 import Modal from "@/components/common/Modal";
+import debounce from "lodash.debounce";
 
 // Mock parsed resume data (in real app, get from upload step or API)
 const MOCK_RESUME = {
@@ -243,6 +244,66 @@ export default function CustomizePage() {
 	const [hoveredComponent, setHoveredComponent] = useState(null);
 	const router = useRouter();
 	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
+	const [slug, setSlug] = useState("");
+	const [slugAvailable, setSlugAvailable] = useState(null); // null = untouched, true = available, false = taken
+	const [slugError, setSlugError] = useState("");
+	const [checkingSlug, setCheckingSlug] = useState(false);
+	const [username, setUsername] = useState("");
+
+	// Fetch username on mount
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await fetch("/api/auth/me");
+				const data = await res.json();
+				if (res.ok && data.username) setUsername(data.username);
+			} catch {}
+		})();
+	}, []);
+
+	// Debounced slug check
+	const checkSlug = debounce(async (slugToCheck) => {
+		if (!slugToCheck || !username) return;
+		setCheckingSlug(true);
+		try {
+			const res = await fetch("/api/portfolio/check-slug", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ username, slug: slugToCheck }),
+			});
+			const data = await res.json();
+			if (res.ok && typeof data.available === "boolean") {
+				setSlugAvailable(data.available);
+				setSlugError(data.available ? "" : "This URL is already taken. Try another or use a suggestion.");
+			} else {
+				setSlugAvailable(null);
+				setSlugError("Could not check URL availability.");
+			}
+		} catch {
+			setSlugAvailable(null);
+			setSlugError("Could not check URL availability.");
+		}
+		setCheckingSlug(false);
+	}, 400);
+
+	// Watch slug changes
+	useEffect(() => {
+		if (slug) checkSlug(slug);
+		else {
+			setSlugAvailable(null);
+			setSlugError("");
+		}
+	}, [slug, username]);
+
+	// Suggest alternative slug
+	const suggestSlug = () => {
+		if (!slug) return "";
+		const match = slug.match(/(.+)-(\d+)$/);
+		if (match) {
+			return `${match[1]}-${parseInt(match[2]) + 1}`;
+		}
+		return `${slug}-2`;
+	};
 
 	// Prefill from resume or Zustand content
 	useEffect(() => {
@@ -351,6 +412,16 @@ export default function CustomizePage() {
 		});
 		setSaving(true);
 		setSuccess("");
+		if (!slug) {
+			setSlugError("Please enter a URL for your portfolio.");
+			setSaving(false);
+			return;
+		}
+		if (!slugAvailable) {
+			setSlugError("This URL is already taken. Please choose another.");
+			setSaving(false);
+			return;
+		}
 		try {
 			// Get email from contact section or use a default
 			const userEmail = localContent.contact?.email || "demo@example.com";
@@ -363,6 +434,8 @@ export default function CustomizePage() {
 					content: localContent,
 					portfolioData, // Include the updated portfolio data
 					resumeId: resumeId, // Associate with resume if available
+					slug,
+					username,
 				}),
 			});
 			const data = await res.json();
@@ -378,6 +451,9 @@ export default function CustomizePage() {
 				// Optionally redirect to the portfolio URL
 				// router.push(portfolioUrl);
 			} else {
+				if (data.error && data.error.includes("Slug already exists")) {
+					setSlugError("This URL is already taken. Please choose another.");
+				}
 				setSuccess("");
 				setModal({
 					open: true,
@@ -653,6 +729,33 @@ export default function CustomizePage() {
 						</motion.div>
 					)}
 				</AnimatePresence>
+
+				{/* Slug input for portfolio URL */}
+				<div className="mb-6">
+					<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+						🔗 Portfolio URL
+					</label>
+					<div className="flex items-center gap-2">
+						<span className="text-gray-500 dark:text-gray-400">{window?.location?.origin || "https://yourdomain.com"}/portfolio/{username || "username"}/</span>
+						<input
+							type="text"
+							className={`w-48 p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${slugError ? "border-red-500" : ""}`}
+							placeholder="your-portfolio"
+							value={slug}
+							onChange={e => setSlug(e.target.value.replace(/[^a-zA-Z0-9-_]/g, "").toLowerCase())}
+							disabled={saving}
+						/>
+						{checkingSlug && <span className="text-xs text-gray-500 ml-2">Checking...</span>}
+						{slugAvailable && slug && <span className="text-xs text-green-600 ml-2">Available!</span>}
+						{!slugAvailable && slug && <span className="text-xs text-red-600 ml-2">Not available</span>}
+					</div>
+					{slugError && <div className="text-xs text-red-600 mt-1">{slugError}</div>}
+					{!slugAvailable && slug && (
+						<div className="text-xs text-gray-500 mt-1">
+							Suggestion: <button type="button" className="underline" onClick={() => setSlug(suggestSlug())}>{suggestSlug()}</button>
+						</div>
+					)}
+				</div>
 
 				{/* Action Buttons */}
 				<motion.div 

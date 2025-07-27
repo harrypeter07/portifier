@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const PortfolioSchema = new mongoose.Schema({
 	// User association
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-	username: { type: String, required: false, unique: true, sparse: true }, // Make optional initially
+	username: { type: String, required: false }, // Removed unique: true, sparse: true
 	
 	// Portfolio configuration
 	templateName: { type: String, default: "cleanfolio" },

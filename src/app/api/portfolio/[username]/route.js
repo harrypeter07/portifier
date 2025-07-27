@@ -1,3 +1,4 @@
+// This route is now legacy: only fetches the latest portfolio for a user. Use /api/portfolio/[username]/[portfolioId] for specific portfolios.
 import dbConnect from "@/lib/mongodb";
 import Portfolio from "@/models/Portfolio";
 import User from "@/models/User";
