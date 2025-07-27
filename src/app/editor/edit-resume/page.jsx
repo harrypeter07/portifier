@@ -223,7 +223,7 @@ export default function EditResumePage() {
 		}));
 	};
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		console.log("💾 [EDIT-RESUME] Save triggered with form data:", {
 			hero: formData.hero,
 			contact: formData.contact,
