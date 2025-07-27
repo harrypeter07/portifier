@@ -351,7 +351,7 @@ export default function EditResumePage() {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
-						layout: { hero: "HeroA", about: "AboutA", experience: "ExperienceA", education: "EducationA", skills: "SkillsA", projects: "ShowcaseA", achievements: "AchievementsA", contact: "ContactFormA" },
+						layout: layout, // Use the selected layout from store
 						content: formData,
 						portfolioData: newPortfolioData,
 					}),
@@ -618,7 +618,13 @@ export default function EditResumePage() {
 								type="input"
 								placeholder="Interests (comma-separated)"
 								value={(formData.about?.interests || []).join(", ")}
-								onChange={(value) => handleInputChange("about", "interests", value.split(",").map(s => s.trim()).filter(Boolean))}
+								onChange={(value) => {
+									if (value && typeof value === 'string') {
+										handleInputChange("about", "interests", value.split(",").map(s => s.trim()).filter(Boolean));
+									} else {
+										handleInputChange("about", "interests", []);
+									}
+								}}
 								aiEnabled={isAIEnabled("about", "interests")}
 								aiSection="about"
 								aiField="interests"
@@ -629,7 +635,13 @@ export default function EditResumePage() {
 								type="input"
 								placeholder="Personal Values (comma-separated)"
 								value={(formData.about?.personalValues || []).join(", ")}
-								onChange={(value) => handleInputChange("about", "personalValues", value.split(",").map(s => s.trim()).filter(Boolean))}
+								onChange={(value) => {
+									if (value && typeof value === 'string') {
+										handleInputChange("about", "personalValues", value.split(",").map(s => s.trim()).filter(Boolean));
+									} else {
+										handleInputChange("about", "personalValues", []);
+									}
+								}}
 								aiEnabled={isAIEnabled("about", "personalValues")}
 								aiSection="about"
 								aiField="personalValues"
@@ -640,7 +652,13 @@ export default function EditResumePage() {
 								type="input"
 								placeholder="Fun Facts (comma-separated)"
 								value={(formData.about?.funFacts || []).join(", ")}
-								onChange={(value) => handleInputChange("about", "funFacts", value.split(",").map(s => s.trim()).filter(Boolean))}
+								onChange={(value) => {
+									if (value && typeof value === 'string') {
+										handleInputChange("about", "funFacts", value.split(",").map(s => s.trim()).filter(Boolean));
+									} else {
+										handleInputChange("about", "funFacts", []);
+									}
+								}}
 								aiEnabled={isAIEnabled("about", "funFacts")}
 								aiSection="about"
 								aiField="funFacts"
@@ -831,16 +849,20 @@ export default function EditResumePage() {
 									type="textarea"
 									placeholder="e.g., JavaScript, React, Python, SQL"
 									value={(formData.skills?.technical || []).join(", ")}
-									onChange={(value) =>
-										handleInputChange(
-											"skills",
-											"technical",
-											value
-												.split(",")
-												.map((s) => s.trim())
-												.filter((s) => s)
-										)
-									}
+									onChange={(value) => {
+										if (value && typeof value === 'string') {
+											handleInputChange(
+												"skills",
+												"technical",
+												value
+													.split(",")
+													.map((s) => s.trim())
+													.filter((s) => s)
+											);
+										} else {
+											handleInputChange("skills", "technical", []);
+										}
+									}}
 									rows={3}
 									aiEnabled={isAIEnabled("skills", "technical")}
 									aiSection="skills"
@@ -857,16 +879,20 @@ export default function EditResumePage() {
 									type="textarea"
 									placeholder="e.g., Team Leadership, Communication, Problem Solving"
 									value={(formData.skills?.soft || []).join(", ")}
-									onChange={(value) =>
-										handleInputChange(
-											"skills",
-											"soft",
-											value
-												.split(",")
-												.map((s) => s.trim())
-												.filter((s) => s)
-										)
-									}
+									onChange={(value) => {
+										if (value && typeof value === 'string') {
+											handleInputChange(
+												"skills",
+												"soft",
+												value
+													.split(",")
+													.map((s) => s.trim())
+													.filter((s) => s)
+											);
+										} else {
+											handleInputChange("skills", "soft", []);
+										}
+									}}
 									rows={3}
 									aiEnabled={isAIEnabled("skills", "soft")}
 									aiSection="skills"
@@ -966,15 +992,22 @@ export default function EditResumePage() {
 							type="textarea"
 							placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
 							value={(formData.languages || []).join(", ")}
-							onChange={(value) =>
-								setFormData((prev) => ({
-									...prev,
-									languages: value
-										.split(",")
-										.map((s) => s.trim())
-										.filter((s) => s),
-								}))
-							}
+							onChange={(value) => {
+								if (value && typeof value === 'string') {
+									setFormData((prev) => ({
+										...prev,
+										languages: value
+											.split(",")
+											.map((s) => s.trim())
+											.filter((s) => s),
+									}));
+								} else {
+									setFormData((prev) => ({
+										...prev,
+										languages: [],
+									}));
+								}
+							}}
 							rows={2}
 							aiEnabled={isAIEnabled("languages", "languages")}
 							aiSection="languages"

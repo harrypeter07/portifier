@@ -3,7 +3,9 @@ export const componentMap = {
 	HeroA: require("@/components/Hero/HeroA").default,
 	HeroB: require("@/components/Hero/HeroB").default,
 	AboutA: require("@/components/About/AboutA").default,
+	AboutB: require("@/components/About/AboutB").default,
 	ExperienceA: require("@/components/Experience/ExperienceA").default,
+	ExperienceB: require("@/components/Experience/ExperienceB").default,
 	EducationA: require("@/components/Education/EducationA").default,
 	SkillsA: require("@/components/Skills/SkillsA").default,
 	ShowcaseA: require("@/components/Showcase/ShowcaseA").default,
@@ -21,13 +23,13 @@ export const componentCategories = {
 	},
 	about: {
 		label: "About Section",
-		components: ["AboutA"],
+		components: ["AboutA", "AboutB"],
 		description: "Professional summary and bio",
 		required: true
 	},
 	experience: {
 		label: "Work Experience",
-		components: ["ExperienceA"],
+		components: ["ExperienceA", "ExperienceB"],
 		description: "Professional work history",
 		required: false
 	},

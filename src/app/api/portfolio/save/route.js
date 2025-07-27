@@ -120,6 +120,9 @@ export async function POST(req) {
 		// Calculate completeness
 		const completeness = portfolio.calculateCompleteness();
 
+		// Generate portfolio URL
+		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${user.username}`;
+
 		return NextResponse.json({
 			success: true,
 			portfolio: portfolio.getPublicData(),
@@ -129,6 +132,8 @@ export async function POST(req) {
 				warnings: validation.errors || [],
 				suggestions: validation.warnings || [],
 			},
+			username: user.username,
+			portfolioUrl: portfolioUrl,
 		});
 	} catch (err) {
 		return NextResponse.json({ error: err.message }, { status: 500 });

@@ -126,11 +126,16 @@ export default function AICompanionField({
 		// Handle different field types
 		if (aiField === "interests" || aiField === "personalValues" || aiField === "funFacts" || aiField === "technical" || aiField === "soft" || aiField === "languages") {
 			// For array fields, split by commas and clean up
-			const items = suggestion.split(",").map(s => s.trim()).filter(s => s);
-			onChange(items);
+			if (suggestion && typeof suggestion === 'string') {
+				const items = suggestion.split(",").map(s => s.trim()).filter(s => s);
+				onChange(items);
+			} else {
+				// Fallback for empty or invalid suggestions
+				onChange([]);
+			}
 		} else {
 			// For regular text fields
-			onChange(suggestion);
+			onChange(suggestion || "");
 		}
 		setShowSuggestions(false);
 	}
@@ -142,7 +147,7 @@ export default function AICompanionField({
 				{type === "textarea" ? (
 					<textarea
 						placeholder={placeholder}
-						value={value}
+						value={value || ""}
 						onChange={(e) => onChange(e.target.value)}
 						rows={rows}
 						className={`flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 ${className}`}
@@ -151,7 +156,7 @@ export default function AICompanionField({
 					<input
 						type={type === "input" ? "text" : type}
 						placeholder={placeholder}
-						value={value}
+						value={value || ""}
 						onChange={(e) => onChange(e.target.value)}
 						className={`flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 ${className}`}
 					/>
