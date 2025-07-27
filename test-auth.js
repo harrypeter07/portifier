@@ -9,13 +9,19 @@ function extractCookies(response) {
     const setCookieHeader = response.headers.get('set-cookie');
     
     if (setCookieHeader) {
-        // Parse the set-cookie header
-        const cookiePairs = setCookieHeader.split(',');
-        cookiePairs.forEach(pair => {
-            const [nameValue] = pair.split(';');
+        console.log('Raw Set-Cookie header:', setCookieHeader);
+        
+        // Handle multiple Set-Cookie headers (they might be in an array)
+        const cookieHeaders = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
+        
+        cookieHeaders.forEach(header => {
+            // Parse the set-cookie header - format: name=value; path=/; httpOnly; etc.
+            const [nameValue, ...options] = header.split(';');
             const [name, value] = nameValue.split('=');
+            
             if (name && value) {
                 cookies[name.trim()] = value.trim();
+                console.log(`Extracted cookie: ${name.trim()} = ${value.trim()}`);
             }
         });
     }
@@ -25,9 +31,12 @@ function extractCookies(response) {
 
 // Helper function to create cookie header string
 function createCookieHeader(cookies) {
-    return Object.entries(cookies)
+    const cookieString = Object.entries(cookies)
         .map(([name, value]) => `${name}=${value}`)
         .join('; ');
+    
+    console.log('Sending cookie header:', cookieString);
+    return cookieString;
 }
 
 async function testAuth() {
