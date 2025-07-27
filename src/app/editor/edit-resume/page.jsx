@@ -581,21 +581,33 @@ export default function EditResumePage() {
 									isActive={activeAiField === "hero-title"}
 								/>
 							</div>
-							<div className="flex items-center gap-2">
-								<input
-									type="text"
-									placeholder="Professional Title (e.g., Software Developer)"
-									value={formData.hero?.subtitle || ""}
-									onChange={(e) =>
-										handleInputChange("hero", "subtitle", e.target.value)
-									}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="text"
+										placeholder="Professional Title (e.g., Software Developer)"
+										value={formData.hero?.subtitle || ""}
+										onChange={(e) =>
+											handleInputChange("hero", "subtitle", e.target.value)
+										}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="hero"
+										field="subtitle"
+										value={formData.hero?.subtitle || ""}
+										label="Professional Title"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="hero-subtitle"
 									section="hero"
 									field="subtitle"
-									value={formData.hero?.subtitle || ""}
 									label="Professional Title"
+									suggestions={aiSuggestions["hero-subtitle"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["hero-subtitle"] || false}
+									isActive={activeAiField === "hero-subtitle"}
 								/>
 							</div>
 							<div className="flex items-center gap-2">
