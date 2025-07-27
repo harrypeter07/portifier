@@ -39,6 +39,7 @@ export default function CustomizePage() {
 		currentTemplate,
 		portfolioType,
 		setPortfolioType,
+		resumeId,
 	} = useLayoutStore();
 	const [localContent, setLocalContent] = useState({});
 	const [localLayout, setLocalLayout] = useState({});
@@ -143,7 +144,7 @@ export default function CustomizePage() {
 					layout: localLayout, // Use the selected layout
 					content: localContent,
 					portfolioData, // Include the updated portfolio data
-					email: userEmail,
+					resumeId: resumeId, // Associate with resume if available
 				}),
 			});
 			const data = await res.json();

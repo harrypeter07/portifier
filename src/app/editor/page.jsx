@@ -47,6 +47,7 @@ export default function ResumeUploadPage() {
 		setAllLayout,
 		applyTemplate,
 		setCurrentTemplate,
+		setResumeId,
 		parsedData,
 		content,
 		portfolioData,
@@ -83,6 +84,12 @@ export default function ResumeUploadPage() {
 			}
 
 			setParsed(data);
+
+			// Store resume ID for later association
+			if (data.resumeId) {
+				setResumeId(data.resumeId);
+				console.log("📄 [EDITOR] Resume ID stored:", data.resumeId);
+			}
 
 			// Log metadata for debugging
 			console.log("📊 Parsing metadata:", data.metadata);

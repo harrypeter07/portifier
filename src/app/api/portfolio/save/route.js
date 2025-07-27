@@ -1,18 +1,25 @@
 import dbConnect from "@/lib/mongodb";
 import Portfolio from "@/models/Portfolio";
 import User from "@/models/User";
+import Resume from "@/models/Resume";
 import { NextResponse } from "next/server";
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 import {
 	transformLegacyDataToSchema,
 	validatePortfolioData,
 } from "@/utils/dataTransformers";
+import { auth } from "@/lib/auth";
 
 export async function POST(req) {
 	await dbConnect();
-	let userId = null;
 
 	try {
+		// Get authenticated user
+		const user = await auth();
+		if (!user) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+
 		const requestData = await req.json();
 
 		// Handle both new schema format and legacy format
@@ -20,12 +27,12 @@ export async function POST(req) {
 			layout,
 			content, // Legacy format
 			portfolioData, // New schema format
-			email,
 			username,
 			templateName = "cleanfolio",
 			portfolioType = "developer",
 			isPublic = false,
 			slug,
+			resumeId, // Optional: associate with a resume
 		} = requestData;
 
 		if (!layout) {
@@ -54,49 +61,9 @@ export async function POST(req) {
 			// Continue saving but log warnings
 		}
 
-		// Determine email for user lookup
-		const userEmail =
-			email ||
-			finalPortfolioData.personal?.email ||
-			finalPortfolioData.contact?.email;
-
-		// Find or create user
-		if (userEmail) {
-			const user = await User.findOne({ email: userEmail });
-			if (user) {
-				userId = user._id;
-			} else {
-				// Create a temporary user if not found (for demo purposes)
-				const newUser = new User({
-					email: userEmail,
-					name: finalPortfolioData.personal?.firstName
-						? `${finalPortfolioData.personal.firstName} ${finalPortfolioData.personal.lastName}`.trim()
-						: userEmail.split("@")[0],
-					password: "demo" + Date.now(), // Temporary password
-					verified: true, // Skip verification for demo
-				});
-				await newUser.save();
-				userId = newUser._id;
-			}
-		} else {
-			// Fallback: use a default user ID for demo
-			const demoUser = await User.findOne({ email: "demo@example.com" });
-			if (demoUser) {
-				userId = demoUser._id;
-			} else {
-				const newDemoUser = new User({
-					email: "demo@example.com",
-					name: "Demo User",
-					password: "demo" + Date.now(), // Temporary password
-					verified: true,
-				});
-				await newDemoUser.save();
-				userId = newDemoUser._id;
-			}
-		}
-
 		// Prepare portfolio update data
 		const updateData = {
+			userId: user._id,
 			layout,
 			portfolioData: finalPortfolioData,
 			content, // Keep legacy format for compatibility
@@ -111,17 +78,34 @@ export async function POST(req) {
 		if (slug) updateData.slug = slug;
 
 		// Upsert portfolio for user
-		const portfolio = await Portfolio.findOneAndUpdate({ userId }, updateData, {
-			upsert: true,
-			new: true,
-			setDefaultsOnInsert: true,
-		});
+		const portfolio = await Portfolio.findOneAndUpdate(
+			{ userId: user._id }, 
+			updateData, 
+			{
+				upsert: true,
+				new: true,
+				setDefaultsOnInsert: true,
+			}
+		);
+
+		// Associate resume with portfolio if resumeId is provided
+		if (resumeId) {
+			try {
+				await Resume.findByIdAndUpdate(resumeId, {
+					portfolioId: portfolio._id,
+					status: 'parsed'
+				});
+			} catch (error) {
+				console.error("Error associating resume with portfolio:", error);
+				// Continue without failing the portfolio save
+			}
+		}
 
 		// Calculate completeness
 		const completeness = portfolio.calculateCompleteness();
 
 		// Generate portfolio URL
-		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${user.username}`;
+		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${portfolio.username || user.username}`;
 
 		return NextResponse.json({
 			success: true,
@@ -132,10 +116,11 @@ export async function POST(req) {
 				warnings: validation.errors || [],
 				suggestions: validation.warnings || [],
 			},
-			username: user.username,
+			username: portfolio.username || user.username,
 			portfolioUrl: portfolioUrl,
 		});
 	} catch (err) {
+		console.error("Error saving portfolio:", err);
 		return NextResponse.json({ error: err.message }, { status: 500 });
 	}
 }

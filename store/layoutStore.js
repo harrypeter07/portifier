@@ -29,11 +29,17 @@ export const useLayoutStore = create(
 			// Portfolio type (developer, designer, marketing, etc.)
 			portfolioType: "developer",
 
+			// Resume ID for association
+			resumeId: null,
+
 			// Actions for layout management
 			setLayout: (section, component) =>
 				set((state) => ({
 					layout: { ...state.layout, [section]: component },
 				})),
+
+			// Set resume ID
+			setResumeId: (id) => set(() => ({ resumeId: id })),
 
 			// Update portfolio data using new schema
 			updatePortfolioData: (sectionPath, value) => {
@@ -200,51 +206,24 @@ export const useLayoutStore = create(
 				set(() => ({
 					layout: template.layout,
 					currentTemplate: template,
-					// Merge template content with existing content, prioritizing existing
-					content: {
-						...template.content,
-						...state.content, // Existing content takes priority
-					},
-					// Keep existing portfolio data if available
-					portfolioData: state.portfolioData.personal.firstName
-						? state.portfolioData
-						: JSON.parse(JSON.stringify(EMPTY_PORTFOLIO)),
+					// Preserve existing content
+					content: state.content,
+					portfolioData: state.portfolioData,
 				}));
 			},
 
-			// Restore from parsed data if content is empty
+			// Restore from parsed data
 			restoreFromParsed: () => {
 				const state = get();
-				console.log("🏪 [LAYOUT-STORE] restoreFromParsed called:", {
-					hasParsedData: !!state.parsedData,
-					contentKeys: Object.keys(state.content),
-					contentEmpty: Object.keys(state.content).length === 0
-				});
-
-				if (state.parsedData && Object.keys(state.content).length === 0) {
-					console.log("🏪 [LAYOUT-STORE] Restoring from parsed data");
+				if (state.parsedData) {
 					const transformedData = transformParsedResumeToSchema(
 						state.parsedData,
 						state.portfolioType
 					);
-					
-					console.log("🏪 [LAYOUT-STORE] Restored data:", {
-						hasContent: !!state.parsedData,
-						hasPortfolioData: !!transformedData,
-						personalData: transformedData?.personal ? {
-							firstName: transformedData.personal.firstName,
-							lastName: transformedData.personal.lastName,
-							subtitle: transformedData.personal.subtitle,
-							email: transformedData.personal.email
-						} : null
-					});
-
 					set(() => ({
 						content: state.parsedData,
 						portfolioData: transformedData,
 					}));
-				} else {
-					console.log("🏪 [LAYOUT-STORE] No restoration needed - parsed data missing or content exists");
 				}
 			},
 
@@ -272,14 +251,15 @@ export const useLayoutStore = create(
 
 			// Full reset
 			reset: () =>
-				set({
+				set(() => ({
 					layout: {},
-					content: {},
 					portfolioData: JSON.parse(JSON.stringify(EMPTY_PORTFOLIO)),
+					content: {},
 					parsedData: null,
 					currentTemplate: null,
 					portfolioType: "developer",
-				}),
+					resumeId: null,
+				})),
 
 			// Soft reset (keep parsed data)
 			softReset: () => {
@@ -296,16 +276,8 @@ export const useLayoutStore = create(
 			},
 		}),
 		{
-			name: "portfolio-store", // Storage key
+			name: "layout-store",
 			storage: createJSONStorage(() => localStorage),
-			partialize: (state) => ({
-				layout: state.layout,
-				content: state.content,
-				portfolioData: state.portfolioData,
-				parsedData: state.parsedData,
-				currentTemplate: state.currentTemplate,
-				portfolioType: state.portfolioType,
-			}),
 		}
 	)
 );

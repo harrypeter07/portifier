@@ -1,8 +1,21 @@
 import { NextResponse } from "next/server";
 import { parseResumeWithGemini, createPortfolioSchema } from "@/lib/gemini";
+import dbConnect from "@/lib/mongodb";
+import Resume from "@/models/Resume";
+import { auth } from "@/lib/auth";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 
 export async function POST(req) {
 	try {
+		await dbConnect();
+		
+		// Get authenticated user
+		const user = await auth();
+		if (!user) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+
 		const formData = await req.formData();
 		const file = formData.get("resume");
 		const schemaType = formData.get("portfolioType") || "developer"; // developer, designer, marketing, etc.
@@ -14,6 +27,33 @@ export async function POST(req) {
 
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
+
+		// Create unique filename
+		const timestamp = Date.now();
+		const originalName = file.name;
+		const fileExtension = path.extname(originalName);
+		const fileName = `resume_${user._id}_${timestamp}${fileExtension}`;
+		
+		// Create uploads directory if it doesn't exist
+		const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'resumes');
+		await mkdir(uploadsDir, { recursive: true });
+		
+		// Save file to disk
+		const filePath = path.join(uploadsDir, fileName);
+		await writeFile(filePath, buffer);
+
+		// Create resume record in database
+		const resume = new Resume({
+			userId: user._id,
+			originalName: originalName,
+			fileName: fileName,
+			fileSize: buffer.length,
+			fileType: file.type,
+			filePath: `/uploads/resumes/${fileName}`,
+			status: 'processing'
+		});
+
+		await resume.save();
 
 		// Determine which schema to use
 		let schema;
@@ -29,6 +69,11 @@ export async function POST(req) {
 		}
 
 		const result = await parseResumeWithGemini(buffer, schema);
+
+		// Update resume with parsed data
+		resume.parsedData = result.content;
+		resume.status = 'parsed';
+		await resume.save();
 
 		// Enhanced logging based on actual schema structure
 		console.log("\n🎯 EXTRACTED RESUME DATA:");
@@ -47,6 +92,7 @@ export async function POST(req) {
 			success: true,
 			content: result.content,
 			schema: result.schema,
+			resumeId: resume._id,
 			metadata: {
 				fileName: file.name,
 				fileSize: buffer.length,
@@ -56,6 +102,22 @@ export async function POST(req) {
 		});
 	} catch (error) {
 		console.error("❌ Error parsing resume:", error);
+		
+		// Update resume status to failed if we have a resume record
+		if (error.resumeId) {
+			try {
+				await Resume.findByIdAndUpdate(error.resumeId, {
+					status: 'failed',
+					error: {
+						message: error.message,
+						details: error.stack
+					}
+				});
+			} catch (updateError) {
+				console.error("❌ Error updating resume status:", updateError);
+			}
+		}
+		
 		return NextResponse.json(
 			{
 				success: false,

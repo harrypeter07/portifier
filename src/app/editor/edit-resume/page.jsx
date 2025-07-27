@@ -18,6 +18,7 @@ export default function EditResumePage() {
 		portfolioData,
 		updatePortfolioData,
 		setPortfolioData,
+		resumeId,
 	} = useLayoutStore();
 	const [formData, setFormData] = useState({
 		hero: { title: "", subtitle: "", tagline: "", availability: "" },
@@ -354,6 +355,7 @@ export default function EditResumePage() {
 						layout: layout, // Use the selected layout from store
 						content: formData,
 						portfolioData: newPortfolioData,
+						resumeId: resumeId, // Associate with resume if available
 					}),
 				});
 
