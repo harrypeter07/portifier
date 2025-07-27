@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import dbConnect from "./mongodb";
 import mongoose from "mongoose";
 
-export default async function auth(req) {
+async function auth(req) {
 	console.log("[AUTH] Starting authentication check");
 	console.log("[AUTH] Request cookies:", req.cookies.getAll());
 	
@@ -57,3 +57,7 @@ export default async function auth(req) {
 		return null;
 	}
 }
+
+// Export both named and default for compatibility
+export { auth };
+export default auth;
