@@ -793,81 +793,141 @@ export default function EditResumePage() {
 					{/* Professional Summary & About */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Professional Summary & About</h2>
-						<div className="flex items-start gap-2">
-							<textarea
-								placeholder="Write a brief professional summary about yourself..."
-								value={formData.about?.summary || ""}
-								onChange={(e) =>
-									handleInputChange("about", "summary", e.target.value)
-								}
-								rows={4}
-								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
+						<div>
+							<div className="flex items-start gap-2">
+								<textarea
+									placeholder="Write a brief professional summary about yourself..."
+									value={formData.about?.summary || ""}
+									onChange={(e) =>
+										handleInputChange("about", "summary", e.target.value)
+									}
+									rows={4}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="about"
+									field="summary"
+									value={formData.about?.summary || ""}
+									label="Professional Summary"
+								/>
+							</div>
+							<AISuggestionInline
+								fieldKey="about-summary"
 								section="about"
 								field="summary"
-								value={formData.about?.summary || ""}
 								label="Professional Summary"
+								suggestions={aiSuggestions["about-summary"] || []}
+								onSelectSuggestion={handleAISuggestionSelect}
+								loading={aiLoading["about-summary"] || false}
+								isActive={activeAiField === "about-summary"}
 							/>
 						</div>
-						<div className="flex items-start gap-2 mt-4">
-							<textarea
-								placeholder="Bio (detailed background, story, or philosophy)"
-								value={formData.about?.bio || ""}
-								onChange={(e) => handleInputChange("about", "bio", e.target.value)}
-								rows={3}
-								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
+						<div className="mt-4">
+							<div className="flex items-start gap-2">
+								<textarea
+									placeholder="Bio (detailed background, story, or philosophy)"
+									value={formData.about?.bio || ""}
+									onChange={(e) => handleInputChange("about", "bio", e.target.value)}
+									rows={3}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="about"
+									field="bio"
+									value={formData.about?.bio || ""}
+									label="Bio"
+								/>
+							</div>
+							<AISuggestionInline
+								fieldKey="about-bio"
 								section="about"
 								field="bio"
-								value={formData.about?.bio || ""}
 								label="Bio"
+								suggestions={aiSuggestions["about-bio"] || []}
+								onSelectSuggestion={handleAISuggestionSelect}
+								loading={aiLoading["about-bio"] || false}
+								isActive={activeAiField === "about-bio"}
 							/>
 						</div>
-						<div className="flex items-center gap-2 mt-4">
-							<input
-								type="text"
-								placeholder="Interests (comma-separated)"
-								value={(formData.about?.interests || []).join(", ")}
-								onChange={(e) => handleInputChange("about", "interests", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
-								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
+						<div className="mt-4">
+							<div className="flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Interests (comma-separated)"
+									value={(formData.about?.interests || []).join(", ")}
+									onChange={(e) => handleInputChange("about", "interests", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="about"
+									field="interests"
+									value={(formData.about?.interests || []).join(", ")}
+									label="Interests"
+								/>
+							</div>
+							<AISuggestionInline
+								fieldKey="about-interests"
 								section="about"
 								field="interests"
-								value={(formData.about?.interests || []).join(", ")}
 								label="Interests"
+								suggestions={aiSuggestions["about-interests"] || []}
+								onSelectSuggestion={handleAISuggestionSelect}
+								loading={aiLoading["about-interests"] || false}
+								isActive={activeAiField === "about-interests"}
 							/>
 						</div>
-						<div className="flex items-center gap-2 mt-4">
-							<input
-								type="text"
-								placeholder="Personal Values (comma-separated)"
-								value={(formData.about?.personalValues || []).join(", ")}
-								onChange={(e) => handleInputChange("about", "personalValues", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
-								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
+						<div className="mt-4">
+							<div className="flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Personal Values (comma-separated)"
+									value={(formData.about?.personalValues || []).join(", ")}
+									onChange={(e) => handleInputChange("about", "personalValues", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="about"
+									field="personalValues"
+									value={(formData.about?.personalValues || []).join(", ")}
+									label="Personal Values"
+								/>
+							</div>
+							<AISuggestionInline
+								fieldKey="about-personalValues"
 								section="about"
 								field="personalValues"
-								value={(formData.about?.personalValues || []).join(", ")}
 								label="Personal Values"
+								suggestions={aiSuggestions["about-personalValues"] || []}
+								onSelectSuggestion={handleAISuggestionSelect}
+								loading={aiLoading["about-personalValues"] || false}
+								isActive={activeAiField === "about-personalValues"}
 							/>
 						</div>
-						<div className="flex items-center gap-2 mt-4">
-							<input
-								type="text"
-								placeholder="Fun Facts (comma-separated)"
-								value={(formData.about?.funFacts || []).join(", ")}
-								onChange={(e) => handleInputChange("about", "funFacts", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
-								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
+						<div className="mt-4">
+							<div className="flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Fun Facts (comma-separated)"
+									value={(formData.about?.funFacts || []).join(", ")}
+									onChange={(e) => handleInputChange("about", "funFacts", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="about"
+									field="funFacts"
+									value={(formData.about?.funFacts || []).join(", ")}
+									label="Fun Facts"
+								/>
+							</div>
+							<AISuggestionInline
+								fieldKey="about-funFacts"
 								section="about"
 								field="funFacts"
-								value={(formData.about?.funFacts || []).join(", ")}
 								label="Fun Facts"
+								suggestions={aiSuggestions["about-funFacts"] || []}
+								onSelectSuggestion={handleAISuggestionSelect}
+								loading={aiLoading["about-funFacts"] || false}
+								isActive={activeAiField === "about-funFacts"}
 							/>
 						</div>
 					</div>
