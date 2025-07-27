@@ -849,85 +849,57 @@ export default function EditResumePage() {
 					{/* Skills */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Skills</h2>
-						<div className="mb-4">
-							<label className="block text-sm font-medium mb-2">
-								Technical Skills (comma-separated)
-							</label>
+						<div className="space-y-4">
 							<div>
-								<div className="flex items-start gap-2">
-									<textarea
-										placeholder="e.g., JavaScript, React, Python, SQL"
-										value={(formData.skills?.technical || []).join(", ")}
-										onChange={(e) =>
-											handleInputChange(
-												"skills",
-												"technical",
-												e.target.value
-													.split(",")
-													.map((s) => s.trim())
-													.filter((s) => s)
-											)
-										}
-										rows={3}
-										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="skills"
-										field="technical"
-										value={(formData.skills?.technical || []).join(", ")}
-										label="Technical Skills"
-									/>
-								</div>
-								<AISuggestionInline
-									fieldKey="skills-technical"
-									section="skills"
-									field="technical"
-									label="Technical Skills"
-									suggestions={aiSuggestions["skills-technical"] || []}
-									onSelectSuggestion={handleAISuggestionSelect}
-									loading={aiLoading["skills-technical"] || false}
-									isActive={activeAiField === "skills-technical"}
+								<label className="block text-sm font-medium mb-2">
+									Technical Skills (comma-separated)
+								</label>
+								<AICompanionField
+									type="textarea"
+									placeholder="e.g., JavaScript, React, Python, SQL"
+									value={(formData.skills?.technical || []).join(", ")}
+									onChange={(value) =>
+										handleInputChange(
+											"skills",
+											"technical",
+											value
+												.split(",")
+												.map((s) => s.trim())
+												.filter((s) => s)
+										)
+									}
+									rows={3}
+									aiEnabled={isAIEnabled("skills", "technical")}
+									aiSection="skills"
+									aiField="technical"
+									aiLabel={getAILabel("skills", "technical")}
+									resumeData={formData}
 								/>
 							</div>
-						</div>
-						<div>
-							<label className="block text-sm font-medium mb-2">
-								Soft Skills (comma-separated)
-							</label>
 							<div>
-								<div className="flex items-start gap-2">
-									<textarea
-										placeholder="e.g., Team Leadership, Communication, Problem Solving"
-										value={(formData.skills?.soft || []).join(", ")}
-										onChange={(e) =>
-											handleInputChange(
-												"skills",
-												"soft",
-												e.target.value
-													.split(",")
-													.map((s) => s.trim())
-													.filter((s) => s)
-											)
-										}
-										rows={3}
-										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="skills"
-										field="soft"
-										value={(formData.skills?.soft || []).join(", ")}
-										label="Soft Skills"
-									/>
-								</div>
-								<AISuggestionInline
-									fieldKey="skills-soft"
-									section="skills"
-									field="soft"
-									label="Soft Skills"
-									suggestions={aiSuggestions["skills-soft"] || []}
-									onSelectSuggestion={handleAISuggestionSelect}
-									loading={aiLoading["skills-soft"] || false}
-									isActive={activeAiField === "skills-soft"}
+								<label className="block text-sm font-medium mb-2">
+									Soft Skills (comma-separated)
+								</label>
+								<AICompanionField
+									type="textarea"
+									placeholder="e.g., Team Leadership, Communication, Problem Solving"
+									value={(formData.skills?.soft || []).join(", ")}
+									onChange={(value) =>
+										handleInputChange(
+											"skills",
+											"soft",
+											value
+												.split(",")
+												.map((s) => s.trim())
+												.filter((s) => s)
+										)
+									}
+									rows={3}
+									aiEnabled={isAIEnabled("skills", "soft")}
+									aiSection="skills"
+									aiField="soft"
+									aiLabel={getAILabel("skills", "soft")}
+									resumeData={formData}
 								/>
 							</div>
 						</div>
