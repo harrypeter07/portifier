@@ -26,7 +26,17 @@ export default function AchievementsA({ awards = [], certifications = [], public
 				<div className="space-y-3">
 					{items.map((item, index) => (
 						<div key={index} className={`p-4 rounded-lg ${colorClass}`}>
-							<p className="font-medium">{item}</p>
+							{typeof item === 'string' ? (
+								<p className="font-medium">{item}</p>
+							) : (
+								<div>
+									<p className="font-medium">{item.title || item.name || item.id || 'Untitled'}</p>
+									{item.organization && <p className="text-sm text-gray-600">{item.organization}</p>}
+									{item.date && <p className="text-xs text-gray-500">{item.date}</p>}
+									{item.description && <p className="text-xs text-gray-400 mt-1">{item.description}</p>}
+									{item.link && <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-xs">View</a>}
+								</div>
+							)}
 						</div>
 					))}
 				</div>
