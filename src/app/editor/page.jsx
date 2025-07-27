@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
+import Preview from "@/components/Preview";
 
 const PREBUILT_TEMPLATES = [
 	{
@@ -48,6 +49,8 @@ export default function ResumeUploadPage() {
 		setCurrentTemplate,
 		parsedData,
 		content,
+		portfolioData,
+		layout,
 		restoreFromParsed,
 	} = useLayoutStore();
 	const router = useRouter();
@@ -242,70 +245,33 @@ export default function ResumeUploadPage() {
 					<h2 className="text-xl font-semibold">Live Preview</h2>
 				</div>
 				<div className="p-4">
-					{parsed &&
-						Object.entries(PREBUILT_TEMPLATES[0].layout).map(
-							([section, componentName]) => {
-								const Component = componentMap[componentName];
-								if (!Component) return null;
-
-								// Handle different data structures for different components
-								let componentProps = parsed.content?.[section] || {};
-
-								// For hero section, use personal data directly
-								if (section === "hero" && parsed.content?.personal) {
-									componentProps = parsed.content.personal;
-								}
-
-								// For projects section, handle the new schema structure
-								if (
-									section === "projects" &&
-									parsed.content?.[section]?.items
-								) {
-									componentProps = { items: parsed.content[section].items };
-								}
-
-								// For skills section, flatten the structure
-								if (section === "skills" && parsed.content?.[section]) {
-									componentProps = {
-										technical: parsed.content[section].technical || [],
-										soft: parsed.content[section].soft || [],
-										languages: parsed.content[section].languages || [],
-									};
-								}
-
-								// For achievements section, flatten the structure
-								if (section === "achievements" && parsed.content?.[section]) {
-									componentProps = {
-										awards: parsed.content[section].awards || [],
-										certifications:
-											parsed.content[section].certifications || [],
-										publications: parsed.content[section].publications || [],
-									};
-								}
-
-								// For experience section, flatten the structure
-								if (
-									section === "experience" &&
-									parsed.content?.[section]?.jobs
-								) {
-									componentProps = { jobs: parsed.content[section].jobs };
-								}
-
-								// For education section, flatten the structure
-								if (
-									section === "education" &&
-									parsed.content?.[section]?.degrees
-								) {
-									componentProps = { degrees: parsed.content[section].degrees };
-								}
-
-								return (
-									<div key={section} className="mb-8 last:mb-0">
-										<Component {...componentProps} />
-									</div>
-								);
-							}
-						)}
+					{parsed && layout && Object.keys(layout).length > 0 ? (
+						<>
+							{console.log("📝 [EDITOR] Rendering Preview component with:", {
+								hasLayout: !!layout,
+								layoutKeys: Object.keys(layout),
+								hasContent: !!content,
+								contentKeys: content ? Object.keys(content) : [],
+								hasPortfolioData: !!portfolioData,
+								portfolioDataKeys: portfolioData ? Object.keys(portfolioData) : [],
+								personalData: portfolioData?.personal ? {
+									firstName: portfolioData.personal.firstName,
+									lastName: portfolioData.personal.lastName,
+									subtitle: portfolioData.personal.subtitle,
+									email: portfolioData.personal.email
+								} : null
+							})}
+							<Preview 
+								layout={layout}
+								content={content}
+								portfolioData={portfolioData}
+							/>
+						</>
+					) : (
+						<div className="text-center text-gray-500 dark:text-gray-400 py-8">
+							<p>Upload a resume to see the preview</p>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
