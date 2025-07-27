@@ -4,7 +4,8 @@ import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
 import Preview from "@/components/Preview";
-import AISuggestionInline from "@/components/AISuggestionInline";
+import AICompanionField from "@/components/AICompanionField";
+import { isAIEnabled, getAILabel } from "@/data/aiFieldConfig";
 
 export default function EditResumePage() {
 	const {
@@ -470,72 +471,7 @@ export default function EditResumePage() {
 		router.push("/preview/live");
 	};
 
-	// AI Suggestion functionality
-	const [aiSuggestions, setAiSuggestions] = useState({});
-	const [aiLoading, setAiLoading] = useState({});
-	const [activeAiField, setActiveAiField] = useState(null);
 
-	async function getAISuggestions(section, field, value, label) {
-		const fieldKey = `${section}-${field}`;
-		setAiLoading(prev => ({ ...prev, [fieldKey]: true }));
-		setActiveAiField(fieldKey);
-
-		try {
-			const response = await fetch("/api/ai-suggestions", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					inputField: field,
-					fieldName: field,
-					resumeType: "developer", // You can make this dynamic
-					resumeData: formData,
-					currentValue: value
-				}),
-			});
-
-			const data = await response.json();
-			
-			if (data.success) {
-				setAiSuggestions(prev => ({ ...prev, [fieldKey]: data.suggestions }));
-			} else {
-				console.error("AI suggestion failed:", data.error);
-				setAiSuggestions(prev => ({ ...prev, [fieldKey]: [] }));
-			}
-		} catch (error) {
-			console.error("Error getting AI suggestions:", error);
-			setAiSuggestions(prev => ({ ...prev, [fieldKey]: [] }));
-		} finally {
-			setAiLoading(prev => ({ ...prev, [fieldKey]: false }));
-		}
-	}
-
-	function handleAISuggestionSelect(suggestion, section, field) {
-		// Handle different field types
-		if (field === "interests" || field === "personalValues" || field === "funFacts" || field === "technical" || field === "soft" || field === "languages") {
-			// For array fields, split by commas and clean up
-			const items = suggestion.split(",").map(s => s.trim()).filter(s => s);
-			handleInputChange(section, field, items);
-		} else {
-			// For regular text fields
-			handleInputChange(section, field, suggestion);
-		}
-		// Close suggestions for this field
-		setActiveAiField(null);
-	}
-
-	function AIHelpButton({ section, field, value, label }) {
-		return (
-			<button
-				type="button"
-				onClick={() => getAISuggestions(section, field, value, label)}
-				title={`Get AI suggestion for ${label || field}`}
-				className="inline-flex items-center px-3 py-1 text-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
-			>
-				<span className="mr-1">🤖</span>
-				AI Help
-			</button>
-		);
-	}
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
@@ -552,118 +488,50 @@ export default function EditResumePage() {
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Personal Information</h2>
 						<div className="grid grid-cols-1 gap-4">
-							<div>
-								<div className="flex items-center gap-2">
-									<input
-										type="text"
-										placeholder="Full Name"
-										value={formData.hero?.title || ""}
-										onChange={(e) =>
-											handleInputChange("hero", "title", e.target.value)
-										}
-										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="hero"
-										field="title"
-										value={formData.hero?.title || ""}
-										label="Full Name"
-									/>
-								</div>
-								<AISuggestionInline
-									fieldKey="hero-title"
-									section="hero"
-									field="title"
-									label="Full Name"
-									suggestions={aiSuggestions["hero-title"] || []}
-									onSelectSuggestion={handleAISuggestionSelect}
-									loading={aiLoading["hero-title"] || false}
-									isActive={activeAiField === "hero-title"}
-								/>
-							</div>
-							<div>
-								<div className="flex items-center gap-2">
-									<input
-										type="text"
-										placeholder="Professional Title (e.g., Software Developer)"
-										value={formData.hero?.subtitle || ""}
-										onChange={(e) =>
-											handleInputChange("hero", "subtitle", e.target.value)
-										}
-										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="hero"
-										field="subtitle"
-										value={formData.hero?.subtitle || ""}
-										label="Professional Title"
-									/>
-								</div>
-								<AISuggestionInline
-									fieldKey="hero-subtitle"
-									section="hero"
-									field="subtitle"
-									label="Professional Title"
-									suggestions={aiSuggestions["hero-subtitle"] || []}
-									onSelectSuggestion={handleAISuggestionSelect}
-									loading={aiLoading["hero-subtitle"] || false}
-									isActive={activeAiField === "hero-subtitle"}
-								/>
-							</div>
-							<div>
-								<div className="flex items-center gap-2">
-									<input
-										type="text"
-										placeholder="Tagline (e.g., Passionate Coder, Creative Designer)"
-										value={formData.hero?.tagline || ""}
-										onChange={(e) => handleInputChange("hero", "tagline", e.target.value)}
-										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="hero"
-										field="tagline"
-										value={formData.hero?.tagline || ""}
-										label="Tagline"
-									/>
-								</div>
-								<AISuggestionInline
-									fieldKey="hero-tagline"
-									section="hero"
-									field="tagline"
-									label="Tagline"
-									suggestions={aiSuggestions["hero-tagline"] || []}
-									onSelectSuggestion={handleAISuggestionSelect}
-									loading={aiLoading["hero-tagline"] || false}
-									isActive={activeAiField === "hero-tagline"}
-								/>
-							</div>
-							<div>
-								<div className="flex items-center gap-2">
-									<input
-										type="text"
-										placeholder="Availability (e.g., Open to work, Freelance only)"
-										value={formData.hero?.availability || ""}
-										onChange={(e) => handleInputChange("hero", "availability", e.target.value)}
-										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="hero"
-										field="availability"
-										value={formData.hero?.availability || ""}
-										label="Availability"
-									/>
-								</div>
-								<AISuggestionInline
-									fieldKey="hero-availability"
-									section="hero"
-									field="availability"
-									label="Availability"
-									suggestions={aiSuggestions["hero-availability"] || []}
-									onSelectSuggestion={handleAISuggestionSelect}
-									loading={aiLoading["hero-availability"] || false}
-									isActive={activeAiField === "hero-availability"}
-								/>
-							</div>
+							<AICompanionField
+								type="input"
+								placeholder="Full Name"
+								value={formData.hero?.title || ""}
+								onChange={(value) => handleInputChange("hero", "title", value)}
+								aiEnabled={isAIEnabled("hero", "title")}
+								aiSection="hero"
+								aiField="title"
+								aiLabel={getAILabel("hero", "title")}
+								resumeData={formData}
+							/>
+							<AICompanionField
+								type="input"
+								placeholder="Professional Title (e.g., Software Developer)"
+								value={formData.hero?.subtitle || ""}
+								onChange={(value) => handleInputChange("hero", "subtitle", value)}
+								aiEnabled={isAIEnabled("hero", "subtitle")}
+								aiSection="hero"
+								aiField="subtitle"
+								aiLabel={getAILabel("hero", "subtitle")}
+								resumeData={formData}
+							/>
+							<AICompanionField
+								type="input"
+								placeholder="Tagline (e.g., Passionate Coder, Creative Designer)"
+								value={formData.hero?.tagline || ""}
+								onChange={(value) => handleInputChange("hero", "tagline", value)}
+								aiEnabled={isAIEnabled("hero", "tagline")}
+								aiSection="hero"
+								aiField="tagline"
+								aiLabel={getAILabel("hero", "tagline")}
+								resumeData={formData}
+							/>
+							<AICompanionField
+								type="input"
+								placeholder="Availability (e.g., Open to work, Freelance only)"
+								value={formData.hero?.availability || ""}
+								onChange={(value) => handleInputChange("hero", "availability", value)}
+								aiEnabled={isAIEnabled("hero", "availability")}
+								aiSection="hero"
+								aiField="availability"
+								aiLabel={getAILabel("hero", "availability")}
+								resumeData={formData}
+							/>
 						</div>
 					</div>
 
