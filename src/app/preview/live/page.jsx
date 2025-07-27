@@ -21,9 +21,47 @@ export default function LivePreviewPage() {
 		router.push("/editor/customize");
 	}
 
-	function handlePublish() {
-		// Save to database and redirect to final portfolio
-		router.push("/dashboard");
+	async function handlePublish() {
+		try {
+			console.log("🚀 [PREVIEW] Publishing portfolio...");
+			
+			// Get user info for the save request
+			const userRes = await fetch("/api/auth/me");
+			const userData = await userRes.json();
+			
+			if (!userRes.ok) {
+				alert("Please sign in to publish your portfolio");
+				return;
+			}
+
+			const res = await fetch("/api/portfolio/save", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					layout,
+					content,
+					portfolioData,
+				}),
+			});
+
+			const data = await res.json();
+			if (res.ok && data.success) {
+				const portfolioUrl = data.portfolioUrl;
+				console.log("🎉 [PREVIEW] Portfolio published successfully:", {
+					username: data.username,
+					portfolioUrl: portfolioUrl
+				});
+				
+				// Show success message and redirect
+				alert(`🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`);
+				router.push(portfolioUrl);
+			} else {
+				alert(data.error || "Failed to publish portfolio");
+			}
+		} catch (err) {
+			console.error("❌ [PREVIEW] Error publishing portfolio:", err);
+			alert("Failed to publish portfolio");
+		}
 	}
 
 	return (
