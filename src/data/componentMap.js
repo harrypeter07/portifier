@@ -1,16 +1,28 @@
 // Dynamic component mapping with new schema support
+import HeroA from "@/components/Hero/HeroA";
+import HeroB from "@/components/Hero/HeroB";
+import AboutA from "@/components/About/AboutA";
+import AboutB from "@/components/About/AboutB";
+import ExperienceA from "@/components/Experience/ExperienceA";
+import ExperienceB from "@/components/Experience/ExperienceB";
+import EducationA from "@/components/Education/EducationA";
+import SkillsA from "@/components/Skills/SkillsA";
+import ShowcaseA from "@/components/Showcase/ShowcaseA";
+import AchievementsA from "@/components/Achievements/AchievementsA";
+import ContactFormA from "@/components/Contact/ContactFormA";
+
 export const componentMap = {
-	HeroA: require("@/components/Hero/HeroA").default,
-	HeroB: require("@/components/Hero/HeroB").default,
-	AboutA: require("@/components/About/AboutA").default,
-	AboutB: require("@/components/About/AboutB").default,
-	ExperienceA: require("@/components/Experience/ExperienceA").default,
-	ExperienceB: require("@/components/Experience/ExperienceB").default,
-	EducationA: require("@/components/Education/EducationA").default,
-	SkillsA: require("@/components/Skills/SkillsA").default,
-	ShowcaseA: require("@/components/Showcase/ShowcaseA").default,
-	AchievementsA: require("@/components/Achievements/AchievementsA").default,
-	ContactFormA: require("@/components/Contact/ContactFormA").default,
+	HeroA,
+	HeroB,
+	AboutA,
+	AboutB,
+	ExperienceA,
+	ExperienceB,
+	EducationA,
+	SkillsA,
+	ShowcaseA,
+	AchievementsA,
+	ContactFormA,
 };
 
 // Component categories for organized selection

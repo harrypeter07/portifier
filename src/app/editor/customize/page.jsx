@@ -52,22 +52,35 @@ export default function CustomizePage() {
 
 	// Prefill from resume or Zustand content
 	useEffect(() => {
+		console.log("🎨 [CUSTOMIZE] useEffect triggered:", {
+			hasContent: Object.keys(content).length > 0,
+			hasParsedData: !!parsedData,
+			hasPortfolioData: !!portfolioData,
+			currentLayout: layout,
+			portfolioType
+		});
+
 		// If no content but we have parsed data, restore it
 		if (Object.keys(content).length === 0 && parsedData) {
+			console.log("🎨 [CUSTOMIZE] Restoring from parsed data");
 			restoreFromParsed();
 			return;
 		}
 
 		// Initialize layout if empty
+		let layoutToUse = layout;
 		if (Object.keys(layout).length === 0) {
 			const recommendedLayout = getRecommendedLayout(portfolioType);
+			console.log("🎨 [CUSTOMIZE] Setting recommended layout:", recommendedLayout);
+			layoutToUse = recommendedLayout;
 			setLocalLayout(recommendedLayout);
 		} else {
+			console.log("🎨 [CUSTOMIZE] Using existing layout:", layout);
 			setLocalLayout(layout);
 		}
 
 		const initial = {};
-		Object.keys(localLayout).forEach((section) => {
+		Object.keys(layoutToUse).forEach((section) => {
 			// Initialize section data from portfolioData or fallback to mock/content
 			const sectionData = {};
 			
@@ -88,7 +101,7 @@ export default function CustomizePage() {
 			};
 		});
 		setLocalContent(initial);
-	}, [layout, content, portfolioData, parsedData, restoreFromParsed, portfolioType, localLayout]);
+	}, [layout, content, portfolioData, parsedData, restoreFromParsed, portfolioType]);
 
 	function handleChange(section, field, value) {
 		// Update local content for form display
@@ -105,11 +118,22 @@ export default function CustomizePage() {
 	}
 
 	function handleComponentChange(section, componentName) {
+		console.log("🎨 [CUSTOMIZE] Component change triggered:", {
+			section,
+			componentName,
+			currentLayout: localLayout,
+			availableComponents: componentCategories[section]?.components
+		});
+		
 		setSelectedSection(section);
-		setLocalLayout(prev => ({
-			...prev,
-			[section]: componentName
-		}));
+		setLocalLayout(prev => {
+			const newLayout = {
+				...prev,
+				[section]: componentName
+			};
+			console.log("🎨 [CUSTOMIZE] Updated layout:", newLayout);
+			return newLayout;
+		});
 		
 		// Clear selection after animation
 		setTimeout(() => setSelectedSection(null), 1000);
@@ -226,7 +250,22 @@ export default function CustomizePage() {
 						whileHover={{ scale: 1.02 }}
 						whileTap={{ scale: 0.98 }}
 					>
-						🎯 Components
+						🎨 Components
+					</motion.button>
+					
+					{/* Debug button */}
+					<motion.button
+						className="ml-auto px-4 py-2 text-xs bg-gray-200 dark:bg-gray-700 rounded"
+						onClick={() => {
+							console.log("🎨 [CUSTOMIZE] Debug - Current state:", {
+								localLayout,
+								layout,
+								componentCategories: Object.keys(componentCategories),
+								heroComponents: componentCategories.hero?.components
+							});
+						}}
+					>
+						🐛 Debug
 					</motion.button>
 				</motion.div>
 
@@ -366,11 +405,14 @@ export default function CustomizePage() {
 												onHoverStart={() => setHoveredComponent(componentName)}
 												onHoverEnd={() => setHoveredComponent(null)}
 											>
-												<label className={`relative block cursor-pointer p-4 rounded-lg border-2 transition-all duration-200 ${
-													localLayout[sectionKey] === componentName
-														? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
-														: 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-800'
-												}`}>
+												<label 
+													className={`relative block cursor-pointer p-4 rounded-lg border-2 transition-all duration-200 ${
+														localLayout[sectionKey] === componentName
+															? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
+															: 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-800'
+													}`}
+													onClick={() => handleComponentChange(sectionKey, componentName)}
+												>
 													<input
 														type="radio"
 														name={sectionKey}
