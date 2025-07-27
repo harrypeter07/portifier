@@ -1,6 +1,6 @@
 "use client";
 import { useLayoutStore } from "@/store/layoutStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { componentMap, componentCategories, getRecommendedLayout } from "@/data/componentMap";
 import Preview from "@/components/Preview";
@@ -25,6 +25,198 @@ const FIELD_MAP = {
 	showcase: [{ name: "projects", label: "Projects (comma separated)", path: "projects.items" }],
 	contact: [{ name: "email", label: "Contact Email", path: "personal.email" }],
 };
+
+// Inline MiniPreview component for live, compact previews
+function MiniPreview({ Component, sectionKey, componentName, isSelected, onSelect, data }) {
+  // Keyboard: select on Enter/Space
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onSelect();
+    }
+  }
+  return (
+    <div
+      className={`relative rounded-lg border-2 p-1 bg-gray-50 dark:bg-gray-800 transition-all duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[80px] max-h-[120px] overflow-hidden shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400
+        ${isSelected ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500'}`}
+      onClick={onSelect}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isSelected}
+      aria-label={`Select ${componentName} for ${sectionKey}`}
+      style={{ minWidth: 0, width: '100px', maxWidth: '120px' }}
+    >
+      <div className="absolute top-1 right-1">
+        {isSelected && (
+          <span className="inline-block w-3 h-3 bg-blue-500 rounded-full border-2 border-white" />
+        )}
+      </div>
+      <div className="w-full flex-1 flex items-center justify-center overflow-hidden">
+        {/* Render the actual component in a small box */}
+        <div className="w-full max-w-[90px] scale-90">
+          <Component {...data} />
+        </div>
+      </div>
+      <div className="mt-1 text-[10px] text-center font-medium text-gray-700 dark:text-gray-300 truncate w-full">
+        {componentName}
+      </div>
+    </div>
+  );
+}
+
+// Inline SectionSlider for horizontal sliding of component variants
+function SectionSlider({ sectionKey, category, localContent, localLayout, handleComponentChange }) {
+  const [current, setCurrent] = useState(0);
+  const sliderRef = useRef(null);
+  const total = category.components.length;
+  const [direction, setDirection] = useState(0); // -1 for left, 1 for right
+  const liveRef = useRef();
+
+  // Keyboard navigation
+  function handleKeyDown(e) {
+    if (e.key === "ArrowRight") {
+      setDirection(1);
+      setCurrent((prev) => (prev + 1) % total);
+    } else if (e.key === "ArrowLeft") {
+      setDirection(-1);
+      setCurrent((prev) => (prev - 1 + total) % total);
+    }
+  }
+
+  // Announce selection changes for screen readers
+  useEffect(() => {
+    if (liveRef.current) {
+      liveRef.current.textContent = `Showing ${category.components[current]} for ${category.label}`;
+    }
+  }, [current, category]);
+
+  // Responsive slides to show
+  let slidesToShow = 1;
+  if (typeof window !== "undefined") {
+    const w = window.innerWidth;
+    if (w >= 1536) slidesToShow = 6;
+    else if (w >= 1280) slidesToShow = 5;
+    else if (w >= 1024) slidesToShow = 4;
+    else if (w >= 768) slidesToShow = 3;
+    else if (w >= 480) slidesToShow = 2;
+  }
+
+  // Prepare preview data for each component
+  const getPreviewData = (sectionKey, componentName) => {
+    if (sectionKey === "hero") {
+      return { data: { personal: localContent.hero || {} } };
+    } else if (sectionKey === "about") {
+      return { summary: localContent.about?.summary || "", data: localContent.about };
+    } else if (sectionKey === "projects") {
+      return { items: localContent.projects?.items || [], data: localContent.projects };
+    } else if (sectionKey === "skills") {
+      return { technical: localContent.skills?.technical || [], soft: localContent.skills?.soft || [], languages: localContent.skills?.languages || [], data: localContent.skills };
+    } else if (sectionKey === "achievements") {
+      return { awards: localContent.achievements?.awards || [], certifications: localContent.achievements?.certifications || [], publications: localContent.achievements?.publications || [], data: localContent.achievements };
+    } else if (sectionKey === "experience") {
+      return { jobs: localContent.experience?.jobs || [], data: localContent.experience };
+    } else if (sectionKey === "education") {
+      return { degrees: localContent.education?.degrees || [], data: localContent.education };
+    } else if (sectionKey === "contact") {
+      return { email: localContent.contact?.email || "", phone: localContent.contact?.phone || "", linkedin: localContent.contact?.linkedin || "", data: localContent.contact };
+    }
+    return {};
+  };
+
+  // Calculate visible slides
+  const start = Math.max(0, Math.min(current - Math.floor(slidesToShow / 2), total - slidesToShow));
+  const visible = category.components.slice(start, start + slidesToShow);
+
+  // Animation variants for sliding
+  const variants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.35, ease: "easeInOut" },
+    },
+    exit: (direction) => ({
+      x: direction < 0 ? 100 : -100,
+      opacity: 0,
+      scale: 0.95,
+      transition: { duration: 0.25, ease: "easeInOut" },
+    }),
+  };
+
+  return (
+    <div className="relative" tabIndex={0} onKeyDown={handleKeyDown} aria-label={`Component variants for ${category.label}`}> 
+      <div ref={liveRef} className="sr-only" aria-live="polite" />
+      <div className="flex items-center justify-between mb-2">
+        <button
+          className="p-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onClick={() => { setDirection(-1); setCurrent((prev) => (prev - 1 + total) % total); }}
+          aria-label="Previous variant"
+        >
+          <span aria-hidden="true">◀</span>
+        </button>
+        <div className="flex-1 flex justify-center gap-1 overflow-x-auto scrollbar-hide relative min-h-[90px] touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            <motion.div
+              key={current}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="flex gap-1 w-full justify-center"
+              style={{ minWidth: 0 }}
+            >
+              {visible.map((componentName, idx) => {
+                const Component = componentMap[componentName];
+                const previewData = getPreviewData(sectionKey, componentName);
+                const isActive = idx === Math.floor(slidesToShow / 2) || visible.length === 1;
+                return (
+                  <motion.div
+                    key={componentName}
+                    className="flex-shrink-0"
+                    animate={isActive ? { scale: 1.05, opacity: 1 } : { scale: 0.95, opacity: 0.7 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <MiniPreview
+                      Component={Component}
+                      sectionKey={sectionKey}
+                      componentName={componentName}
+                      isSelected={localLayout[sectionKey] === componentName}
+                      onSelect={() => handleComponentChange(sectionKey, componentName)}
+                      data={previewData}
+                    />
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <button
+          className="p-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onClick={() => { setDirection(1); setCurrent((prev) => (prev + 1) % total); }}
+          aria-label="Next variant"
+        >
+          <span aria-hidden="true">▶</span>
+        </button>
+      </div>
+      <div className="flex justify-center gap-1 mt-1">
+        {category.components.map((_, idx) => (
+          <span
+            key={idx}
+            className={`inline-block w-2 h-2 rounded-full ${idx === current ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`}
+            aria-label={idx === current ? 'Current slide' : undefined}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function CustomizePage() {
 	const {
@@ -367,19 +559,18 @@ export default function CustomizePage() {
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									transition={{ duration: 0.5, delay: index * 0.1 }}
-									className={`bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border-2 transition-all duration-300 ${
-										selectedSection === sectionKey 
+									className={`bg-white dark:bg-gray-900 p-4 rounded-xl shadow-lg border-2 transition-all duration-300 mb-2
+										${selectedSection === sectionKey 
 											? 'border-blue-500 shadow-blue-100 dark:shadow-blue-900/20' 
-											: 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-									}`}
+											: 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}`}
 								>
-									<div className="flex items-center justify-between mb-4">
+									<div className="flex items-center justify-between mb-2">
 										<div>
-											<h3 className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
+											<h3 className="text-base font-semibold text-gray-900 dark:text-white capitalize">
 												{category.label}
 												{category.required && <span className="text-red-500 ml-1">*</span>}
 											</h3>
-											<p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+											<p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
 												{category.description}
 											</p>
 										</div>
@@ -387,95 +578,22 @@ export default function CustomizePage() {
 											<motion.div
 												initial={{ scale: 0 }}
 												animate={{ scale: 1 }}
-												className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+												className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center"
 											>
-												<svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+												<svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
 													<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
 												</svg>
 											</motion.div>
 										)}
 									</div>
-									
-									<div className="grid grid-cols-1 gap-3">
-										{category.components.map((componentName, compIndex) => (
-											<motion.div
-												key={componentName}
-												whileHover={{ scale: 1.02 }}
-												whileTap={{ scale: 0.98 }}
-												onHoverStart={() => setHoveredComponent(componentName)}
-												onHoverEnd={() => setHoveredComponent(null)}
-											>
-												<label 
-													className={`relative block cursor-pointer p-4 rounded-lg border-2 transition-all duration-200 ${
-														localLayout[sectionKey] === componentName
-															? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
-															: 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-800'
-													}`}
-													onClick={() => handleComponentChange(sectionKey, componentName)}
-												>
-													<input
-														type="radio"
-														name={sectionKey}
-														value={componentName}
-														checked={localLayout[sectionKey] === componentName}
-														onChange={(e) => handleComponentChange(sectionKey, e.target.value)}
-														className="sr-only"
-													/>
-													<div className="flex items-center justify-between">
-														<div className="flex items-center space-x-3">
-															<div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-																localLayout[sectionKey] === componentName
-																	? 'border-blue-500 bg-blue-500'
-																	: 'border-gray-300 dark:border-gray-600'
-															}`}>
-																{localLayout[sectionKey] === componentName && (
-																	<motion.div
-																		initial={{ scale: 0 }}
-																		animate={{ scale: 1 }}
-																		className="w-2 h-2 bg-white rounded-full"
-																	/>
-																)}
-															</div>
-															<span className={`font-medium ${
-																localLayout[sectionKey] === componentName
-																	? 'text-blue-700 dark:text-blue-300'
-																	: 'text-gray-700 dark:text-gray-300'
-															}`}>
-																{componentName}
-															</span>
-														</div>
-														{localLayout[sectionKey] === componentName && (
-															<motion.div
-																initial={{ scale: 0, rotate: -180 }}
-																animate={{ scale: 1, rotate: 0 }}
-																className="text-blue-500"
-															>
-																<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-																	<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-																</svg>
-															</motion.div>
-														)}
-													</div>
-													
-													{/* Component Preview */}
-													{category.components.length > 1 && (
-														<motion.div
-															initial={{ opacity: 0, height: 0 }}
-															animate={{ 
-																opacity: hoveredComponent === componentName ? 1 : 0,
-																height: hoveredComponent === componentName ? 'auto' : 0
-															}}
-															className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600"
-														>
-															<div className="text-xs text-gray-500 dark:text-gray-400">
-																Preview: {componentName} component
-															</div>
-														</motion.div>
-													)}
-												</label>
-											</motion.div>
-										))}
-									</div>
+									{/* Horizontal slider for component variants */}
+									<SectionSlider
+										sectionKey={sectionKey}
+										category={category}
+										localContent={localContent}
+										localLayout={localLayout}
+										handleComponentChange={handleComponentChange}
+									/>
 								</motion.div>
 							))}
 						</motion.div>

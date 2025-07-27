@@ -4,6 +4,7 @@ import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
 import Preview from "@/components/Preview";
+import { motion } from "framer-motion";
 
 const PREBUILT_TEMPLATES = [
 	{
@@ -150,9 +151,8 @@ export default function ResumeUploadPage() {
 						</p>
 					</div>
 				)}
-
 				{/* Portfolio Type Selector */}
-				<div className="mb-4">
+				<div className="mb-2">
 					<label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
 						Portfolio Type
 					</label>
@@ -167,28 +167,58 @@ export default function ResumeUploadPage() {
 						<option value="marketing">📈 Marketing/Business</option>
 					</select>
 					<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-						Choose the type that best matches your profession for optimized
-						parsing
+						Choose the type that best matches your profession for optimized parsing
 					</p>
 				</div>
-
-				<input
-					type="file"
-					accept="application/pdf"
-					onChange={handleFileChange}
-					disabled={loading}
-					className="mb-4"
-				/>
-				<button
-					className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60 mb-4 block"
-					onClick={handleUpload}
-					disabled={!file || loading}
-				>
-					{loading ? "Parsing..." : "Upload & Parse"}
-				</button>
-				{error && <div className="text-red-600 mb-4">{error}</div>}
+				<div className="flex flex-col gap-2 mb-4 p-4 border border-blue-200 dark:border-blue-700 rounded-lg bg-white dark:bg-gray-900 shadow-sm">
+					<input
+						type="file"
+						accept="application/pdf"
+						onChange={handleFileChange}
+						disabled={loading}
+						className="mb-2"
+					/>
+					<button
+						className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60 block"
+						onClick={handleUpload}
+						disabled={!file || loading}
+					>
+						{loading ? "Parsing..." : "Upload & Parse"}
+					</button>
+					{error && <div className="text-red-600 mb-2">{error}</div>}
+					{!file && !parsedData && (
+						<div className="text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded p-2 mt-1">
+							Tip: You can also start with a prebuilt template below!
+						</div>
+					)}
+				</div>
+				{/* Prebuilt Portfolio Templates Grid */}
+				<div className="mt-4">
+					<div className="font-semibold text-gray-700 dark:text-gray-200 mb-2">Or use a prebuilt template:</div>
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						{PREBUILT_TEMPLATES.map((tpl) => (
+							<motion.div
+								key={tpl.name}
+								className="border-2 border-blue-200 dark:border-blue-700 rounded-xl bg-white dark:bg-gray-900 shadow hover:shadow-lg transition-all flex flex-col items-center p-3 group"
+								whileHover={{ scale: 1.03 }}
+							>
+								<div className="font-bold mb-2 text-blue-700 dark:text-blue-300 text-center w-full">{tpl.name}</div>
+								<div className="w-full h-32 mb-2 rounded overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
+									<Preview layout={tpl.layout} content={tpl.content} portfolioData={tpl.content} />
+								</div>
+								<button
+									className="bg-blue-600 text-white px-3 py-1 rounded mt-2 w-full font-semibold group-hover:bg-blue-700 transition-colors"
+									onClick={() => handleTemplateSelect(tpl)}
+								>
+									Use Template
+								</button>
+							</motion.div>
+						))}
+					</div>
+				</div>
+				{/* Parsed resume info and actions remain below if present */}
 				{parsed && (
-					<div className="bg-white dark:bg-gray-900 p-6 rounded shadow">
+					<div className="bg-white dark:bg-gray-900 p-6 rounded shadow mt-6">
 						<h2 className="text-lg font-semibold mb-4">
 							Resume Parsed!
 							{parsed.metadata && (
@@ -218,30 +248,10 @@ export default function ResumeUploadPage() {
 									Custom Builder
 								</button>
 							</div>
-							<div className="font-semibold text-gray-700 dark:text-gray-200 mt-4">
-								Or use a prebuilt template:
-							</div>
-							<div className="grid grid-cols-2 gap-4">
-								{PREBUILT_TEMPLATES.map((tpl) => (
-									<div
-										key={tpl.name}
-										className="border rounded p-4 flex flex-col items-center bg-gray-50 dark:bg-gray-800"
-									>
-										<div className="font-bold mb-2">{tpl.name}</div>
-										<button
-											className="bg-blue-600 text-white px-3 py-1 rounded mt-2"
-											onClick={() => handleTemplateSelect(tpl)}
-										>
-											Use Template
-										</button>
-									</div>
-								))}
-							</div>
 						</div>
 					</div>
 				)}
 			</div>
-
 			{/* Right Panel - Live Preview */}
 			<div className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
 				<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
