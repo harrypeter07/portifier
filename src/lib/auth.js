@@ -4,15 +4,21 @@ import { cookies } from "next/headers";
 import dbConnect from "./mongodb";
 
 export default async function auth(req) {
+	console.log("[AUTH] Starting authentication check");
+	
 	let token = req.cookies.get("token")?.value;
+	console.log("[AUTH] Token from cookies:", token ? "EXISTS" : "MISSING");
+	
 	if (!token) {
 		console.log("[AUTH] No token found in cookies");
 		return null;
 	}
 	
 	try {
+		console.log("[AUTH] Attempting to verify token...");
 		const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 		const { payload } = await jwtVerify(token, secret);
+		console.log("[AUTH] Token verified successfully, payload:", payload);
 		
 		await dbConnect();
 		const user = await User.findById(payload.userId);

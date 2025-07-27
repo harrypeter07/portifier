@@ -3,8 +3,37 @@
 
 const BASE_URL = 'http://localhost:3000';
 
+// Helper function to extract cookies from response headers
+function extractCookies(response) {
+    const cookies = {};
+    const setCookieHeader = response.headers.get('set-cookie');
+    
+    if (setCookieHeader) {
+        // Parse the set-cookie header
+        const cookiePairs = setCookieHeader.split(',');
+        cookiePairs.forEach(pair => {
+            const [nameValue] = pair.split(';');
+            const [name, value] = nameValue.split('=');
+            if (name && value) {
+                cookies[name.trim()] = value.trim();
+            }
+        });
+    }
+    
+    return cookies;
+}
+
+// Helper function to create cookie header string
+function createCookieHeader(cookies) {
+    return Object.entries(cookies)
+        .map(([name, value]) => `${name}=${value}`)
+        .join('; ');
+}
+
 async function testAuth() {
     console.log('🧪 Testing Authentication Endpoints\n');
+    
+    let sessionCookies = {};
 
     // Test 1: Sign up a new user
     console.log('1. Testing Sign Up...');
@@ -22,15 +51,24 @@ async function testAuth() {
             body: JSON.stringify(signupData)
         });
 
+        // Extract cookies from signup response
+        const signupCookies = extractCookies(signupRes);
+        sessionCookies = { ...sessionCookies, ...signupCookies };
+        
         const signupResult = await signupRes.json();
         console.log('Signup Response:', signupRes.status, signupResult);
+        console.log('Cookies after signup:', sessionCookies);
 
         if (signupRes.ok) {
             console.log('✅ Signup successful');
             
             // Test 2: Check if user is authenticated
             console.log('\n2. Testing /me endpoint...');
-            const meRes = await fetch(`${BASE_URL}/api/auth/me`);
+            const meRes = await fetch(`${BASE_URL}/api/auth/me`, {
+                headers: {
+                    'Cookie': createCookieHeader(sessionCookies)
+                }
+            });
             const meResult = await meRes.json();
             console.log('/me Response:', meRes.status, meResult);
 
@@ -44,15 +82,23 @@ async function testAuth() {
             console.log('\n3. Testing Sign In...');
             const signinRes = await fetch(`${BASE_URL}/api/auth/signin`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Cookie': createCookieHeader(sessionCookies)
+                },
                 body: JSON.stringify({
                     email: signupData.email,
                     password: signupData.password
                 })
             });
 
+            // Extract cookies from signin response
+            const signinCookies = extractCookies(signinRes);
+            sessionCookies = { ...sessionCookies, ...signinCookies };
+
             const signinResult = await signinRes.json();
             console.log('Signin Response:', signinRes.status, signinResult);
+            console.log('Cookies after signin:', sessionCookies);
 
             if (signinRes.ok) {
                 console.log('✅ Signin successful');
@@ -63,8 +109,14 @@ async function testAuth() {
             // Test 4: Logout
             console.log('\n4. Testing Logout...');
             const logoutRes = await fetch(`${BASE_URL}/api/auth/logout`, {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                    'Cookie': createCookieHeader(sessionCookies)
+                }
             });
+
+            // Clear cookies after logout
+            sessionCookies = {};
 
             const logoutResult = await logoutRes.json();
             console.log('Logout Response:', logoutRes.status, logoutResult);
@@ -77,7 +129,11 @@ async function testAuth() {
 
             // Test 5: Check if user is still authenticated after logout
             console.log('\n5. Testing /me endpoint after logout...');
-            const meAfterLogoutRes = await fetch(`${BASE_URL}/api/auth/me`);
+            const meAfterLogoutRes = await fetch(`${BASE_URL}/api/auth/me`, {
+                headers: {
+                    'Cookie': createCookieHeader(sessionCookies)
+                }
+            });
             const meAfterLogoutResult = await meAfterLogoutRes.json();
             console.log('/me Response after logout:', meAfterLogoutRes.status, meAfterLogoutResult);
 
