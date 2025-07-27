@@ -13,6 +13,9 @@ export default function EditResumePage() {
 		parsedData,
 		restoreFromParsed,
 		setAllContent,
+		portfolioData,
+		updatePortfolioData,
+		setPortfolioData,
 	} = useLayoutStore();
 	const [formData, setFormData] = useState({
 		hero: { title: "", subtitle: "", tagline: "", availability: "" },
@@ -34,43 +37,51 @@ export default function EditResumePage() {
 			restoreFromParsed();
 			return;
 		}
-		// Initialize with existing content or defaults
+		
+		// Initialize with existing portfolioData or content (for backwards compatibility)
+		const data = portfolioData || content;
+		
 		setFormData({
 			hero: {
-				title: content.hero?.title || "",
-				subtitle: content.hero?.subtitle || "",
-				tagline: content.hero?.tagline || "",
-				availability: content.hero?.availability || "",
+				title: data.personal?.firstName && data.personal?.lastName 
+					? `${data.personal.firstName} ${data.personal.lastName}`.trim()
+					: data.hero?.title || "",
+				subtitle: data.personal?.title || data.hero?.subtitle || "",
+				tagline: data.personal?.tagline || data.hero?.tagline || "",
+				availability: data.personal?.availability || data.hero?.availability || "",
 			},
 			about: {
-				summary: content.about?.summary || "",
-				bio: content.about?.bio || "",
-				interests: content.about?.interests || [],
-				personalValues: content.about?.personalValues || [],
-				funFacts: content.about?.funFacts || [],
+				summary: data.about?.summary || "",
+				bio: data.about?.bio || "",
+				interests: data.about?.interests || [],
+				personalValues: data.about?.personalValues || [],
+				funFacts: data.about?.funFacts || [],
 			},
-			contact: content.contact || {
-				email: "",
-				phone: "",
-				location: "",
-				linkedin: "",
+			contact: {
+				email: data.personal?.email || data.contact?.email || "",
+				phone: data.personal?.phone || data.contact?.phone || "",
+				location: data.personal?.location?.city && data.personal?.location?.state
+					? `${data.personal.location.city}, ${data.personal.location.state}`
+					: data.contact?.location || "",
+				linkedin: data.personal?.social?.linkedin || data.contact?.linkedin || "",
 			},
-			experience: content.experience || { jobs: [] },
-			education: content.education || { degrees: [] },
-			skills: content.skills || { technical: [], soft: [] },
-			projects: content.projects || { items: [] },
-			achievements: content.achievements || { awards: [] },
-			languages: Array.isArray(content.languages)
-				? content.languages.map(String)
-				: typeof content.languages === "string"
-				? content.languages
-						.split(",")
-						.map((s) => s.trim())
-						.filter(Boolean)
-				: [],
-			hobbies: content.hobbies || [],
+			experience: data.experience || { jobs: [] },
+			education: data.education || { degrees: [] },
+			skills: data.skills || { technical: [], soft: [] },
+			projects: data.projects || { items: [] },
+			achievements: data.achievements || { awards: [] },
+			languages: data.skills?.languages?.map(l => l.name) || 
+				(Array.isArray(data.languages)
+					? data.languages.map(String)
+					: typeof data.languages === "string"
+					? data.languages
+							.split(",")
+							.map((s) => s.trim())
+							.filter(Boolean)
+					: []),
+			hobbies: data.hobbies || [],
 		});
-	}, [content, parsedData, restoreFromParsed]);
+	}, [content, portfolioData, parsedData, restoreFromParsed]);
 
 	const handleInputChange = (section, field, value) => {
 		setFormData((prev) => ({
@@ -170,17 +181,149 @@ export default function EditResumePage() {
 	};
 
 	const handleSave = () => {
-		// Save all form data to Zustand store
+		// Save all form data to new schema format
+		const newPortfolioData = { ...portfolioData };
+		
+		// Transform form data to new schema
+		if (formData.hero) {
+			const nameParts = (formData.hero.title || "").split(" ");
+			newPortfolioData.personal.firstName = nameParts[0] || "";
+			newPortfolioData.personal.lastName = nameParts.slice(1).join(" ") || "";
+			newPortfolioData.personal.title = formData.hero.subtitle || "";
+			newPortfolioData.personal.tagline = formData.hero.tagline || "";
+			newPortfolioData.personal.availability = formData.hero.availability || "";
+		}
+		
+		if (formData.about) {
+			newPortfolioData.about.summary = formData.about.summary || "";
+			newPortfolioData.about.bio = formData.about.bio || "";
+			newPortfolioData.about.interests = formData.about.interests || [];
+			newPortfolioData.about.personalValues = formData.about.personalValues || [];
+			newPortfolioData.about.funFacts = formData.about.funFacts || [];
+		}
+		
+		if (formData.contact) {
+			newPortfolioData.personal.email = formData.contact.email || "";
+			newPortfolioData.personal.phone = formData.contact.phone || "";
+			newPortfolioData.personal.social.linkedin = formData.contact.linkedin || "";
+			
+			if (formData.contact.location) {
+				const locationParts = formData.contact.location.split(",").map(p => p.trim());
+				newPortfolioData.personal.location.city = locationParts[0] || "";
+				newPortfolioData.personal.location.state = locationParts[1] || "";
+				newPortfolioData.personal.location.country = locationParts[2] || "";
+			}
+		}
+		
+		if (formData.experience) {
+			newPortfolioData.experience.jobs = formData.experience.jobs || [];
+		}
+		
+		if (formData.education) {
+			newPortfolioData.education.degrees = formData.education.degrees || [];
+		}
+		
+		if (formData.skills) {
+			newPortfolioData.skills.technical = formData.skills.technical || [];
+			newPortfolioData.skills.soft = formData.skills.soft || [];
+		}
+		
+		if (formData.projects) {
+			newPortfolioData.projects.items = formData.projects.items || [];
+		}
+		
+		if (formData.achievements) {
+			newPortfolioData.achievements.awards = formData.achievements.awards || [];
+		}
+		
+		if (formData.languages) {
+			newPortfolioData.skills.languages = formData.languages.map(lang => ({
+				name: lang,
+				proficiency: "conversational",
+				certification: ""
+			}));
+		}
+		
+		// Save to store
+		setPortfolioData(newPortfolioData);
+		
+		// Also save to legacy content for backwards compatibility
 		Object.entries(formData).forEach(([section, data]) => {
 			setContent(section, data);
 		});
 
-		// Navigate to customize page or preview
+		// Navigate to customize page
 		router.push("/editor/customize");
 	};
 
 	const handlePreview = () => {
-		// Save data first
+		// Save data first (same logic as handleSave)
+		const newPortfolioData = { ...portfolioData };
+		
+		// Transform form data to new schema
+		if (formData.hero) {
+			const nameParts = (formData.hero.title || "").split(" ");
+			newPortfolioData.personal.firstName = nameParts[0] || "";
+			newPortfolioData.personal.lastName = nameParts.slice(1).join(" ") || "";
+			newPortfolioData.personal.title = formData.hero.subtitle || "";
+			newPortfolioData.personal.tagline = formData.hero.tagline || "";
+			newPortfolioData.personal.availability = formData.hero.availability || "";
+		}
+		
+		if (formData.about) {
+			newPortfolioData.about.summary = formData.about.summary || "";
+			newPortfolioData.about.bio = formData.about.bio || "";
+			newPortfolioData.about.interests = formData.about.interests || [];
+			newPortfolioData.about.personalValues = formData.about.personalValues || [];
+			newPortfolioData.about.funFacts = formData.about.funFacts || [];
+		}
+		
+		if (formData.contact) {
+			newPortfolioData.personal.email = formData.contact.email || "";
+			newPortfolioData.personal.phone = formData.contact.phone || "";
+			newPortfolioData.personal.social.linkedin = formData.contact.linkedin || "";
+			
+			if (formData.contact.location) {
+				const locationParts = formData.contact.location.split(",").map(p => p.trim());
+				newPortfolioData.personal.location.city = locationParts[0] || "";
+				newPortfolioData.personal.location.state = locationParts[1] || "";
+				newPortfolioData.personal.location.country = locationParts[2] || "";
+			}
+		}
+		
+		if (formData.experience) {
+			newPortfolioData.experience.jobs = formData.experience.jobs || [];
+		}
+		
+		if (formData.education) {
+			newPortfolioData.education.degrees = formData.education.degrees || [];
+		}
+		
+		if (formData.skills) {
+			newPortfolioData.skills.technical = formData.skills.technical || [];
+			newPortfolioData.skills.soft = formData.skills.soft || [];
+		}
+		
+		if (formData.projects) {
+			newPortfolioData.projects.items = formData.projects.items || [];
+		}
+		
+		if (formData.achievements) {
+			newPortfolioData.achievements.awards = formData.achievements.awards || [];
+		}
+		
+		if (formData.languages) {
+			newPortfolioData.skills.languages = formData.languages.map(lang => ({
+				name: lang,
+				proficiency: "conversational",
+				certification: ""
+			}));
+		}
+		
+		// Save to store
+		setPortfolioData(newPortfolioData);
+		
+		// Also save to legacy content for backwards compatibility
 		Object.entries(formData).forEach(([section, data]) => {
 			setContent(section, data);
 		});
@@ -879,7 +1022,7 @@ export default function EditResumePage() {
 									componentProps = {
 										technical: formData[section].technical || [],
 										soft: formData[section].soft || [],
-										languages: formData[section].languages || [],
+										languages: formData.languages || [],
 									};
 								}
 								// For achievements section, flatten the structure
@@ -898,21 +1041,23 @@ export default function EditResumePage() {
 								if (section === "education" && formData[section]?.degrees) {
 									componentProps = { degrees: formData[section].degrees };
 								}
-								if (section === "hero") {
-									const heroData = formData.hero || {};
-									const personalData = {
-										firstName: heroData.title || "",
-										lastName: "",
-										subtitle: heroData.subtitle || "",
-										tagline: heroData.tagline || "",
-										availability: heroData.availability || "",
-									};
-									return (
-										<div key={section} className="mb-8 last:mb-0">
-											<Component data={personalData} />
-										</div>
-									);
-								}
+												if (section === "hero") {
+					const heroData = formData.hero || {};
+					const nameParts = (heroData.title || "").split(" ");
+					const personalData = {
+						firstName: nameParts[0] || "",
+						lastName: nameParts.slice(1).join(" ") || "",
+						title: heroData.subtitle || "",
+						subtitle: heroData.subtitle || "",
+						tagline: heroData.tagline || "",
+						availability: heroData.availability || "",
+					};
+					return (
+						<div key={section} className="mb-8 last:mb-0">
+							<Component data={{ personal: personalData }} />
+						</div>
+					);
+				}
 								if (section === "about") {
 									const aboutData = formData.about || {};
 									return (
