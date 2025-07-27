@@ -539,15 +539,7 @@ export default function EditResumePage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-			{/* AI Suggestion Inline Component */}
-			<AISuggestionInline
-				isOpen={aiModalOpen}
-				onClose={() => setAiModalOpen(false)}
-				suggestions={aiSuggestions}
-				onSelectSuggestion={handleAISuggestionSelect}
-				fieldName={currentAiLabel || currentAiField}
-				loading={aiLoading}
-			/>
+
 			
 			<div className="flex">
 				{/* Left Panel - Form */}
