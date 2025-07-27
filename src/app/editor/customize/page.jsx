@@ -17,7 +17,7 @@ const FIELD_MAP = {
 	hero: [
 		{ name: "firstName", label: "First Name", path: "personal.firstName" },
 		{ name: "lastName", label: "Last Name", path: "personal.lastName" },
-		{ name: "title", label: "Professional Title", path: "personal.title" },
+		{ name: "subtitle", label: "Professional Title", path: "personal.subtitle" },
 		{ name: "tagline", label: "Tagline", path: "personal.tagline" },
 	],
 	about: [{ name: "summary", label: "Bio", path: "about.summary" }],

@@ -56,13 +56,13 @@ export const transformParsedResumeToSchema = (
 		if (heroData.firstName)
 			transformed.personal.firstName = heroData.firstName;
 		if (heroData.lastName) transformed.personal.lastName = heroData.lastName;
-		if (heroData.subtitle) transformed.personal.title = heroData.subtitle;
+		if (heroData.subtitle) transformed.personal.subtitle = heroData.subtitle;
 		if (heroData.tagline) transformed.personal.tagline = heroData.tagline;
 		
 		console.log("🔄 [DATA-TRANSFORMER] Final personal data:", {
 			firstName: transformed.personal.firstName,
 			lastName: transformed.personal.lastName,
-			title: transformed.personal.title,
+			subtitle: transformed.personal.subtitle,
 			tagline: transformed.personal.tagline
 		});
 
@@ -344,7 +344,7 @@ export const transformParsedResumeToSchema = (
 			personal: {
 				firstName: transformed.personal.firstName,
 				lastName: transformed.personal.lastName,
-				title: transformed.personal.title,
+				subtitle: transformed.personal.subtitle,
 				email: transformed.personal.email
 			},
 			about: {
