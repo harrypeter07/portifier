@@ -4,6 +4,7 @@ import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
 import Preview from "@/components/Preview";
+import AISuggestionInline from "@/components/AISuggestionModal";
 
 export default function EditResumePage() {
 	const {
@@ -469,45 +470,85 @@ export default function EditResumePage() {
 		router.push("/preview/live");
 	};
 
-	// Add AIHelpButton component at the top
-	function AIHelpButton({ section, field, value, onAIResult, label }) {
-		// Placeholder for AI call
-		const [loading, setLoading] = useState(false);
-		const [error, setError] = useState("");
+	// AI Suggestion functionality
+	const [aiSuggestions, setAiSuggestions] = useState({});
+	const [aiLoading, setAiLoading] = useState({});
+	const [activeAiField, setActiveAiField] = useState(null);
 
-		async function handleClick() {
-			setLoading(true);
-			setError("");
-			try {
-				// TODO: Replace with real AI call
-				// Simulate AI suggestion
-				const aiSuggestion = `AI suggestion for ${label || field}`;
-				setTimeout(() => {
-					onAIResult(aiSuggestion);
-					setLoading(false);
-				}, 800);
-			} catch (e) {
-				setError("AI suggestion failed");
-				setLoading(false);
+	async function getAISuggestions(section, field, value, label) {
+		const fieldKey = `${section}-${field}`;
+		setAiLoading(prev => ({ ...prev, [fieldKey]: true }));
+		setActiveAiField(fieldKey);
+
+		try {
+			const response = await fetch("/api/ai-suggestions", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					inputField: field,
+					fieldName: field,
+					resumeType: "developer", // You can make this dynamic
+					resumeData: formData,
+					currentValue: value
+				}),
+			});
+
+			const data = await response.json();
+			
+			if (data.success) {
+				setAiSuggestions(prev => ({ ...prev, [fieldKey]: data.suggestions }));
+			} else {
+				console.error("AI suggestion failed:", data.error);
+				setAiSuggestions(prev => ({ ...prev, [fieldKey]: [] }));
 			}
+		} catch (error) {
+			console.error("Error getting AI suggestions:", error);
+			setAiSuggestions(prev => ({ ...prev, [fieldKey]: [] }));
+		} finally {
+			setAiLoading(prev => ({ ...prev, [fieldKey]: false }));
 		}
+	}
 
+	function handleAISuggestionSelect(suggestion, section, field) {
+		// Handle different field types
+		if (field === "interests" || field === "personalValues" || field === "funFacts" || field === "technical" || field === "soft" || field === "languages") {
+			// For array fields, split by commas and clean up
+			const items = suggestion.split(",").map(s => s.trim()).filter(s => s);
+			handleInputChange(section, field, items);
+		} else {
+			// For regular text fields
+			handleInputChange(section, field, suggestion);
+		}
+		// Close suggestions for this field
+		setActiveAiField(null);
+	}
+
+	function AIHelpButton({ section, field, value, label }) {
 		return (
 			<button
 				type="button"
-				onClick={handleClick}
-				disabled={loading}
+				onClick={() => getAISuggestions(section, field, value, label)}
 				title={`Get AI suggestion for ${label || field}`}
-				className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 border border-blue-300 disabled:opacity-60"
-				style={{ verticalAlign: 'middle' }}
+				className="inline-flex items-center px-3 py-1 text-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
 			>
-				{loading ? "..." : "🤖 AI Help"}
+				<span className="mr-1">🤖</span>
+				AI Help
 			</button>
 		);
 	}
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+			{/* AI Suggestion Inline Component */}
+			<AISuggestionInline
+				isOpen={aiModalOpen}
+				onClose={() => setAiModalOpen(false)}
+				suggestions={aiSuggestions}
+				onSelectSuggestion={handleAISuggestionSelect}
+				fieldName={currentAiLabel || currentAiField}
+				loading={aiLoading}
+			/>
+			
 			<div className="flex">
 				{/* Left Panel - Form */}
 				<div className="w-1/2 p-6 overflow-y-auto h-screen">
@@ -519,66 +560,82 @@ export default function EditResumePage() {
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Personal Information</h2>
 						<div className="grid grid-cols-1 gap-4">
-							<input
-								type="text"
-								placeholder="Full Name"
-								value={formData.hero?.title || ""}
-								onChange={(e) =>
-									handleInputChange("hero", "title", e.target.value)
-								}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="hero"
-								field="title"
-								value={formData.hero?.title || ""}
-								label="Full Name"
-								onAIResult={(aiValue) => handleInputChange("hero", "title", aiValue)}
-							/>
-							<input
-								type="text"
-								placeholder="Professional Title (e.g., Software Developer)"
-								value={formData.hero?.subtitle || ""}
-								onChange={(e) =>
-									handleInputChange("hero", "subtitle", e.target.value)
-								}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="hero"
-								field="subtitle"
-								value={formData.hero?.subtitle || ""}
-								label="Professional Title"
-								onAIResult={(aiValue) => handleInputChange("hero", "subtitle", aiValue)}
-							/>
-							<input
-								type="text"
-								placeholder="Tagline (e.g., Passionate Coder, Creative Designer)"
-								value={formData.hero?.tagline || ""}
-								onChange={(e) => handleInputChange("hero", "tagline", e.target.value)}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="hero"
-								field="tagline"
-								value={formData.hero?.tagline || ""}
-								label="Tagline"
-								onAIResult={(aiValue) => handleInputChange("hero", "tagline", aiValue)}
-							/>
-							<input
-								type="text"
-								placeholder="Availability (e.g., Open to work, Freelance only)"
-								value={formData.hero?.availability || ""}
-								onChange={(e) => handleInputChange("hero", "availability", e.target.value)}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="hero"
-								field="availability"
-								value={formData.hero?.availability || ""}
-								label="Availability"
-								onAIResult={(aiValue) => handleInputChange("hero", "availability", aiValue)}
-							/>
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="text"
+										placeholder="Full Name"
+										value={formData.hero?.title || ""}
+										onChange={(e) =>
+											handleInputChange("hero", "title", e.target.value)
+										}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="hero"
+										field="title"
+										value={formData.hero?.title || ""}
+										label="Full Name"
+									/>
+								</div>
+								{aiModalOpen && currentAiSection === "hero" && currentAiField === "title" && (
+									<AISuggestionInline
+										isOpen={true}
+										onClose={() => setAiModalOpen(false)}
+										suggestions={aiSuggestions}
+										onSelectSuggestion={handleAISuggestionSelect}
+										fieldName={currentAiLabel || currentAiField}
+										loading={aiLoading}
+									/>
+								)}
+							</div>
+							<div className="flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Professional Title (e.g., Software Developer)"
+									value={formData.hero?.subtitle || ""}
+									onChange={(e) =>
+										handleInputChange("hero", "subtitle", e.target.value)
+									}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="hero"
+									field="subtitle"
+									value={formData.hero?.subtitle || ""}
+									label="Professional Title"
+								/>
+							</div>
+							<div className="flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Tagline (e.g., Passionate Coder, Creative Designer)"
+									value={formData.hero?.tagline || ""}
+									onChange={(e) => handleInputChange("hero", "tagline", e.target.value)}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="hero"
+									field="tagline"
+									value={formData.hero?.tagline || ""}
+									label="Tagline"
+								/>
+							</div>
+							<div className="flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Availability (e.g., Open to work, Freelance only)"
+									value={formData.hero?.availability || ""}
+									onChange={(e) => handleInputChange("hero", "availability", e.target.value)}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="hero"
+									field="availability"
+									value={formData.hero?.availability || ""}
+									label="Availability"
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -586,148 +643,157 @@ export default function EditResumePage() {
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Contact Information</h2>
 						<div className="grid grid-cols-1 gap-4">
-							<input
-								type="email"
-								placeholder="Email Address"
-								value={formData.contact?.email || ""}
-								onChange={(e) => {
-									handleInputChange("contact", "email", e.target.value);
-								}}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="contact"
-								field="email"
-								value={formData.contact?.email || ""}
-								label="Email Address"
-								onAIResult={(aiValue) => handleInputChange("contact", "email", aiValue)}
-							/>
-							<input
-								type="tel"
-								placeholder="Phone Number"
-								value={formData.contact?.phone || ""}
-								onChange={(e) =>
-									handleInputChange("contact", "phone", e.target.value)
-								}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="contact"
-								field="phone"
-								value={formData.contact?.phone || ""}
-								label="Phone Number"
-								onAIResult={(aiValue) => handleInputChange("contact", "phone", aiValue)}
-							/>
-							<input
-								type="text"
-								placeholder="Location (City, Country)"
-								value={formData.contact?.location || ""}
-								onChange={(e) =>
-									handleInputChange("contact", "location", e.target.value)
-								}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="contact"
-								field="location"
-								value={formData.contact?.location || ""}
-								label="Location"
-								onAIResult={(aiValue) => handleInputChange("contact", "location", aiValue)}
-							/>
-							<input
-								type="url"
-								placeholder="LinkedIn Profile"
-								value={formData.contact?.linkedin || ""}
-								onChange={(e) =>
-									handleInputChange("contact", "linkedin", e.target.value)
-								}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="contact"
-								field="linkedin"
-								value={formData.contact?.linkedin || ""}
-								label="LinkedIn Profile"
-								onAIResult={(aiValue) => handleInputChange("contact", "linkedin", aiValue)}
-							/>
+							<div className="flex items-center gap-2">
+								<input
+									type="email"
+									placeholder="Email Address"
+									value={formData.contact?.email || ""}
+									onChange={(e) => {
+										handleInputChange("contact", "email", e.target.value);
+									}}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="contact"
+									field="email"
+									value={formData.contact?.email || ""}
+									label="Email Address"
+								/>
+							</div>
+							<div className="flex items-center gap-2">
+								<input
+									type="tel"
+									placeholder="Phone Number"
+									value={formData.contact?.phone || ""}
+									onChange={(e) =>
+										handleInputChange("contact", "phone", e.target.value)
+									}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="contact"
+									field="phone"
+									value={formData.contact?.phone || ""}
+									label="Phone Number"
+								/>
+							</div>
+							<div className="flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Location (City, Country)"
+									value={formData.contact?.location || ""}
+									onChange={(e) =>
+										handleInputChange("contact", "location", e.target.value)
+									}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="contact"
+									field="location"
+									value={formData.contact?.location || ""}
+									label="Location"
+								/>
+							</div>
+							<div className="flex items-center gap-2">
+								<input
+									type="url"
+									placeholder="LinkedIn Profile"
+									value={formData.contact?.linkedin || ""}
+									onChange={(e) =>
+										handleInputChange("contact", "linkedin", e.target.value)
+									}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="contact"
+									field="linkedin"
+									value={formData.contact?.linkedin || ""}
+									label="LinkedIn Profile"
+								/>
+							</div>
 						</div>
 					</div>
 
 					{/* Professional Summary & About */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Professional Summary & About</h2>
-						<textarea
-							placeholder="Write a brief professional summary about yourself..."
-							value={formData.about?.summary || ""}
-							onChange={(e) =>
-								handleInputChange("about", "summary", e.target.value)
-							}
-							rows={4}
-							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-						/>
-						<AIHelpButton
-							section="about"
-							field="summary"
-							value={formData.about?.summary || ""}
-							label="Professional Summary"
-							onAIResult={(aiValue) => handleInputChange("about", "summary", aiValue)}
-						/>
-						<textarea
-							placeholder="Bio (detailed background, story, or philosophy)"
-							value={formData.about?.bio || ""}
-							onChange={(e) => handleInputChange("about", "bio", e.target.value)}
-							rows={3}
-							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
-						/>
-						<AIHelpButton
-							section="about"
-							field="bio"
-							value={formData.about?.bio || ""}
-							label="Bio"
-							onAIResult={(aiValue) => handleInputChange("about", "bio", aiValue)}
-						/>
-						<input
-							type="text"
-							placeholder="Interests (comma-separated)"
-							value={(formData.about?.interests || []).join(", ")}
-							onChange={(e) => handleInputChange("about", "interests", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
-							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
-						/>
-						<AIHelpButton
-							section="about"
-							field="interests"
-							value={(formData.about?.interests || []).join(", ")}
-							label="Interests"
-							onAIResult={(aiValue) => handleInputChange("about", "interests", aiValue.split(",").map(s => s.trim()).filter(Boolean))}
-						/>
-						<input
-							type="text"
-							placeholder="Personal Values (comma-separated)"
-							value={(formData.about?.personalValues || []).join(", ")}
-							onChange={(e) => handleInputChange("about", "personalValues", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
-							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
-						/>
-						<AIHelpButton
-							section="about"
-							field="personalValues"
-							value={(formData.about?.personalValues || []).join(", ")}
-							label="Personal Values"
-							onAIResult={(aiValue) => handleInputChange("about", "personalValues", aiValue.split(",").map(s => s.trim()).filter(Boolean))}
-						/>
-						<input
-							type="text"
-							placeholder="Fun Facts (comma-separated)"
-							value={(formData.about?.funFacts || []).join(", ")}
-							onChange={(e) => handleInputChange("about", "funFacts", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
-							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 mt-4"
-						/>
-						<AIHelpButton
-							section="about"
-							field="funFacts"
-							value={(formData.about?.funFacts || []).join(", ")}
-							label="Fun Facts"
-							onAIResult={(aiValue) => handleInputChange("about", "funFacts", aiValue.split(",").map(s => s.trim()).filter(Boolean))}
-						/>
+						<div className="flex items-start gap-2">
+							<textarea
+								placeholder="Write a brief professional summary about yourself..."
+								value={formData.about?.summary || ""}
+								onChange={(e) =>
+									handleInputChange("about", "summary", e.target.value)
+								}
+								rows={4}
+								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="about"
+								field="summary"
+								value={formData.about?.summary || ""}
+								label="Professional Summary"
+							/>
+						</div>
+						<div className="flex items-start gap-2 mt-4">
+							<textarea
+								placeholder="Bio (detailed background, story, or philosophy)"
+								value={formData.about?.bio || ""}
+								onChange={(e) => handleInputChange("about", "bio", e.target.value)}
+								rows={3}
+								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="about"
+								field="bio"
+								value={formData.about?.bio || ""}
+								label="Bio"
+							/>
+						</div>
+						<div className="flex items-center gap-2 mt-4">
+							<input
+								type="text"
+								placeholder="Interests (comma-separated)"
+								value={(formData.about?.interests || []).join(", ")}
+								onChange={(e) => handleInputChange("about", "interests", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="about"
+								field="interests"
+								value={(formData.about?.interests || []).join(", ")}
+								label="Interests"
+							/>
+						</div>
+						<div className="flex items-center gap-2 mt-4">
+							<input
+								type="text"
+								placeholder="Personal Values (comma-separated)"
+								value={(formData.about?.personalValues || []).join(", ")}
+								onChange={(e) => handleInputChange("about", "personalValues", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="about"
+								field="personalValues"
+								value={(formData.about?.personalValues || []).join(", ")}
+								label="Personal Values"
+							/>
+						</div>
+						<div className="flex items-center gap-2 mt-4">
+							<input
+								type="text"
+								placeholder="Fun Facts (comma-separated)"
+								value={(formData.about?.funFacts || []).join(", ")}
+								onChange={(e) => handleInputChange("about", "funFacts", e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="about"
+								field="funFacts"
+								value={(formData.about?.funFacts || []).join(", ")}
+								label="Fun Facts"
+							/>
+						</div>
 					</div>
 
 					{/* Experience */}
@@ -739,82 +805,86 @@ export default function EditResumePage() {
 								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
-									<input
-										type="text"
-										placeholder="Job Title"
-										value={job?.title || ""}
-										onChange={(e) =>
-											handleArrayChange("experience", "jobs", index, {
-												...job,
-												title: e.target.value,
-											})
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="experience"
-										field="title"
-										value={job?.title || ""}
-										label="Job Title"
-										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, title: aiValue })}
-									/>
-									<input
-										type="text"
-										placeholder="Company Name"
-										value={job?.company || ""}
-										onChange={(e) =>
-											handleArrayChange("experience", "jobs", index, {
-												...job,
-												company: e.target.value,
-											})
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="experience"
-										field="company"
-										value={job?.company || ""}
-										label="Company Name"
-										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, company: aiValue })}
-									/>
-									<input
-										type="text"
-										placeholder="Duration (e.g., Jan 2020 - Dec 2022)"
-										value={job?.duration || ""}
-										onChange={(e) =>
-											handleArrayChange("experience", "jobs", index, {
-												...job,
-												duration: e.target.value,
-											})
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="experience"
-										field="duration"
-										value={job?.duration || ""}
-										label="Duration"
-										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, duration: aiValue })}
-									/>
-									<textarea
-										placeholder="Job Description"
-										value={job?.description || ""}
-										onChange={(e) =>
-											handleArrayChange("experience", "jobs", index, {
-												...job,
-												description: e.target.value,
-											})
-										}
-										rows={3}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="experience"
-										field="description"
-										value={job?.description || ""}
-										label="Job Description"
-										onAIResult={(aiValue) => handleArrayChange("experience", "jobs", index, { ...job, description: aiValue })}
-									/>
+									<div className="flex items-center gap-2">
+										<input
+											type="text"
+											placeholder="Job Title"
+											value={job?.title || ""}
+											onChange={(e) =>
+												handleArrayChange("experience", "jobs", index, {
+													...job,
+													title: e.target.value,
+												})
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="experience"
+											field="title"
+											value={job?.title || ""}
+											label="Job Title"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<input
+											type="text"
+											placeholder="Company Name"
+											value={job?.company || ""}
+											onChange={(e) =>
+												handleArrayChange("experience", "jobs", index, {
+													...job,
+													company: e.target.value,
+												})
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="experience"
+											field="company"
+											value={job?.company || ""}
+											label="Company Name"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<input
+											type="text"
+											placeholder="Duration (e.g., Jan 2020 - Dec 2022)"
+											value={job?.duration || ""}
+											onChange={(e) =>
+												handleArrayChange("experience", "jobs", index, {
+													...job,
+													duration: e.target.value,
+												})
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="experience"
+											field="duration"
+											value={job?.duration || ""}
+											label="Duration"
+										/>
+									</div>
+									<div className="flex items-start gap-2">
+										<textarea
+											placeholder="Job Description"
+											value={job?.description || ""}
+											onChange={(e) =>
+												handleArrayChange("experience", "jobs", index, {
+													...job,
+													description: e.target.value,
+												})
+											}
+											rows={3}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="experience"
+											field="description"
+											value={job?.description || ""}
+											label="Job Description"
+										/>
+									</div>
 								</div>
 								<button
 									type="button"
@@ -843,63 +913,66 @@ export default function EditResumePage() {
 								className="mb-4 p-4 border rounded-lg dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
-									<input
-										type="text"
-										placeholder="Degree (e.g., Bachelor of Computer Science)"
-										value={degree?.degree || ""}
-										onChange={(e) =>
-											handleArrayChange("education", "degrees", index, {
-												...degree,
-												degree: e.target.value,
-											})
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="education"
-										field="degree"
-										value={degree?.degree || ""}
-										label="Degree"
-										onAIResult={(aiValue) => handleArrayChange("education", "degrees", index, { ...degree, degree: aiValue })}
-									/>
-									<input
-										type="text"
-										placeholder="Institution Name"
-										value={degree?.institution || ""}
-										onChange={(e) =>
-											handleArrayChange("education", "degrees", index, {
-												...degree,
-												institution: e.target.value,
-											})
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="education"
-										field="institution"
-										value={degree?.institution || ""}
-										label="Institution Name"
-										onAIResult={(aiValue) => handleArrayChange("education", "degrees", index, { ...degree, institution: aiValue })}
-									/>
-									<input
-										type="text"
-										placeholder="Year (e.g., 2020-2024)"
-										value={degree?.year || ""}
-										onChange={(e) =>
-											handleArrayChange("education", "degrees", index, {
-												...degree,
-												year: e.target.value,
-											})
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="education"
-										field="year"
-										value={degree?.year || ""}
-										label="Year"
-										onAIResult={(aiValue) => handleArrayChange("education", "degrees", index, { ...degree, year: aiValue })}
-									/>
+									<div className="flex items-center gap-2">
+										<input
+											type="text"
+											placeholder="Degree (e.g., Bachelor of Computer Science)"
+											value={degree?.degree || ""}
+											onChange={(e) =>
+												handleArrayChange("education", "degrees", index, {
+													...degree,
+													degree: e.target.value,
+												})
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="education"
+											field="degree"
+											value={degree?.degree || ""}
+											label="Degree"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<input
+											type="text"
+											placeholder="Institution Name"
+											value={degree?.institution || ""}
+											onChange={(e) =>
+												handleArrayChange("education", "degrees", index, {
+													...degree,
+													institution: e.target.value,
+												})
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="education"
+											field="institution"
+											value={degree?.institution || ""}
+											label="Institution Name"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<input
+											type="text"
+											placeholder="Year (e.g., 2020-2024)"
+											value={degree?.year || ""}
+											onChange={(e) =>
+												handleArrayChange("education", "degrees", index, {
+													...degree,
+													year: e.target.value,
+												})
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="education"
+											field="year"
+											value={degree?.year || ""}
+											label="Year"
+										/>
+									</div>
 								</div>
 								<button
 									type="button"
@@ -926,57 +999,59 @@ export default function EditResumePage() {
 							<label className="block text-sm font-medium mb-2">
 								Technical Skills (comma-separated)
 							</label>
-							<textarea
-								placeholder="e.g., JavaScript, React, Python, SQL"
-								value={(formData.skills?.technical || []).join(", ")}
-								onChange={(e) =>
-									handleInputChange(
-										"skills",
-										"technical",
-										e.target.value
-											.split(",")
-											.map((s) => s.trim())
-											.filter((s) => s)
-									)
-								}
-								rows={3}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="skills"
-								field="technical"
-								value={(formData.skills?.technical || []).join(", ")}
-								label="Technical Skills"
-								onAIResult={(aiValue) => handleInputChange("skills", "technical", aiValue.split(",").map(s => s.trim()).filter(s => s))}
-							/>
+							<div className="flex items-start gap-2">
+								<textarea
+									placeholder="e.g., JavaScript, React, Python, SQL"
+									value={(formData.skills?.technical || []).join(", ")}
+									onChange={(e) =>
+										handleInputChange(
+											"skills",
+											"technical",
+											e.target.value
+												.split(",")
+												.map((s) => s.trim())
+												.filter((s) => s)
+										)
+									}
+									rows={3}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="skills"
+									field="technical"
+									value={(formData.skills?.technical || []).join(", ")}
+									label="Technical Skills"
+								/>
+							</div>
 						</div>
 						<div>
 							<label className="block text-sm font-medium mb-2">
 								Soft Skills (comma-separated)
 							</label>
-							<textarea
-								placeholder="e.g., Team Leadership, Communication, Problem Solving"
-								value={(formData.skills?.soft || []).join(", ")}
-								onChange={(e) =>
-									handleInputChange(
-										"skills",
-										"soft",
-										e.target.value
-											.split(",")
-											.map((s) => s.trim())
-											.filter((s) => s)
-									)
-								}
-								rows={3}
-								className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
-								section="skills"
-								field="soft"
-								value={(formData.skills?.soft || []).join(", ")}
-								label="Soft Skills"
-								onAIResult={(aiValue) => handleInputChange("skills", "soft", aiValue.split(",").map(s => s.trim()).filter(s => s))}
-							/>
+							<div className="flex items-start gap-2">
+								<textarea
+									placeholder="e.g., Team Leadership, Communication, Problem Solving"
+									value={(formData.skills?.soft || []).join(", ")}
+									onChange={(e) =>
+										handleInputChange(
+											"skills",
+											"soft",
+											e.target.value
+												.split(",")
+												.map((s) => s.trim())
+												.filter((s) => s)
+										)
+									}
+									rows={3}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="skills"
+									field="soft"
+									value={(formData.skills?.soft || []).join(", ")}
+									label="Soft Skills"
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -989,70 +1064,74 @@ export default function EditResumePage() {
 								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
-									<input
-										type="text"
-										placeholder="Project Title"
-										value={project?.title || ""}
-										onChange={(e) =>
-											handleProjectChange(index, "title", e.target.value)
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="projects"
-										field="title"
-										value={project?.title || ""}
-										label="Project Title"
-										onAIResult={(aiValue) => handleProjectChange(index, "title", aiValue)}
-									/>
-									<textarea
-										placeholder="Project Description"
-										value={project?.description || ""}
-										onChange={(e) =>
-											handleProjectChange(index, "description", e.target.value)
-										}
-										rows={2}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="projects"
-										field="description"
-										value={project?.description || ""}
-										label="Project Description"
-										onAIResult={(aiValue) => handleProjectChange(index, "description", aiValue)}
-									/>
-									<input
-										type="url"
-										placeholder="GitHub Link"
-										value={project?.github || ""}
-										onChange={(e) =>
-											handleProjectChange(index, "github", e.target.value)
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="projects"
-										field="github"
-										value={project?.github || ""}
-										label="GitHub Link"
-										onAIResult={(aiValue) => handleProjectChange(index, "github", aiValue)}
-									/>
-									<input
-										type="url"
-										placeholder="Live URL"
-										value={project?.url || ""}
-										onChange={(e) =>
-											handleProjectChange(index, "url", e.target.value)
-										}
-										className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-									/>
-									<AIHelpButton
-										section="projects"
-										field="url"
-										value={project?.url || ""}
-										label="Live URL"
-										onAIResult={(aiValue) => handleProjectChange(index, "url", aiValue)}
-									/>
+									<div className="flex items-center gap-2">
+										<input
+											type="text"
+											placeholder="Project Title"
+											value={project?.title || ""}
+											onChange={(e) =>
+												handleProjectChange(index, "title", e.target.value)
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="projects"
+											field="title"
+											value={project?.title || ""}
+											label="Project Title"
+										/>
+									</div>
+									<div className="flex items-start gap-2">
+										<textarea
+											placeholder="Project Description"
+											value={project?.description || ""}
+											onChange={(e) =>
+												handleProjectChange(index, "description", e.target.value)
+											}
+											rows={2}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="projects"
+											field="description"
+											value={project?.description || ""}
+											label="Project Description"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<input
+											type="url"
+											placeholder="GitHub Link"
+											value={project?.github || ""}
+											onChange={(e) =>
+												handleProjectChange(index, "github", e.target.value)
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="projects"
+											field="github"
+											value={project?.github || ""}
+											label="GitHub Link"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<input
+											type="url"
+											placeholder="Live URL"
+											value={project?.url || ""}
+											onChange={(e) =>
+												handleProjectChange(index, "url", e.target.value)
+											}
+											className="flex-1 p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+										/>
+										<AIHelpButton
+											section="projects"
+											field="url"
+											value={project?.url || ""}
+											label="Live URL"
+										/>
+									</div>
 								</div>
 								<button
 									type="button"
@@ -1075,28 +1154,29 @@ export default function EditResumePage() {
 					{/* Languages */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Languages</h2>
-						<textarea
-							placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
-							value={(formData.languages || []).join(", ")}
-							onChange={(e) =>
-								setFormData((prev) => ({
-									...prev,
-									languages: e.target.value
-										.split(",")
-										.map((s) => s.trim())
-										.filter((s) => s),
-								}))
-							}
-							rows={2}
-							className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-						/>
-						<AIHelpButton
-							section="languages"
-							field="languages"
-							value={(formData.languages || []).join(", ")}
-							label="Languages"
-							onAIResult={(aiValue) => setFormData((prev) => ({ ...prev, languages: aiValue.split(",").map(s => s.trim()).filter(s => s) }))}
-						/>
+						<div className="flex items-start gap-2">
+							<textarea
+								placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
+								value={(formData.languages || []).join(", ")}
+								onChange={(e) =>
+									setFormData((prev) => ({
+										...prev,
+										languages: e.target.value
+											.split(",")
+											.map((s) => s.trim())
+											.filter((s) => s),
+									}))
+								}
+								rows={2}
+								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+							/>
+							<AIHelpButton
+								section="languages"
+								field="languages"
+								value={(formData.languages || []).join(", ")}
+								label="Languages"
+							/>
+						</div>
 					</div>
 
 					{/* Action Buttons */}

@@ -48,7 +48,8 @@ export default function Navbar() {
 		};
 
 		checkAuth();
-	}, []);
+	// Add pathname as a dependency so auth is checked on every route change
+	}, [pathname]);
 
 	const handleLogout = async () => {
 		try {

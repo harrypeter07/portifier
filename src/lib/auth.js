@@ -49,14 +49,8 @@ export default async function auth(req) {
 			console.log("[AUTH] Authentication successful for user:", user.email);
 			return user;
 		} catch (dbError) {
-			console.log("[AUTH] Database connection failed, but token is valid. Returning mock user data for testing.");
-			// Return mock user data for testing when database is not available
-			return {
-				_id: userIdString,
-				name: "Test User",
-				email: "test@example.com",
-				username: "testuser"
-			};
+			console.log("[AUTH] Database connection failed:", dbError.message);
+			return null;
 		}
 	} catch (error) {
 		console.log("[AUTH] Authentication failed:", error.message);
