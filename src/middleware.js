@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export function middleware(request) {
+export async function middleware(request) {
 	const { pathname } = request.nextUrl;
 
 	// Define protected routes
@@ -23,9 +23,11 @@ export function middleware(request) {
 	let isAuthenticated = false;
 	if (token) {
 		try {
-			// Verify JWT token
-			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			isValidToken = !!decoded.userId;
+			// Verify JWT token using jose
+			const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+			const { payload } = await jwtVerify(token, secret);
+			isAuthenticated = !!payload.userId;
+			console.log(`[MIDDLEWARE] Token verified for user:`, payload.userId);
 		} catch (error) {
 			// Token is invalid, clear it
 			console.log(`[MIDDLEWARE] Token verification failed:`, error.message);
@@ -39,6 +41,7 @@ export function middleware(request) {
 
 	// Redirect unauthenticated users from protected routes
 	if (isProtectedRoute && !isAuthenticated) {
+		console.log(`[MIDDLEWARE] Redirecting unauthenticated user from protected route: ${pathname}`);
 		return NextResponse.redirect(
 			new URL("/auth/signin", request.url)
 		);
@@ -46,6 +49,7 @@ export function middleware(request) {
 
 	// Redirect authenticated users away from auth routes
 	if (isAuthRoute && isAuthenticated) {
+		console.log(`[MIDDLEWARE] Redirecting authenticated user from auth route: ${pathname}`);
 		return NextResponse.redirect(
 			new URL("/editor", request.url)
 		);
