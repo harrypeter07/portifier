@@ -18,6 +18,14 @@ const authenticatedNavLinks = [
 export default function Navbar() {
 	const pathname = usePathname();
 	const router = useRouter();
+
+	// Hide Navbar for public portfolio pages (single segment, not app routes)
+	const isPortfolioPage =
+		/^\/[a-zA-Z0-9_-]+$/.test(pathname) &&
+		!['/dashboard', '/editor', '/settings', '/auth', '/api'].some(prefix => pathname.startsWith(prefix));
+
+	if (isPortfolioPage) return null;
+
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
