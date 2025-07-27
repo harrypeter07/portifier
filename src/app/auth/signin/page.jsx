@@ -11,6 +11,8 @@ export default function Signin() {
 	});
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+	const [verifiedMsg, setVerifiedMsg] = useState("");
 	const router = useRouter();
 
 	// Check if user is already logged in
@@ -30,7 +32,7 @@ export default function Signin() {
 				router.push("/dashboard");
 			}
 		}
-		checkAuth();
+		checkLoggedIn();
 	}, [router]);
 
 	async function handleSubmit(e) {
@@ -70,6 +72,12 @@ export default function Signin() {
 						Sign in to access your portfolio
 					</p>
 				</div>
+
+				{verifiedMsg && (
+					<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+						<p className="text-green-700 text-sm">{verifiedMsg}</p>
+					</div>
+				)}
 
 				{error && (
 					<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -140,17 +148,7 @@ export default function Signin() {
 							</div>
 						</div>
 
-						{/* Error message */}
-						{error && (
-							<div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
-								<div className="flex items-center">
-									<svg className="w-5 h-5 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-									</svg>
-									<p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
-								</div>
-							</div>
-						)}
+
 
 						{/* Submit Button */}
 						<button

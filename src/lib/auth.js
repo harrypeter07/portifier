@@ -1,19 +1,24 @@
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import User from "../models/User";
-import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import dbConnect from "./mongodb";
 
 export default async function auth(req) {
 	let token = req.cookies.get("token")?.value;
 	if (!token) {
+		console.log("[AUTH] No token found in cookies");
 		return null;
 	}
+	
 	try {
-		const decoded = jwt.verify(token, process.env.JWT_SECRET);
-		const user = await User.findById(decoded.userId);
+		const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+		const { payload } = await jwtVerify(token, secret);
+		
+		await dbConnect();
+		const user = await User.findById(payload.userId);
+		
 		if (!user) {
-			console.log("[AUTH] User not found in database");
+			console.log("[AUTH] User not found in database for ID:", payload.userId);
 			return null;
 		}
 

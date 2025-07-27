@@ -49,13 +49,11 @@ export default function Signup() {
 			const data = await res.json();
 
 			if (res.ok) {
-				setSuccess("Account created successfully! You can now sign in.");
-				setForm({
-					name: "",
-					username: "",
-					email: "",
-					password: "",
-				});
+				setSuccess("Account created successfully! Redirecting to dashboard...");
+				// Wait a moment for the cookie to be set, then redirect
+				setTimeout(() => {
+					router.push("/dashboard");
+				}, 1500);
 			} else {
 				setError(data.error || "Signup failed");
 			}
