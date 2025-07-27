@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLayoutStore } from "@/store/layoutStore";
 
 export default function Dashboard() {
 	const [user, setUser] = useState(null);
@@ -10,6 +11,7 @@ export default function Dashboard() {
 	const [loading, setLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState("overview");
 	const router = useRouter();
+	const { setAllContent, setParsedData, setResumeId } = useLayoutStore();
 
 	useEffect(() => {
 		async function fetchData() {
@@ -57,6 +59,25 @@ export default function Dashboard() {
 	if (!user) return null;
 
 	const { resumes, portfolios } = dashboardData || { resumes: { list: [], stats: {} }, portfolios: { list: [], stats: {} } };
+
+	async function handleResumeClick(resume) {
+		if (resume.status !== "parsed") {
+			alert("This resume is not yet parsed and cannot be loaded.");
+			return;
+		}
+		try {
+			const res = await fetch(`/api/resume/${resume._id}`);
+			if (!res.ok) throw new Error("Failed to fetch resume data");
+			const data = await res.json();
+			if (!data.resume || !data.resume.parsedData) throw new Error("No parsed data found");
+			setAllContent(data.resume.parsedData);
+			setParsedData(data.resume.parsedData);
+			setResumeId(resume._id);
+			router.push("/editor/edit-resume");
+		} catch (err) {
+			alert("Error loading resume: " + err.message);
+		}
+	}
 
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -311,7 +332,8 @@ export default function Dashboard() {
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 													transition={{ delay: (index + 3) * 0.1 }}
-													className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300"
+													className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300 cursor-pointer"
+													onClick={() => handleResumeClick(resume)}
 												>
 													<div className="flex items-center">
 														<div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-4">

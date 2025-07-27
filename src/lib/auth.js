@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 async function auth() {
 	console.log("[AUTH] Starting authentication check");
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	console.log("[AUTH] Request cookies:", cookieStore.getAll());
 	
 	let token = cookieStore.get("token")?.value;

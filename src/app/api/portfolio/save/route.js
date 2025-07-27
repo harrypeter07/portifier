@@ -77,6 +77,11 @@ export async function POST(req) {
 		if (username) updateData.username = username;
 		if (slug) updateData.slug = slug;
 
+		// Ensure username is always set for uniqueness
+		if (!updateData.username) {
+			updateData.username = user.username || (user.email && user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, ''));
+		}
+
 		// Upsert portfolio for user
 		const portfolio = await Portfolio.findOneAndUpdate(
 			{ userId: user._id }, 

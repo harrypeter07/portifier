@@ -479,10 +479,10 @@ export default function EditResumePage() {
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
 
 			
-			<div className="flex">
+			<div className="flex flex-col-reverse md:flex-row">
 				{/* Left Panel - Form */}
-				<div className="w-1/2 p-6 overflow-y-auto h-screen">
-					<h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+				<div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto h-auto md:h-screen">
+					<h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">
 						Edit Resume Details
 					</h1>
 
@@ -621,7 +621,9 @@ export default function EditResumePage() {
 								placeholder="Interests (comma-separated)"
 								value={(formData.about?.interests || []).join(", ")}
 								onChange={(value) => {
-									if (value && typeof value === 'string') {
+									if (Array.isArray(value)) {
+										handleInputChange("about", "interests", value);
+									} else if (typeof value === 'string') {
 										handleInputChange("about", "interests", value.split(",").map(s => s.trim()).filter(Boolean));
 									} else {
 										handleInputChange("about", "interests", []);
@@ -638,7 +640,9 @@ export default function EditResumePage() {
 								placeholder="Personal Values (comma-separated)"
 								value={(formData.about?.personalValues || []).join(", ")}
 								onChange={(value) => {
-									if (value && typeof value === 'string') {
+									if (Array.isArray(value)) {
+										handleInputChange("about", "personalValues", value);
+									} else if (typeof value === 'string') {
 										handleInputChange("about", "personalValues", value.split(",").map(s => s.trim()).filter(Boolean));
 									} else {
 										handleInputChange("about", "personalValues", []);
@@ -655,7 +659,9 @@ export default function EditResumePage() {
 								placeholder="Fun Facts (comma-separated)"
 								value={(formData.about?.funFacts || []).join(", ")}
 								onChange={(value) => {
-									if (value && typeof value === 'string') {
+									if (Array.isArray(value)) {
+										handleInputChange("about", "funFacts", value);
+									} else if (typeof value === 'string') {
 										handleInputChange("about", "funFacts", value.split(",").map(s => s.trim()).filter(Boolean));
 									} else {
 										handleInputChange("about", "funFacts", []);
@@ -852,15 +858,10 @@ export default function EditResumePage() {
 									placeholder="e.g., JavaScript, React, Python, SQL"
 									value={(formData.skills?.technical || []).join(", ")}
 									onChange={(value) => {
-										if (value && typeof value === 'string') {
-											handleInputChange(
-												"skills",
-												"technical",
-												value
-													.split(",")
-													.map((s) => s.trim())
-													.filter((s) => s)
-											);
+										if (Array.isArray(value)) {
+											handleInputChange("skills", "technical", value);
+										} else if (typeof value === 'string') {
+											handleInputChange("skills", "technical", value.split(",").map(s => s.trim()).filter(Boolean));
 										} else {
 											handleInputChange("skills", "technical", []);
 										}
@@ -882,15 +883,10 @@ export default function EditResumePage() {
 									placeholder="e.g., Team Leadership, Communication, Problem Solving"
 									value={(formData.skills?.soft || []).join(", ")}
 									onChange={(value) => {
-										if (value && typeof value === 'string') {
-											handleInputChange(
-												"skills",
-												"soft",
-												value
-													.split(",")
-													.map((s) => s.trim())
-													.filter((s) => s)
-											);
+										if (Array.isArray(value)) {
+											handleInputChange("skills", "soft", value);
+										} else if (typeof value === 'string') {
+											handleInputChange("skills", "soft", value.split(",").map(s => s.trim()).filter(Boolean));
 										} else {
 											handleInputChange("skills", "soft", []);
 										}
@@ -995,19 +991,12 @@ export default function EditResumePage() {
 							placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
 							value={(formData.languages || []).join(", ")}
 							onChange={(value) => {
-								if (value && typeof value === 'string') {
-									setFormData((prev) => ({
-										...prev,
-										languages: value
-											.split(",")
-											.map((s) => s.trim())
-											.filter((s) => s),
-									}));
+								if (Array.isArray(value)) {
+									setFormData((prev) => ({ ...prev, languages: value }));
+								} else if (typeof value === 'string') {
+									setFormData((prev) => ({ ...prev, languages: value.split(",").map(s => s.trim()).filter(Boolean) }));
 								} else {
-									setFormData((prev) => ({
-										...prev,
-										languages: [],
-									}));
+									setFormData((prev) => ({ ...prev, languages: [] }));
 								}
 							}}
 							rows={2}
@@ -1020,22 +1009,22 @@ export default function EditResumePage() {
 					</div>
 
 					{/* Action Buttons */}
-					<div className="flex gap-4 mb-8">
+					<div className="flex flex-col md:flex-row gap-2 md:gap-4 mb-8">
 						<button
 							onClick={handleSave}
-							className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold"
+							className="bg-blue-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-blue-700 font-semibold"
 						>
 							Save Changes
 						</button>
 						<button
 							onClick={handlePreview}
-							className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-semibold"
+							className="bg-green-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-green-700 font-semibold"
 						>
 							Preview Portfolio
 						</button>
 						<button
 							onClick={() => router.push("/editor")}
-							className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 font-semibold"
+							className="bg-gray-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-gray-700 font-semibold"
 						>
 							Back to Upload
 						</button>
@@ -1043,11 +1032,11 @@ export default function EditResumePage() {
 				</div>
 
 				{/* Right Panel - Live Preview */}
-				<div className="w-1/2 h-screen overflow-y-auto border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+				<div className="w-full md:w-1/2 h-auto md:h-screen overflow-x-auto overflow-y-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
 					<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
-						<h2 className="text-xl font-semibold">Live Preview</h2>
+						<h2 className="text-lg md:text-xl font-semibold">Live Preview</h2>
 					</div>
-					<div className="p-4">
+					<div className="p-2 md:p-4">
 										{layout && Object.entries(layout).length > 0 ? (
 					Object.entries(layout).map(([section, componentName]) => {
 						console.log(`👁️ [EDIT-RESUME-PREVIEW] Rendering section: ${section} with component: ${componentName}`);
@@ -1146,7 +1135,7 @@ export default function EditResumePage() {
 								);
 							})
 						) : (
-							<div className="text-center py-12">
+							<div className="text-center py-8 md:py-12">
 								<p className="text-gray-500">
 									No layout selected. Please go back and choose a template
 									first.

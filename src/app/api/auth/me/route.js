@@ -1,20 +1,17 @@
 import dbConnect from "@/lib/mongodb";
 import auth from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function GET(req) {
 	console.log("[ME] Incoming /me request");
-	
 	try {
-		// Try to connect to database, but don't fail if it doesn't work
 		try {
 			await dbConnect();
 		} catch (dbError) {
 			console.log("[ME] Database connection failed, continuing with auth check");
 		}
-		
 		const user = await auth();
-
 		if (!user) {
 			console.log("[ME] No authenticated user found");
 			return NextResponse.json(
@@ -22,7 +19,6 @@ export async function GET(req) {
 				{ status: 401 }
 			);
 		}
-
 		console.log("[ME] Returning user data for:", user.email || user.name);
 		return NextResponse.json({
 			user: {
@@ -32,7 +28,6 @@ export async function GET(req) {
 				email: user.email,
 			}
 		});
-
 	} catch (error) {
 		console.error("[ME] Error during /me request:", error);
 		return NextResponse.json(
