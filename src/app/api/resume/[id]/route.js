@@ -3,13 +3,13 @@ import dbConnect from "@/lib/mongodb";
 import { auth } from "@/lib/auth";
 import Resume from "@/models/Resume";
 
-export async function GET(req, params) {
+export async function GET(req, { params }) {
   await dbConnect();
   const user = await auth();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { id } = await params;
+  const { id } = params;
   if (!id) {
     return NextResponse.json({ error: "Missing resume ID" }, { status: 400 });
   }
