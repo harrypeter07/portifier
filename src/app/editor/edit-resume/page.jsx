@@ -610,34 +610,58 @@ export default function EditResumePage() {
 									isActive={activeAiField === "hero-subtitle"}
 								/>
 							</div>
-							<div className="flex items-center gap-2">
-								<input
-									type="text"
-									placeholder="Tagline (e.g., Passionate Coder, Creative Designer)"
-									value={formData.hero?.tagline || ""}
-									onChange={(e) => handleInputChange("hero", "tagline", e.target.value)}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="text"
+										placeholder="Tagline (e.g., Passionate Coder, Creative Designer)"
+										value={formData.hero?.tagline || ""}
+										onChange={(e) => handleInputChange("hero", "tagline", e.target.value)}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="hero"
+										field="tagline"
+										value={formData.hero?.tagline || ""}
+										label="Tagline"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="hero-tagline"
 									section="hero"
 									field="tagline"
-									value={formData.hero?.tagline || ""}
 									label="Tagline"
+									suggestions={aiSuggestions["hero-tagline"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["hero-tagline"] || false}
+									isActive={activeAiField === "hero-tagline"}
 								/>
 							</div>
-							<div className="flex items-center gap-2">
-								<input
-									type="text"
-									placeholder="Availability (e.g., Open to work, Freelance only)"
-									value={formData.hero?.availability || ""}
-									onChange={(e) => handleInputChange("hero", "availability", e.target.value)}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-center gap-2">
+									<input
+										type="text"
+										placeholder="Availability (e.g., Open to work, Freelance only)"
+										value={formData.hero?.availability || ""}
+										onChange={(e) => handleInputChange("hero", "availability", e.target.value)}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="hero"
+										field="availability"
+										value={formData.hero?.availability || ""}
+										label="Availability"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="hero-availability"
 									section="hero"
 									field="availability"
-									value={formData.hero?.availability || ""}
 									label="Availability"
+									suggestions={aiSuggestions["hero-availability"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["hero-availability"] || false}
+									isActive={activeAiField === "hero-availability"}
 								/>
 							</div>
 						</div>
