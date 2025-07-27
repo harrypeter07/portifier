@@ -1,50 +1,54 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
-export async function middleware(request) {
+export function middleware(request) {
 	const { pathname } = request.nextUrl;
 
-	// Define protected routes and auth-only routes
+	// Define protected routes
 	const protectedRoutes = ["/dashboard", "/editor"];
-	const authRoutes = ["/signin", "/signup"];
+	const authRoutes = ["/auth/signin", "/auth/signup"];
 
-	const isProtected = protectedRoutes.some((route) =>
+	const isProtectedRoute = protectedRoutes.some(route => 
 		pathname.startsWith(route)
 	);
-	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+	const isAuthRoute = authRoutes.some(route => 
+		pathname.startsWith(route)
+	);
 
+	// Get token from cookie
 	const token = request.cookies.get("token")?.value;
+	console.log(`[MIDDLEWARE] ${pathname} - Token:`, token ? "EXISTS" : "MISSING");
 
-	// Validate token if present
-	let isValidToken = false;
+	// Verify token
+	let isAuthenticated = false;
 	if (token) {
 		try {
-			// Verify JWT token
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			isValidToken = !!decoded.userId;
+			isAuthenticated = true;
+			console.log(`[MIDDLEWARE] Token verified successfully for userId:`, decoded.userId);
 		} catch (error) {
-			// Token is invalid or expired
-			isValidToken = false;
-
-			// Clear invalid token and redirect to signin
-			const response = NextResponse.redirect(new URL("/signin", request.url));
+			// Token is invalid, clear it
+			console.log(`[MIDDLEWARE] Token verification failed:`, error.message);
+			const response = NextResponse.redirect(
+				new URL("/auth/signin", request.url)
+			);
 			response.cookies.delete("token");
 			return response;
 		}
 	}
 
 	// Redirect unauthenticated users from protected routes
-	if (isProtected && !isValidToken) {
-		const url = request.nextUrl.clone();
-		url.pathname = "/signin";
-		return NextResponse.redirect(url);
+	if (isProtectedRoute && !isAuthenticated) {
+		return NextResponse.redirect(
+			new URL("/auth/signin", request.url)
+		);
 	}
 
 	// Redirect authenticated users away from auth routes
-	if (isAuthRoute && isValidToken) {
-		const url = request.nextUrl.clone();
-		url.pathname = "/dashboard";
-		return NextResponse.redirect(url);
+	if (isAuthRoute && isAuthenticated) {
+		return NextResponse.redirect(
+			new URL("/editor", request.url)
+		);
 	}
 
 	return NextResponse.next();
@@ -52,11 +56,9 @@ export async function middleware(request) {
 
 export const config = {
 	matcher: [
-		"/dashboard",
-		"/editor",
-		"/signin",
-		"/signup",
-		"/api/auth/me",
-		"/api/auth/logout"
+		"/dashboard/:path*",
+		"/editor/:path*",
+		"/auth/signin",
+		"/auth/signup",
 	],
 };
