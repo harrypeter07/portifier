@@ -23,9 +23,9 @@ export function middleware(request) {
 	let isAuthenticated = false;
 	if (token) {
 		try {
+			// Verify JWT token
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			isAuthenticated = true;
-			console.log(`[MIDDLEWARE] Token verified successfully for userId:`, decoded.userId);
+			isValidToken = !!decoded.userId;
 		} catch (error) {
 			// Token is invalid, clear it
 			console.log(`[MIDDLEWARE] Token verification failed:`, error.message);
