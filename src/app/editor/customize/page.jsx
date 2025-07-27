@@ -160,7 +160,7 @@ function SectionSlider({ sectionKey, category, localContent, localLayout, handle
         >
           <span aria-hidden="true">◀</span>
         </button>
-        <div className="flex-1 flex justify-center gap-1 overflow-x-auto scrollbar-hide relative min-h-[90px] touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="flex-1 flex justify-center gap-1 overflow-x-auto custom-thin-slider scrollbar-hide relative min-h-[90px] touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
               key={current}

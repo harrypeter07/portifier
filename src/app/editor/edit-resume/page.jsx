@@ -1032,7 +1032,7 @@ export default function EditResumePage() {
 				</div>
 
 				{/* Right Panel - Live Preview */}
-				<div className="w-full md:w-1/2 h-auto md:h-screen overflow-x-auto overflow-y-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+				<div className="w-full md:w-1/2 h-auto md:h-screen overflow-x-auto overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
 					<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
 						<h2 className="text-lg md:text-xl font-semibold">Live Preview</h2>
 					</div>

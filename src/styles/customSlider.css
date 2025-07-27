@@ -1,0 +1,29 @@
+/* Thin, beautiful custom horizontal scrollbar for template previews and sliders */
+.custom-thin-slider {
+  scrollbar-width: thin;
+  scrollbar-color: #60a5fa #e0e7ef;
+}
+.custom-thin-slider::-webkit-scrollbar {
+  height: 6px;
+  background: transparent;
+}
+.custom-thin-slider::-webkit-scrollbar-thumb {
+  background: #60a5fa;
+  border-radius: 4px;
+  min-width: 24px;
+}
+.custom-thin-slider::-webkit-scrollbar-track {
+  background: #e0e7ef;
+  border-radius: 4px;
+}
+@media (prefers-color-scheme: dark) {
+  .custom-thin-slider {
+    scrollbar-color: #2563eb #1e293b;
+  }
+  .custom-thin-slider::-webkit-scrollbar-thumb {
+    background: #2563eb;
+  }
+  .custom-thin-slider::-webkit-scrollbar-track {
+    background: #1e293b;
+  }
+} 

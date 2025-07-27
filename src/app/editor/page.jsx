@@ -8,32 +8,26 @@ import { motion } from "framer-motion";
 import gsap from "gsap";
 // Add import for custom slider styles
 import "@/styles/customSlider.css";
+import { sampleDataCleanfolio } from "@/data/samplePortfolioData";
+
+const FULL_LAYOUT = {
+  hero: "HeroA",
+  about: "AboutB",
+  experience: "ExperienceA",
+  education: "EducationA",
+  skills: "SkillsA",
+  projects: "ShowcaseA",
+  achievements: "AchievementsA",
+  contact: "ContactFormA",
+};
 
 const PREBUILT_TEMPLATES = [
-	{
-		name: "Professional Portfolio",
-		layout: {
-			hero: "HeroA",
-			about: "AboutA",
-			experience: "ExperienceA",
-			education: "EducationA",
-			skills: "SkillsA",
-			projects: "ShowcaseA",
-			achievements: "AchievementsA",
-			contact: "ContactFormA",
-		},
-		content: {
-			hero: { title: "Your Name", subtitle: "Your Professional Title" },
-			about: { summary: "Your professional summary..." },
-			experience: { jobs: [] },
-			education: { degrees: [] },
-			skills: { technical: [], soft: [], languages: [] },
-			projects: { items: [] },
-			achievements: { awards: [], certifications: [], publications: [] },
-			contact: { email: "", phone: "", linkedin: "", github: "" },
-		},
-	},
-	// Add more templates as needed
+  {
+    name: "Professional Portfolio (A/B Mix)",
+    layout: FULL_LAYOUT,
+    content: sampleDataCleanfolio,
+  },
+  // Add more templates as needed
 ];
 
 export default function ResumeUploadPage() {
@@ -201,10 +195,11 @@ export default function ResumeUploadPage() {
 							>
 								<div className="font-bold mb-2 text-blue-700 dark:text-blue-300 text-center w-full">{tpl.name}</div>
 								<div
-									className="w-full max-w-[400px] h-[200px] rounded overflow-x-auto border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-center custom-thin-slider"
+									className="w-full max-w-[400px] h-[200px] rounded overflow-y-auto custom-thin-slider border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
 									style={{ minWidth: 0 }}
 								>
-									<Preview layout={tpl.layout} content={tpl.content} portfolioData={tpl.content} />
+									{/* Always pass FULL_LAYOUT and sampleDataCleanfolio for preview */}
+									<Preview layout={FULL_LAYOUT} content={sampleDataCleanfolio} portfolioData={sampleDataCleanfolio} />
 								</div>
 								<button
 									className="bg-blue-600 text-white px-3 py-1 rounded mt-2 w-full font-semibold group-hover:bg-blue-700 transition-colors"
@@ -219,7 +214,7 @@ export default function ResumeUploadPage() {
 			</div>
 			{/* Right Panel - Live Preview (hidden until parsed) */}
 			{parsed && (
-				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 fixed md:static top-0 right-0 z-30">
+				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 fixed md:static top-0 right-0 z-30">
 					<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
 						<h2 className="text-xl font-semibold">Live Preview</h2>
 					</div>

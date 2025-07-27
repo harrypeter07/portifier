@@ -1,6 +1,17 @@
 import { componentMap } from "@/data/componentMap";
 import { motion } from "framer-motion";
 
+const SECTION_ORDER = [
+  "hero",
+  "about",
+  "experience",
+  "education",
+  "skills",
+  "projects",
+  "achievements",
+  "contact"
+];
+
 export default function Preview({ layout, content, portfolioData }) {
   console.log("👁️ [PREVIEW] Component received props:", {
     hasLayout: !!layout,
@@ -23,7 +34,9 @@ export default function Preview({ layout, content, portfolioData }) {
       animate={{ opacity: 1, y: 0 }}
       className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
     >
-      {Object.entries(layout).map(([section, componentName]) => {
+      {SECTION_ORDER.map((section) => {
+        const componentName = layout[section];
+        if (!componentName) return null;
         console.log(`👁️ [PREVIEW] Rendering section: ${section} with component: ${componentName}`);
         
         const Component = componentMap[componentName];
@@ -75,10 +88,14 @@ export default function Preview({ layout, content, portfolioData }) {
         }
         // For achievements section
         else if (section === "achievements") {
+          const toStringArr = arr => (Array.isArray(arr) ? arr.map(item => typeof item === 'string' ? item : (item.title || item.name || item.id || JSON.stringify(item))) : []);
+          const awardsArr = toStringArr(portfolioData?.achievements?.awards || content?.achievements?.awards);
+          const certsArr = toStringArr(portfolioData?.achievements?.certifications || content?.achievements?.certifications);
+          const pubsArr = toStringArr(portfolioData?.achievements?.publications || content?.achievements?.publications);
           componentProps = {
-            awards: portfolioData?.achievements?.awards || content?.achievements?.awards || [],
-            certifications: portfolioData?.achievements?.certifications || content?.achievements?.certifications || [],
-            publications: portfolioData?.achievements?.publications || content?.achievements?.publications || [],
+            awards: awardsArr,
+            certifications: certsArr,
+            publications: pubsArr,
             data: portfolioData || content,
           };
         }
