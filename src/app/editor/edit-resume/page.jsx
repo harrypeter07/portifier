@@ -13,6 +13,9 @@ export default function EditResumePage() {
 		parsedData,
 		restoreFromParsed,
 		setAllContent,
+		portfolioData,
+		updatePortfolioData,
+		setPortfolioData,
 	} = useLayoutStore();
 	const [formData, setFormData] = useState({
 		hero: { title: "", subtitle: "", tagline: "", availability: "" },
@@ -29,48 +32,99 @@ export default function EditResumePage() {
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log("📝 [EDIT-RESUME] useEffect triggered:", {
+			hasContent: Object.keys(content).length > 0,
+			hasParsedData: !!parsedData,
+			hasPortfolioData: !!portfolioData,
+			contentKeys: Object.keys(content),
+			portfolioDataKeys: portfolioData ? Object.keys(portfolioData) : []
+		});
+
 		// If no content but we have parsed data, restore it first
 		if (Object.keys(content).length === 0 && parsedData) {
+			console.log("📝 [EDIT-RESUME] Restoring from parsed data");
 			restoreFromParsed();
 			return;
 		}
-		// Initialize with existing content or defaults
-		setFormData({
+		
+		// Initialize with existing portfolioData or content (for backwards compatibility)
+		const data = portfolioData || content;
+		console.log("📝 [EDIT-RESUME] Using data source:", {
+			source: portfolioData ? "portfolioData" : "content",
+			dataKeys: Object.keys(data),
+			hasPersonal: !!data.personal,
+			hasHero: !!data.hero,
+			hasAbout: !!data.about,
+			hasContact: !!data.contact
+		});
+		
+		const formDataToSet = {
 			hero: {
-				title: content.hero?.title || "",
-				subtitle: content.hero?.subtitle || "",
-				tagline: content.hero?.tagline || "",
-				availability: content.hero?.availability || "",
+				title: data.personal?.firstName && data.personal?.lastName 
+					? `${data.personal.firstName} ${data.personal.lastName}`.trim()
+					: data.hero?.title || "",
+				subtitle: data.personal?.title || data.hero?.subtitle || "",
+				tagline: data.personal?.tagline || data.hero?.tagline || "",
+				availability: data.personal?.availability || data.hero?.availability || "",
 			},
 			about: {
-				summary: content.about?.summary || "",
-				bio: content.about?.bio || "",
-				interests: content.about?.interests || [],
-				personalValues: content.about?.personalValues || [],
-				funFacts: content.about?.funFacts || [],
+				summary: data.about?.summary || "",
+				bio: data.about?.bio || "",
+				interests: data.about?.interests || [],
+				personalValues: data.about?.personalValues || [],
+				funFacts: data.about?.funFacts || [],
 			},
-			contact: content.contact || {
-				email: "",
-				phone: "",
-				location: "",
-				linkedin: "",
+			contact: {
+				email: data.personal?.email || data.contact?.email || "",
+				phone: data.personal?.phone || data.contact?.phone || "",
+				location: data.personal?.location?.city && data.personal?.location?.state
+					? `${data.personal.location.city}, ${data.personal.location.state}`
+					: data.contact?.location || "",
+				linkedin: data.personal?.social?.linkedin || data.contact?.linkedin || "",
 			},
-			experience: content.experience || { jobs: [] },
-			education: content.education || { degrees: [] },
-			skills: content.skills || { technical: [], soft: [] },
-			projects: content.projects || { items: [] },
-			achievements: content.achievements || { awards: [] },
-			languages: Array.isArray(content.languages)
-				? content.languages.map(String)
-				: typeof content.languages === "string"
-				? content.languages
-						.split(",")
-						.map((s) => s.trim())
-						.filter(Boolean)
-				: [],
-			hobbies: content.hobbies || [],
+			experience: data.experience || { jobs: [] },
+			education: data.education || { degrees: [] },
+			skills: data.skills || { technical: [], soft: [] },
+			projects: data.projects || { items: [] },
+			achievements: data.achievements || { awards: [] },
+			languages: data.skills?.languages?.map(l => l.name) || 
+				(Array.isArray(data.languages)
+					? data.languages.map(String)
+					: typeof data.languages === "string"
+					? data.languages
+							.split(",")
+							.map((s) => s.trim())
+							.filter(Boolean)
+					: []),
+			hobbies: data.hobbies || [],
+		};
+
+		console.log("📝 [EDIT-RESUME] Setting form data:", {
+			hero: {
+				title: formDataToSet.hero.title,
+				subtitle: formDataToSet.hero.subtitle,
+				tagline: formDataToSet.hero.tagline,
+				availability: formDataToSet.hero.availability
+			},
+			contact: {
+				email: formDataToSet.contact.email,
+				phone: formDataToSet.contact.phone,
+				location: formDataToSet.contact.location,
+				linkedin: formDataToSet.contact.linkedin
+			},
+			about: {
+				summary: formDataToSet.about.summary,
+				bio: formDataToSet.about.bio
+			},
+			experienceJobs: formDataToSet.experience.jobs?.length || 0,
+			educationDegrees: formDataToSet.education.degrees?.length || 0,
+			skillsTechnical: formDataToSet.skills.technical?.length || 0,
+			projectsItems: formDataToSet.projects.items?.length || 0,
+			languages: formDataToSet.languages?.length || 0
 		});
-	}, [content, parsedData, restoreFromParsed]);
+
+		setFormData(formDataToSet);
+	}, [content, portfolioData, parsedData, restoreFromParsed]);
 
 	const handleInputChange = (section, field, value) => {
 		setFormData((prev) => ({
@@ -170,21 +224,206 @@ export default function EditResumePage() {
 	};
 
 	const handleSave = () => {
-		// Save all form data to Zustand store
+		console.log("💾 [EDIT-RESUME] Save triggered with form data:", {
+			hero: formData.hero,
+			contact: formData.contact,
+			about: formData.about,
+			experienceJobs: formData.experience?.jobs?.length || 0,
+			educationDegrees: formData.education?.degrees?.length || 0,
+			skillsTechnical: formData.skills?.technical?.length || 0,
+			projectsItems: formData.projects?.items?.length || 0,
+			languages: formData.languages?.length || 0
+		});
+
+		// Save all form data to new schema format
+		const newPortfolioData = { ...portfolioData };
+		
+		// Transform form data to new schema
+		if (formData.hero) {
+			const nameParts = (formData.hero.title || "").split(" ");
+			newPortfolioData.personal.firstName = nameParts[0] || "";
+			newPortfolioData.personal.lastName = nameParts.slice(1).join(" ") || "";
+			newPortfolioData.personal.title = formData.hero.subtitle || "";
+			newPortfolioData.personal.tagline = formData.hero.tagline || "";
+			newPortfolioData.personal.availability = formData.hero.availability || "";
+
+			console.log("💾 [EDIT-RESUME] Transformed hero data:", {
+				originalTitle: formData.hero.title,
+				nameParts,
+				firstName: newPortfolioData.personal.firstName,
+				lastName: newPortfolioData.personal.lastName,
+				title: newPortfolioData.personal.title,
+				tagline: newPortfolioData.personal.tagline,
+				availability: newPortfolioData.personal.availability
+			});
+		}
+		
+		if (formData.about) {
+			newPortfolioData.about.summary = formData.about.summary || "";
+			newPortfolioData.about.bio = formData.about.bio || "";
+			newPortfolioData.about.interests = formData.about.interests || [];
+			newPortfolioData.about.personalValues = formData.about.personalValues || [];
+			newPortfolioData.about.funFacts = formData.about.funFacts || [];
+		}
+		
+		if (formData.contact) {
+			newPortfolioData.personal.email = formData.contact.email || "";
+			newPortfolioData.personal.phone = formData.contact.phone || "";
+			newPortfolioData.personal.social.linkedin = formData.contact.linkedin || "";
+			
+			if (formData.contact.location) {
+				const locationParts = formData.contact.location.split(",").map(p => p.trim());
+				newPortfolioData.personal.location.city = locationParts[0] || "";
+				newPortfolioData.personal.location.state = locationParts[1] || "";
+				newPortfolioData.personal.location.country = locationParts[2] || "";
+			}
+		}
+		
+		if (formData.experience) {
+			newPortfolioData.experience.jobs = formData.experience.jobs || [];
+		}
+		
+		if (formData.education) {
+			newPortfolioData.education.degrees = formData.education.degrees || [];
+		}
+		
+		if (formData.skills) {
+			newPortfolioData.skills.technical = formData.skills.technical || [];
+			newPortfolioData.skills.soft = formData.skills.soft || [];
+		}
+		
+		if (formData.projects) {
+			newPortfolioData.projects.items = formData.projects.items || [];
+		}
+		
+		if (formData.achievements) {
+			newPortfolioData.achievements.awards = formData.achievements.awards || [];
+		}
+		
+		if (formData.languages) {
+			newPortfolioData.skills.languages = formData.languages.map(lang => ({
+				name: lang,
+				proficiency: "conversational",
+				certification: ""
+			}));
+		}
+		
+		console.log("💾 [EDIT-RESUME] Final portfolio data to save:", {
+			personal: {
+				firstName: newPortfolioData.personal.firstName,
+				lastName: newPortfolioData.personal.lastName,
+				title: newPortfolioData.personal.title,
+				email: newPortfolioData.personal.email,
+				phone: newPortfolioData.personal.phone
+			},
+			about: {
+				summary: newPortfolioData.about.summary,
+				bio: newPortfolioData.about.bio
+			},
+			experienceJobs: newPortfolioData.experience.jobs?.length || 0,
+			educationDegrees: newPortfolioData.education.degrees?.length || 0,
+			skillsTechnical: newPortfolioData.skills.technical?.length || 0,
+			projectsItems: newPortfolioData.projects.items?.length || 0,
+			languages: newPortfolioData.skills.languages?.length || 0
+		});
+
+		// Save to store
+		setPortfolioData(newPortfolioData);
+		
+		// Also save to legacy content for backwards compatibility
 		Object.entries(formData).forEach(([section, data]) => {
 			setContent(section, data);
 		});
 
-		// Navigate to customize page or preview
+		console.log("💾 [EDIT-RESUME] Data saved to both portfolioData and content stores");
+		// Navigate to customize page
 		router.push("/editor/customize");
 	};
 
 	const handlePreview = () => {
-		// Save data first
+		console.log("👁️ [EDIT-RESUME] Preview triggered with form data:", {
+			hero: formData.hero,
+			contact: formData.contact,
+			about: formData.about,
+			experienceJobs: formData.experience?.jobs?.length || 0,
+			educationDegrees: formData.education?.degrees?.length || 0,
+			skillsTechnical: formData.skills?.technical?.length || 0,
+			projectsItems: formData.projects?.items?.length || 0,
+			languages: formData.languages?.length || 0
+		});
+
+		// Save data first (same logic as handleSave)
+		const newPortfolioData = { ...portfolioData };
+		
+		// Transform form data to new schema
+		if (formData.hero) {
+			const nameParts = (formData.hero.title || "").split(" ");
+			newPortfolioData.personal.firstName = nameParts[0] || "";
+			newPortfolioData.personal.lastName = nameParts.slice(1).join(" ") || "";
+			newPortfolioData.personal.title = formData.hero.subtitle || "";
+			newPortfolioData.personal.tagline = formData.hero.tagline || "";
+			newPortfolioData.personal.availability = formData.hero.availability || "";
+		}
+		
+		if (formData.about) {
+			newPortfolioData.about.summary = formData.about.summary || "";
+			newPortfolioData.about.bio = formData.about.bio || "";
+			newPortfolioData.about.interests = formData.about.interests || [];
+			newPortfolioData.about.personalValues = formData.about.personalValues || [];
+			newPortfolioData.about.funFacts = formData.about.funFacts || [];
+		}
+		
+		if (formData.contact) {
+			newPortfolioData.personal.email = formData.contact.email || "";
+			newPortfolioData.personal.phone = formData.contact.phone || "";
+			newPortfolioData.personal.social.linkedin = formData.contact.linkedin || "";
+			
+			if (formData.contact.location) {
+				const locationParts = formData.contact.location.split(",").map(p => p.trim());
+				newPortfolioData.personal.location.city = locationParts[0] || "";
+				newPortfolioData.personal.location.state = locationParts[1] || "";
+				newPortfolioData.personal.location.country = locationParts[2] || "";
+			}
+		}
+		
+		if (formData.experience) {
+			newPortfolioData.experience.jobs = formData.experience.jobs || [];
+		}
+		
+		if (formData.education) {
+			newPortfolioData.education.degrees = formData.education.degrees || [];
+		}
+		
+		if (formData.skills) {
+			newPortfolioData.skills.technical = formData.skills.technical || [];
+			newPortfolioData.skills.soft = formData.skills.soft || [];
+		}
+		
+		if (formData.projects) {
+			newPortfolioData.projects.items = formData.projects.items || [];
+		}
+		
+		if (formData.achievements) {
+			newPortfolioData.achievements.awards = formData.achievements.awards || [];
+		}
+		
+		if (formData.languages) {
+			newPortfolioData.skills.languages = formData.languages.map(lang => ({
+				name: lang,
+				proficiency: "conversational",
+				certification: ""
+			}));
+		}
+		
+		// Save to store
+		setPortfolioData(newPortfolioData);
+		
+		// Also save to legacy content for backwards compatibility
 		Object.entries(formData).forEach(([section, data]) => {
 			setContent(section, data);
 		});
 
+		console.log("👁️ [EDIT-RESUME] Data saved, navigating to preview");
 		// Navigate to preview
 		router.push("/preview/live");
 	};
@@ -848,10 +1087,12 @@ export default function EditResumePage() {
 						<h2 className="text-xl font-semibold">Live Preview</h2>
 					</div>
 					<div className="p-4">
-						{layout && Object.entries(layout).length > 0 ? (
-							Object.entries(layout).map(([section, componentName]) => {
-								const Component = componentMap[componentName];
-								if (!Component) return null;
+										{layout && Object.entries(layout).length > 0 ? (
+					Object.entries(layout).map(([section, componentName]) => {
+						console.log(`👁️ [EDIT-RESUME-PREVIEW] Rendering section: ${section} with component: ${componentName}`);
+						
+						const Component = componentMap[componentName];
+						if (!Component) return null;
 								let componentProps = formData[section] || {};
 								// Ensure no null values for inputs
 								if (componentProps && typeof componentProps === "object") {
@@ -879,7 +1120,7 @@ export default function EditResumePage() {
 									componentProps = {
 										technical: formData[section].technical || [],
 										soft: formData[section].soft || [],
-										languages: formData[section].languages || [],
+										languages: formData.languages || [],
 									};
 								}
 								// For achievements section, flatten the structure
@@ -898,18 +1139,31 @@ export default function EditResumePage() {
 								if (section === "education" && formData[section]?.degrees) {
 									componentProps = { degrees: formData[section].degrees };
 								}
-								if (section === "hero") {
+																				if (section === "hero") {
 									const heroData = formData.hero || {};
+									const nameParts = (heroData.title || "").split(" ");
 									const personalData = {
-										firstName: heroData.title || "",
-										lastName: "",
+										firstName: nameParts[0] || "",
+										lastName: nameParts.slice(1).join(" ") || "",
+										title: heroData.subtitle || "",
 										subtitle: heroData.subtitle || "",
 										tagline: heroData.tagline || "",
 										availability: heroData.availability || "",
 									};
+									
+									console.log("👁️ [EDIT-RESUME-PREVIEW] Hero section data:", {
+										originalHeroData: heroData,
+										nameParts,
+										personalData,
+										hasFirstName: !!personalData.firstName,
+										hasLastName: !!personalData.lastName,
+										hasTitle: !!personalData.title,
+										hasTagline: !!personalData.tagline
+									});
+									
 									return (
 										<div key={section} className="mb-8 last:mb-0">
-											<Component data={personalData} />
+											<Component data={{ personal: personalData }} />
 										</div>
 									);
 								}

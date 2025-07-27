@@ -16,6 +16,19 @@ export const transformParsedResumeToSchema = (
 	parsedData,
 	portfolioType = "developer"
 ) => {
+	console.log("🔄 [DATA-TRANSFORMER] Starting transformation:", {
+		hasParsedData: !!parsedData,
+		portfolioType,
+		parsedDataKeys: parsedData ? Object.keys(parsedData) : [],
+		heroData: parsedData?.hero,
+		contactData: parsedData?.contact,
+		aboutData: parsedData?.about,
+		experienceJobs: parsedData?.experience?.jobs?.length || 0,
+		educationDegrees: parsedData?.education?.degrees?.length || 0,
+		skillsData: parsedData?.skills,
+		projectsItems: parsedData?.projects?.items?.length || 0
+	});
+
 	const transformed = JSON.parse(JSON.stringify(EMPTY_PORTFOLIO));
 
 	if (!parsedData) return transformed;
@@ -24,12 +37,20 @@ export const transformParsedResumeToSchema = (
 		// Transform Personal Information
 		if (parsedData.hero || parsedData.personal) {
 			const heroData = parsedData.hero || parsedData.personal || {};
+			console.log("🔄 [DATA-TRANSFORMER] Processing hero/personal data:", heroData);
 
 			// Handle name extraction from title field or separate fields
 			if (heroData.title && typeof heroData.title === "string") {
 				const nameParts = heroData.title.trim().split(" ");
 				transformed.personal.firstName = nameParts[0] || "";
 				transformed.personal.lastName = nameParts.slice(1).join(" ") || "";
+				
+				console.log("🔄 [DATA-TRANSFORMER] Extracted name from title:", {
+					originalTitle: heroData.title,
+					nameParts,
+					firstName: transformed.personal.firstName,
+					lastName: transformed.personal.lastName
+				});
 			}
 
 			if (heroData.firstName)
@@ -37,11 +58,20 @@ export const transformParsedResumeToSchema = (
 			if (heroData.lastName) transformed.personal.lastName = heroData.lastName;
 			if (heroData.subtitle) transformed.personal.title = heroData.subtitle;
 			if (heroData.tagline) transformed.personal.tagline = heroData.tagline;
+			
+			console.log("🔄 [DATA-TRANSFORMER] Final personal data:", {
+				firstName: transformed.personal.firstName,
+				lastName: transformed.personal.lastName,
+				title: transformed.personal.title,
+				tagline: transformed.personal.tagline
+			});
 		}
 
 		// Transform Contact Information
 		if (parsedData.contact) {
 			const contactData = parsedData.contact;
+			console.log("🔄 [DATA-TRANSFORMER] Processing contact data:", contactData);
+			
 			transformed.personal.email = contactData.email || "";
 			transformed.personal.phone = contactData.phone || "";
 
@@ -58,6 +88,14 @@ export const transformParsedResumeToSchema = (
 				} else if (locationParts.length === 1) {
 					transformed.personal.location.city = locationParts[0] || "";
 				}
+				
+				console.log("🔄 [DATA-TRANSFORMER] Parsed location:", {
+					originalLocation: contactData.location,
+					locationParts,
+					city: transformed.personal.location.city,
+					state: transformed.personal.location.state,
+					country: transformed.personal.location.country
+				});
 			}
 
 			// Social links
@@ -69,10 +107,20 @@ export const transformParsedResumeToSchema = (
 				transformed.personal.social.portfolio =
 					contactData.website || contactData.portfolio;
 			}
+			
+			console.log("🔄 [DATA-TRANSFORMER] Final contact data:", {
+				email: transformed.personal.email,
+				phone: transformed.personal.phone,
+				linkedin: transformed.personal.social.linkedin,
+				github: transformed.personal.social.github,
+				portfolio: transformed.personal.social.portfolio
+			});
 		}
 
 		// Transform About Section
 		if (parsedData.about) {
+			console.log("🔄 [DATA-TRANSFORMER] Processing about data:", parsedData.about);
+			
 			transformed.about.summary = parsedData.about.summary || "";
 			transformed.about.bio =
 				parsedData.about.bio || parsedData.about.summary || "";
@@ -81,10 +129,22 @@ export const transformParsedResumeToSchema = (
 			if (parsedData.about.yearsOfExperience) {
 				transformed.about.bio += `\n\nExperience: ${parsedData.about.yearsOfExperience} years`;
 			}
+			
+			console.log("🔄 [DATA-TRANSFORMER] Final about data:", {
+				summary: transformed.about.summary,
+				bio: transformed.about.bio,
+				hasSummary: !!transformed.about.summary,
+				hasBio: !!transformed.about.bio
+			});
 		}
 
 		// Transform Experience
 		if (parsedData.experience?.jobs) {
+			console.log("🔄 [DATA-TRANSFORMER] Processing experience data:", {
+				jobsCount: parsedData.experience.jobs.length,
+				firstJob: parsedData.experience.jobs[0]
+			});
+			
 			transformed.experience.jobs = parsedData.experience.jobs.map((job) => ({
 				id: generateId(),
 				company: job.company || "",
@@ -101,6 +161,17 @@ export const transformParsedResumeToSchema = (
 				companyLogo: "",
 				companyWebsite: "",
 			}));
+			
+			console.log("🔄 [DATA-TRANSFORMER] Transformed experience:", {
+				jobsCount: transformed.experience.jobs.length,
+				firstJob: transformed.experience.jobs[0] ? {
+					company: transformed.experience.jobs[0].company,
+					position: transformed.experience.jobs[0].position,
+					startDate: transformed.experience.jobs[0].startDate,
+					endDate: transformed.experience.jobs[0].endDate,
+					current: transformed.experience.jobs[0].current
+				} : null
+			});
 		}
 
 		// Transform Education
@@ -270,6 +341,37 @@ export const transformParsedResumeToSchema = (
 			`${transformed.personal.firstName} ${transformed.personal.lastName} - Portfolio`.trim();
 		transformed.metadata.description =
 			transformed.about.summary || "Professional portfolio";
+
+		console.log("🔄 [DATA-TRANSFORMER] Transformation completed:", {
+			personal: {
+				firstName: transformed.personal.firstName,
+				lastName: transformed.personal.lastName,
+				title: transformed.personal.title,
+				email: transformed.personal.email
+			},
+			about: {
+				hasSummary: !!transformed.about.summary,
+				hasBio: !!transformed.about.bio
+			},
+			experience: {
+				jobsCount: transformed.experience.jobs.length
+			},
+			education: {
+				degreesCount: transformed.education.degrees.length
+			},
+			skills: {
+				technicalCount: transformed.skills.technical.length,
+				softCount: transformed.skills.soft.length,
+				languagesCount: transformed.skills.languages.length
+			},
+			projects: {
+				itemsCount: transformed.projects.items.length
+			},
+			metadata: {
+				title: transformed.metadata.title,
+				description: transformed.metadata.description
+			}
+		});
 
 		return transformed;
 	} catch (error) {
