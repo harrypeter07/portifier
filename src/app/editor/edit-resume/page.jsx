@@ -1135,28 +1135,40 @@ export default function EditResumePage() {
 							<label className="block text-sm font-medium mb-2">
 								Technical Skills (comma-separated)
 							</label>
-							<div className="flex items-start gap-2">
-								<textarea
-									placeholder="e.g., JavaScript, React, Python, SQL"
-									value={(formData.skills?.technical || []).join(", ")}
-									onChange={(e) =>
-										handleInputChange(
-											"skills",
-											"technical",
-											e.target.value
-												.split(",")
-												.map((s) => s.trim())
-												.filter((s) => s)
-										)
-									}
-									rows={3}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-start gap-2">
+									<textarea
+										placeholder="e.g., JavaScript, React, Python, SQL"
+										value={(formData.skills?.technical || []).join(", ")}
+										onChange={(e) =>
+											handleInputChange(
+												"skills",
+												"technical",
+												e.target.value
+													.split(",")
+													.map((s) => s.trim())
+													.filter((s) => s)
+											)
+										}
+										rows={3}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="skills"
+										field="technical"
+										value={(formData.skills?.technical || []).join(", ")}
+										label="Technical Skills"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="skills-technical"
 									section="skills"
 									field="technical"
-									value={(formData.skills?.technical || []).join(", ")}
 									label="Technical Skills"
+									suggestions={aiSuggestions["skills-technical"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["skills-technical"] || false}
+									isActive={activeAiField === "skills-technical"}
 								/>
 							</div>
 						</div>
@@ -1164,28 +1176,40 @@ export default function EditResumePage() {
 							<label className="block text-sm font-medium mb-2">
 								Soft Skills (comma-separated)
 							</label>
-							<div className="flex items-start gap-2">
-								<textarea
-									placeholder="e.g., Team Leadership, Communication, Problem Solving"
-									value={(formData.skills?.soft || []).join(", ")}
-									onChange={(e) =>
-										handleInputChange(
-											"skills",
-											"soft",
-											e.target.value
-												.split(",")
-												.map((s) => s.trim())
-												.filter((s) => s)
-										)
-									}
-									rows={3}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
+							<div>
+								<div className="flex items-start gap-2">
+									<textarea
+										placeholder="e.g., Team Leadership, Communication, Problem Solving"
+										value={(formData.skills?.soft || []).join(", ")}
+										onChange={(e) =>
+											handleInputChange(
+												"skills",
+												"soft",
+												e.target.value
+													.split(",")
+													.map((s) => s.trim())
+													.filter((s) => s)
+											)
+										}
+										rows={3}
+										className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+									/>
+									<AIHelpButton
+										section="skills"
+										field="soft"
+										value={(formData.skills?.soft || []).join(", ")}
+										label="Soft Skills"
+									/>
+								</div>
+								<AISuggestionInline
+									fieldKey="skills-soft"
 									section="skills"
 									field="soft"
-									value={(formData.skills?.soft || []).join(", ")}
 									label="Soft Skills"
+									suggestions={aiSuggestions["skills-soft"] || []}
+									onSelectSuggestion={handleAISuggestionSelect}
+									loading={aiLoading["skills-soft"] || false}
+									isActive={activeAiField === "skills-soft"}
 								/>
 							</div>
 						</div>
@@ -1290,27 +1314,39 @@ export default function EditResumePage() {
 					{/* Languages */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Languages</h2>
-						<div className="flex items-start gap-2">
-							<textarea
-								placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
-								value={(formData.languages || []).join(", ")}
-								onChange={(e) =>
-									setFormData((prev) => ({
-										...prev,
-										languages: e.target.value
-											.split(",")
-											.map((s) => s.trim())
-											.filter((s) => s),
-									}))
-								}
-								rows={2}
-								className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-							/>
-							<AIHelpButton
+						<div>
+							<div className="flex items-start gap-2">
+								<textarea
+									placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
+									value={(formData.languages || []).join(", ")}
+									onChange={(e) =>
+										setFormData((prev) => ({
+											...prev,
+											languages: e.target.value
+												.split(",")
+												.map((s) => s.trim())
+												.filter((s) => s),
+										}))
+									}
+									rows={2}
+									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
+								/>
+								<AIHelpButton
+									section="languages"
+									field="languages"
+									value={(formData.languages || []).join(", ")}
+									label="Languages"
+								/>
+							</div>
+							<AISuggestionInline
+								fieldKey="languages-languages"
 								section="languages"
 								field="languages"
-								value={(formData.languages || []).join(", ")}
 								label="Languages"
+								suggestions={aiSuggestions["languages-languages"] || []}
+								onSelectSuggestion={handleAISuggestionSelect}
+								loading={aiLoading["languages-languages"] || false}
+								isActive={activeAiField === "languages-languages"}
 							/>
 						</div>
 					</div>
