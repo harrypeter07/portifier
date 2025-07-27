@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 export async function middleware(request) {
 	const { pathname } = request.nextUrl;
@@ -19,9 +19,10 @@ export async function middleware(request) {
 	let isValidToken = false;
 	if (token) {
 		try {
-			// Verify JWT token
-			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			isValidToken = !!decoded.userId;
+			// Verify JWT token using jose (Edge Runtime compatible)
+			const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+			const { payload } = await jwtVerify(token, secret);
+			isValidToken = !!payload.userId;
 		} catch (error) {
 			// Token is invalid or expired
 			isValidToken = false;

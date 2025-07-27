@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import User from "../models/User";
 
 export default async function auth(req) {
@@ -7,8 +7,9 @@ export default async function auth(req) {
 		return null;
 	}
 	try {
-		const decoded = jwt.verify(token, process.env.JWT_SECRET);
-		const user = await User.findById(decoded.userId);
+		const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+		const { payload } = await jwtVerify(token, secret);
+		const user = await User.findById(payload.userId);
 		if (!user) {
 			throw new Error("User not found");
 		}

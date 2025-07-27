@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import { cookies } from "next/headers";
 
 export async function POST(req) {
@@ -32,9 +32,14 @@ export async function POST(req) {
 			status: 401,
 		});
 	}
-	const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-		expiresIn: "7d",
-	});
+	
+	// Create JWT token using jose
+	const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+	const token = await new SignJWT({ userId: user._id })
+		.setProtectedHeader({ alg: "HS256" })
+		.setExpirationTime("7d")
+		.sign(secret);
+	
 	console.log("[SIGNIN] JWT token created:", token ? token.substring(0, 20) + "..." : null);
 
 	// Await cookies() as required by Next.js dynamic API

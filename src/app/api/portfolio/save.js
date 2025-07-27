@@ -2,7 +2,7 @@ import dbConnect from "@/lib/mongodb";
 import Portfolio from "@/models/Portfolio";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 export async function POST(req) {
 	await dbConnect();
@@ -11,8 +11,9 @@ export async function POST(req) {
 		// Get user from JWT cookie
 		const cookie = cookies().get("token")?.value;
 		if (!cookie) throw new Error("No auth token");
-		const decoded = jwt.verify(cookie, process.env.JWT_SECRET);
-		userId = decoded.userId;
+		const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+		const { payload } = await jwtVerify(cookie, secret);
+		userId = payload.userId;
 	} catch (err) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
