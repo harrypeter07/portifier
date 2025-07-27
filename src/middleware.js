@@ -26,8 +26,15 @@ export async function middleware(request) {
 			// Verify JWT token using jose
 			const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 			const { payload } = await jwtVerify(token, secret);
-			isAuthenticated = !!payload.userId;
-			console.log(`[MIDDLEWARE] Token verified for user:`, payload.userId);
+			
+			// Check if userId is a valid string (not a buffer)
+			if (payload.userId && typeof payload.userId === 'string') {
+				isAuthenticated = true;
+				console.log(`[MIDDLEWARE] Token verified for user:`, payload.userId);
+			} else {
+				console.log(`[MIDDLEWARE] Invalid userId format in token:`, payload.userId);
+				throw new Error("Invalid userId format");
+			}
 		} catch (error) {
 			// Token is invalid, clear it
 			console.log(`[MIDDLEWARE] Token verification failed:`, error.message);

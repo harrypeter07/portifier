@@ -22,9 +22,22 @@ export default async function auth(req) {
 		const { payload } = await jwtVerify(token, secret);
 		console.log("[AUTH] Token verified successfully, payload:", payload);
 		
+		// Handle both string and buffer userId formats (for backward compatibility)
+		let userIdString;
+		if (typeof payload.userId === 'string') {
+			userIdString = payload.userId;
+		} else if (payload.userId && payload.userId.buffer) {
+			// Convert buffer to ObjectId string (for old tokens)
+			const buffer = Buffer.from(Object.values(payload.userId.buffer));
+			userIdString = buffer.toString('hex');
+		} else {
+			console.log("[AUTH] Invalid userId format in token");
+			return null;
+		}
+		
 		await dbConnect();
 		// Convert userId string back to ObjectId for database query
-		const userId = new mongoose.Types.ObjectId(payload.userId);
+		const userId = new mongoose.Types.ObjectId(userIdString);
 		const user = await User.findById(userId);
 		
 		if (!user) {
