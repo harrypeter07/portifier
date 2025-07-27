@@ -27,7 +27,76 @@ const PREBUILT_TEMPLATES = [
     layout: FULL_LAYOUT,
     content: sampleDataCleanfolio,
   },
-  // Add more templates as needed
+  {
+    name: "Modern Developer (All A)",
+    layout: {
+      hero: "HeroA",
+      about: "AboutA",
+      experience: "ExperienceA",
+      education: "EducationA",
+      skills: "SkillsA",
+      projects: "ShowcaseA",
+      achievements: "AchievementsA",
+      contact: "ContactFormA",
+    },
+    content: sampleDataCleanfolio,
+  },
+  {
+    name: "Creative Mix (All B)",
+    layout: {
+      hero: "HeroB",
+      about: "AboutB",
+      experience: "ExperienceB",
+      education: "EducationA",
+      skills: "SkillsA",
+      projects: "ShowcaseA",
+      achievements: "AchievementsA",
+      contact: "ContactFormA",
+    },
+    content: sampleDataCleanfolio,
+  },
+  {
+    name: "Classic Resume (A Hero, B About, B Experience)",
+    layout: {
+      hero: "HeroA",
+      about: "AboutB",
+      experience: "ExperienceB",
+      education: "EducationA",
+      skills: "SkillsA",
+      projects: "ShowcaseA",
+      achievements: "AchievementsA",
+      contact: "ContactFormA",
+    },
+    content: sampleDataCleanfolio,
+  },
+  {
+    name: "Showcase First (B Hero, A About, A Experience)",
+    layout: {
+      hero: "HeroB",
+      about: "AboutA",
+      experience: "ExperienceA",
+      education: "EducationA",
+      skills: "SkillsA",
+      projects: "ShowcaseA",
+      achievements: "AchievementsA",
+      contact: "ContactFormA",
+    },
+    content: sampleDataCleanfolio,
+  },
+  {
+    name: "Balanced Portfolio (A Hero, B About, A Experience, B Hero)",
+    layout: {
+      hero: "HeroA",
+      about: "AboutB",
+      experience: "ExperienceA",
+      education: "EducationA",
+      skills: "SkillsA",
+      projects: "ShowcaseA",
+      achievements: "AchievementsA",
+      contact: "ContactFormA",
+    },
+    content: sampleDataCleanfolio,
+  },
 ];
 
 export default function ResumeUploadPage() {
@@ -149,9 +218,9 @@ export default function ResumeUploadPage() {
 	}
 
 	return (
-		<div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen flex flex-col-reverse md:flex-row bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
 			{/* Left Panel - Upload and Template Selection */}
-			<div className="w-full md:w-1/2 p-4 md:p-8 overflow-y-auto">
+			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>
 				<h1 className="text-3xl font-extrabold mb-4 text-blue-700 dark:text-blue-200">Start Your Portfolio</h1>
 				<div className="mb-6 text-gray-700 dark:text-gray-300 text-base">
 					Upload your resume (PDF) to auto-fill your portfolio, or pick a template to start from scratch. You can always customize everything later!
@@ -181,7 +250,7 @@ export default function ResumeUploadPage() {
 				{/* Prebuilt Portfolio Templates Grid */}
 				<div className="mt-4">
 					<div className="font-semibold text-gray-700 dark:text-gray-200 mb-2">Available Templates:</div>
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', display: 'grid' }}>
 						{PREBUILT_TEMPLATES.map((tpl) => (
 							<motion.div
 								key={tpl.name}
@@ -199,7 +268,7 @@ export default function ResumeUploadPage() {
 									style={{ minWidth: 0 }}
 								>
 									{/* Always pass FULL_LAYOUT and sampleDataCleanfolio for preview */}
-									<Preview layout={FULL_LAYOUT} content={sampleDataCleanfolio} portfolioData={sampleDataCleanfolio} />
+									<Preview layout={tpl.layout} content={sampleDataCleanfolio} portfolioData={sampleDataCleanfolio} />
 								</div>
 								<button
 									className="bg-blue-600 text-white px-3 py-1 rounded mt-2 w-full font-semibold group-hover:bg-blue-700 transition-colors"
@@ -214,7 +283,7 @@ export default function ResumeUploadPage() {
 			</div>
 			{/* Right Panel - Live Preview (hidden until parsed) */}
 			{parsed && (
-				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 fixed md:static top-0 right-0 z-30">
+				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 fixed md:static top-0 right-0 z-30 transition-all duration-500 order-1 md:order-2">
 					<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
 						<h2 className="text-xl font-semibold">Live Preview</h2>
 					</div>
