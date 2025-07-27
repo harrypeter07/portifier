@@ -89,11 +89,43 @@ export const useLayoutStore = create(
 
 			// Set entire content object (for parsed resume data)
 			setAllContent: (contentData) => {
+				console.log("🏪 [LAYOUT-STORE] setAllContent called:", {
+					hasContentData: !!contentData,
+					contentKeys: contentData ? Object.keys(contentData) : [],
+					heroData: contentData?.hero,
+					personalData: contentData?.personal,
+					contactData: contentData?.contact,
+					aboutData: contentData?.about,
+					experienceJobs: contentData?.experience?.jobs?.length || 0,
+					educationDegrees: contentData?.education?.degrees?.length || 0,
+					skillsData: contentData?.skills,
+					projectsItems: contentData?.projects?.items?.length || 0
+				});
+
 				// Transform to new schema format
 				const transformedData = transformParsedResumeToSchema(
 					contentData,
 					get().portfolioType
 				);
+				
+				console.log("🏪 [LAYOUT-STORE] setAllContent transformation result:", {
+					hasTransformedData: !!transformedData,
+					personalData: transformedData?.personal ? {
+						firstName: transformedData.personal.firstName,
+						lastName: transformedData.personal.lastName,
+						title: transformedData.personal.title,
+						email: transformedData.personal.email
+					} : null,
+					aboutData: transformedData?.about ? {
+						hasSummary: !!transformedData.about.summary,
+						hasBio: !!transformedData.about.bio
+					} : null,
+					experienceJobs: transformedData?.experience?.jobs?.length || 0,
+					educationDegrees: transformedData?.education?.degrees?.length || 0,
+					skillsTechnical: transformedData?.skills?.technical?.length || 0,
+					projectsItems: transformedData?.projects?.items?.length || 0
+				});
+
 				set(() => ({
 					content: contentData, // Keep legacy format
 					portfolioData: transformedData, // Set new schema format

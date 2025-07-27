@@ -94,8 +94,22 @@ export default function ResumeUploadPage() {
 
 			// Store parsed content and backup
 			if (data.content) {
+				console.log("📝 [EDITOR] Storing parsed content:", {
+					contentKeys: Object.keys(data.content),
+					heroData: data.content.hero,
+					personalData: data.content.personal,
+					contactData: data.content.contact,
+					aboutData: data.content.about,
+					experienceJobs: data.content.experience?.jobs?.length || 0,
+					educationDegrees: data.content.education?.degrees?.length || 0,
+					skillsData: data.content.skills,
+					projectsItems: data.content.projects?.items?.length || 0
+				});
+				
 				setAllContent(data.content);
 				setParsedData(data.content); // Backup for later restoration
+				
+				console.log("📝 [EDITOR] Content stored in both content and parsedData");
 			}
 		} catch (err) {
 			setError(err.message);

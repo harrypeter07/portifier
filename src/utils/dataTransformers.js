@@ -35,108 +35,106 @@ export const transformParsedResumeToSchema = (
 
 	try {
 		// Transform Personal Information
-		if (parsedData.hero || parsedData.personal) {
-			const heroData = parsedData.hero || parsedData.personal || {};
-			console.log("🔄 [DATA-TRANSFORMER] Processing hero/personal data:", heroData);
+		// Handle both nested (hero/personal) and flat structure (title, subtitle at root level)
+		const heroData = parsedData.hero || parsedData.personal || parsedData;
+		console.log("🔄 [DATA-TRANSFORMER] Processing hero/personal data:", heroData);
 
-			// Handle name extraction from title field or separate fields
-			if (heroData.title && typeof heroData.title === "string") {
-				const nameParts = heroData.title.trim().split(" ");
-				transformed.personal.firstName = nameParts[0] || "";
-				transformed.personal.lastName = nameParts.slice(1).join(" ") || "";
-				
-				console.log("🔄 [DATA-TRANSFORMER] Extracted name from title:", {
-					originalTitle: heroData.title,
-					nameParts,
-					firstName: transformed.personal.firstName,
-					lastName: transformed.personal.lastName
-				});
-			}
-
-			if (heroData.firstName)
-				transformed.personal.firstName = heroData.firstName;
-			if (heroData.lastName) transformed.personal.lastName = heroData.lastName;
-			if (heroData.subtitle) transformed.personal.title = heroData.subtitle;
-			if (heroData.tagline) transformed.personal.tagline = heroData.tagline;
+		// Handle name extraction from title field or separate fields
+		if (heroData.title && typeof heroData.title === "string") {
+			const nameParts = heroData.title.trim().split(" ");
+			transformed.personal.firstName = nameParts[0] || "";
+			transformed.personal.lastName = nameParts.slice(1).join(" ") || "";
 			
-			console.log("🔄 [DATA-TRANSFORMER] Final personal data:", {
+			console.log("🔄 [DATA-TRANSFORMER] Extracted name from title:", {
+				originalTitle: heroData.title,
+				nameParts,
 				firstName: transformed.personal.firstName,
-				lastName: transformed.personal.lastName,
-				title: transformed.personal.title,
-				tagline: transformed.personal.tagline
+				lastName: transformed.personal.lastName
 			});
 		}
+
+		if (heroData.firstName)
+			transformed.personal.firstName = heroData.firstName;
+		if (heroData.lastName) transformed.personal.lastName = heroData.lastName;
+		if (heroData.subtitle) transformed.personal.title = heroData.subtitle;
+		if (heroData.tagline) transformed.personal.tagline = heroData.tagline;
+		
+		console.log("🔄 [DATA-TRANSFORMER] Final personal data:", {
+			firstName: transformed.personal.firstName,
+			lastName: transformed.personal.lastName,
+			title: transformed.personal.title,
+			tagline: transformed.personal.tagline
+		});
 
 		// Transform Contact Information
-		if (parsedData.contact) {
-			const contactData = parsedData.contact;
-			console.log("🔄 [DATA-TRANSFORMER] Processing contact data:", contactData);
-			
-			transformed.personal.email = contactData.email || "";
-			transformed.personal.phone = contactData.phone || "";
+		// Handle both nested (contact) and flat structure (email, phone at root level)
+		const contactData = parsedData.contact || parsedData;
+		console.log("🔄 [DATA-TRANSFORMER] Processing contact data:", contactData);
+		
+		transformed.personal.email = contactData.email || "";
+		transformed.personal.phone = contactData.phone || "";
 
-			if (contactData.location) {
-				// Parse location string into components
-				const locationParts = contactData.location
-					.split(",")
-					.map((p) => p.trim());
-				if (locationParts.length >= 2) {
-					transformed.personal.location.city = locationParts[0] || "";
-					transformed.personal.location.state = locationParts[1] || "";
-					transformed.personal.location.country =
-						locationParts[2] || locationParts[1] || "";
-				} else if (locationParts.length === 1) {
-					transformed.personal.location.city = locationParts[0] || "";
-				}
-				
-				console.log("🔄 [DATA-TRANSFORMER] Parsed location:", {
-					originalLocation: contactData.location,
-					locationParts,
-					city: transformed.personal.location.city,
-					state: transformed.personal.location.state,
-					country: transformed.personal.location.country
-				});
-			}
-
-			// Social links
-			if (contactData.linkedin)
-				transformed.personal.social.linkedin = contactData.linkedin;
-			if (contactData.github)
-				transformed.personal.social.github = contactData.github;
-			if (contactData.website || contactData.portfolio) {
-				transformed.personal.social.portfolio =
-					contactData.website || contactData.portfolio;
+		if (contactData.location) {
+			// Parse location string into components
+			const locationParts = contactData.location
+				.split(",")
+				.map((p) => p.trim());
+			if (locationParts.length >= 2) {
+				transformed.personal.location.city = locationParts[0] || "";
+				transformed.personal.location.state = locationParts[1] || "";
+				transformed.personal.location.country =
+					locationParts[2] || locationParts[1] || "";
+			} else if (locationParts.length === 1) {
+				transformed.personal.location.city = locationParts[0] || "";
 			}
 			
-			console.log("🔄 [DATA-TRANSFORMER] Final contact data:", {
-				email: transformed.personal.email,
-				phone: transformed.personal.phone,
-				linkedin: transformed.personal.social.linkedin,
-				github: transformed.personal.social.github,
-				portfolio: transformed.personal.social.portfolio
+			console.log("🔄 [DATA-TRANSFORMER] Parsed location:", {
+				originalLocation: contactData.location,
+				locationParts,
+				city: transformed.personal.location.city,
+				state: transformed.personal.location.state,
+				country: transformed.personal.location.country
 			});
 		}
+
+		// Social links
+		if (contactData.linkedin)
+			transformed.personal.social.linkedin = contactData.linkedin;
+		if (contactData.github)
+			transformed.personal.social.github = contactData.github;
+		if (contactData.website || contactData.portfolio) {
+			transformed.personal.social.portfolio =
+				contactData.website || contactData.portfolio;
+		}
+		
+		console.log("🔄 [DATA-TRANSFORMER] Final contact data:", {
+			email: transformed.personal.email,
+			phone: transformed.personal.phone,
+			linkedin: transformed.personal.social.linkedin,
+			github: transformed.personal.social.github,
+			portfolio: transformed.personal.social.portfolio
+		});
 
 		// Transform About Section
-		if (parsedData.about) {
-			console.log("🔄 [DATA-TRANSFORMER] Processing about data:", parsedData.about);
-			
-			transformed.about.summary = parsedData.about.summary || "";
-			transformed.about.bio =
-				parsedData.about.bio || parsedData.about.summary || "";
+		// Handle both nested (about) and flat structure (summary at root level)
+		const aboutData = parsedData.about || parsedData;
+		console.log("🔄 [DATA-TRANSFORMER] Processing about data:", aboutData);
+		
+		transformed.about.summary = aboutData.summary || "";
+		transformed.about.bio =
+			aboutData.bio || aboutData.summary || "";
 
-			// Extract years of experience if mentioned
-			if (parsedData.about.yearsOfExperience) {
-				transformed.about.bio += `\n\nExperience: ${parsedData.about.yearsOfExperience} years`;
-			}
-			
-			console.log("🔄 [DATA-TRANSFORMER] Final about data:", {
-				summary: transformed.about.summary,
-				bio: transformed.about.bio,
-				hasSummary: !!transformed.about.summary,
-				hasBio: !!transformed.about.bio
-			});
+		// Extract years of experience if mentioned
+		if (aboutData.yearsOfExperience) {
+			transformed.about.bio += `\n\nExperience: ${aboutData.yearsOfExperience} years`;
 		}
+		
+		console.log("🔄 [DATA-TRANSFORMER] Final about data:", {
+			summary: transformed.about.summary,
+			bio: transformed.about.bio,
+			hasSummary: !!transformed.about.summary,
+			hasBio: !!transformed.about.bio
+		});
 
 		// Transform Experience
 		if (parsedData.experience?.jobs) {
