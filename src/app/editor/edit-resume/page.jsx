@@ -1004,41 +1004,26 @@ export default function EditResumePage() {
 					{/* Languages */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
 						<h2 className="text-xl font-semibold mb-4">Languages</h2>
-						<div>
-							<div className="flex items-start gap-2">
-								<textarea
-									placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
-									value={(formData.languages || []).join(", ")}
-									onChange={(e) =>
-										setFormData((prev) => ({
-											...prev,
-											languages: e.target.value
-												.split(",")
-												.map((s) => s.trim())
-												.filter((s) => s),
-										}))
-									}
-									rows={2}
-									className="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600"
-								/>
-								<AIHelpButton
-									section="languages"
-									field="languages"
-									value={(formData.languages || []).join(", ")}
-									label="Languages"
-								/>
-							</div>
-							<AISuggestionInline
-								fieldKey="languages-languages"
-								section="languages"
-								field="languages"
-								label="Languages"
-								suggestions={aiSuggestions["languages-languages"] || []}
-								onSelectSuggestion={handleAISuggestionSelect}
-								loading={aiLoading["languages-languages"] || false}
-								isActive={activeAiField === "languages-languages"}
-							/>
-						</div>
+						<AICompanionField
+							type="textarea"
+							placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
+							value={(formData.languages || []).join(", ")}
+							onChange={(value) =>
+								setFormData((prev) => ({
+									...prev,
+									languages: value
+										.split(",")
+										.map((s) => s.trim())
+										.filter((s) => s),
+								}))
+							}
+							rows={2}
+							aiEnabled={isAIEnabled("languages", "languages")}
+							aiSection="languages"
+							aiField="languages"
+							aiLabel={getAILabel("languages", "languages")}
+							resumeData={formData}
+						/>
 					</div>
 
 					{/* Action Buttons */}
