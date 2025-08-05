@@ -6,6 +6,44 @@ import { auth } from "@/lib/auth";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
+// Health check endpoint
+export async function GET() {
+	try {
+		if (!process.env.GEMINI_API_KEY) {
+			return NextResponse.json({
+				status: "warning",
+				message: "No Gemini API key configured",
+				available: false
+			});
+		}
+
+		// Simple test to check if Gemini API is accessible
+		const { GoogleGenerativeAI } = await import("@google/generative-ai");
+		const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+		const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+		// Try a simple test call
+		const result = await model.generateContent("Hello");
+		const response = await result.response;
+		const text = response.text();
+
+		return NextResponse.json({
+			status: "healthy",
+			message: "Gemini API is accessible",
+			available: true,
+			testResponse: text.substring(0, 50) + "..."
+		});
+	} catch (error) {
+		console.error("❌ Gemini API health check failed:", error);
+		return NextResponse.json({
+			status: "unhealthy",
+			message: "Gemini API is not accessible",
+			available: false,
+			error: error.message
+		}, { status: 503 });
+	}
+}
+
 export async function POST(req) {
 	try {
 		await dbConnect();
@@ -88,6 +126,10 @@ export async function POST(req) {
 			countSchemaFields(result.schema)
 		);
 
+		// Check if we used mock data (indicated by specific mock values)
+		const usedMockData = result.content?.hero?.title === "Hassan Ahmed" && 
+							result.content?.contact?.email === "hassan@example.com";
+
 		return NextResponse.json({
 			success: true,
 			content: result.content,
@@ -98,6 +140,10 @@ export async function POST(req) {
 				fileSize: buffer.length,
 				portfolioType: schemaType,
 				fieldsExtracted: countNonEmptyFields(result.content),
+				usedMockData: usedMockData,
+				message: usedMockData ? 
+					"AI service temporarily unavailable. Using sample data for demonstration." : 
+					"Resume parsed successfully using AI."
 			},
 		});
 	} catch (error) {

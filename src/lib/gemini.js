@@ -2,6 +2,21 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// Retry configuration
+const RETRY_CONFIG = {
+	maxRetries: 3,
+	baseDelay: 1000, // 1 second
+	maxDelay: 10000, // 10 seconds
+	timeout: 30000, // 30 seconds timeout
+};
+
+// Available Gemini models to try as fallbacks
+const GEMINI_MODELS = [
+	"gemini-2.0-flash-exp",
+	"gemini-1.5-flash",
+	"gemini-1.5-pro",
+];
+
 // Default portfolio schema - you can modify this or pass it as a parameter
 const DEFAULT_PORTFOLIO_SCHEMA = {
 	hero: {
@@ -75,21 +90,60 @@ const DEFAULT_PORTFOLIO_SCHEMA = {
 	},
 };
 
+// Utility function to calculate exponential backoff delay
+function calculateDelay(attempt, baseDelay, maxDelay) {
+	const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
+	return delay + Math.random() * 1000; // Add jitter
+}
+
+// Utility function to check if error is retryable
+function isRetryableError(error) {
+	// Check for specific error types that are retryable
+	if (error.message && error.message.includes('503')) return true;
+	if (error.message && error.message.includes('Service Unavailable')) return true;
+	if (error.message && error.message.includes('overloaded')) return true;
+	if (error.message && error.message.includes('rate limit')) return true;
+	if (error.message && error.message.includes('quota exceeded')) return true;
+	
+	// Check for network-related errors
+	if (error.message && error.message.includes('network')) return true;
+	if (error.message && error.message.includes('timeout')) return true;
+	
+	return false;
+}
+
+// Utility function to create a timeout promise
+function createTimeoutPromise(timeoutMs) {
+	return new Promise((_, reject) => {
+		setTimeout(() => {
+			reject(new Error(`Request timeout after ${timeoutMs}ms`));
+		}, timeoutMs);
+	});
+}
+
 export async function parseResumeWithGemini(buffer, customSchema = null) {
 	if (!process.env.GEMINI_API_KEY) {
 		console.log("⚠️  No Google API key found, using mock data");
 		return getMockData(customSchema || DEFAULT_PORTFOLIO_SCHEMA);
 	}
 
-	try {
-		const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
-		const schema = customSchema || DEFAULT_PORTFOLIO_SCHEMA;
+	const schema = customSchema || DEFAULT_PORTFOLIO_SCHEMA;
+	let lastError = null;
 
-		// Convert buffer to base64
-		const base64Data = buffer.toString("base64");
+	// Try different models
+	for (const modelName of GEMINI_MODELS) {
+		console.log(`🤖 Trying Gemini model: ${modelName}`);
+		
+		// Retry loop for each model
+		for (let attempt = 0; attempt <= RETRY_CONFIG.maxRetries; attempt++) {
+			try {
+				const model = genAI.getGenerativeModel({ model: modelName });
 
-		// Dynamic prompt that includes the schema
-		const prompt = `
+				// Convert buffer to base64
+				const base64Data = buffer.toString("base64");
+
+				// Dynamic prompt that includes the schema
+				const prompt = `
 You are an expert resume parser. I will provide you with a resume PDF and a specific data structure schema. Your task is to:
 
 1. Extract ALL relevant information from the resume PDF
@@ -116,50 +170,79 @@ IMPORTANT INSTRUCTIONS:
 Now analyze the resume and return the structured JSON:
 `;
 
-		const result = await model.generateContent([
-			prompt,
-			{
-				inlineData: {
-					mimeType: "application/pdf",
-					data: base64Data,
-				},
-			},
-		]);
+				// Create the API call with timeout
+				const apiCall = model.generateContent([
+					prompt,
+					{
+						inlineData: {
+							mimeType: "application/pdf",
+							data: base64Data,
+						},
+					},
+				]);
 
-		const response = await result.response;
-		let extractedData = response.text();
+				// Race between the API call and timeout
+				const result = await Promise.race([
+					apiCall,
+					createTimeoutPromise(RETRY_CONFIG.timeout)
+				]);
 
-		// Clean the response to ensure it's valid JSON
-		extractedData = extractedData
-			.replace(/```json/g, "")
-			.replace(/```/g, "")
-			.trim();
+				const response = await result.response;
+				let extractedData = response.text();
 
-		// Parse the JSON response
-		let parsedData;
-		try {
-			parsedData = JSON.parse(extractedData);
-		} catch (parseError) {
-			console.error("❌ Error parsing JSON response:", parseError);
-			console.log("🔧 Attempting to fix JSON...");
+				// Clean the response to ensure it's valid JSON
+				extractedData = extractedData
+					.replace(/```json/g, "")
+					.replace(/```/g, "")
+					.trim();
 
-			// Try to fix common JSON issues
-			extractedData = fixJsonResponse(extractedData);
-			parsedData = JSON.parse(extractedData);
+				// Parse the JSON response
+				let parsedData;
+				try {
+					parsedData = JSON.parse(extractedData);
+				} catch (parseError) {
+					console.error("❌ Error parsing JSON response:", parseError);
+					console.log("🔧 Attempting to fix JSON...");
+
+					// Try to fix common JSON issues
+					extractedData = fixJsonResponse(extractedData);
+					parsedData = JSON.parse(extractedData);
+				}
+
+				// Validate and clean the data
+				const validatedData = validateAndCleanData(parsedData, schema);
+
+				console.log(`✅ Gemini API call successful with model: ${modelName}!`);
+				return {
+					content: validatedData,
+					schema: schema,
+				};
+			} catch (error) {
+				lastError = error;
+				
+				// Check if this is a retryable error
+				if (isRetryableError(error) && attempt < RETRY_CONFIG.maxRetries) {
+					const delay = calculateDelay(attempt, RETRY_CONFIG.baseDelay, RETRY_CONFIG.maxDelay);
+					console.log(`⚠️  Gemini API error (${modelName}, attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1}):`, error.message);
+					console.log(`🔄 Retrying in ${Math.round(delay)}ms...`);
+					
+					await new Promise(resolve => setTimeout(resolve, delay));
+					continue;
+				}
+				
+				// If not retryable or max retries reached, try next model
+				break;
+			}
 		}
-
-		// Validate and clean the data
-		const validatedData = validateAndCleanData(parsedData, schema);
-
-		return {
-			content: validatedData,
-			schema: schema,
-		};
-	} catch (error) {
-		console.error("❌ Error calling Gemini API:", error);
-		console.log("🔄 Falling back to mock data");
-		return getMockData(customSchema || DEFAULT_PORTFOLIO_SCHEMA);
+		
+		// If we get here, this model failed completely, try next model
+		console.log(`❌ Model ${modelName} failed, trying next model...`);
 	}
+
+	// If we get here, all models failed
+	console.error("❌ All Gemini API attempts failed:", lastError);
+	console.log("🔄 Falling back to mock data");
+	return getMockData(customSchema || DEFAULT_PORTFOLIO_SCHEMA);
 }
 
 function fixJsonResponse(jsonString) {
