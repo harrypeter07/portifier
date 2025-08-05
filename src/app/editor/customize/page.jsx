@@ -736,7 +736,7 @@ export default function CustomizePage() {
 						🔗 Portfolio URL
 					</label>
 					<div className="flex items-center gap-2">
-						<span className="text-gray-500 dark:text-gray-400">{window?.location?.origin || "https://yourdomain.com"}/portfolio/{username || "username"}/</span>
+						<span className="text-gray-500 dark:text-gray-400">{typeof window !== 'undefined' ? window.location.origin : "https://yourdomain.com"}/portfolio/{username || "username"}/</span>
 						<input
 							type="text"
 							className={`w-48 p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${slugError ? "border-red-500" : ""}`}
