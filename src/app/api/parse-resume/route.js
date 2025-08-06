@@ -157,7 +157,9 @@ export async function POST(req) {
 		}
 		
 		// Check for specific Gemini API errors
-		if (error.message?.includes("503")) {
+		if (error.message?.includes("EROFS") || error.message?.includes("read-only file system")) {
+			errorMessage = "Server configuration error. Please try again or contact support.";
+		} else if (error.message?.includes("503")) {
 			errorMessage = "AI service is temporarily overloaded. Please try again in a few minutes.";
 		} else if (error.message?.includes("429")) {
 			errorMessage = "Too many requests to AI service. Please wait a moment and try again.";
