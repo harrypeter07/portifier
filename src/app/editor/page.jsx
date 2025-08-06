@@ -273,13 +273,25 @@ export default function ResumeUploadPage() {
 		router.push("/preview/live");
 	}
 
+	function handleNavigateToCustomize() {
+		router.push("/editor/customize");
+	}
+
+	function handleNavigateToEditResume() {
+		router.push("/editor/edit-resume");
+	}
+
+	function handleNavigateToTemplatesDemo() {
+		router.push("/templates-demo");
+	}
+
 	return (
 		<div className="min-h-screen flex flex-col-reverse md:flex-row bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-			{/* Left Panel - Upload and Template Selection */}
+			{/* Left Panel - Upload and Navigation */}
 			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>
 				<h1 className="text-3xl font-extrabold mb-4 text-blue-700 dark:text-blue-200">Start Your Portfolio</h1>
 				<div className="mb-6 text-gray-700 dark:text-gray-300 text-base">
-					Upload your resume (PDF) to auto-fill your portfolio, or pick a template to start from scratch. You can always customize everything later!
+					Upload your resume (PDF) to auto-fill your portfolio, or use the navigation below to explore different editing options.
 				</div>
 				<div className="flex flex-col gap-2 mb-6 p-4 border-2 border-blue-300 dark:border-blue-700 rounded-xl bg-white dark:bg-gray-900 shadow-md">
 					{/* API Status Indicator */}
@@ -309,41 +321,53 @@ export default function ResumeUploadPage() {
 					{error && <div className="text-red-600 mb-2">{error}</div>}
 					{!file && !parsedData && (
 						<div className="text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded p-2 mt-1">
-							Tip: You can also start with a prebuilt template below!
+							Tip: You can also start with the navigation options below!
 						</div>
 					)}
 				</div>
-				{/* Prebuilt Portfolio Templates Grid */}
-				<div className="mt-4">
-					<div className="font-semibold text-gray-700 dark:text-gray-200 mb-2">Available Templates:</div>
-					<div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', display: 'grid' }}>
-						{PREBUILT_TEMPLATES.map((tpl) => (
-							<motion.div
-								key={tpl.name}
-								className={`border-2 rounded-xl bg-white dark:bg-gray-900 shadow transition-all flex flex-col items-center p-3 group cursor-pointer ${selectedTemplate.name === tpl.name ? 'border-blue-500 ring-2 ring-blue-300' : 'border-blue-200 dark:border-blue-700'}`}
-								whileHover={{ scale: 1.03 }}
-								onClick={() => setSelectedTemplate(tpl)}
-								tabIndex={0}
-								role="button"
-								aria-pressed={selectedTemplate.name === tpl.name}
-								aria-label={`Select template ${tpl.name}`}
-							>
-								<div className="font-bold mb-2 text-blue-700 dark:text-blue-300 text-center w-full">{tpl.name}</div>
-								<div
-									className="w-full max-w-[400px] h-[200px] rounded overflow-y-auto custom-thin-slider border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
-									style={{ minWidth: 0 }}
-								>
-									{/* Always pass FULL_LAYOUT and sampleDataCleanfolio for preview */}
-									<Preview layout={tpl.layout} content={sampleDataCleanfolio} portfolioData={sampleDataCleanfolio} />
-								</div>
-								<button
-									className="bg-blue-600 text-white px-3 py-1 rounded mt-2 w-full font-semibold group-hover:bg-blue-700 transition-colors"
-									onClick={(e) => { e.stopPropagation(); handleTemplateSelect(tpl); }}
-								>
-									Use Template
-								</button>
-							</motion.div>
-						))}
+
+				{/* Navigation Buttons */}
+				<div className="mt-8">
+					<div className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Portfolio Editor Options:</div>
+					<div className="grid gap-4 md:grid-cols-3">
+						<motion.button
+							onClick={handleNavigateToCustomize}
+							className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group"
+							whileHover={{ scale: 1.02 }}
+							whileTap={{ scale: 0.98 }}
+						>
+							<div className="text-2xl mb-2">🎨</div>
+							<div className="font-bold text-lg mb-1">Customize</div>
+							<div className="text-sm text-blue-100 text-center">
+								Choose and customize individual components
+							</div>
+						</motion.button>
+
+						<motion.button
+							onClick={handleNavigateToEditResume}
+							className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group"
+							whileHover={{ scale: 1.02 }}
+							whileTap={{ scale: 0.98 }}
+						>
+							<div className="text-2xl mb-2">✏️</div>
+							<div className="font-bold text-lg mb-1">Edit Resume</div>
+							<div className="text-sm text-green-100 text-center">
+								Edit your resume content and details
+							</div>
+						</motion.button>
+
+						<motion.button
+							onClick={handleNavigateToTemplatesDemo}
+							className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group"
+							whileHover={{ scale: 1.02 }}
+							whileTap={{ scale: 0.98 }}
+						>
+							<div className="text-2xl mb-2">📋</div>
+							<div className="font-bold text-lg mb-1">Templates</div>
+							<div className="text-sm text-purple-100 text-center">
+								Browse all available templates
+							</div>
+						</motion.button>
 					</div>
 				</div>
 			</div>
