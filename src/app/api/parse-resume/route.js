@@ -7,11 +7,21 @@ import { auth } from "@/lib/auth";
 // Health check endpoint
 export async function GET() {
 	try {
+		// Check environment variables
+		const envCheck = {
+			GEMINI_API_KEY: !!process.env.GEMINI_API_KEY,
+			JWT_SECRET: !!process.env.JWT_SECRET,
+			MONGODB_URI: !!process.env.MONGODB_URI
+		};
+		
+		console.log("🔍 [HEALTH-CHECK] Environment variables:", envCheck);
+		
 		if (!process.env.GEMINI_API_KEY) {
 			return NextResponse.json({
 				status: "warning",
 				message: "No Gemini API key configured",
-				available: false
+				available: false,
+				envCheck
 			});
 		}
 
@@ -29,7 +39,8 @@ export async function GET() {
 			status: "healthy",
 			message: "Gemini API is accessible",
 			available: true,
-			testResponse: text.substring(0, 50) + "..."
+			testResponse: text.substring(0, 50) + "...",
+			envCheck
 		});
 	} catch (error) {
 		console.error("❌ Gemini API health check failed:", error);
@@ -37,7 +48,8 @@ export async function GET() {
 			status: "unhealthy",
 			message: "Gemini API is not accessible",
 			available: false,
-			error: error.message
+			error: error.message,
+			envCheck
 		}, { status: 503 });
 	}
 }
@@ -49,8 +61,15 @@ export async function POST(req) {
 		// Get authenticated user
 		const user = await auth();
 		if (!user) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+			console.log("❌ [PARSE-RESUME] No authenticated user found");
+			return NextResponse.json({ 
+				success: false,
+				error: "Authentication required. Please sign in to upload your resume.",
+				errorType: "AuthenticationError"
+			}, { status: 401 });
 		}
+		
+		console.log("✅ [PARSE-RESUME] User authenticated:", user.email);
 
 		const formData = await req.formData();
 		const file = formData.get("resume");
@@ -75,7 +94,13 @@ export async function POST(req) {
 			status: 'processing'
 		});
 
-		await resume.save();
+		try {
+			await resume.save();
+			console.log("✅ [PARSE-RESUME] Resume record created:", resume._id);
+		} catch (saveError) {
+			console.error("❌ [PARSE-RESUME] Failed to save resume record:", saveError);
+			throw new Error(`Database error: ${saveError.message}`);
+		}
 
 		// Determine which schema to use
 		let schema;
@@ -95,7 +120,13 @@ export async function POST(req) {
 		// Update resume with parsed data
 		resume.parsedData = result.content;
 		resume.status = 'parsed';
-		await resume.save();
+		try {
+			await resume.save();
+			console.log("✅ [PARSE-RESUME] Resume updated with parsed data");
+		} catch (updateError) {
+			console.error("❌ [PARSE-RESUME] Failed to update resume with parsed data:", updateError);
+			throw new Error(`Database update error: ${updateError.message}`);
+		}
 
 		// Enhanced logging based on actual schema structure
 		console.log("\n🎯 EXTRACTED RESUME DATA:");
@@ -159,6 +190,10 @@ export async function POST(req) {
 		// Check for specific Gemini API errors
 		if (error.message?.includes("EROFS") || error.message?.includes("read-only file system")) {
 			errorMessage = "Server configuration error. Please try again or contact support.";
+		} else if (error.message?.includes("validation failed")) {
+			errorMessage = "Data validation error. Please try again or contact support.";
+		} else if (error.message?.includes("Database error") || error.message?.includes("Database update error")) {
+			errorMessage = "Database error. Please try again or contact support.";
 		} else if (error.message?.includes("503")) {
 			errorMessage = "AI service is temporarily overloaded. Please try again in a few minutes.";
 		} else if (error.message?.includes("429")) {
