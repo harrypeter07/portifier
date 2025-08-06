@@ -1,4 +1,4 @@
-import { componentMap } from "@/data/componentMap";
+import { componentMap, isFullPageTemplate } from "@/data/componentMap";
 import { motion } from "framer-motion";
 
 const SECTION_ORDER = [
@@ -12,7 +12,7 @@ const SECTION_ORDER = [
   "contact"
 ];
 
-export default function Preview({ layout, content, portfolioData }) {
+export default function Preview({ layout, content, portfolioData, currentTemplate }) {
   console.log("👁️ [PREVIEW] Component received props:", {
     hasLayout: !!layout,
     layoutKeys: layout ? Object.keys(layout) : [],
@@ -20,6 +20,8 @@ export default function Preview({ layout, content, portfolioData }) {
     contentKeys: content ? Object.keys(content) : [],
     hasPortfolioData: !!portfolioData,
     portfolioDataKeys: portfolioData ? Object.keys(portfolioData) : [],
+    currentTemplate: currentTemplate?.id,
+    templateType: currentTemplate?.type,
     personalData: portfolioData?.personal ? {
       firstName: portfolioData.personal.firstName,
       lastName: portfolioData.personal.lastName,
@@ -28,6 +30,24 @@ export default function Preview({ layout, content, portfolioData }) {
     } : null
   });
 
+  // Handle full-page templates
+  if (currentTemplate?.type === "full" && currentTemplate?.component) {
+    const FullTemplateComponent = componentMap[currentTemplate.component];
+    if (FullTemplateComponent) {
+      console.log("👁️ [PREVIEW] Rendering full-page template:", currentTemplate.component);
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
+        >
+          <FullTemplateComponent data={portfolioData || content} />
+        </motion.div>
+      );
+    }
+  }
+
+  // Handle component-based templates (existing logic)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

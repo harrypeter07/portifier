@@ -1,8 +1,11 @@
 // Dynamic component mapping with new schema support
 import HeroA from "@/components/Hero/HeroA";
 import HeroB from "@/components/Hero/HeroB";
+import HeroC from "@/components/Hero/HeroC";
+import HeroD from "@/components/Hero/HeroD";
 import AboutA from "@/components/About/AboutA";
 import AboutB from "@/components/About/AboutB";
+import AboutC from "@/components/About/AboutC";
 import ExperienceA from "@/components/Experience/ExperienceA";
 import ExperienceB from "@/components/Experience/ExperienceB";
 import EducationA from "@/components/Education/EducationA";
@@ -13,33 +16,61 @@ import ContactFormA from "@/components/Contact/ContactFormA";
 import PortfolioLoading from "@/components/PortfolioLoading";
 import CustomPortfolioLoading from "@/components/CustomPortfolioLoading";
 
+// Full-page templates
+import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
+import CreativeFull from "@/components/FullTemplates/CreativeFull";
+
 export const componentMap = {
+	// Hero components
 	HeroA,
 	HeroB,
+	HeroC,
+	HeroD,
+	
+	// About components
 	AboutA,
 	AboutB,
+	AboutC,
+	
+	// Experience components
 	ExperienceA,
 	ExperienceB,
+	
+	// Education components
 	EducationA,
+	
+	// Skills components
 	SkillsA,
+	
+	// Showcase/Projects components
 	ShowcaseA,
+	
+	// Achievements components
 	AchievementsA,
+	
+	// Contact components
 	ContactFormA,
+	
+	// Loading components
 	PortfolioLoading,
 	CustomPortfolioLoading,
+	
+	// Full-page templates
+	CleanfolioFull,
+	CreativeFull,
 };
 
 // Component categories for organized selection
 export const componentCategories = {
 	hero: {
 		label: "Hero Section",
-		components: ["HeroA", "HeroB"],
+		components: ["HeroA", "HeroB", "HeroC", "HeroD"],
 		description: "Main header section with name and title",
 		required: true
 	},
 	about: {
 		label: "About Section",
-		components: ["AboutA", "AboutB"],
+		components: ["AboutA", "AboutB", "AboutC"],
 		description: "Professional summary and bio",
 		required: true
 	},
@@ -83,6 +114,12 @@ export const componentCategories = {
 		label: "Loading Screen",
 		components: ["PortfolioLoading", "CustomPortfolioLoading"],
 		description: "Loading spinner or animation while portfolio loads",
+		required: false
+	},
+	fullTemplates: {
+		label: "Full Page Templates",
+		components: ["CleanfolioFull", "CreativeFull"],
+		description: "Complete portfolio page templates",
 		required: false
 	}
 };
@@ -135,6 +172,11 @@ export const getRecommendedLayout = (portfolioType = 'developer') => {
 	});
 	
 	return layout;
+};
+
+// Helper function to check if a component is a full-page template
+export const isFullPageTemplate = (componentName) => {
+	return componentCategories.fullTemplates.components.includes(componentName);
 };
 
 export default componentMap;

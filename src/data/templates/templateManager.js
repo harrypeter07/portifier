@@ -11,11 +11,13 @@ import {
 
 // Template configurations with complete schema data
 export const PORTFOLIO_TEMPLATES = {
+	// Component-based templates
 	cleanfolio: {
 		id: "cleanfolio",
 		name: "Clean Portfolio",
 		description: "Minimalist and professional design perfect for developers",
 		category: "developer",
+		type: "component", // component-based template
 		preview: "/templates/cleanfolio-preview.jpg",
 		layout: {
 			hero: "HeroA",
@@ -44,6 +46,7 @@ export const PORTFOLIO_TEMPLATES = {
 		name: "Creative Portfolio",
 		description: "Bold and vibrant design perfect for designers and creatives",
 		category: "designer",
+		type: "component", // component-based template
 		preview: "/templates/creative-preview.jpg",
 		layout: {
 			hero: "HeroB",
@@ -71,6 +74,7 @@ export const PORTFOLIO_TEMPLATES = {
 		name: "Business Portfolio",
 		description: "Professional and corporate design for business professionals",
 		category: "marketing",
+		type: "component", // component-based template
 		preview: "/templates/business-preview.jpg",
 		layout: {
 			hero: "HeroA",
@@ -92,6 +96,110 @@ export const PORTFOLIO_TEMPLATES = {
 		},
 		sampleData: sampleDataBusiness,
 	},
+
+	// New component-based templates
+	modern: {
+		id: "modern",
+		name: "Modern Portfolio",
+		description: "Contemporary design with clean lines and modern aesthetics",
+		category: "developer",
+		type: "component",
+		preview: "/templates/modern-preview.jpg",
+		layout: {
+			hero: "HeroC",
+			about: "AboutC",
+			experience: "ExperienceA",
+			skills: "SkillsA",
+			projects: "ShowcaseA",
+			contact: "ContactFormA",
+		},
+		theme: {
+			primaryColor: "#6366F1",
+			secondaryColor: "#4F46E5",
+			accentColor: "#F59E0B",
+			backgroundColor: "#FFFFFF",
+			textColor: "#1F2937",
+			font: "Inter",
+			darkMode: true,
+			animations: true,
+			layout: "modern",
+		},
+		sampleData: sampleDataCleanfolio,
+	},
+
+	animated: {
+		id: "animated",
+		name: "Animated Portfolio",
+		description: "Dynamic and interactive design with smooth animations",
+		category: "designer",
+		type: "component",
+		preview: "/templates/animated-preview.jpg",
+		layout: {
+			hero: "HeroD",
+			about: "AboutC",
+			experience: "ExperienceB",
+			skills: "SkillsA",
+			projects: "ShowcaseA",
+			contact: "ContactFormA",
+		},
+		theme: {
+			primaryColor: "#8B5CF6",
+			secondaryColor: "#7C3AED",
+			accentColor: "#F59E0B",
+			backgroundColor: "#000000",
+			textColor: "#FFFFFF",
+			font: "Poppins",
+			darkMode: true,
+			animations: true,
+			layout: "creative",
+		},
+		sampleData: sampleDataCreative,
+	},
+
+	// Full-page templates
+	cleanfolioFull: {
+		id: "cleanfolioFull",
+		name: "Cleanfolio (Full Page)",
+		description: "Complete portfolio page with clean, professional design",
+		category: "developer",
+		type: "full", // full-page template
+		component: "CleanfolioFull", // reference to full template component
+		preview: "/templates/cleanfolio-full-preview.jpg",
+		theme: {
+			primaryColor: "#3B82F6",
+			secondaryColor: "#1E40AF",
+			accentColor: "#F59E0B",
+			backgroundColor: "#FFFFFF",
+			textColor: "#1F2937",
+			font: "Inter",
+			darkMode: true,
+			animations: true,
+			layout: "modern",
+		},
+		sampleData: sampleDataCleanfolio,
+	},
+
+	creativeFull: {
+		id: "creativeFull",
+		name: "Creative (Full Page)",
+		description: "Complete portfolio page with bold, artistic design",
+		category: "designer",
+		type: "full", // full-page template
+		component: "CreativeFull", // reference to full template component
+		preview: "/templates/creative-full-preview.jpg",
+		theme: {
+			primaryColor: "#8B5CF6",
+			secondaryColor: "#7C3AED",
+			accentColor: "#F59E0B",
+			backgroundColor: "#000000",
+			textColor: "#FFFFFF",
+			font: "Poppins",
+			darkMode: true,
+			animations: true,
+			layout: "creative",
+		},
+		sampleData: sampleDataCreative,
+	},
 };
 
 // Template utility functions
@@ -109,6 +217,20 @@ export const getTemplatesByCategory = (category) => {
 	);
 };
 
+export const getTemplatesByType = (type) => {
+	return Object.values(PORTFOLIO_TEMPLATES).filter(
+		(template) => template.type === type
+	);
+};
+
+export const getComponentTemplates = () => {
+	return getTemplatesByType("component");
+};
+
+export const getFullPageTemplates = () => {
+	return getTemplatesByType("full");
+};
+
 export const createTemplateFromPortfolioType = (portfolioType) => {
 	const layout = getRecommendedLayout(portfolioType);
 	const baseTemplate = PORTFOLIO_TEMPLATES.cleanfolio;
@@ -120,6 +242,7 @@ export const createTemplateFromPortfolioType = (portfolioType) => {
 		} Template`,
 		description: `Optimized template for ${portfolioType} portfolios`,
 		category: portfolioType,
+		type: "component",
 		layout,
 		theme: baseTemplate.theme,
 		sampleData: JSON.parse(JSON.stringify(EMPTY_PORTFOLIO)),
@@ -145,7 +268,14 @@ export const validateTemplate = (template) => {
 
 	if (!template.id) errors.push("Template ID is required");
 	if (!template.name) errors.push("Template name is required");
-	if (!template.layout) errors.push("Template layout is required");
+	if (!template.type) errors.push("Template type is required");
+	
+	if (template.type === "component") {
+		if (!template.layout) errors.push("Component template layout is required");
+	} else if (template.type === "full") {
+		if (!template.component) errors.push("Full template component is required");
+	}
+	
 	if (!template.theme) errors.push("Template theme is required");
 
 	// Validate layout components exist
@@ -166,6 +296,9 @@ const TemplateManager = {
 	getTemplate,
 	getAllTemplates,
 	getTemplatesByCategory,
+	getTemplatesByType,
+	getComponentTemplates,
+	getFullPageTemplates,
 	createTemplateFromPortfolioType,
 	mergeTemplateWithData,
 	validateTemplate,

@@ -27,6 +27,7 @@
 
 - [Getting Started](#getting-started)
 - [Architecture & Customization Guide](#portfolio-builder-architecture--customization-guide)
+- [Template System](#template-system)
 - [Directory Structure](#4-directory-structure)
 - [Adding Templates & Components](#3-adding-new-templates-and-components)
 - [Team & Task Breakdown](#team--task-breakdown)
@@ -59,13 +60,14 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 
 - **Resume Parsing:**
   - API: `src/app/api/parse-resume/route.js` parses uploaded resumes using Gemini API (`src/lib/gemini.js`).
+  - **Enhanced Error Handling:** Implements retry logic with exponential backoff and model fallback for robust API calls.
   - Returns structured data matching the portfolio schema.
-- **State Management:** Zustand store (`src/store/layoutStore.js`) holds all portfolio data, template, layout, and content.
-- **Editor:** `src/app/editor/edit-resume/page.jsx` renders a dynamic form for each section based on the selected template/layout. Updates the Zustand store as the user edits. Right panel shows a live preview using the actual portfolio components.
+- **State Management:** Zustand store (`store/layoutStore.js`) holds all portfolio data, template, layout, and content.
+- **Editor:** `src/app/editor/edit-resume/page.jsx` renders a dynamic form for each section based on the selected template/layout. Updates the Zustand store as the user edits. Right panel shows a live preview using the `Preview` component.
 - **Portfolio Components:** `src/components/` contains all section components (Hero, About, Projects, etc.). `src/data/componentMap.js` maps section names to React components.
 - **Templates:** Defined in `src/data/templates/templateManager.js`. Each template specifies a layout, theme, and sample data.
 - **Schema:** `src/data/schemas/portfolioSchema.js` defines the full data structure for all portfolio types.
-- **Rendering:** Live preview and final portfolio use the same logic to render the user’s portfolio.
+- **Rendering:** Live preview and final portfolio use the same logic to render the user's portfolio.
 
 ### 2. **How Data Flows**
 
@@ -74,30 +76,38 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 3. Editor form reads/writes to Zustand.
 4. Live preview and final portfolio use the same data and component mapping.
 
-### 3. **Adding New Templates and Components**
+---
 
-#### A. **Add a Complete Template Portfolio**
+## 🎨 **Template System**
 
-- **Where:** `src/data/templates/templateManager.js`
-- **How:**
-  1. Add a new entry to `PORTFOLIO_TEMPLATES` with a unique `id`, `name`, `layout`, `theme`, and `sampleData`.
-  2. The `layout` field maps section names to component names (e.g., `"hero": "HeroA"`).
-  3. Add a preview image in `/public/templates/` if needed.
+### **Dual Template Architecture**
 
-#### B. **Add New Section Components**
+The portfolio builder now supports two types of templates:
 
-- **Where:** `src/components/`
-- **How:**
-  1. Create a new file for your component, e.g., `src/components/Hero/HeroAnimated.jsx`.
-  2. Export the component.
-  3. Add it to `src/data/componentMap.js` so it can be referenced in templates/layouts.
+#### **1. Component-Based Templates**
+- **Description:** Mix and match individual section components (Hero, About, Experience, etc.)
+- **Flexibility:** Users can customize each section independently
+- **Components:** Located in `src/components/[Section]/[Component].jsx`
+- **Examples:** `HeroA`, `HeroB`, `HeroC`, `HeroD`, `AboutA`, `AboutB`, `AboutC`
 
-#### C. **Let Users Pick Components One by One**
+#### **2. Full-Page Templates**
+- **Description:** Complete, pre-designed portfolio pages as single components
+- **Consistency:** Cohesive design across all sections
+- **Components:** Located in `src/components/FullTemplates/[Template].jsx`
+- **Examples:** `CleanfolioFull`, `CreativeFull`
 
-- **How:**
-  1. In your UI, allow users to select which component to use for each section.
-  2. Update the `layout` in Zustand to reflect their choices.
-  3. The editor and preview will automatically use the selected components.
+### **Template Management**
+
+- **Template Definitions:** `src/data/templates/templateManager.js`
+- **Component Mapping:** `src/data/componentMap.js`
+- **Preview Rendering:** `src/components/Preview.jsx`
+
+### **Template Types**
+
+| Type | Description | Location | Registration |
+|------|-------------|----------|--------------|
+| `"component"` | Individual section components | `src/components/[Section]/` | `componentMap.js` + `templateManager.js` |
+| `"full"` | Complete portfolio pages | `src/components/FullTemplates/` | `componentMap.js` + `templateManager.js` |
 
 ---
 
@@ -107,106 +117,226 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 src/
   components/
     Hero/
-      HeroA.jsx
-      HeroAnimated.jsx
+      HeroA.jsx          # Original hero component
+      HeroB.jsx          # Alternative hero design
+      HeroC.jsx          # Modern minimalist hero
+      HeroD.jsx          # Animated dynamic hero
+    About/
+      AboutA.jsx         # Original about component
+      AboutB.jsx         # Alternative about design
+      AboutC.jsx         # Card-based about layout
+    FullTemplates/       # Full-page portfolio templates
+      CleanfolioFull.jsx # Professional full-page template
+      CreativeFull.jsx   # Artistic dark-themed template
     Showcase/
       ShowcaseA.jsx
-      ShowcaseAnimated.jsx
     ... (other sections)
   data/
-    componentMap.js
+    componentMap.js      # Maps component names to React components
     templates/
-      templateManager.js
+      templateManager.js # Template definitions and management
     schemas/
-      portfolioSchema.js
+      portfolioSchema.js # Data structure definitions
   app/
     editor/
       edit-resume/
-        page.jsx
+        page.jsx         # Main editor interface
+    templates-demo/
+      page.jsx           # Template selection demo
     ... (other pages)
   store/
-    layoutStore.js
+    layoutStore.js       # Zustand state management
+  lib/
+    gemini.js           # Enhanced Gemini API integration
 ```
 
-- **Add new full templates** in `templateManager.js`.
-- **Add new section components** in the appropriate folder in `components/`.
-- **Map new components** in `componentMap.js`.
-
 ---
 
-## 🧩 **How Data Is Populated and Used**
+## 🧩 **Adding New Templates and Components**
 
-- **Parsing:** Data is parsed and set in Zustand.
-- **Form:** Reads and writes to Zustand (`formData` mirrors `content`/`portfolioData`).
-- **Preview:** Reads from Zustand and passes the correct props to each section/component.
-- **Component Map:** Ensures the right React component is used for each section, based on the current layout/template.
+### **A. Adding New Section Components**
 
----
+#### **Step 1: Create the Component**
+```jsx
+// src/components/Hero/HeroE.jsx
+import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 
-## 🎨 **Adding Full-Page Portfolio Templates**
+export default function HeroE({ data = EMPTY_PORTFOLIO, ...personalData }) {
+  const personal = data?.personal || personalData || {};
+  const fullName = personal.firstName && personal.lastName 
+    ? `${personal.firstName} ${personal.lastName}`.trim() 
+    : personal.title || "Your Name";
+  
+  return (
+    <section className="your-hero-styles">
+      <h1>{fullName}</h1>
+      {/* Your component content */}
+    </section>
+  );
+}
+```
 
-You can use fully coded, single-page portfolio templates (not just section components) in your system. Here’s how:
-
-#### A. **Where to Add Full Templates**
-
-- Place your full template component in `src/components/FullTemplates/` (recommended) or as a page in `src/app/templates/`.
-
-#### B. **Registering the Template**
-
-- In `src/data/templates/templateManager.js`, add an entry for your full template:
-
+#### **Step 2: Register in Component Map**
 ```js
-import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
-// ...
-export const PORTFOLIO_TEMPLATES = {
-	cleanfolio: {
-		id: "cleanfolio",
-		name: "Cleanfolio (Full Page)",
-		type: "full", // mark as full template
-		component: CleanfolioFull, // reference the full template component
-		// ...other fields
-	},
-	// ...other templates
+// src/data/componentMap.js
+import HeroE from "@/components/Hero/HeroE";
+
+export const componentMap = {
+  // ... existing components
+  HeroE: HeroE,
+};
+
+export const componentCategories = {
+  hero: {
+    name: "Hero Sections",
+    components: ["HeroA", "HeroB", "HeroC", "HeroD", "HeroE"], // Add your component
+  },
+  // ... other categories
 };
 ```
 
-#### C. **How Full Templates Get Data**
-
-```jsx
-export default function CleanfolioFull({ data }) {
-	// Use data.hero, data.projects, data.skills, etc.
-	return (
-		<main>
-			<header>{data.hero.title}</header>
-			{/* ...render all sections using data... */}
-		</main>
-	);
-}
-```
-
-#### D. **Customization**
-
-- The user customizes their data in the editor as usual.
-- The full template component should use the data fields (not hardcoded content), so any changes in the editor are reflected in the preview and final output.
-- For per-section overrides, add logic in your full template to optionally render a different component if specified.
-
-#### E. **Supporting Both Section-Based and Full-Page Templates**
-
+#### **Step 3: Add to Template Manager**
 ```js
-if (currentTemplate.type === "full" && currentTemplate.component) {
-	// Render the full template with all data
-	return <currentTemplate.component data={portfolioData} />;
-} else {
-	// Render section-based layout as before
+// src/data/templates/templateManager.js
+export const PORTFOLIO_TEMPLATES = {
+  // ... existing templates
+  myNewTemplate: {
+    id: "myNewTemplate",
+    name: "My New Template",
+    type: "component", // or "full"
+    category: "developer",
+    description: "A new template using HeroE",
+    layout: {
+      hero: "HeroE", // Use your new component
+      about: "AboutA",
+      // ... other sections
+    },
+    theme: "modern",
+    sampleData: { /* your sample data */ }
+  },
+};
+```
+
+### **B. Adding New Full-Page Templates**
+
+#### **Step 1: Create the Full Template Component**
+```jsx
+// src/components/FullTemplates/MyFullTemplate.jsx
+import { motion } from "framer-motion";
+import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
+
+export default function MyFullTemplate({ data = EMPTY_PORTFOLIO }) {
+  const personal = data?.personal || {};
+  const about = data?.about || {};
+  // ... extract other data
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Section */}
+      <section className="your-hero-section">
+        <h1>{personal.firstName} {personal.lastName}</h1>
+        {/* Your full template content */}
+      </section>
+      
+      {/* About Section */}
+      {about.summary && (
+        <section className="your-about-section">
+          <p>{about.summary}</p>
+        </section>
+      )}
+      
+      {/* Add other sections as needed */}
+    </div>
+  );
 }
 ```
 
-#### F. **Summary Table**
+#### **Step 2: Register in Component Map**
+```js
+// src/data/componentMap.js
+import MyFullTemplate from "@/components/FullTemplates/MyFullTemplate";
 
-| Type               | Where to Add Code                                                    | How Data is Passed       | How to Register in TemplateManager |
-| ------------------ | -------------------------------------------------------------------- | ------------------------ | ---------------------------------- |
-| Section Component  | `src/components/Section/SectionX.jsx`                                | As props to each section | In `componentMap.js` and `layout`  |
-| Full Page Template | `src/components/FullTemplates/TemplateX.jsx` or `src/app/templates/` | As a single `data` prop  | As `component` in templateManager  |
+export const componentMap = {
+  // ... existing components
+  MyFullTemplate: MyFullTemplate,
+};
+
+export const componentCategories = {
+  // ... existing categories
+  fullTemplates: {
+    name: "Full Page Templates",
+    components: ["CleanfolioFull", "CreativeFull", "MyFullTemplate"], // Add your template
+  },
+};
+```
+
+#### **Step 3: Add to Template Manager**
+```js
+// src/data/templates/templateManager.js
+export const PORTFOLIO_TEMPLATES = {
+  // ... existing templates
+  myFullTemplate: {
+    id: "myFullTemplate",
+    name: "My Full Template",
+    type: "full", // Important: mark as full template
+    component: "MyFullTemplate", // Reference to component name
+    category: "designer",
+    description: "A complete full-page portfolio template",
+    theme: "creative",
+    sampleData: { /* your sample data */ }
+  },
+};
+```
+
+### **C. Template Categories**
+
+Available categories for organizing templates:
+- `"developer"` - Software development focused
+- `"designer"` - Design and creative focused  
+- `"marketing"` - Marketing and business focused
+- `"all"` - General purpose
+
+### **D. Component Categories**
+
+Available section categories:
+- `"hero"` - Hero/Introduction sections
+- `"about"` - About/Summary sections
+- `"experience"` - Work experience sections
+- `"education"` - Education sections
+- `"skills"` - Skills and expertise sections
+- `"projects"` - Project showcase sections
+- `"achievements"` - Awards and achievements sections
+- `"contact"` - Contact information sections
+- `"fullTemplates"` - Complete full-page templates
+
+---
+
+## 🔧 **Recent Enhancements**
+
+### **1. Enhanced Gemini API Integration**
+- **Retry Logic:** Implements exponential backoff with jitter for transient failures
+- **Model Fallback:** Automatically tries alternative models if primary fails
+- **Timeout Handling:** Prevents hanging API requests
+- **Better Error Reporting:** Clear feedback when mock data is used
+
+### **2. New Component Variants**
+- **HeroC:** Modern minimalist design with gradient backgrounds
+- **HeroD:** Animated dynamic design with Framer Motion
+- **AboutC:** Card-based layout with interests, values, and fun facts
+
+### **3. Full-Page Templates**
+- **CleanfolioFull:** Professional, clean design for developers
+- **CreativeFull:** Artistic, dark-themed design with animations
+
+### **4. Template Selection System**
+- **TemplateSelector Component:** UI for choosing between component-based and full-page templates
+- **Demo Page:** `/templates-demo` for interactive template exploration
+- **Category Filtering:** Filter templates by category and type
+
+### **5. Improved Preview System**
+- **Unified Preview Component:** Handles both component-based and full-page templates
+- **Real-time Updates:** Live preview reflects form changes immediately
+- **Template Type Detection:** Automatically renders appropriate template type
 
 ---
 
@@ -233,6 +363,26 @@ if (currentTemplate.type === "full" && currentTemplate.component) {
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
 
 See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+## 🔍 **Troubleshooting**
+
+### **Preview Not Showing Selected Template**
+- Ensure the template is properly registered in `templateManager.js`
+- Check that the component is mapped in `componentMap.js`
+- Verify the template type (`"component"` vs `"full"`) is set correctly
+- The `Preview` component automatically handles both template types
+
+### **Component Not Rendering**
+- Check that the component is exported as default
+- Verify the component name matches the mapping in `componentMap.js`
+- Ensure the component accepts the correct props (usually `data` or specific section props)
+
+### **Template Selection Issues**
+- Use the `/templates-demo` page to test template selection
+- Check browser console for any mapping errors
+- Verify template definitions in `templateManager.js`
 
 ---
 

@@ -21,6 +21,7 @@ export default function EditResumePage() {
 		updatePortfolioData,
 		setPortfolioData,
 		resumeId,
+		currentTemplate,
 	} = useLayoutStore();
 	const [formData, setFormData] = useState({
 		hero: { title: "", subtitle: "", tagline: "", availability: "" },
@@ -1149,103 +1150,13 @@ export default function EditResumePage() {
 						<h2 className="text-lg md:text-xl font-semibold">Live Preview</h2>
 					</div>
 					<div className="p-2 md:p-4">
-										{layout && Object.entries(layout).length > 0 ? (
-					Object.entries(layout).map(([section, componentName]) => {
-						console.log(`👁️ [EDIT-RESUME-PREVIEW] Rendering section: ${section} with component: ${componentName}`);
-						
-						const Component = componentMap[componentName];
-						if (!Component) return null;
-								let componentProps = formData[section] || {};
-								// Ensure no null values for inputs
-								if (componentProps && typeof componentProps === "object") {
-									Object.keys(componentProps).forEach((key) => {
-										if (
-											componentProps[key] === null ||
-											componentProps[key] === undefined
-										) {
-											componentProps[key] = "";
-										}
-									});
-								}
-								// For projects section, handle the new schema structure
-								if (section === "projects" && formData[section]?.items) {
-									// Map 'title' to 'name' for ShowcaseA compatibility
-									componentProps = {
-										items: formData[section].items.map((item) => ({
-											...item,
-											name: item.title || "",
-										})),
-									};
-								}
-								// For skills section, flatten the structure
-								if (section === "skills" && formData[section]) {
-									componentProps = {
-										technical: formData[section].technical || [],
-										soft: formData[section].soft || [],
-										languages: formData.languages || [],
-									};
-								}
-								// For achievements section, flatten the structure
-								if (section === "achievements" && formData[section]) {
-									componentProps = {
-										awards: formData[section].awards || [],
-										certifications: formData[section].certifications || [],
-										publications: formData[section].publications || [],
-									};
-								}
-								// For experience section, flatten the structure
-								if (section === "experience" && formData[section]?.jobs) {
-									componentProps = { jobs: formData[section].jobs };
-								}
-								// For education section, flatten the structure
-								if (section === "education" && formData[section]?.degrees) {
-									componentProps = { degrees: formData[section].degrees };
-								}
-																				if (section === "hero") {
-									const heroData = formData.hero || {};
-									const nameParts = (heroData.title || "").split(" ");
-									const personalData = {
-										firstName: nameParts[0] || "",
-										lastName: nameParts.slice(1).join(" ") || "",
-										title: heroData.subtitle || "",
-										subtitle: heroData.subtitle || "",
-										tagline: heroData.tagline || "",
-										availability: heroData.availability || "",
-									};
-									
-									console.log("👁️ [EDIT-RESUME-PREVIEW] Hero section data:", {
-										originalHeroData: heroData,
-										nameParts,
-										personalData,
-										hasFirstName: !!personalData.firstName,
-										hasLastName: !!personalData.lastName,
-										hasTitle: !!personalData.title,
-										hasTagline: !!personalData.tagline
-									});
-									
-									return (
-										<div key={section} className="mb-8 last:mb-0">
-											<Component data={{ personal: personalData }} />
-										</div>
-									);
-								}
-								if (section === "about") {
-									const aboutData = formData.about || {};
-									return (
-										<div key={section} className="mb-8 last:mb-0">
-											<Component
-												summary={aboutData.summary || ""}
-												data={{ about: aboutData }}
-											/>
-										</div>
-									);
-								}
-								return (
-									<div key={section} className="mb-8 last:mb-0">
-										<Component {...componentProps} />
-									</div>
-								);
-							})
+						{layout && Object.entries(layout).length > 0 ? (
+							<Preview 
+								layout={layout} 
+								content={formData} 
+								portfolioData={portfolioData}
+								currentTemplate={currentTemplate}
+							/>
 						) : (
 							<div className="text-center py-8 md:py-12">
 								<p className="text-gray-500">

@@ -189,10 +189,18 @@ export const useLayoutStore = create(
 			},
 
 			// Set current template
-			setCurrentTemplate: (template) =>
+			setCurrentTemplate: (template) => {
+				console.log("🏪 [LAYOUT-STORE] setCurrentTemplate called:", {
+					templateId: template?.id,
+					templateType: template?.type,
+					templateName: template?.name,
+					hasComponent: !!template?.component,
+					hasLayout: !!template?.layout
+				});
 				set(() => ({
 					currentTemplate: template,
-				})),
+				}));
+			},
 
 			// Set portfolio type
 			setPortfolioType: (type) =>
@@ -203,9 +211,17 @@ export const useLayoutStore = create(
 			// Apply template while preserving content
 			applyTemplate: (template) => {
 				const state = get();
+				console.log("🏪 [LAYOUT-STORE] applyTemplate called:", {
+					templateId: template?.id,
+					templateType: template?.type,
+					hasComponent: !!template?.component,
+					hasLayout: !!template?.layout
+				});
+				
 				set(() => ({
-					layout: template.layout,
 					currentTemplate: template,
+					// For component-based templates, set the layout
+					...(template.type === "component" && template.layout ? { layout: template.layout } : {}),
 					// Preserve existing content
 					content: state.content,
 					portfolioData: state.portfolioData,
