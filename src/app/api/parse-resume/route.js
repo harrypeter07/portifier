@@ -3,8 +3,6 @@ import { parseResumeWithGemini, createPortfolioSchema } from "@/lib/gemini";
 import dbConnect from "@/lib/mongodb";
 import Resume from "@/models/Resume";
 import { auth } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 
 // Health check endpoint
 export async function GET() {
@@ -66,28 +64,14 @@ export async function POST(req) {
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
 
-		// Create unique filename
-		const timestamp = Date.now();
-		const originalName = file.name;
-		const fileExtension = path.extname(originalName);
-		const fileName = `resume_${user._id}_${timestamp}${fileExtension}`;
-		
-		// Create uploads directory if it doesn't exist
-		const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'resumes');
-		await mkdir(uploadsDir, { recursive: true });
-		
-		// Save file to disk
-		const filePath = path.join(uploadsDir, fileName);
-		await writeFile(filePath, buffer);
-
-		// Create resume record in database
+		// Create resume record in database (without file storage)
 		const resume = new Resume({
 			userId: user._id,
-			originalName: originalName,
-			fileName: fileName,
+			originalName: file.name,
+			fileName: `resume_${user._id}_${Date.now()}.pdf`,
 			fileSize: buffer.length,
 			fileType: file.type,
-			filePath: `/uploads/resumes/${fileName}`,
+			filePath: null, // No file storage in serverless environment
 			status: 'processing'
 		});
 
