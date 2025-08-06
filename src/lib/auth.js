@@ -5,23 +5,23 @@ import dbConnect from "./mongodb";
 import mongoose from "mongoose";
 
 async function auth() {
-	console.log("[AUTH] Starting authentication check");
+	//console.log("[AUTH] Starting authentication check");
 	const cookieStore = await cookies();
-	console.log("[AUTH] Request cookies:", cookieStore.getAll());
+	//console.log("[AUTH] Request cookies:", cookieStore.getAll());
 	
 	let token = cookieStore.get("token")?.value;
-	console.log("[AUTH] Token from cookies:", token ? "EXISTS" : "MISSING");
+	//console.log("[AUTH] Token from cookies:", token ? "EXISTS" : "MISSING");
 	
 	if (!token) {
-		console.log("[AUTH] No token found in cookies");
+	//	console.log("[AUTH] No token found in cookies");
 		return null;
 	}
 	
 	try {
-		console.log("[AUTH] Attempting to verify token...");
+	//	console.log("[AUTH] Attempting to verify token...");
 		const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 		const { payload } = await jwtVerify(token, secret);
-		console.log("[AUTH] Token verified successfully, payload:", payload);
+	//	console.log("[AUTH] Token verified successfully, payload:", payload);
 		
 		// Handle both string and buffer userId formats (for backward compatibility)
 		let userIdString;
@@ -32,7 +32,7 @@ async function auth() {
 			const buffer = Buffer.from(Object.values(payload.userId.buffer));
 			userIdString = buffer.toString('hex');
 		} else {
-			console.log("[AUTH] Invalid userId format in token");
+	//		console.log("[AUTH] Invalid userId format in token");
 			return null;
 		}
 		
@@ -43,18 +43,18 @@ async function auth() {
 			const user = await User.findById(userId);
 			
 			if (!user) {
-				console.log("[AUTH] User not found in database for ID:", payload.userId);
+		//		console.log("[AUTH] User not found in database for ID:", payload.userId);
 				return null;
 			}
 
-			console.log("[AUTH] Authentication successful for user:", user.email);
+		//	console.log("[AUTH] Authentication successful for user:", user.email);
 			return user;
 		} catch (dbError) {
-			console.log("[AUTH] Database connection failed:", dbError.message);
+		//	console.log("[AUTH] Database connection failed:", dbError.message);
 			return null;
 		}
 	} catch (error) {
-		console.log("[AUTH] Authentication failed:", error.message);
+		//console.log("[AUTH] Authentication failed:", error.message);
 		return null;
 	}
 }

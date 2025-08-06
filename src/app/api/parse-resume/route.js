@@ -164,12 +164,43 @@ export async function POST(req) {
 			}
 		}
 		
+		// Enhanced error message handling
+		let errorMessage = "Failed to parse resume";
+		let errorDetails = "";
+		
+		if (error.message) {
+			errorMessage = error.message;
+		}
+		
+		// Check for specific Gemini API errors
+		if (error.message?.includes("503")) {
+			errorMessage = "AI service is temporarily overloaded. Please try again in a few minutes.";
+		} else if (error.message?.includes("429")) {
+			errorMessage = "Too many requests to AI service. Please wait a moment and try again.";
+		} else if (error.message?.includes("401") || error.message?.includes("403")) {
+			errorMessage = "AI service authentication failed. Please contact support.";
+		} else if (error.message?.includes("timeout")) {
+			errorMessage = "AI service request timed out. Please try again.";
+		} else if (error.message?.includes("network") || error.message?.includes("fetch")) {
+			errorMessage = "Network error connecting to AI service. Please check your connection and try again.";
+		} else if (error.message?.includes("model is overloaded")) {
+			errorMessage = "AI service is currently overloaded. Please try again in a few minutes.";
+		} else if (error.message?.includes("quota")) {
+			errorMessage = "AI service quota exceeded. Please try again later.";
+		}
+		
+		// Add technical details for debugging
+		if (process.env.NODE_ENV === "development") {
+			errorDetails = error.stack;
+		}
+		
 		return NextResponse.json(
 			{
 				success: false,
-				error: error.message,
-				details:
-					process.env.NODE_ENV === "development" ? error.stack : undefined,
+				error: errorMessage,
+				details: errorDetails,
+				errorType: error.name || "UnknownError",
+				timestamp: new Date().toISOString()
 			},
 			{ status: 500 }
 		);

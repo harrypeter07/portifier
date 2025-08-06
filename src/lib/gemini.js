@@ -241,8 +241,31 @@ Now analyze the resume and return the structured JSON:
 
 	// If we get here, all models failed
 	console.error("❌ All Gemini API attempts failed:", lastError);
-	console.log("🔄 Falling back to mock data");
-	return getMockData(customSchema || DEFAULT_PORTFOLIO_SCHEMA);
+	
+	// Create a more descriptive error message
+	let errorMessage = "AI service unavailable";
+	if (lastError) {
+		if (lastError.message?.includes("503")) {
+			errorMessage = "AI service is temporarily overloaded";
+		} else if (lastError.message?.includes("429")) {
+			errorMessage = "Too many requests to AI service";
+		} else if (lastError.message?.includes("401") || lastError.message?.includes("403")) {
+			errorMessage = "AI service authentication failed";
+		} else if (lastError.message?.includes("timeout")) {
+			errorMessage = "AI service request timed out";
+		} else if (lastError.message?.includes("network") || lastError.message?.includes("fetch")) {
+			errorMessage = "Network error connecting to AI service";
+		} else if (lastError.message?.includes("model is overloaded")) {
+			errorMessage = "AI service is currently overloaded";
+		} else if (lastError.message?.includes("quota")) {
+			errorMessage = "AI service quota exceeded";
+		} else {
+			errorMessage = lastError.message || "AI service unavailable";
+		}
+	}
+	
+	// Throw error with specific message instead of falling back to mock data
+	throw new Error(errorMessage);
 }
 
 function fixJsonResponse(jsonString) {

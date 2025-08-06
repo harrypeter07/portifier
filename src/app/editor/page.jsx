@@ -105,6 +105,7 @@ export default function ResumeUploadPage() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [portfolioType, setPortfolioType] = useState("developer");
+	const [apiStatus, setApiStatus] = useState({ available: true, message: "AI service available" });
 	const {
 		reset,
 		setLayout,
@@ -135,6 +136,27 @@ export default function ResumeUploadPage() {
 		}
 	}, [parsed]);
 
+	// Check API status on component mount
+	useEffect(() => {
+		async function checkApiStatus() {
+			try {
+				const healthCheck = await fetch("/api/parse-resume", { method: "GET" });
+				const healthData = await healthCheck.json();
+				setApiStatus({
+					available: healthData.available,
+					message: healthData.message
+				});
+			} catch (error) {
+				setApiStatus({
+					available: false,
+					message: "Unable to connect to AI service"
+				});
+			}
+		}
+		
+		checkApiStatus();
+	}, []);
+
 	async function handleFileChange(e) {
 		setFile(e.target.files[0]);
 		setParsed(null);
@@ -146,6 +168,25 @@ export default function ResumeUploadPage() {
 		setLoading(true);
 		setError("");
 		setParsed(null);
+		
+		try {
+			// First, check if the API is healthy
+			console.log("🔍 Checking API health...");
+			const healthCheck = await fetch("/api/parse-resume", { method: "GET" });
+			const healthData = await healthCheck.json();
+			
+			if (!healthData.available) {
+				throw new Error(healthData.message || "AI service is not available");
+			}
+			
+			console.log("✅ API health check passed:", healthData.message);
+		} catch (healthError) {
+			console.error("❌ API health check failed:", healthError);
+			setError(`AI service unavailable: ${healthError.message}. Please try again later.`);
+			setLoading(false);
+			return;
+		}
+		
 		const formData = new FormData();
 		formData.append("resume", file);
 		formData.append("portfolioType", portfolioType);
@@ -154,8 +195,13 @@ export default function ResumeUploadPage() {
 				method: "POST",
 				body: formData,
 			});
-			if (!res.ok) throw new Error("Failed to parse resume");
 			const data = await res.json();
+			
+			if (!res.ok) {
+				// Show specific error message from API
+				const errorMessage = data.error || `Server error (${res.status}): ${res.statusText}`;
+				throw new Error(errorMessage);
+			}
 
 			// Check if parsing was successful
 			if (!data.success) {
@@ -201,7 +247,17 @@ export default function ResumeUploadPage() {
 				console.log("📝 [EDITOR] Content stored in both content and parsedData");
 			}
 		} catch (err) {
-			setError(err.message);
+			console.error("❌ Resume parsing error:", err);
+			
+			// Enhanced error message handling
+			let errorMessage = err.message || "Failed to parse resume";
+			
+			// If it's a fetch error, try to get more details
+			if (err.name === "TypeError" && err.message.includes("fetch")) {
+				errorMessage = "Network error: Unable to connect to the server. Please check your internet connection and try again.";
+			}
+			
+			setError(errorMessage);
 		} finally {
 			setLoading(false);
 		}
@@ -226,6 +282,16 @@ export default function ResumeUploadPage() {
 					Upload your resume (PDF) to auto-fill your portfolio, or pick a template to start from scratch. You can always customize everything later!
 				</div>
 				<div className="flex flex-col gap-2 mb-6 p-4 border-2 border-blue-300 dark:border-blue-700 rounded-xl bg-white dark:bg-gray-900 shadow-md">
+					{/* API Status Indicator */}
+					<div className={`flex items-center gap-2 mb-3 p-2 rounded text-sm ${
+						apiStatus.available 
+							? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700' 
+							: 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700'
+					}`}>
+						<div className={`w-2 h-2 rounded-full ${apiStatus.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+						<span>{apiStatus.message}</span>
+					</div>
+					
 					<input
 						type="file"
 						accept="application/pdf"
@@ -236,7 +302,7 @@ export default function ResumeUploadPage() {
 					<button
 						className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60 block font-bold text-lg"
 						onClick={handleUpload}
-						disabled={!file || loading}
+						disabled={!file || loading || !apiStatus.available}
 					>
 						{loading ? "Parsing..." : "Upload & Parse Resume"}
 					</button>
