@@ -2,7 +2,7 @@
 // Provides scalable template configurations with full schema support
 
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
-import { getRecommendedLayout } from "@/components/Skills/data/componentMap";
+import { getRecommendedLayout } from "@/data/componentMap";
 import {
 	sampleDataCleanfolio,
 	sampleDataCreative,
