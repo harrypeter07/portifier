@@ -412,7 +412,9 @@ export default function CustomizePage() {
 				// router.push(portfolioUrl);
 				// Redirect to portfolio dashboard after successful publish
 				setTimeout(() => {
-					router.push(`/portfolio/${username}`);
+					const redirectUrl = `/portfolio/${data.username || username}`;
+					console.log("🎯 [CUSTOMIZE] Redirecting to analytics dashboard:", redirectUrl);
+					router.push(redirectUrl);
 				}, 1500);
 			} else {
 				setSuccess("");
