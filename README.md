@@ -21,6 +21,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](#)
 [![Next.js](https://img.shields.io/badge/Next.js-14-blue?logo=next.js)](https://nextjs.org/)
 [![Made with Zustand](https://img.shields.io/badge/State-Zustand-29b6f6)](https://github.com/pmndrs/zustand)
+[![AI Powered](https://img.shields.io/badge/AI-Gemini-orange)](https://ai.google.dev/)
 
 ---
 
