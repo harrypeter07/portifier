@@ -113,6 +113,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
   - Returns structured data matching the portfolio schema.
 - **State Management:** Zustand store (`store/layoutStore.js`) holds all portfolio data, template, layout, and content.
 - **Editor:** `src/app/editor/edit-resume/page.jsx` renders a dynamic form for each section based on the selected template/layout. Updates the Zustand store as the user edits. Right panel shows a live preview using the `Preview` component.
+- **Auto-Save:** Automatic saving of changes with debounced updates.
 - **Portfolio Components:** `src/components/` contains all section components (Hero, About, Projects, etc.). `src/data/componentMap.js` maps section names to React components.
 - **Templates:** Defined in `src/data/templates/templateManager.js`. Each template specifies a layout, theme, and sample data.
 - **Schema:** `src/data/schemas/portfolioSchema.js` defines the full data structure for all portfolio types.
