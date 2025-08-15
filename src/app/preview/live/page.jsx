@@ -87,7 +87,12 @@ export default function LivePreviewPage() {
 					confirmText: 'View Analytics',
 					showCancel: false,
 					error: false,
-					onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(`/portfolio/${username}`); },
+												onConfirm: () => { 
+								setModal(m => ({ ...m, open: false })); 
+								const redirectUrl = `/portfolio/${data.username || username}`;
+								console.log("🎯 [PREVIEW] Redirecting to analytics dashboard:", redirectUrl);
+								router.push(redirectUrl); 
+							},
 				});
 			} else {
 				setModal({
