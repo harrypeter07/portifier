@@ -8,6 +8,7 @@ import AICompanionField from "@/components/AICompanionField";
 import { isAIEnabled, getAILabel } from "@/data/aiFieldConfig";
 import Modal from "@/components/common/Modal";
 import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
+import { motion } from "framer-motion";
 import debounce from "lodash.debounce";
 
 export default function EditResumePage() {
