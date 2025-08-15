@@ -26,8 +26,10 @@
 ## 📑 **Table of Contents**
 
 - [Getting Started](#getting-started)
+- [Features](#features)
 - [Architecture & Customization Guide](#portfolio-builder-architecture--customization-guide)
 - [Template System](#template-system)
+- [Analytics & Tracking](#analytics--tracking)
 - [Directory Structure](#4-directory-structure)
 - [Adding Templates & Components](#3-adding-new-templates-and-components)
 - [Team & Task Breakdown](#team--task-breakdown)
@@ -51,6 +53,43 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) to see the result.
 
 > **Tip:** Edit `app/page.js` to start customizing. The page auto-updates as you edit.
+
+---
+
+## ✨ **Features**
+
+### 🎨 **Dynamic Navigation System**
+- **Auto-hide Progress Bar**: Compact sidebar navigation that disappears after 3 seconds
+- **Minimize/Maximize**: Toggle between compact and full navigation views
+- **Smooth Transitions**: Opacity animations for seamless user experience
+- **Scroll Detection**: Reappears on scroll or mouse movement
+- **Mobile Optimized**: Responsive design for all device sizes
+
+### 📊 **Real-Time Analytics**
+- **Portfolio Views Tracking**: Comprehensive visitor analytics
+- **Device & Browser Detection**: Detailed visitor information
+- **Geographic Data**: IP-based location tracking
+- **Session Management**: Unique visitor identification
+- **Interactive Dashboard**: Charts and metrics visualization
+- **Event Tracking**: Custom user interaction monitoring
+
+### 🤖 **AI-Powered Resume Parsing**
+- **Gemini API Integration**: Advanced resume parsing with retry logic
+- **Model Fallback**: Automatic fallback to alternative models
+- **Enhanced Error Handling**: Robust API call management
+- **Structured Data Extraction**: Clean, organized portfolio data
+
+### 🎯 **Template System**
+- **Component-Based Templates**: Mix and match individual sections
+- **Full-Page Templates**: Complete pre-designed portfolios
+- **Live Preview**: Real-time template customization
+- **Template Categories**: Developer, Designer, Marketing focused
+
+### 🔐 **Authentication & Security**
+- **JWT Authentication**: Secure user sessions
+- **User Management**: Profile and portfolio management
+- **Secure API Endpoints**: Protected routes and data
+- **Environment Configuration**: Proper secret management
 
 ---
 
@@ -111,6 +150,53 @@ The portfolio builder now supports two types of templates:
 
 ---
 
+## 📊 **Analytics & Tracking**
+
+### **Real-Time Analytics System**
+- **Portfolio Views**: Track every visit with detailed visitor information
+- **Unique Visitors**: Based on IP + User Agent combination
+- **Session Analytics**: Multi-page session tracking and bounce rate calculation
+- **Device Analytics**: Desktop, mobile, tablet breakdown
+- **Geographic Data**: Country/region based on IP address
+- **Traffic Sources**: Referrer domain analysis
+
+### **Event Tracking**
+- **Page Views**: Automatic tracking of portfolio visits
+- **User Interactions**: Resume downloads, contact form submissions
+- **Social Clicks**: LinkedIn, GitHub, and other social media interactions
+- **Time on Page**: Session duration and engagement metrics
+- **Scroll Depth**: User engagement measurement
+
+### **Analytics Dashboard**
+- **Real-Time Metrics**: Live view counts and visitor data
+- **Interactive Charts**: Line, Pie, and Bar charts for data visualization
+- **Time Range Filtering**: 7-day, 30-day, 90-day analytics views
+- **Export Capabilities**: Data export for further analysis
+
+### **Technical Implementation**
+```javascript
+// PortfolioView Model
+{
+  portfolioId: ObjectId,
+  userId: ObjectId,
+  sessionId: String,
+  ipAddress: String,
+  userAgent: String,
+  deviceType: String,
+  browser: String,
+  os: String,
+  referrer: String,
+  timeOnPage: Number,
+  pagesViewed: Number,
+  isBounce: Boolean,
+  eventType: String,
+  data: Object,
+  timestamp: Date
+}
+```
+
+---
+
 ## 🗂️ **Directory Structure**
 
 ```text
@@ -130,6 +216,9 @@ src/
       CreativeFull.jsx   # Artistic dark-themed template
     Showcase/
       ShowcaseA.jsx
+    common/
+      EditorNavbar.jsx   # Dynamic navigation component
+      PortfolioUrlDisplay.jsx # URL display component
     ... (other sections)
   data/
     componentMap.js      # Maps component names to React components
@@ -138,6 +227,9 @@ src/
     schemas/
       portfolioSchema.js # Data structure definitions
   app/
+    api/
+      analytics/         # Analytics tracking endpoints
+      portfolio/         # Portfolio management APIs
     editor/
       edit-resume/
         page.jsx         # Main editor interface
@@ -148,6 +240,8 @@ src/
     layoutStore.js       # Zustand state management
   lib/
     gemini.js           # Enhanced Gemini API integration
+  models/
+    PortfolioView.js    # Analytics tracking model
 ```
 
 ---
@@ -313,27 +407,41 @@ Available section categories:
 
 ## 🔧 **Recent Enhancements**
 
-### **1. Enhanced Gemini API Integration**
+### **1. Dynamic Navigation System**
+- **Auto-hide Functionality**: Progress bar disappears after 3 seconds of inactivity
+- **Minimize/Maximize**: Toggle between compact and full navigation views
+- **Smooth Transitions**: Opacity animations for seamless user experience
+- **Scroll Detection**: Reappears on scroll or mouse movement
+- **Mobile Optimized**: Responsive design for all device sizes
+
+### **2. Enhanced Analytics System**
+- **Real-Time Tracking**: Comprehensive visitor analytics with detailed metrics
+- **Interactive Dashboard**: Charts and visualizations for data analysis
+- **Event Tracking**: Custom user interaction monitoring
+- **Geographic Data**: IP-based location tracking
+- **Session Management**: Unique visitor identification
+
+### **3. Enhanced Gemini API Integration**
 - **Retry Logic:** Implements exponential backoff with jitter for transient failures
 - **Model Fallback:** Automatically tries alternative models if primary fails
 - **Timeout Handling:** Prevents hanging API requests
 - **Better Error Reporting:** Clear feedback when mock data is used
 
-### **2. New Component Variants**
+### **4. New Component Variants**
 - **HeroC:** Modern minimalist design with gradient backgrounds
 - **HeroD:** Animated dynamic design with Framer Motion
 - **AboutC:** Card-based layout with interests, values, and fun facts
 
-### **3. Full-Page Templates**
+### **5. Full-Page Templates**
 - **CleanfolioFull:** Professional, clean design for developers
 - **CreativeFull:** Artistic, dark-themed design with animations
 
-### **4. Template Selection System**
+### **6. Template Selection System**
 - **TemplateSelector Component:** UI for choosing between component-based and full-page templates
 - **Demo Page:** `/templates-demo` for interactive template exploration
 - **Category Filtering:** Filter templates by category and type
 
-### **5. Improved Preview System**
+### **7. Improved Preview System**
 - **Unified Preview Component:** Handles both component-based and full-page templates
 - **Real-time Updates:** Live preview reflects form changes immediately
 - **Template Type Detection:** Automatically renders appropriate template type
@@ -383,6 +491,11 @@ See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-applicat
 - Use the `/templates-demo` page to test template selection
 - Check browser console for any mapping errors
 - Verify template definitions in `templateManager.js`
+
+### **Analytics Not Tracking**
+- Check that the analytics API endpoints are properly configured
+- Verify MongoDB connection for analytics data storage
+- Ensure the `AnalyticsTracker` component is included in portfolio pages
 
 ---
 
