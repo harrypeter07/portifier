@@ -208,7 +208,7 @@ function SectionSlider({ sectionKey, category, localContent, localLayout, handle
           <span aria-hidden="true">▶</span>
         </button>
       </div>
-      <div className="flex justify-center gap-1 mt-1">
+      <div className="flex justify-center gap-2 mt-2">
         {category.components.map((_, idx) => (
           <span
             key={idx}
