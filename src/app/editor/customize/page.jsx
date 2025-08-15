@@ -633,7 +633,7 @@ export default function CustomizePage() {
 											? 'border-blue-500 shadow-blue-100 dark:shadow-blue-900/20' 
 											: 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}`}
 								>
-									<div className="flex items-center justify-between mb-2">
+									<div className="flex items-center justify-between mb-4">
 										<div>
 											<h3 className="text-base font-semibold text-gray-900 dark:text-white capitalize">
 												{category.label}
