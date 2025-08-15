@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://nextjs.org/">Next.js</a> • <a href="https://vercel.com/">Vercel</a> • <a href="#team--task-breakdown">Team</a>
+  <a href="https://nextjs.org/">Next.js</a> • <a href="https://vercel.com/">Vercel</a> • <a href="https://github.com/pmndrs/zustand">Zustand</a> • <a href="#team--task-breakdown">Team</a>
 </p>
 
 ---
