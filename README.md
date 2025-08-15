@@ -4,6 +4,7 @@
   <img src="public/next.svg" alt="Next.js Logo" height="40"/>
   <img src="public/vercel.svg" alt="Vercel Logo" height="40"/>
   <img src="public/globe.svg" alt="Globe Logo" height="40"/>
+  <img src="public/file.svg" alt="File Logo" height="40"/>
 </p>
 
 <p align="center">
