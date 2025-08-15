@@ -56,6 +56,7 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) to see the result.
 
 > **Tip:** Edit `app/page.js` to start customizing. The page auto-updates as you edit.
+> **Note:** Make sure to set up your environment variables for AI features.
 
 ---
 
