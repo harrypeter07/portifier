@@ -77,6 +77,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 - **Session Management**: Unique visitor identification
 - **Interactive Dashboard**: Charts and metrics visualization
 - **Event Tracking**: Custom user interaction monitoring
+- **Performance Metrics**: Page load times and user engagement data
 
 ### 🤖 **AI-Powered Resume Parsing**
 - **Gemini API Integration**: Advanced resume parsing with retry logic
