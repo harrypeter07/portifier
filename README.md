@@ -118,6 +118,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 - **Templates:** Defined in `src/data/templates/templateManager.js`. Each template specifies a layout, theme, and sample data.
 - **Schema:** `src/data/schemas/portfolioSchema.js` defines the full data structure for all portfolio types.
 - **Rendering:** Live preview and final portfolio use the same logic to render the user's portfolio.
+- **SEO Optimization:** Meta tags and structured data for better search visibility.
 
 ### 2. **How Data Flows**
 
