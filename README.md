@@ -109,6 +109,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 - **Resume Parsing:**
   - API: `src/app/api/parse-resume/route.js` parses uploaded resumes using Gemini API (`src/lib/gemini.js`).
   - **Enhanced Error Handling:** Implements retry logic with exponential backoff and model fallback for robust API calls.
+  - **File Validation:** Supports PDF, DOCX, and TXT formats with size limits.
   - Returns structured data matching the portfolio schema.
 - **State Management:** Zustand store (`store/layoutStore.js`) holds all portfolio data, template, layout, and content.
 - **Editor:** `src/app/editor/edit-resume/page.jsx` renders a dynamic form for each section based on the selected template/layout. Updates the Zustand store as the user edits. Right panel shows a live preview using the `Preview` component.
