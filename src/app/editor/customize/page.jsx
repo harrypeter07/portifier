@@ -400,22 +400,11 @@ export default function CustomizePage() {
 			});
 			const data = await res.json();
 			if (res.ok && data.success) {
-				const portfolioUrl = data.portfolioUrl;
-				setSuccess(
-					`🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`
-				);
-				console.log("🎉 [CUSTOMIZE] Portfolio published successfully:", {
-					username: data.username,
-					portfolioUrl: portfolioUrl
-				});
-				// Optionally redirect to the portfolio URL
-				// router.push(portfolioUrl);
-				// Redirect to portfolio dashboard after successful publish
-				setTimeout(() => {
-					const redirectUrl = `/portfolio/${data.username || username}`;
-					console.log("🎯 [CUSTOMIZE] Redirecting to analytics dashboard:", redirectUrl);
-					router.push(redirectUrl);
-				}, 1500);
+				console.log("✅ [CUSTOMIZE] Portfolio published successfully, redirecting to analytics dashboard");
+				// Redirect directly to analytics dashboard instead of showing success message
+				const redirectUrl = `/portfolio/${data.username || username}`;
+				console.log("🎯 [CUSTOMIZE] Redirecting to analytics dashboard:", redirectUrl);
+				router.push(redirectUrl);
 			} else {
 				setSuccess("");
 				setModal({

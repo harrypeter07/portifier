@@ -397,7 +397,6 @@ export default function EditResumePage() {
 						const redirectUrl = `/portfolio/${data.username || username}`;
 						console.log("🎯 [EDIT-RESUME] Redirecting to analytics dashboard:", redirectUrl);
 						router.push(redirectUrl);
-					}
 					} else {
 						// Slug errors are not applicable anymore
 						setModal({

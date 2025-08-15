@@ -79,21 +79,11 @@ export default function LivePreviewPage() {
 
 			const data = await res.json();
 			if (res.ok && data.success) {
-				const portfolioUrl = data.portfolioUrl;
-				setModal({
-					open: true,
-					title: 'Success!',
-					message: `🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`,
-					confirmText: 'View Analytics',
-					showCancel: false,
-					error: false,
-												onConfirm: () => { 
-								setModal(m => ({ ...m, open: false })); 
-								const redirectUrl = `/portfolio/${data.username || username}`;
-								console.log("🎯 [PREVIEW] Redirecting to analytics dashboard:", redirectUrl);
-								router.push(redirectUrl); 
-							},
-				});
+				console.log("✅ [PREVIEW] Portfolio published successfully, redirecting to analytics dashboard");
+				// Redirect directly to analytics dashboard instead of showing modal
+				const redirectUrl = `/portfolio/${data.username || username}`;
+				console.log("🎯 [PREVIEW] Redirecting to analytics dashboard:", redirectUrl);
+				router.push(redirectUrl);
 			} else {
 				setModal({
 					open: true,
