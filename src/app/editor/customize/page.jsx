@@ -628,7 +628,7 @@ export default function CustomizePage() {
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									transition={{ duration: 0.5, delay: index * 0.1 }}
-									className={`bg-white dark:bg-gray-900 p-4 rounded-xl shadow-lg border-2 transition-all duration-300 mb-2
+									className={`bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border-2 transition-all duration-300 mb-4
 										${selectedSection === sectionKey 
 											? 'border-blue-500 shadow-blue-100 dark:shadow-blue-900/20' 
 											: 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}`}
