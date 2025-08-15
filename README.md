@@ -35,6 +35,7 @@
 - [Directory Structure](#4-directory-structure)
 - [Adding Templates & Components](#3-adding-new-templates-and-components)
 - [Team & Task Breakdown](#team--task-breakdown)
+- [Troubleshooting](#troubleshooting)
 - [Learn More](#learn-more)
 - [Deploy](#deploy-on-vercel)
 
