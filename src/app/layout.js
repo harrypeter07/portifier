@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import EditorNavbar from "@/components/common/EditorNavbar";
+import StepBreadcrumb from "@/components/common/StepBreadcrumb";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
@@ -26,6 +28,8 @@ export default function RootLayout({ children }) {
 			>
 				<ErrorBoundary>
 					<Navbar />
+					<EditorNavbar />
+					<StepBreadcrumb />
 					<main>{children}</main>
 				</ErrorBoundary>
 			</body>

@@ -526,9 +526,31 @@ export default function EditResumePage() {
 			<div className="flex flex-col-reverse md:flex-row">
 				{/* Left Panel - Form */}
 				<div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto h-auto md:h-screen">
-					<h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">
-						Edit Resume Details
-					</h1>
+					<div className="flex items-center justify-between mb-4 md:mb-6">
+						<h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+							Edit Resume Details
+						</h1>
+						
+						{/* Quick Actions */}
+						<div className="flex items-center space-x-2">
+							<motion.button
+								onClick={() => router.push("/editor")}
+								className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+								whileHover={{ scale: 1.02 }}
+								whileTap={{ scale: 0.98 }}
+							>
+								← Back to Upload
+							</motion.button>
+							<motion.button
+								onClick={() => router.push("/editor/customize")}
+								className="px-3 py-2 text-sm bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-200"
+								whileHover={{ scale: 1.02 }}
+								whileTap={{ scale: 0.98 }}
+							>
+								Customize →
+							</motion.button>
+						</div>
+					</div>
 
 					{/* Personal Information */}
 					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
@@ -1108,6 +1130,24 @@ export default function EditResumePage() {
 					</div>
 				</div>
 			</div>
+			{/* Floating Action Button for Save */}
+			<motion.div
+				className="fixed bottom-6 right-6 z-50"
+				initial={{ opacity: 0, scale: 0.8 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={{ duration: 0.3, delay: 0.5 }}
+			>
+				<motion.button
+					className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
+					onClick={handleSave}
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+				>
+					<span>💾</span>
+					<span>Save & Continue</span>
+				</motion.button>
+			</motion.div>
+
 			<Modal
 				open={modal.open}
 				title={modal.title}

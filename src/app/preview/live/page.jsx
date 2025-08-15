@@ -256,18 +256,37 @@ export default function LivePreviewPage() {
 						</div>
 					</div>
 				</div>
-				<Modal
-					open={modal.open}
-					title={modal.title}
-					message={modal.message}
-					confirmText={modal.confirmText}
-					cancelText={modal.cancelText}
-					showCancel={modal.showCancel}
-					error={modal.error}
-					onConfirm={modal.onConfirm}
-					onCancel={modal.onCancel}
-				/>
 			</div>
+
+			{/* Floating Action Button for Publish */}
+			<motion.div
+				className="fixed bottom-6 right-6 z-50"
+				initial={{ opacity: 0, scale: 0.8 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={{ duration: 0.3, delay: 0.5 }}
+			>
+				<motion.button
+					className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
+					onClick={handlePublish}
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+				>
+					<span>🚀</span>
+					<span>Publish Portfolio</span>
+				</motion.button>
+			</motion.div>
+
+			<Modal
+				open={modal.open}
+				title={modal.title}
+				message={modal.message}
+				confirmText={modal.confirmText}
+				cancelText={modal.cancelText}
+				showCancel={modal.showCancel}
+				error={modal.error}
+				onConfirm={modal.onConfirm}
+				onCancel={modal.onCancel}
+			/>
 		</div>
 	);
 }

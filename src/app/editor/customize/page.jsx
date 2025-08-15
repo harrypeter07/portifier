@@ -455,9 +455,31 @@ export default function CustomizePage() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
 				>
-					<h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-						🎨 Customize Your Portfolio
-					</h1>
+					<div className="flex items-center justify-between mb-6">
+						<h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+							🎨 Customize Your Portfolio
+						</h1>
+						
+						{/* Quick Actions */}
+						<div className="flex items-center space-x-2">
+							<motion.button
+								onClick={() => router.push("/editor/edit-resume")}
+								className="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+								whileHover={{ scale: 1.02 }}
+								whileTap={{ scale: 0.98 }}
+							>
+								← Back to Edit
+							</motion.button>
+							<motion.button
+								onClick={handlePreview}
+								className="px-4 py-2 text-sm bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors duration-200"
+								whileHover={{ scale: 1.02 }}
+								whileTap={{ scale: 0.98 }}
+							>
+								Preview →
+							</motion.button>
+						</div>
+					</div>
 				</motion.div>
 				
 				{/* Tab Navigation */}
@@ -755,6 +777,38 @@ export default function CustomizePage() {
 					<Preview layout={localLayout} content={localContent} portfolioData={portfolioData} />
 				</motion.div>
 			</div>
+			{/* Floating Action Button for Publish */}
+			<motion.div
+				className="fixed bottom-6 right-6 z-50"
+				initial={{ opacity: 0, scale: 0.8 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={{ duration: 0.3, delay: 0.5 }}
+			>
+				<motion.button
+					className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
+					onClick={handleSave}
+					disabled={saving}
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+				>
+					{saving ? (
+						<>
+							<motion.div
+								animate={{ rotate: 360 }}
+								transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+								className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+							/>
+							<span>Publishing...</span>
+						</>
+					) : (
+						<>
+							<span>🚀</span>
+							<span>Publish Portfolio</span>
+						</>
+					)}
+				</motion.button>
+			</motion.div>
+
 			<Modal
 				open={modal.open}
 				title={modal.title}
