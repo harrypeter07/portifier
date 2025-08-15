@@ -17,6 +17,8 @@ import {
 	Cell
 } from 'recharts';
 
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+
 export default function PortfolioDashboardPage({ params }) {
 	const { username } = React.use(params);
 	const router = useRouter();
@@ -29,6 +31,11 @@ export default function PortfolioDashboardPage({ params }) {
 	useEffect(() => {
 		async function fetchPortfolioAndStats() {
 			try {
+				// Track view first
+				await fetch(`/api/portfolio/${username}/views`, {
+					method: 'POST'
+				});
+
 				// Fetch portfolio data
 				const portfolioRes = await fetch(`/api/portfolio/${username}`);
 				const portfolioData = await portfolioRes.json();
@@ -41,7 +48,7 @@ export default function PortfolioDashboardPage({ params }) {
 				setPortfolio(portfolioData.portfolio);
 
 				// Fetch detailed stats
-				const statsRes = await fetch(`/api/portfolio/${username}/stats?range=${timeRange}`);
+				const statsRes = await fetch(`/api/portfolio/${username}/views?range=${timeRange}`);
 				const statsData = await statsRes.json();
 				
 				if (statsRes.ok) {
@@ -62,10 +69,16 @@ export default function PortfolioDashboardPage({ params }) {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-				<div className="text-center">
-					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-					<p className="text-gray-600 dark:text-gray-300">Loading portfolio dashboard...</p>
+			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+				<div className="flex items-center justify-center min-h-screen">
+					<div className="text-center">
+						<motion.div
+							animate={{ rotate: 360 }}
+							transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+							className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4"
+						></motion.div>
+						<p className="text-gray-600 dark:text-gray-400">Loading portfolio analytics...</p>
+					</div>
 				</div>
 			</div>
 		);
@@ -73,64 +86,62 @@ export default function PortfolioDashboardPage({ params }) {
 
 	if (error) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-				<div className="text-center">
-					<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Dashboard Not Found</h1>
-					<p className="text-gray-600 dark:text-gray-300 mb-4">{error}</p>
-					<button 
-						onClick={() => router.push('/dashboard')}
-						className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-					>
-						Back to Dashboard
-					</button>
+			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+				<div className="flex items-center justify-center min-h-screen">
+					<div className="text-center">
+						<div className="text-red-600 text-6xl mb-4">⚠️</div>
+						<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Portfolio Not Found</h1>
+						<p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+						<button
+							onClick={() => router.push('/dashboard')}
+							className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+						>
+							Back to Dashboard
+						</button>
+					</div>
 				</div>
 			</div>
 		);
 	}
-
-	if (!portfolio) {
-		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-				<div className="text-center">
-					<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
-					<p className="text-gray-600 dark:text-gray-300">This portfolio doesn't exist or hasn't been published yet.</p>
-				</div>
-			</div>
-		);
-	}
-
-	const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
 			{/* Header */}
 			<div className="bg-white dark:bg-gray-900 shadow-sm border-b">
-				<div className="max-w-7xl mx-auto px-4 py-4">
-					<div className="flex items-center justify-between">
+				<div className="max-w-7xl mx-auto px-4 py-6">
+					<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 						<div>
-							<h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-								Portfolio Analytics
+							<h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+								📊 Portfolio Analytics
 							</h1>
-							<p className="text-gray-600 dark:text-gray-400">
-								@{username} • {portfolio.portfolioData?.personal?.firstName} {portfolio.portfolioData?.personal?.lastName}
+							<p className="text-gray-600 dark:text-gray-400 mt-1">
+								{portfolio?.portfolioData?.personal?.firstName} {portfolio?.portfolioData?.personal?.lastName}'s Portfolio Performance
 							</p>
 						</div>
 						<div className="flex items-center gap-4">
+							{/* Time Range Selector */}
 							<select
 								value={timeRange}
 								onChange={(e) => setTimeRange(e.target.value)}
-								className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800 dark:text-white"
+								className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
 							>
 								<option value="7d">Last 7 days</option>
 								<option value="30d">Last 30 days</option>
 								<option value="90d">Last 90 days</option>
 							</select>
-							<button
-								onClick={() => router.push(`/${username}`)}
-								className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-							>
-								View Portfolio
-							</button>
+							
+							{/* Portfolio URL */}
+							<div className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+								<span className="text-sm text-gray-600 dark:text-gray-400">🔗</span>
+								<a 
+									href={`/${username}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+								>
+									View Portfolio
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -149,7 +160,7 @@ export default function PortfolioDashboardPage({ params }) {
 							<div>
 								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Views</p>
 								<p className="text-3xl font-bold text-gray-900 dark:text-white">
-									{stats?.totalViews || portfolio.views || 0}
+									{stats?.totalViews || portfolio?.views || 0}
 								</p>
 							</div>
 							<div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
@@ -311,18 +322,18 @@ export default function PortfolioDashboardPage({ params }) {
 					>
 						<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Referrers</h3>
 						<div className="space-y-3">
-							{(stats?.topReferrers || []).map((referrer, index) => (
+							{(stats?.trafficSources || []).slice(0, 5).map((referrer, index) => (
 								<div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
 									<div className="flex items-center space-x-3">
 										<span className="text-sm font-medium text-gray-900 dark:text-white">
 											{index + 1}
 										</span>
 										<span className="text-sm text-gray-600 dark:text-gray-300 truncate">
-											{referrer.source}
+											{referrer.name}
 										</span>
 									</div>
 									<span className="text-sm font-semibold text-gray-900 dark:text-white">
-										{referrer.visits}
+										{referrer.value}
 									</span>
 								</div>
 							))}

@@ -392,21 +392,12 @@ export default function EditResumePage() {
 					const data = await res.json();
 					console.log("📊 [EDIT-RESUME] Save response:", { success: data.success, portfolioUrl: data.portfolioUrl, error: data.error });
 					if (res.ok && data.success) {
-						console.log("✅ [EDIT-RESUME] Portfolio published successfully, redirecting to:", `/portfolio/${username}`);
-						setModal({
-							open: true,
-							title: 'Success!',
-							message: `🎉 Congratulations! Your portfolio is now live at: ${data.portfolioUrl}`,
-							confirmText: 'View Analytics',
-							showCancel: false,
-							error: false,
-							onConfirm: () => { 
-								setModal(m => ({ ...m, open: false })); 
-								const redirectUrl = `/portfolio/${data.username || username}`;
-								console.log("🎯 [EDIT-RESUME] Redirecting to analytics dashboard:", redirectUrl);
-								router.push(redirectUrl); 
-							},
-						});
+						console.log("✅ [EDIT-RESUME] Portfolio published successfully, redirecting to analytics dashboard");
+						// Redirect directly to analytics dashboard instead of showing modal
+						const redirectUrl = `/portfolio/${data.username || username}`;
+						console.log("🎯 [EDIT-RESUME] Redirecting to analytics dashboard:", redirectUrl);
+						router.push(redirectUrl);
+					}
 					} else {
 						// Slug errors are not applicable anymore
 						setModal({
