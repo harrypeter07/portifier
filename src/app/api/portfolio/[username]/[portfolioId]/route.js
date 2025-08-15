@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   await dbConnect();
-  const { username, portfolioId } = params;
+  const { username, portfolioId } = await params;
 
   if (!username || !portfolioId) {
     return NextResponse.json(

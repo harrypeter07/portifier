@@ -403,6 +403,10 @@ export default function CustomizePage() {
 				});
 				// Optionally redirect to the portfolio URL
 				// router.push(portfolioUrl);
+				// Redirect to portfolio dashboard after successful publish
+				setTimeout(() => {
+					router.push(`/portfolio/${username}`);
+				}, 1500);
 			} else {
 				setSuccess("");
 				setModal({

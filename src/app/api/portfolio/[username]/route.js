@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
 	await dbConnect();
-	const { username } = params;
+	const { username } = await params;
 
 	if (!username) {
 		return NextResponse.json(

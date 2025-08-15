@@ -387,10 +387,10 @@ export default function EditResumePage() {
 							open: true,
 							title: 'Success!',
 							message: `🎉 Congratulations! Your portfolio is now live at: ${data.portfolioUrl}`,
-							confirmText: 'View Portfolio',
+							confirmText: 'View Analytics',
 							showCancel: false,
 							error: false,
-							onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(data.portfolioUrl); },
+							onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(`/portfolio/${username}`); },
 						});
 					} else {
 						// Slug errors are not applicable anymore

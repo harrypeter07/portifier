@@ -77,10 +77,10 @@ export default function LivePreviewPage() {
 					open: true,
 					title: 'Success!',
 					message: `🎉 Congratulations! Your portfolio is now live at: ${portfolioUrl}`,
-					confirmText: 'View Portfolio',
+					confirmText: 'View Analytics',
 					showCancel: false,
 					error: false,
-					onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(portfolioUrl); },
+					onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(`/portfolio/${username}`); },
 				});
 			} else {
 				setModal({
