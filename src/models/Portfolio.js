@@ -238,6 +238,8 @@ const PortfolioSchema = new mongoose.Schema({
 	// SEO and public profile settings
 	isPublic: { type: Boolean, default: false },
 	slug: { type: String, unique: true, sparse: true }, // URL slug for public portfolio
+	// Public stats
+	views: { type: Number, default: 0 },
 	
 	// Timestamps
 	createdAt: { type: Date, default: Date.now },
@@ -275,6 +277,7 @@ PortfolioSchema.methods.getPublicData = function() {
 		portfolioData: this.portfolioData,
 		content: this.content, // For legacy compatibility
 		isPublic: this.isPublic,
+		views: this.views,
 		updatedAt: this.updatedAt
 	};
 };

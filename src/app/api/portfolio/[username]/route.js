@@ -35,8 +35,8 @@ export async function GET(req, { params }) {
 			email: user.email
 		});
 
-		// Then, find the portfolio for that user
-		const portfolio = await Portfolio.findOne({ userId: user._id });
+		// Then, find the latest public portfolio for that user
+		const portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true }).sort({ updatedAt: -1 });
 		if (!portfolio) {
 			console.log("❌ [API] Portfolio not found for user:", user._id);
 			return NextResponse.json(
@@ -50,24 +50,13 @@ export async function GET(req, { params }) {
 			hasLayout: !!portfolio.layout,
 			layoutKeys: portfolio.layout ? Object.keys(portfolio.layout) : [],
 			hasContent: !!portfolio.content,
-			hasPortfolioData: !!portfolio.portfolioData,
-			personalData: portfolio.portfolioData?.personal ? {
-				firstName: portfolio.portfolioData.personal.firstName,
-				lastName: portfolio.portfolioData.personal.lastName,
-				subtitle: portfolio.portfolioData.personal.subtitle,
-				email: portfolio.portfolioData.personal.email
-			} : null
+			hasPortfolioData: !!portfolio.portfolioData
 		});
 
 		return NextResponse.json({
 			success: true,
-			portfolio: {
-				layout: portfolio.layout,
-				content: portfolio.content,
-				portfolioData: portfolio.portfolioData,
-				username: user.username,
-				name: user.name
-			}
+			portfolio: portfolio.getPublicData(),
+			username: user.username,
 		});
 	} catch (err) {
 		console.error("❌ [API] Error fetching portfolio:", err);

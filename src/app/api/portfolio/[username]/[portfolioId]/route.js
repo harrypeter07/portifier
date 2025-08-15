@@ -25,7 +25,7 @@ export async function GET(req, { params }) {
     }
 
     // Find the portfolio by userId and _id
-    const portfolio = await Portfolio.findOne({ userId: user._id, _id: portfolioId });
+    const portfolio = await Portfolio.findOne({ userId: user._id, _id: portfolioId, isPublic: true });
     if (!portfolio) {
       return NextResponse.json(
         { error: "Portfolio not found" },

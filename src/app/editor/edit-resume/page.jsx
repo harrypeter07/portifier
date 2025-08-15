@@ -37,10 +37,6 @@ export default function EditResumePage() {
 	});
 	const router = useRouter();
 	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
-	const [slug, setSlug] = useState("");
-	const [slugAvailable, setSlugAvailable] = useState(null); // null = untouched, true = available, false = taken
-	const [slugError, setSlugError] = useState("");
-	const [checkingSlug, setCheckingSlug] = useState(false);
 	const [username, setUsername] = useState("");
 
 	// Fetch username on mount
@@ -54,49 +50,7 @@ export default function EditResumePage() {
 		})();
 	}, []);
 
-	// Debounced slug check
-	const checkSlug = debounce(async (slugToCheck) => {
-		if (!slugToCheck || !username) return;
-		setCheckingSlug(true);
-		try {
-			const res = await fetch("/api/portfolio/check-slug", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ username, slug: slugToCheck }),
-			});
-			const data = await res.json();
-			if (res.ok && typeof data.available === "boolean") {
-				setSlugAvailable(data.available);
-				setSlugError(data.available ? "" : "This URL is already taken. Try another or use a suggestion.");
-			} else {
-				setSlugAvailable(null);
-				setSlugError("Could not check URL availability.");
-			}
-		} catch {
-			setSlugAvailable(null);
-			setSlugError("Could not check URL availability.");
-		}
-		setCheckingSlug(false);
-	}, 400);
-
-	// Watch slug changes
-	useEffect(() => {
-		if (slug) checkSlug(slug);
-		else {
-			setSlugAvailable(null);
-			setSlugError("");
-		}
-	}, [slug, username]);
-
-	// Suggest alternative slug
-	const suggestSlug = () => {
-		if (!slug) return "";
-		const match = slug.match(/(.+)-(\d+)$/);
-		if (match) {
-			return `${match[1]}-${parseInt(match[2]) + 1}`;
-		}
-		return `${slug}-2`;
-	};
+	// No slug flow; publish to /{username}
 
 	useEffect(() => {
 		console.log("📝 [EDIT-RESUME] useEffect triggered:", {
@@ -424,7 +378,6 @@ export default function EditResumePage() {
 							content: formData,
 							portfolioData: newPortfolioData,
 							resumeId: resumeId,
-							slug,
 							username,
 						}),
 					});
@@ -440,9 +393,7 @@ export default function EditResumePage() {
 							onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(data.portfolioUrl); },
 						});
 					} else {
-						if (data.error && data.error.includes("Slug already exists")) {
-							setSlugError("This URL is already taken. Please choose another.");
-						}
+						// Slug errors are not applicable anymore
 						setModal({
 							open: true,
 							title: 'Error',
@@ -1097,31 +1048,14 @@ export default function EditResumePage() {
 
 					{/* Action Buttons */}
 					<div className="flex flex-col md:flex-row gap-2 md:gap-4 mb-8">
-						{/* Slug input for portfolio URL */}
+						{/* Public URL (username only) */}
 						<div className="mb-6">
 							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 								🔗 Portfolio URL
 							</label>
 							<div className="flex items-center gap-2">
-								<span className="text-gray-500 dark:text-gray-400">{typeof window !== 'undefined' ? window.location.origin : "https://yourdomain.com"}/portfolio/{username || "username"}/</span>
-								<input
-									type="text"
-									className={`w-48 p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${slugError ? "border-red-500" : ""}`}
-									placeholder="your-portfolio"
-									value={slug}
-									onChange={e => setSlug(e.target.value.replace(/[^a-zA-Z0-9-_]/g, "").toLowerCase())}
-									disabled={modal.open}
-								/>
-								{checkingSlug && <span className="text-xs text-gray-500 ml-2">Checking...</span>}
-								{slugAvailable && slug && <span className="text-xs text-green-600 ml-2">Available!</span>}
-								{!slugAvailable && slug && <span className="text-xs text-red-600 ml-2">Not available</span>}
+								<span className="text-gray-500 dark:text-gray-400">{typeof window !== 'undefined' ? window.location.origin : "https://yourdomain.com"}/{username || "username"}</span>
 							</div>
-							{slugError && <div className="text-xs text-red-600 mt-1">{slugError}</div>}
-							{!slugAvailable && slug && (
-								<div className="text-xs text-gray-500 mt-1">
-									Suggestion: <button type="button" className="underline" onClick={() => setSlug(suggestSlug())}>{suggestSlug()}</button>
-								</div>
-							)}
 						</div>
 						<button
 							onClick={handleSave}

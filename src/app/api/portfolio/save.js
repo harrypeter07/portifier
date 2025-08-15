@@ -52,7 +52,7 @@ export async function POST(req) {
 			} : null
 		});
 
-		// Upsert portfolio for user
+		// Upsert portfolio for user (username-only URL)
 		const portfolio = await Portfolio.findOneAndUpdate(
 			{ userId },
 			{ 
@@ -60,7 +60,7 @@ export async function POST(req) {
 				content, 
 				portfolioData,
 				username: user.username,
-				isPublic: true // Make portfolio public when saved
+				isPublic: true
 			},
 			{ upsert: true, new: true, setDefaultsOnInsert: true }
 		);

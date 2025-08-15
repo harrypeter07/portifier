@@ -30,8 +30,8 @@ export async function POST(req) {
 			username,
 			templateName = "cleanfolio",
 			portfolioType = "developer",
-			isPublic = false,
-			slug,
+			// Force publish for username-only URL; no slug
+			isPublic = true,
 			resumeId, // Optional: associate with a resume
 		} = requestData;
 
@@ -75,23 +75,18 @@ export async function POST(req) {
 
 		// Add optional fields if provided
 		if (username) updateData.username = username;
-		if (slug) updateData.slug = slug;
 
 		// Ensure username is always set for uniqueness
 		if (!updateData.username) {
 			updateData.username = user.username || (user.email && user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, ''));
 		}
 
-		// Ensure slug is unique for this user
-		if (slug) {
-			const existing = await Portfolio.findOne({ userId: user._id, slug });
-			if (existing) {
-				return NextResponse.json({ error: "Slug already exists for this user. Please choose a different one." }, { status: 409 });
-			}
-		}
-
-		// Create a new portfolio for each save
-		const portfolio = await Portfolio.create(updateData);
+		// Upsert a single portfolio per userId (username URL)
+		const portfolio = await Portfolio.findOneAndUpdate(
+			{ userId: user._id },
+			updateData,
+			{ new: true, upsert: true, setDefaultsOnInsert: true }
+		);
 
 		// Associate resume with portfolio if resumeId is provided
 		if (resumeId) {
@@ -109,8 +104,8 @@ export async function POST(req) {
 		// Calculate completeness
 		const completeness = portfolio.calculateCompleteness();
 
-		// Generate portfolio URL with username and portfolioId
-		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/portfolio/${portfolio.username || user.username}/${portfolio._id}`;
+		// Generate portfolio URL with username only
+		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${portfolio.username || user.username}`;
 
 		return NextResponse.json({
 			success: true,

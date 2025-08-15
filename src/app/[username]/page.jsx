@@ -4,8 +4,8 @@ import { componentMap } from "@/data/componentMap";
 import PortfolioLoading from "@/components/PortfolioLoading";
 
 export default function PortfolioPage({ params }) {
-	// Next.js 15+ params handling
-	const { username } = React.use(params);
+	// Support both old and new params shapes
+	const username = (params && (params.username || params.slug)) || "";
 	const [portfolio, setPortfolio] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -17,6 +17,8 @@ export default function PortfolioPage({ params }) {
 				const data = await res.json();
 				if (res.ok && data.success) {
 					setPortfolio(data.portfolio);
+					// Increment views count in background
+					fetch(`/api/portfolio/${username}/views`, { method: 'POST' }).catch(() => {});
 				} else {
 					setError(data.error || "Portfolio not found");
 				}
@@ -61,6 +63,11 @@ export default function PortfolioPage({ params }) {
 	const { layout, content, portfolioData } = portfolio;
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
+			{/* Simple stats header */}
+			<div className="max-w-5xl mx-auto px-4 py-4 text-sm text-gray-600 dark:text-gray-300 flex items-center justify-between">
+				<span>Public page for @{username}</span>
+				{typeof portfolio.views === 'number' && <span>Views: {portfolio.views}</span>}
+			</div>
 			{/* Render each section based on layout, edge-to-edge */}
 			{Object.entries(layout).map(([section, componentName]) => {
 				const Component = componentMap[componentName];

@@ -6,18 +6,20 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   await dbConnect();
   try {
-    const { username, slug } = await req.json();
-    if (!username || !slug) {
-      return NextResponse.json({ error: "Username and slug are required" }, { status: 400 });
+    // We no longer support per-portfolio slugs. URL is username only.
+    const { username } = await req.json();
+    if (!username) {
+      return NextResponse.json({ error: "Username is required" }, { status: 400 });
     }
-    // Find the user
     const user = await User.findOne({ username });
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      // username available → suggest username1 fallback
+      return NextResponse.json({ available: true, suggestions: [`${username}1`, `${username}123`] });
     }
-    // Check if any portfolio for this user has the slug
-    const existing = await Portfolio.findOne({ userId: user._id, slug });
-    return NextResponse.json({ available: !existing });
+    // Username taken → suggest a few alternatives
+    const base = username.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const suggestions = [1, 2, 3].map(n => `${base}${n}`);
+    return NextResponse.json({ available: false, suggestions });
   } catch (err) {
     return NextResponse.json({ error: "Failed to check slug" }, { status: 500 });
   }
