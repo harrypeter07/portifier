@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Preview from "@/components/Preview";
 import Modal from "@/components/common/Modal";
+import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
 import debounce from "lodash.debounce";
 
 export default function LivePreviewPage() {
@@ -122,7 +123,7 @@ export default function LivePreviewPage() {
 								🔗 Portfolio URL
 							</label>
 							<div className="flex items-center gap-2">
-								<span className="text-gray-500 dark:text-gray-400">{typeof window !== 'undefined' ? window.location.origin : "https://yourdomain.com"}/{username || "username"}</span>
+								<PortfolioUrlDisplay username={username} />
 							</div>
 						</div>
 						<button onClick={handlePublish} className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Publish Portfolio</button>

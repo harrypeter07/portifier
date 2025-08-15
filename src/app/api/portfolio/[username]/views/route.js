@@ -4,7 +4,7 @@ import PortfolioView from "@/models/PortfolioView";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import UAParser from "ua-parser-js";
+import { UAParser } from "ua-parser-js";
 
 export async function POST(req, { params }) {
   await dbConnect();

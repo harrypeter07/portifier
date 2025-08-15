@@ -7,6 +7,7 @@ import Preview from "@/components/Preview";
 import AICompanionField from "@/components/AICompanionField";
 import { isAIEnabled, getAILabel } from "@/data/aiFieldConfig";
 import Modal from "@/components/common/Modal";
+import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
 import debounce from "lodash.debounce";
 
 export default function EditResumePage() {
@@ -1059,7 +1060,7 @@ export default function EditResumePage() {
 								🔗 Portfolio URL
 							</label>
 							<div className="flex items-center gap-2">
-								<span className="text-gray-500 dark:text-gray-400">{typeof window !== 'undefined' ? window.location.origin : "https://yourdomain.com"}/{username || "username"}</span>
+								<PortfolioUrlDisplay username={username} />
 							</div>
 						</div>
 						<button

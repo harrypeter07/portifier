@@ -6,6 +6,7 @@ import { componentMap, componentCategories, getRecommendedLayout } from "@/data/
 import Preview from "@/components/Preview";
 import { motion, AnimatePresence } from "framer-motion";
 import Modal from "@/components/common/Modal";
+import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
 import debounce from "lodash.debounce";
 
 // Mock parsed resume data (in real app, get from upload step or API)
@@ -688,7 +689,7 @@ export default function CustomizePage() {
 						🔗 Portfolio URL
 					</label>
 					<div className="flex items-center gap-2">
-						<span className="text-gray-500 dark:text-gray-400">{typeof window !== 'undefined' ? window.location.origin : "https://yourdomain.com"}/{username || "username"}</span>
+						<PortfolioUrlDisplay username={username} />
 					</div>
 				</div>
 
