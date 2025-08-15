@@ -40,7 +40,7 @@ function MiniPreview({ Component, sectionKey, componentName, isSelected, onSelec
   }
   return (
     <div
-      className={`relative rounded-lg border-2 p-1 bg-gray-50 dark:bg-gray-800 transition-all duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[80px] max-h-[120px] overflow-hidden shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400
+      className={`relative rounded-lg border-2 p-2 bg-gray-50 dark:bg-gray-800 transition-all duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[120px] max-h-[180px] overflow-hidden shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400
         ${isSelected ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500'}`}
       onClick={onSelect}
       onKeyDown={handleKeyDown}
@@ -48,7 +48,7 @@ function MiniPreview({ Component, sectionKey, componentName, isSelected, onSelec
       role="button"
       aria-pressed={isSelected}
       aria-label={`Select ${componentName} for ${sectionKey}`}
-      style={{ minWidth: 0, width: '100px', maxWidth: '120px' }}
+      style={{ minWidth: 0, width: '140px', maxWidth: '160px' }}
     >
       <div className="absolute top-1 right-1">
         {isSelected && (
@@ -56,12 +56,12 @@ function MiniPreview({ Component, sectionKey, componentName, isSelected, onSelec
         )}
       </div>
       <div className="w-full flex-1 flex items-center justify-center overflow-hidden">
-        {/* Render the actual component in a small box */}
-        <div className="w-full max-w-[90px] scale-90">
+        {/* Render the actual component in a larger box */}
+        <div className="w-full max-w-[130px] scale-95">
           <Component {...data} />
         </div>
       </div>
-      <div className="mt-1 text-[10px] text-center font-medium text-gray-700 dark:text-gray-300 truncate w-full">
+      <div className="mt-1 text-[11px] text-center font-medium text-gray-700 dark:text-gray-300 truncate w-full">
         {componentName}
       </div>
     </div>
@@ -163,7 +163,7 @@ function SectionSlider({ sectionKey, category, localContent, localLayout, handle
         >
           <span aria-hidden="true">◀</span>
         </button>
-        <div className="flex-1 flex justify-center gap-1 overflow-x-auto custom-thin-slider scrollbar-hide relative min-h-[90px] touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="flex-1 flex justify-center gap-2 overflow-x-auto custom-thin-slider scrollbar-hide relative min-h-[140px] touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
               key={current}
