@@ -84,6 +84,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 - **Model Fallback**: Automatic fallback to alternative models
 - **Enhanced Error Handling**: Robust API call management
 - **Structured Data Extraction**: Clean, organized portfolio data
+- **Multi-Format Support**: PDF, DOCX, and TXT file parsing
 
 ### 🎯 **Template System**
 - **Component-Based Templates**: Mix and match individual sections
