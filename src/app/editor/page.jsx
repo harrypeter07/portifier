@@ -9,6 +9,7 @@ import gsap from "gsap";
 // Add import for custom slider styles
 import "@/styles/customSlider.css";
 import { sampleDataCleanfolio } from "@/data/samplePortfolioData";
+import GeminiKeyModal from "@/components/common/GeminiKeyModal";
 
 const FULL_LAYOUT = {
   hero: "HeroA",
@@ -125,6 +126,12 @@ export default function ResumeUploadPage() {
 	const router = useRouter();
 	const [selectedTemplate, setSelectedTemplate] = useState(PREBUILT_TEMPLATES[0]);
 	const previewRef = useRef(null);
+	const [isDragOver, setIsDragOver] = useState(false);
+	const [isUploading, setIsUploading] = useState(false);
+	const [uploadProgress, setUploadProgress] = useState(0);
+	const [success, setSuccess] = useState("");
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [apiKeyStatus, setApiKeyStatus] = useState({ hasKey: false, loading: true });
 
 	useEffect(() => {
 		if (parsed && previewRef.current) {
@@ -157,14 +164,60 @@ export default function ResumeUploadPage() {
 		checkApiStatus();
 	}, []);
 
+	useEffect(() => {
+		checkApiKeyStatus();
+	}, []);
+
+	const checkApiKeyStatus = async () => {
+		try {
+			const res = await fetch("/api/user/gemini-key");
+			const data = await res.json();
+			if (res.ok) {
+				setApiKeyStatus({ hasKey: data.hasKey, loading: false });
+			}
+		} catch (error) {
+			setApiKeyStatus({ hasKey: false, loading: false });
+		}
+	};
+
+	const handleApiKeySuccess = () => {
+		setApiKeyStatus({ hasKey: true, loading: false });
+		setSuccess("API key added successfully! You can now parse resumes.");
+		setTimeout(() => setSuccess(""), 3000);
+	};
+
 	async function handleFileChange(e) {
-		setFile(e.target.files[0]);
+		const selectedFile = e.target.files[0];
+		console.log("📁 File selected:", {
+			name: selectedFile?.name,
+			size: selectedFile?.size,
+			type: selectedFile?.type
+		});
+		setFile(selectedFile);
 		setParsed(null);
 		setError("");
 	}
 
 	async function handleUpload() {
-		if (!file) return;
+		console.log("🚀 Upload triggered with file:", {
+			hasFile: !!file,
+			fileName: file?.name,
+			fileSize: file?.size,
+			fileType: file?.type
+		});
+		
+		if (!file) {
+			console.error("❌ No file selected");
+			setError("Please select a file first");
+			return;
+		}
+		
+		// Check if user has API key before proceeding
+		if (!apiKeyStatus.hasKey) {
+			setIsModalOpen(true);
+			return;
+		}
+		
 		setLoading(true);
 		setError("");
 		setParsed(null);
@@ -188,7 +241,8 @@ export default function ResumeUploadPage() {
 		}
 		
 		const formData = new FormData();
-		formData.append("resume", file);
+		console.log("📤 Adding file to FormData:", file.name);
+		formData.append("file", file);
 		formData.append("portfolioType", portfolioType);
 		try {
 			const res = await fetch("/api/parse-resume", {
@@ -252,8 +306,11 @@ export default function ResumeUploadPage() {
 			// Enhanced error message handling
 			let errorMessage = err.message || "Failed to parse resume";
 			
-			// If it's a fetch error, try to get more details
-			if (err.name === "TypeError" && err.message.includes("fetch")) {
+			// Check if it's an API key related error
+			if (err.message?.includes("requiresApiKey") || err.message?.includes("API key")) {
+				setIsModalOpen(true);
+				errorMessage = "Please add your Gemini API key to continue.";
+			} else if (err.name === "TypeError" && err.message.includes("fetch")) {
 				errorMessage = "Network error: Unable to connect to the server. Please check your internet connection and try again.";
 			}
 			
@@ -392,6 +449,7 @@ export default function ResumeUploadPage() {
 					</div>
 				</div>
 			)}
+			<GeminiKeyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={handleApiKeySuccess} />
 		</div>
 	);
 }

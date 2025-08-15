@@ -1,301 +1,242 @@
 import { NextResponse } from "next/server";
-import { parseResumeWithGemini, createPortfolioSchema } from "@/lib/gemini";
-import dbConnect from "@/lib/mongodb";
-import Resume from "@/models/Resume";
 import { auth } from "@/lib/auth";
+import { getGeminiModel, checkUserApiKey } from "@/lib/gemini";
+import dbConnect from "@/lib/mongodb";
 
-// Health check endpoint
-export async function GET() {
+export async function POST(req) {
+	await dbConnect();
+	const user = await auth();
+	
+	if (!user) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+	}
+
 	try {
-		// Check environment variables
+		const formData = await req.formData();
+		console.log("📥 API received formData fields:", Array.from(formData.keys()));
+		
+		const file = formData.get("file");
+		console.log("📥 File received:", {
+			hasFile: !!file,
+			fileName: file?.name,
+			fileSize: file?.size,
+			fileType: file?.type
+		});
+
+		if (!file) {
+			console.error("❌ No file provided in request");
+			return NextResponse.json({ error: "No file provided" }, { status: 400 });
+		}
+
+		// Check if user has API key configured
+		const apiKeyStatus = await checkUserApiKey(user._id);
+		
+		if (!apiKeyStatus.hasKey && !process.env.GEMINI_API_KEY) {
+			return NextResponse.json({
+				error: "No Gemini API key available. Please add your API key in settings.",
+				requiresApiKey: true
+			}, { status: 400 });
+		}
+
+		// Convert file to base64
+		const bytes = await file.arrayBuffer();
+		const buffer = Buffer.from(bytes);
+		const base64 = buffer.toString("base64");
+
+		// Prepare the prompt for resume parsing
+		const prompt = `
+		Please parse this resume and extract the following information in JSON format:
+		{
+			"personal": {
+				"firstName": "",
+				"lastName": "",
+				"email": "",
+				"phone": "",
+				"location": {
+					"city": "",
+					"state": "",
+					"country": ""
+				},
+				"social": {
+					"linkedin": "",
+					"github": ""
+				}
+			},
+			"about": {
+				"summary": "",
+				"bio": ""
+			},
+			"experience": {
+				"jobs": [
+					{
+						"title": "",
+						"company": "",
+						"duration": "",
+						"description": ""
+					}
+				]
+			},
+			"education": {
+				"degrees": [
+					{
+						"degree": "",
+						"institution": "",
+						"year": ""
+					}
+				]
+			},
+			"skills": {
+				"technical": [],
+				"soft": []
+			},
+			"projects": {
+				"items": [
+					{
+						"title": "",
+						"description": "",
+						"github": "",
+						"url": ""
+					}
+				]
+			}
+		}
+
+		Extract as much information as possible from the resume. If a field is not found, leave it as an empty string or empty array.
+		`;
+
+		// Use user's API key if available, otherwise fall back to environment variable
+		const model = await getGeminiModel(user._id, "gemini-1.5-flash");
+
+		// Generate content with image
+		const result = await model.generateContent([
+			prompt,
+			{
+				inlineData: {
+					mimeType: file.type,
+					data: base64,
+				},
+			},
+		]);
+
+		const response = await result.response;
+		const text = response.text();
+
+		// Try to parse the JSON response
+		let parsedData;
+		try {
+			// Extract JSON from the response (in case there's extra text)
+			const jsonMatch = text.match(/\{[\s\S]*\}/);
+			if (jsonMatch) {
+				parsedData = JSON.parse(jsonMatch[0]);
+			} else {
+				parsedData = JSON.parse(text);
+			}
+		} catch (parseError) {
+			console.error("Failed to parse AI response:", parseError);
+			return NextResponse.json({
+				error: "Failed to parse AI response. Please try again.",
+				rawResponse: text
+			}, { status: 500 });
+		}
+
+		// Transform the parsed data to match the expected structure
+		const transformedData = {
+			hero: {
+				title: `${parsedData.personal?.firstName || ''} ${parsedData.personal?.lastName || ''}`.trim(),
+				subtitle: parsedData.personal?.subtitle || '',
+				tagline: parsedData.personal?.tagline || '',
+				availability: parsedData.personal?.availability || ''
+			},
+			about: {
+				summary: parsedData.about?.summary || '',
+				bio: parsedData.about?.bio || '',
+				interests: parsedData.about?.interests || [],
+				personalValues: parsedData.about?.personalValues || [],
+				funFacts: parsedData.about?.funFacts || []
+			},
+			contact: {
+				email: parsedData.personal?.email || '',
+				phone: parsedData.personal?.phone || '',
+				location: `${parsedData.personal?.location?.city || ''}, ${parsedData.personal?.location?.state || ''}, ${parsedData.personal?.location?.country || ''}`.replace(/^,\s*/, '').replace(/,\s*$/, ''),
+				linkedin: parsedData.personal?.social?.linkedin || ''
+			},
+			experience: {
+				jobs: parsedData.experience?.jobs || []
+			},
+			education: {
+				degrees: parsedData.education?.degrees || []
+			},
+			skills: {
+				technical: parsedData.skills?.technical || [],
+				soft: parsedData.skills?.soft || []
+			},
+			projects: {
+				items: parsedData.projects?.items || []
+			},
+			achievements: {
+				awards: parsedData.achievements?.awards || []
+			},
+			languages: parsedData.skills?.languages?.map(lang => lang.name) || []
+		};
+
+		return NextResponse.json({
+			success: true,
+			content: transformedData,
+			data: transformedData,
+			message: "Resume parsed successfully"
+		});
+
+	} catch (error) {
+		console.error("Resume parsing error:", error);
+		
+		// Check if it's an API key related error
+		if (error.message.includes("API key") || error.message.includes("authentication")) {
+			return NextResponse.json({
+				error: "Invalid API key. Please check your Gemini API key in settings.",
+				requiresApiKey: true
+			}, { status: 400 });
+		}
+
+		return NextResponse.json({
+			error: "Failed to parse resume. Please try again.",
+			details: error.message
+		}, { status: 500 });
+	}
+}
+
+export async function GET(req) {
+	// Health check endpoint
+	try {
 		const envCheck = {
 			GEMINI_API_KEY: !!process.env.GEMINI_API_KEY,
 			JWT_SECRET: !!process.env.JWT_SECRET,
-			MONGODB_URI: !!process.env.MONGODB_URI
+			MONGODB_URI: !!process.env.MONGODB_URI,
 		};
-		
-		console.log("🔍 [HEALTH-CHECK] Environment variables:", envCheck);
-		
-		if (!process.env.GEMINI_API_KEY) {
-			return NextResponse.json({
-				status: "warning",
-				message: "No Gemini API key configured",
-				available: false,
-				envCheck
-			});
-		}
 
-		// Simple test to check if Gemini API is accessible
-		const { GoogleGenerativeAI } = await import("@google/generative-ai");
-		const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-		const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+		console.log("🔍 [HEALTH-CHECK] Environment variables:", envCheck);
 
 		// Try a simple test call
+		const model = await getGeminiModel(null, "gemini-1.5-flash");
 		const result = await model.generateContent("Hello");
 		const response = await result.response;
 		const text = response.text();
 
 		return NextResponse.json({
 			status: "healthy",
-			message: "Gemini API is accessible",
 			available: true,
-			testResponse: text.substring(0, 50) + "...",
 			envCheck
 		});
 	} catch (error) {
 		console.error("❌ Gemini API health check failed:", error);
 		return NextResponse.json({
 			status: "unhealthy",
-			message: "Gemini API is not accessible",
 			available: false,
 			error: error.message,
-			envCheck
+			envCheck: {
+				GEMINI_API_KEY: !!process.env.GEMINI_API_KEY,
+				JWT_SECRET: !!process.env.JWT_SECRET,
+				MONGODB_URI: !!process.env.MONGODB_URI,
+			}
 		}, { status: 503 });
 	}
-}
-
-export async function POST(req) {
-	try {
-		await dbConnect();
-		
-		// Get authenticated user
-		const user = await auth();
-		if (!user) {
-			console.log("❌ [PARSE-RESUME] No authenticated user found");
-			return NextResponse.json({ 
-				success: false,
-				error: "Authentication required. Please sign in to upload your resume.",
-				errorType: "AuthenticationError"
-			}, { status: 401 });
-		}
-		
-		console.log("✅ [PARSE-RESUME] User authenticated:", user.email);
-
-		const formData = await req.formData();
-		const file = formData.get("resume");
-		const schemaType = formData.get("portfolioType") || "developer"; // developer, designer, marketing, etc.
-		const customSchemaJson = formData.get("customSchema"); // Optional custom schema
-
-		if (!file) {
-			return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-		}
-
-		const bytes = await file.arrayBuffer();
-		const buffer = Buffer.from(bytes);
-
-		// Create resume record in database (without file storage)
-		const resume = new Resume({
-			userId: user._id,
-			originalName: file.name,
-			fileName: `resume_${user._id}_${Date.now()}.pdf`,
-			fileSize: buffer.length,
-			fileType: file.type,
-			filePath: null, // No file storage in serverless environment
-			status: 'processing'
-		});
-
-		try {
-			await resume.save();
-			console.log("✅ [PARSE-RESUME] Resume record created:", resume._id);
-		} catch (saveError) {
-			console.error("❌ [PARSE-RESUME] Failed to save resume record:", saveError);
-			throw new Error(`Database error: ${saveError.message}`);
-		}
-
-		// Determine which schema to use
-		let schema;
-		if (customSchemaJson) {
-			try {
-				schema = JSON.parse(customSchemaJson);
-			} catch (error) {
-				console.error("❌ Invalid custom schema JSON:", error);
-				schema = createPortfolioSchema(schemaType);
-			}
-		} else {
-			schema = createPortfolioSchema(schemaType);
-		}
-
-		const result = await parseResumeWithGemini(buffer, schema);
-
-		// Update resume with parsed data
-		resume.parsedData = result.content;
-		resume.status = 'parsed';
-		try {
-			await resume.save();
-			console.log("✅ [PARSE-RESUME] Resume updated with parsed data");
-		} catch (updateError) {
-			console.error("❌ [PARSE-RESUME] Failed to update resume with parsed data:", updateError);
-			throw new Error(`Database update error: ${updateError.message}`);
-		}
-
-		// Enhanced logging based on actual schema structure
-		console.log("\n🎯 EXTRACTED RESUME DATA:");
-		console.log("=".repeat(50));
-
-		logExtractedData(result.content, result.schema);
-
-		console.log("\n" + "=".repeat(50));
-		console.log("✅ Resume parsing completed successfully!");
-		console.log(
-			"📊 Schema fields processed:",
-			countSchemaFields(result.schema)
-		);
-
-		// Check if we used mock data (indicated by specific mock values)
-		const usedMockData = result.content?.hero?.title === "Hassan Ahmed" && 
-							result.content?.contact?.email === "hassan@example.com";
-
-		return NextResponse.json({
-			success: true,
-			content: result.content,
-			schema: result.schema,
-			resumeId: resume._id,
-			metadata: {
-				fileName: file.name,
-				fileSize: buffer.length,
-				portfolioType: schemaType,
-				fieldsExtracted: countNonEmptyFields(result.content),
-				usedMockData: usedMockData,
-				message: usedMockData ? 
-					"AI service temporarily unavailable. Using sample data for demonstration." : 
-					"Resume parsed successfully using AI."
-			},
-		});
-	} catch (error) {
-		console.error("❌ Error parsing resume:", error);
-		
-		// Update resume status to failed if we have a resume record
-		if (error.resumeId) {
-			try {
-				await Resume.findByIdAndUpdate(error.resumeId, {
-					status: 'failed',
-					error: {
-						message: error.message,
-						details: error.stack
-					}
-				});
-			} catch (updateError) {
-				console.error("❌ Error updating resume status:", updateError);
-			}
-		}
-		
-		// Enhanced error message handling
-		let errorMessage = "Failed to parse resume";
-		let errorDetails = "";
-		
-		if (error.message) {
-			errorMessage = error.message;
-		}
-		
-		// Check for specific Gemini API errors
-		if (error.message?.includes("EROFS") || error.message?.includes("read-only file system")) {
-			errorMessage = "Server configuration error. Please try again or contact support.";
-		} else if (error.message?.includes("validation failed")) {
-			errorMessage = "Data validation error. Please try again or contact support.";
-		} else if (error.message?.includes("Database error") || error.message?.includes("Database update error")) {
-			errorMessage = "Database error. Please try again or contact support.";
-		} else if (error.message?.includes("503")) {
-			errorMessage = "AI service is temporarily overloaded. Please try again in a few minutes.";
-		} else if (error.message?.includes("429")) {
-			errorMessage = "Too many requests to AI service. Please wait a moment and try again.";
-		} else if (error.message?.includes("401") || error.message?.includes("403")) {
-			errorMessage = "AI service authentication failed. Please contact support.";
-		} else if (error.message?.includes("timeout")) {
-			errorMessage = "AI service request timed out. Please try again.";
-		} else if (error.message?.includes("network") || error.message?.includes("fetch")) {
-			errorMessage = "Network error connecting to AI service. Please check your connection and try again.";
-		} else if (error.message?.includes("model is overloaded")) {
-			errorMessage = "AI service is currently overloaded. Please try again in a few minutes.";
-		} else if (error.message?.includes("quota")) {
-			errorMessage = "AI service quota exceeded. Please try again later.";
-		}
-		
-		// Add technical details for debugging
-		if (process.env.NODE_ENV === "development") {
-			errorDetails = error.stack;
-		}
-		
-		return NextResponse.json(
-			{
-				success: false,
-				error: errorMessage,
-				details: errorDetails,
-				errorType: error.name || "UnknownError",
-				timestamp: new Date().toISOString()
-			},
-			{ status: 500 }
-		);
-	}
-}
-
-// Helper function to log extracted data based on schema
-function logExtractedData(data, schema, prefix = "") {
-	for (const [key, value] of Object.entries(schema)) {
-		const dataValue = data[key];
-
-		if (typeof value === "object" && !Array.isArray(value)) {
-			if (dataValue && typeof dataValue === "object") {
-				logExtractedData(dataValue, value, prefix + "   ");
-			} else {
-				console.log(`${prefix}   No data found`);
-			}
-		} else if (Array.isArray(value)) {
-			if (Array.isArray(dataValue) && dataValue.length > 0) {
-				dataValue.forEach((item, index) => {
-					if (typeof item === "object") {
-						console.log(
-							`${prefix}   ${index + 1}.`,
-							JSON.stringify(item, null, 2)
-						);
-					} else {
-						console.log(`${prefix}   ${index + 1}. ${item}`);
-					}
-				});
-			} else {
-				console.log(`${prefix}   No items found`);
-			}
-		} else {
-			console.log(`${prefix}📝 ${key}:`, dataValue || "Not found");
-		}
-	}
-}
-
-// Count total schema fields
-function countSchemaFields(schema) {
-	let count = 0;
-
-	function countFields(obj) {
-		for (const value of Object.values(obj)) {
-			if (typeof value === "object" && !Array.isArray(value)) {
-				countFields(value);
-			} else {
-				count++;
-			}
-		}
-	}
-
-	countFields(schema);
-	return count;
-}
-
-// Count non-empty fields in extracted data
-function countNonEmptyFields(data) {
-	let count = 0;
-
-	function countNonEmpty(obj) {
-		for (const value of Object.values(obj)) {
-			if (value === null || value === undefined || value === "") {
-				continue;
-			} else if (Array.isArray(value)) {
-				if (value.length > 0) count++;
-			} else if (typeof value === "object") {
-				countNonEmpty(value);
-			} else {
-				count++;
-			}
-		}
-	}
-
-	countNonEmpty(data);
-	return count;
 }

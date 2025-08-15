@@ -27,8 +27,15 @@ export default function LivePreviewPage() {
 			try {
 				const res = await fetch("/api/auth/me");
 				const data = await res.json();
-				if (res.ok && data.username) setUsername(data.username);
-			} catch {}
+				if (res.ok && data.user?.username) {
+					console.log("👤 [PREVIEW] Username fetched:", data.user.username);
+					setUsername(data.user.username);
+				} else {
+					console.error("❌ [PREVIEW] No username found in response:", data);
+				}
+			} catch (error) {
+				console.error("❌ [PREVIEW] Failed to fetch username:", error);
+			}
 		})();
 	}, []);
 

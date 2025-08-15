@@ -1,6 +1,76 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Function to get Gemini instance with user's API key or fallback to env
+export async function getGeminiInstance(userId = null) {
+	let apiKey = process.env.GEMINI_API_KEY;
+
+	// If userId is provided, try to get user's API key
+	if (userId) {
+		try {
+			const { default: dbConnect } = await import("@/lib/mongodb");
+			const { default: User } = await import("@/models/User");
+			
+			await dbConnect();
+			const user = await User.findById(userId).select('+geminiApiKey');
+			
+			if (user && user.geminiApiKey) {
+				apiKey = user.geminiApiKey;
+			}
+		} catch (error) {
+			console.error("Failed to fetch user's API key:", error);
+			// Fall back to environment variable
+		}
+	}
+
+	if (!apiKey) {
+		throw new Error("No Gemini API key available");
+	}
+
+	return new GoogleGenerativeAI(apiKey);
+}
+
+// Function to get model instance
+export async function getGeminiModel(userId = null, modelName = "gemini-1.5-flash") {
+	const genAI = await getGeminiInstance(userId);
+	return genAI.getGenerativeModel({ model: modelName });
+}
+
+// Function to generate content with user's API key
+export async function generateContent(prompt, userId = null, modelName = "gemini-1.5-flash") {
+	try {
+		const model = await getGeminiModel(userId, modelName);
+		const result = await model.generateContent(prompt);
+		const response = await result.response;
+		return response.text();
+	} catch (error) {
+		console.error("Gemini API error:", error);
+		throw error;
+	}
+}
+
+// Function to check if user has API key configured
+export async function checkUserApiKey(userId) {
+	try {
+		const { default: dbConnect } = await import("@/lib/mongodb");
+		const { default: User } = await import("@/models/User");
+		
+		await dbConnect();
+		const user = await User.findById(userId).select('+geminiApiKey');
+		
+		return {
+			hasKey: !!user?.geminiApiKey,
+			key: user?.geminiApiKey || null
+		};
+	} catch (error) {
+		console.error("Failed to check user API key:", error);
+		return { hasKey: false, key: null };
+	}
+}
+
+// Legacy function for backward compatibility
+export function getGemini() {
+	return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+}
 
 // Retry configuration
 const RETRY_CONFIG = {
@@ -137,7 +207,7 @@ export async function parseResumeWithGemini(buffer, customSchema = null) {
 		// Retry loop for each model
 		for (let attempt = 0; attempt <= RETRY_CONFIG.maxRetries; attempt++) {
 			try {
-				const model = genAI.getGenerativeModel({ model: modelName });
+				const model = await getGeminiModel(null, modelName); // Use getGeminiModel
 
 				// Convert buffer to base64
 				const base64Data = buffer.toString("base64");

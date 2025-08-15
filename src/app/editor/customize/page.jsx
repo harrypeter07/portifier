@@ -252,8 +252,15 @@ export default function CustomizePage() {
 			try {
 				const res = await fetch("/api/auth/me");
 				const data = await res.json();
-				if (res.ok && data.username) setUsername(data.username);
-			} catch {}
+				if (res.ok && data.user?.username) {
+					console.log("👤 [CUSTOMIZE] Username fetched:", data.user.username);
+					setUsername(data.user.username);
+				} else {
+					console.error("❌ [CUSTOMIZE] No username found in response:", data);
+				}
+			} catch (error) {
+				console.error("❌ [CUSTOMIZE] Failed to fetch username:", error);
+			}
 		})();
 	}, []);
 

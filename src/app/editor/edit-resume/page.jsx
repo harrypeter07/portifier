@@ -45,8 +45,15 @@ export default function EditResumePage() {
 			try {
 				const res = await fetch("/api/auth/me");
 				const data = await res.json();
-				if (res.ok && data.username) setUsername(data.username);
-			} catch {}
+				if (res.ok && data.user?.username) {
+					console.log("👤 [EDIT-RESUME] Username fetched:", data.user.username);
+					setUsername(data.user.username);
+				} else {
+					console.error("❌ [EDIT-RESUME] No username found in response:", data);
+				}
+			} catch (error) {
+				console.error("❌ [EDIT-RESUME] Failed to fetch username:", error);
+			}
 		})();
 	}, []);
 
@@ -369,6 +376,7 @@ export default function EditResumePage() {
 			error: false,
 			onConfirm: async () => {
 				setModal(m => ({ ...m, open: false }));
+				console.log("🚀 [EDIT-RESUME] Publishing portfolio with username:", username);
 				try {
 					const res = await fetch("/api/portfolio/save", {
 						method: "POST",
@@ -382,7 +390,9 @@ export default function EditResumePage() {
 						}),
 					});
 					const data = await res.json();
+					console.log("📊 [EDIT-RESUME] Save response:", { success: data.success, portfolioUrl: data.portfolioUrl, error: data.error });
 					if (res.ok && data.success) {
+						console.log("✅ [EDIT-RESUME] Portfolio published successfully, redirecting to:", `/portfolio/${username}`);
 						setModal({
 							open: true,
 							title: 'Success!',
@@ -390,7 +400,12 @@ export default function EditResumePage() {
 							confirmText: 'View Analytics',
 							showCancel: false,
 							error: false,
-							onConfirm: () => { setModal(m => ({ ...m, open: false })); router.push(`/portfolio/${username}`); },
+							onConfirm: () => { 
+								setModal(m => ({ ...m, open: false })); 
+								const redirectUrl = `/portfolio/${data.username || username}`;
+								console.log("🎯 [EDIT-RESUME] Redirecting to analytics dashboard:", redirectUrl);
+								router.push(redirectUrl); 
+							},
 						});
 					} else {
 						// Slug errors are not applicable anymore

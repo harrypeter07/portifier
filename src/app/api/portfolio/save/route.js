@@ -80,6 +80,15 @@ export async function POST(req) {
 		if (!updateData.username) {
 			updateData.username = user.username || (user.email && user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, ''));
 		}
+		
+		console.log("💾 [SAVE] Portfolio save details:", {
+			userId: user._id,
+			userEmail: user.email,
+			userUsername: user.username,
+			finalUsername: updateData.username,
+			hasLayout: !!layout,
+			hasPortfolioData: !!finalPortfolioData
+		});
 
 		// Upsert a single portfolio per userId (username URL)
 		const portfolio = await Portfolio.findOneAndUpdate(
@@ -105,7 +114,15 @@ export async function POST(req) {
 		const completeness = portfolio.calculateCompleteness();
 
 		// Generate portfolio URL with username only
-		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${portfolio.username || user.username}`;
+		const finalUsername = portfolio.username || updateData.username || user.username;
+		const portfolioUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${finalUsername}`;
+		
+		console.log("✅ [SAVE] Portfolio saved successfully:", {
+			portfolioId: portfolio._id,
+			finalUsername,
+			portfolioUrl,
+			completeness: portfolio.calculateCompleteness()
+		});
 
 		return NextResponse.json({
 			success: true,
@@ -116,7 +133,7 @@ export async function POST(req) {
 				warnings: validation.errors || [],
 				suggestions: validation.warnings || [],
 			},
-			username: portfolio.username || user.username,
+			username: finalUsername,
 			portfolioId: portfolio._id,
 			slug: portfolio.slug,
 			portfolioUrl: portfolioUrl,
