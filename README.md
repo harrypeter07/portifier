@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <b>Build, customize, and deploy beautiful developer portfolios with ease.</b>
+  <b>Build, customize, and deploy beautiful developer portfolios with ease and AI-powered features.</b>
 </p>
 
 <p align="center">
