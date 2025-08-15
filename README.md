@@ -91,6 +91,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 - **Full-Page Templates**: Complete pre-designed portfolios
 - **Live Preview**: Real-time template customization
 - **Template Categories**: Developer, Designer, Marketing focused
+- **Custom CSS Support**: Advanced styling and theming options
 
 ### 🔐 **Authentication & Security**
 - **JWT Authentication**: Secure user sessions
