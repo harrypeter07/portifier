@@ -98,6 +98,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 - **User Management**: Profile and portfolio management
 - **Secure API Endpoints**: Protected routes and data
 - **Environment Configuration**: Proper secret management
+- **Rate Limiting**: API protection against abuse
 
 ---
 
