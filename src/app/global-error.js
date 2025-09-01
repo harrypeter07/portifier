@@ -14,7 +14,6 @@ export default function GlobalError({
     <html>
       <body>
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-          <Navbar />
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
               <div className="text-red-600 text-6xl mb-4">⚠️</div>
