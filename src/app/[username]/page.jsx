@@ -16,6 +16,15 @@ export default function PortfolioPage({ params }) {
 				const res = await fetch(`/api/portfolio/${username}`);
 				const data = await res.json();
 				if (res.ok && data.success) {
+					console.log("🎨 [PORTFOLIO] Fetched portfolio data:", {
+						hasPortfolio: !!data.portfolio,
+						templateId: data.portfolio?.templateId,
+						templateName: data.portfolio?.templateName,
+						templateType: data.portfolio?.templateType,
+						hasLayout: !!data.portfolio?.layout,
+						layoutKeys: data.portfolio?.layout ? Object.keys(data.portfolio.layout) : [],
+						hasPortfolioData: !!data.portfolio?.portfolioData
+					});
 					setPortfolio(data.portfolio);
 					// Increment views count in background
 					fetch(`/api/portfolio/${username}/views`, { method: 'POST' }).catch(() => {});
@@ -60,7 +69,16 @@ export default function PortfolioPage({ params }) {
 			</div>
 		);
 	}
-	const { layout, content, portfolioData } = portfolio;
+	const { layout, content, portfolioData, templateId, templateName, templateType } = portfolio;
+	
+	console.log("🎨 [PORTFOLIO] Rendering portfolio with template info:", {
+		templateId,
+		templateName,
+		templateType,
+		layoutKeys: Object.keys(layout || {}),
+		hasPortfolioData: !!portfolioData
+	});
+	
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
 			{/* Render each section based on layout, edge-to-edge */}
