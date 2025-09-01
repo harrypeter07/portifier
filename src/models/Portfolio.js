@@ -7,6 +7,9 @@ const PortfolioSchema = new mongoose.Schema({
 	
 	// Portfolio configuration
 	templateName: { type: String, default: "cleanfolio" },
+	templateId: { type: String, default: "cleanfolio" }, // New: specific template ID
+	templateType: { type: String, default: "component" }, // New: component or full
+	currentTemplate: { type: Object, default: null }, // New: full template object for reference
 	portfolioType: { type: String, enum: ['developer', 'designer', 'marketing', 'academic'], default: 'developer' },
 	
 	// Layout configuration (component mapping)

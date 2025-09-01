@@ -29,6 +29,9 @@ export async function POST(req) {
 			portfolioData, // New schema format
 			username,
 			templateName = "cleanfolio",
+			templateId, // New: specific template ID
+			templateType = "component", // New: template type
+			currentTemplate, // New: full template object
 			portfolioType = "developer",
 			// Force publish for username-only URL; no slug
 			isPublic = true,
@@ -41,6 +44,22 @@ export async function POST(req) {
 				{ status: 400 }
 			);
 		}
+
+		// Determine final template information
+		const finalTemplateId = templateId || currentTemplate?.id || templateName || "cleanfolio";
+		const finalTemplateName = currentTemplate?.name || templateName || "cleanfolio";
+		const finalTemplateType = templateType || currentTemplate?.type || "component";
+
+		console.log("🎨 [SAVE] Template information:", {
+			originalTemplateId: templateId,
+			originalTemplateName: templateName,
+			currentTemplateId: currentTemplate?.id,
+			currentTemplateName: currentTemplate?.name,
+			finalTemplateId,
+			finalTemplateName,
+			finalTemplateType,
+			portfolioType
+		});
 
 		// Determine data format and transform if needed
 		let finalPortfolioData;
@@ -67,7 +86,10 @@ export async function POST(req) {
 			layout,
 			portfolioData: finalPortfolioData,
 			content, // Keep legacy format for compatibility
-			templateName,
+			templateName: finalTemplateId, // Use the specific template ID
+			templateId: finalTemplateId, // Store template ID
+			templateType: finalTemplateType, // Store template type
+			currentTemplate: currentTemplate, // Store full template object for reference
 			portfolioType,
 			isPublic,
 			updatedAt: new Date(),
@@ -121,6 +143,9 @@ export async function POST(req) {
 			portfolioId: portfolio._id,
 			finalUsername,
 			portfolioUrl,
+			templateId: finalTemplateId,
+			templateName: finalTemplateName,
+			templateType: finalTemplateType,
 			completeness: portfolio.calculateCompleteness()
 		});
 
@@ -137,6 +162,11 @@ export async function POST(req) {
 			portfolioId: portfolio._id,
 			slug: portfolio.slug,
 			portfolioUrl: portfolioUrl,
+			// Include template information in response
+			templateId: finalTemplateId,
+			templateName: finalTemplateName,
+			templateType: finalTemplateType,
+			template: currentTemplate, // Full template object
 		});
 	} catch (err) {
 		console.error("Error saving portfolio:", err);

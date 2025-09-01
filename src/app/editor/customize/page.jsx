@@ -386,8 +386,15 @@ export default function CustomizePage() {
 		setSaving(true);
 		setSuccess("");
 		try {
-			// Get email from contact section or use a default
-			const userEmail = localContent.contact?.email || "demo@example.com";
+			// Get current template from store
+			const { currentTemplate, portfolioType } = useLayoutStore.getState();
+			
+			console.log("💾 [CUSTOMIZE] Saving portfolio with template:", {
+				templateId: currentTemplate?.id,
+				templateName: currentTemplate?.name,
+				templateType: currentTemplate?.type,
+				portfolioType
+			});
 
 			const res = await fetch("/api/portfolio/save", {
 				method: "POST",
@@ -398,11 +405,21 @@ export default function CustomizePage() {
 					portfolioData, // Include the updated portfolio data
 					resumeId: resumeId, // Associate with resume if available
 					username,
+					// Include template information
+					templateName: currentTemplate?.id || currentTemplate?.name || "cleanfolio",
+					templateId: currentTemplate?.id || "cleanfolio",
+					templateType: currentTemplate?.type || "component",
+					portfolioType: portfolioType || "developer",
+					currentTemplate: currentTemplate, // Include full template object
 				}),
 			});
 			const data = await res.json();
 			if (res.ok && data.success) {
-				console.log("✅ [CUSTOMIZE] Portfolio published successfully, redirecting to analytics dashboard");
+				console.log("✅ [CUSTOMIZE] Portfolio published successfully with template:", {
+					templateId: data.templateId,
+					templateName: data.templateName,
+					redirectUrl: `/portfolio/${data.username || username}`
+				});
 				// Redirect directly to analytics dashboard instead of showing success message
 				const redirectUrl = `/portfolio/${data.username || username}`;
 				console.log("🎯 [CUSTOMIZE] Redirecting to analytics dashboard:", redirectUrl);

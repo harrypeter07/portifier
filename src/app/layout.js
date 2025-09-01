@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 import EditorNavbar from "@/components/common/EditorNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
@@ -26,7 +25,6 @@ export default function RootLayout({ children }) {
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<ErrorBoundary>
-					<Navbar />
 					<EditorNavbar />
 					<main>{children}</main>
 				</ErrorBoundary>

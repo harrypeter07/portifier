@@ -381,6 +381,16 @@ export default function EditResumePage() {
 				setModal(m => ({ ...m, open: false }));
 				console.log("🚀 [EDIT-RESUME] Publishing portfolio with username:", username);
 				try {
+					// Get current template from store
+					const { currentTemplate, portfolioType } = useLayoutStore.getState();
+					
+					console.log("💾 [EDIT-RESUME] Publishing portfolio with template:", {
+						templateId: currentTemplate?.id,
+						templateName: currentTemplate?.name,
+						templateType: currentTemplate?.type,
+						portfolioType
+					});
+
 					const res = await fetch("/api/portfolio/save", {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
@@ -390,12 +400,22 @@ export default function EditResumePage() {
 							portfolioData: newPortfolioData,
 							resumeId: resumeId,
 							username,
+							// Include template information
+							templateName: currentTemplate?.id || currentTemplate?.name || "cleanfolio",
+							templateId: currentTemplate?.id || "cleanfolio",
+							templateType: currentTemplate?.type || "component",
+							portfolioType: portfolioType || "developer",
+							currentTemplate: currentTemplate, // Include full template object
 						}),
 					});
 					const data = await res.json();
-					console.log("📊 [EDIT-RESUME] Save response:", { success: data.success, portfolioUrl: data.portfolioUrl, error: data.error });
+					console.log("📊 [EDIT-RESUME] Save response:", { success: data.success, portfolioUrl: data.portfolioUrl, templateId: data.templateId, templateName: data.templateName, error: data.error });
 					if (res.ok && data.success) {
-						console.log("✅ [EDIT-RESUME] Portfolio published successfully, redirecting to analytics dashboard");
+						console.log("✅ [EDIT-RESUME] Portfolio published successfully with template:", {
+							templateId: data.templateId,
+							templateName: data.templateName,
+							redirectUrl: `/portfolio/${data.username || username}`
+						});
 						// Redirect directly to analytics dashboard instead of showing modal
 						const redirectUrl = `/portfolio/${data.username || username}`;
 						console.log("🎯 [EDIT-RESUME] Redirecting to analytics dashboard:", redirectUrl);
