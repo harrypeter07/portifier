@@ -121,13 +121,23 @@ export async function POST(req) {
 			portfolio = new Portfolio(updateData);
 			await portfolio.save();
 		} else {
-			// Update existing portfolio (upsert a single portfolio per userId)
-			console.log("🔄 [SAVE] Updating existing portfolio for user:", user._id);
-			portfolio = await Portfolio.findOneAndUpdate(
-				{ userId: user._id },
-				updateData,
-				{ new: true, upsert: true, setDefaultsOnInsert: true }
-			);
+			// Update existing portfolio - if username is provided, update that specific portfolio
+			if (username) {
+				console.log("🔄 [SAVE] Updating specific portfolio with username:", username);
+				portfolio = await Portfolio.findOneAndUpdate(
+					{ userId: user._id, username: username },
+					updateData,
+					{ new: true, upsert: true, setDefaultsOnInsert: true }
+				);
+			} else {
+				// Fallback: update the latest portfolio for the user
+				console.log("🔄 [SAVE] Updating latest portfolio for user:", user._id);
+				portfolio = await Portfolio.findOneAndUpdate(
+					{ userId: user._id },
+					updateData,
+					{ new: true, upsert: true, setDefaultsOnInsert: true }
+				);
+			}
 		}
 
 		// Associate resume with portfolio if resumeId is provided

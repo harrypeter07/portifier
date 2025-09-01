@@ -18,31 +18,61 @@ export async function GET(req, { params }) {
 	try {
 		console.log("🔍 [API] Fetching portfolio for username:", username);
 		
-		// First, find the user by username
-		const user = await User.findOne({ username });
-		if (!user) {
-			console.log("❌ [API] User not found for username:", username);
-			return NextResponse.json(
-				{ error: "Portfolio not found" },
-				{ status: 404 }
-			);
-		}
+		// Check if this is a numbered username (e.g., iitz_hassan-2)
+		const isNumberedUsername = username.includes('-') && /-\d+$/.test(username);
+		
+		let portfolio;
+		let user;
+		
+		if (isNumberedUsername) {
+			// For numbered usernames, find portfolio directly by username
+			console.log("🔍 [API] Numbered username detected, searching portfolio directly");
+			portfolio = await Portfolio.findOne({ username, isPublic: true });
+			
+			if (!portfolio) {
+				console.log("❌ [API] Portfolio not found for numbered username:", username);
+				return NextResponse.json(
+					{ error: "Portfolio not found" },
+					{ status: 404 }
+				);
+			}
+			
+			// Get user info from portfolio's userId
+			user = await User.findById(portfolio.userId);
+			if (!user) {
+				console.log("❌ [API] User not found for portfolio userId:", portfolio.userId);
+				return NextResponse.json(
+					{ error: "Portfolio not found" },
+					{ status: 404 }
+				);
+			}
+		} else {
+			// For regular usernames, find user first then portfolio
+			user = await User.findOne({ username });
+			if (!user) {
+				console.log("❌ [API] User not found for username:", username);
+				return NextResponse.json(
+					{ error: "Portfolio not found" },
+					{ status: 404 }
+				);
+			}
 
-		console.log("✅ [API] User found:", {
-			userId: user._id,
-			username: user.username,
-			name: user.name,
-			email: user.email
-		});
+			console.log("✅ [API] User found:", {
+				userId: user._id,
+				username: user.username,
+				name: user.name,
+				email: user.email
+			});
 
-		// Then, find the latest public portfolio for that user
-		const portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true }).sort({ updatedAt: -1 });
-		if (!portfolio) {
-			console.log("❌ [API] Portfolio not found for user:", user._id);
-			return NextResponse.json(
-				{ error: "Portfolio not found" },
-				{ status: 404 }
-			);
+			// Find the latest public portfolio for that user
+			portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true }).sort({ updatedAt: -1 });
+			if (!portfolio) {
+				console.log("❌ [API] Portfolio not found for user:", user._id);
+				return NextResponse.json(
+					{ error: "Portfolio not found" },
+					{ status: 404 }
+				);
+			}
 		}
 
 		console.log("✅ [API] Portfolio found:", {
@@ -56,7 +86,7 @@ export async function GET(req, { params }) {
 		return NextResponse.json({
 			success: true,
 			portfolio: portfolio.getPublicData(),
-			username: user.username,
+			username: portfolio.username, // Use portfolio username (could be numbered)
 		});
 	} catch (err) {
 		console.error("❌ [API] Error fetching portfolio:", err);

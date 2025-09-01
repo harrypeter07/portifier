@@ -15,15 +15,33 @@ export async function POST(req, { params }) {
   }
 
   try {
-    // Get user and portfolio
-    const user = await User.findOne({ username });
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
+    // Check if this is a numbered username (e.g., iitz_hassan-2)
+    const isNumberedUsername = username.includes('-') && /-\d+$/.test(username);
+    
+    let portfolio;
+    let user;
+    
+    if (isNumberedUsername) {
+      // For numbered usernames, find portfolio directly by username
+      portfolio = await Portfolio.findOne({ username, isPublic: true });
+      if (!portfolio) {
+        return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+      }
+      user = await User.findById(portfolio.userId);
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+    } else {
+      // For regular usernames, find user first then portfolio
+      user = await User.findOne({ username });
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
 
-    const portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true });
-    if (!portfolio) {
-      return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+      portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true });
+      if (!portfolio) {
+        return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+      }
     }
 
     // Get request headers
