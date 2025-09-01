@@ -74,18 +74,38 @@ export default function PortfolioPage({ params }) {
 	
 	// Get the template definition to ensure we're using the correct layout
 	const template = getTemplate(templateId) || currentTemplate;
-	const effectiveLayout = template?.layout || layout;
 	
 	console.log("🎨 [PORTFOLIO] Rendering portfolio with template info:", {
 		templateId,
 		templateName,
 		templateType,
 		hasTemplate: !!template,
+		templateType: template?.type,
+		templateComponent: template?.component,
 		templateLayoutKeys: template?.layout ? Object.keys(template.layout) : [],
 		storedLayoutKeys: Object.keys(layout || {}),
-		effectiveLayoutKeys: Object.keys(effectiveLayout || {}),
 		hasPortfolioData: !!portfolioData
 	});
+	
+	// Handle full-page templates
+	if (template?.type === "full" && template?.component) {
+		const FullPageComponent = componentMap[template.component];
+		if (FullPageComponent) {
+			console.log("🎨 [PORTFOLIO] Rendering full-page template:", template.component);
+			return (
+				<div className="min-h-screen bg-white dark:bg-gray-900">
+					<FullPageComponent 
+						portfolioData={portfolioData}
+						content={content}
+						template={template}
+					/>
+				</div>
+			);
+		}
+	}
+	
+	// Handle component-based templates
+	const effectiveLayout = template?.layout || layout;
 	
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">

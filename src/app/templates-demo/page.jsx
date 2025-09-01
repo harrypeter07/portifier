@@ -55,7 +55,7 @@ export default function TemplatesDemoPage() {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					layout: currentTemplate.type === "component" ? currentTemplate.layout : layout,
+					layout: currentTemplate.type === "component" ? currentTemplate.layout : {},
 					content: existingPortfolio.content || content,
 					portfolioData: existingPortfolio.portfolioData || portfolioData,
 					username: existingPortfolio.username,
@@ -131,7 +131,7 @@ export default function TemplatesDemoPage() {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					layout: currentTemplate.type === "component" ? currentTemplate.layout : layout,
+					layout: currentTemplate.type === "component" ? currentTemplate.layout : {},
 					content: content,
 					portfolioData: portfolioData,
 					username: newUsername,
