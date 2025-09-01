@@ -92,7 +92,6 @@ export default function SettingsPage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-			<Navbar />
 			{/* Header */}
 			<div className="bg-white dark:bg-gray-900 shadow-sm border-b">
 				<div className="max-w-4xl mx-auto px-4 py-6">
