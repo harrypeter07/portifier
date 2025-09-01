@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TemplateSelector from "@/components/TemplateSelector";
 import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
@@ -10,10 +10,82 @@ import Navbar from "@/components/Navbar";
 export default function TemplatesDemoPage() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
 	const [showSelector, setShowSelector] = useState(true);
+	const [existingPortfolio, setExistingPortfolio] = useState(null);
+	const [isUpdating, setIsUpdating] = useState(false);
 	const router = useRouter();
 
 	const componentTemplates = getComponentTemplates();
 	const fullPageTemplates = getFullPageTemplates();
+
+	// Check if user has an existing portfolio
+	useEffect(() => {
+		const checkExistingPortfolio = async () => {
+			try {
+				const res = await fetch("/api/auth/me");
+				if (res.ok) {
+					const userData = await res.json();
+					if (userData.user?.username) {
+						// Check if portfolio exists
+						const portfolioRes = await fetch(`/api/portfolio/${userData.user.username}`);
+						if (portfolioRes.ok) {
+							const portfolioData = await portfolioRes.json();
+							setExistingPortfolio(portfolioData.portfolio);
+						}
+					}
+				}
+			} catch (error) {
+				console.log("No existing portfolio found");
+			}
+		};
+
+		checkExistingPortfolio();
+	}, []);
+
+	const handleUpdateExistingPortfolio = async () => {
+		if (!currentTemplate || !existingPortfolio) return;
+
+		setIsUpdating(true);
+		try {
+			console.log("🔄 [TEMPLATES-DEMO] Updating existing portfolio template:", {
+				templateId: currentTemplate.id,
+				templateName: currentTemplate.name,
+				portfolioId: existingPortfolio._id
+			});
+
+			const res = await fetch("/api/portfolio/save", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					layout: currentTemplate.type === "component" ? currentTemplate.layout : layout,
+					content: existingPortfolio.content || content,
+					portfolioData: existingPortfolio.portfolioData || portfolioData,
+					username: existingPortfolio.username,
+					// Template information
+					templateName: currentTemplate.id,
+					templateId: currentTemplate.id,
+					templateType: currentTemplate.type,
+					portfolioType: existingPortfolio.portfolioType || "developer",
+					currentTemplate: currentTemplate,
+				}),
+			});
+
+			const data = await res.json();
+			if (res.ok && data.success) {
+				console.log("✅ [TEMPLATES-DEMO] Portfolio template updated successfully:", {
+					templateId: data.templateId,
+					templateName: data.templateName,
+					redirectUrl: `/portfolio/${data.username}`
+				});
+				router.push(`/portfolio/${data.username}`);
+			} else {
+				console.error("Failed to update portfolio template:", data.error);
+			}
+		} catch (error) {
+			console.error("Error updating portfolio template:", error);
+		} finally {
+			setIsUpdating(false);
+		}
+	};
 
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -67,12 +139,32 @@ export default function TemplatesDemoPage() {
 								>
 									{showSelector ? "Hide Selector" : "Show Selector"}
 								</button>
-								<button
-									onClick={() => router.push('/editor')}
-									className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-								>
-									Deploy Portfolio
-								</button>
+								
+								{/* Conditional buttons based on existing portfolio */}
+								{existingPortfolio ? (
+									<>
+										<button
+											onClick={handleUpdateExistingPortfolio}
+											disabled={isUpdating}
+											className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+										>
+											{isUpdating ? "Updating..." : "🔄 Update Portfolio Template"}
+										</button>
+										<button
+											onClick={() => router.push('/editor')}
+											className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+										>
+											Create New Portfolio
+										</button>
+									</>
+								) : (
+									<button
+										onClick={() => router.push('/editor')}
+										className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+									>
+										Deploy Portfolio
+									</button>
+								)}
 							</div>
 						</div>
 						

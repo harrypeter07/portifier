@@ -67,6 +67,16 @@ export default function LivePreviewPage() {
 				return;
 			}
 
+			// Get current template from store
+			const { currentTemplate, portfolioType } = useLayoutStore.getState();
+			
+			console.log("💾 [PREVIEW] Publishing portfolio with template:", {
+				templateId: currentTemplate?.id,
+				templateName: currentTemplate?.name,
+				templateType: currentTemplate?.type,
+				portfolioType
+			});
+
 			const res = await fetch("/api/portfolio/save", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -75,12 +85,22 @@ export default function LivePreviewPage() {
 					content,
 					portfolioData,
 					username,
+					// Include template information
+					templateName: currentTemplate?.id || currentTemplate?.name || "cleanfolio",
+					templateId: currentTemplate?.id || "cleanfolio",
+					templateType: currentTemplate?.type || "component",
+					portfolioType: portfolioType || "developer",
+					currentTemplate: currentTemplate, // Include full template object
 				}),
 			});
 
 			const data = await res.json();
 			if (res.ok && data.success) {
-				console.log("✅ [PREVIEW] Portfolio published successfully, redirecting to analytics dashboard");
+				console.log("✅ [PREVIEW] Portfolio published successfully with template:", {
+					templateId: data.templateId,
+					templateName: data.templateName,
+					redirectUrl: `/portfolio/${data.username || username}`
+				});
 				// Redirect directly to analytics dashboard instead of showing modal
 				const redirectUrl = `/portfolio/${data.username || username}`;
 				console.log("🎯 [PREVIEW] Redirecting to analytics dashboard:", redirectUrl);

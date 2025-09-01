@@ -151,6 +151,47 @@ export default function PortfolioDashboardPage({ params }) {
 				</div>
 			</div>
 
+			{/* Template Information Section */}
+			{portfolio && (
+				<div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-b border-purple-200 dark:border-purple-700">
+					<div className="max-w-7xl mx-auto px-4 py-4">
+						<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+							<div className="flex items-center space-x-4">
+								<div className="flex items-center space-x-2">
+									<span className="text-2xl">🎨</span>
+									<div>
+										<h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+											Current Template: {portfolio.currentTemplate?.name || portfolio.templateName || portfolio.templateId || "Default"}
+										</h3>
+										<div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+											<span>ID: {portfolio.templateId || portfolio.templateName || "cleanfolio"}</span>
+											<span>•</span>
+											<span>Type: {portfolio.templateType || "component"}</span>
+											<span>•</span>
+											<span>Category: {portfolio.portfolioType || "developer"}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div className="flex items-center space-x-3">
+								<button
+									onClick={() => router.push('/templates-demo')}
+									className="px-4 py-2 bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-700 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors font-medium"
+								>
+									🔄 Change Template
+								</button>
+								<button
+									onClick={() => router.push('/editor/customize')}
+									className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+								>
+									✏️ Customize
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
+
 			{/* Main Content */}
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Overview Stats */}
