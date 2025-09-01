@@ -9,7 +9,21 @@ export async function POST(req) {
 	console.log("[SIGNUP] Incoming sign-up request");
 	
 	try {
-		await dbConnect();
+		// Try to connect to database with better error handling
+		try {
+			await dbConnect();
+			console.log("[SIGNUP] Database connected successfully");
+		} catch (dbError) {
+			console.error("[SIGNUP] Database connection failed:", dbError.message);
+			return NextResponse.json(
+				{ 
+					error: "Database connection failed. Please try again in a few moments.",
+					details: process.env.NODE_ENV === "development" ? dbError.message : undefined
+				},
+				{ status: 503 }
+			);
+		}
+
 		const { name, username, email, password } = await req.json();
 		
 		console.log("[SIGNUP] Registration attempt for:", { name, username, email });
@@ -109,9 +123,28 @@ export async function POST(req) {
 
 	} catch (error) {
 		console.error("[SIGNUP] Error during sign up:", error);
+		
+		// Provide more specific error messages
+		let errorMessage = "Internal server error";
+		let statusCode = 500;
+		
+		if (error.name === "ValidationError") {
+			errorMessage = "Invalid data provided";
+			statusCode = 400;
+		} else if (error.code === 11000) {
+			errorMessage = "User already exists";
+			statusCode = 409;
+		} else if (error.message?.includes("timeout") || error.message?.includes("ETIMEDOUT")) {
+			errorMessage = "Database connection timeout. Please try again.";
+			statusCode = 503;
+		}
+		
 		return NextResponse.json(
-			{ error: "Internal server error" },
-			{ status: 500 }
+			{ 
+				error: errorMessage,
+				details: process.env.NODE_ENV === "development" ? error.message : undefined
+			},
+			{ status: statusCode }
 		);
 	}
 }

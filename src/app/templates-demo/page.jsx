@@ -4,16 +4,20 @@ import TemplateSelector from "@/components/TemplateSelector";
 import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
 import { getComponentTemplates, getFullPageTemplates } from "@/data/templates/templateManager";
+import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 export default function TemplatesDemoPage() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
 	const [showSelector, setShowSelector] = useState(true);
+	const router = useRouter();
 
 	const componentTemplates = getComponentTemplates();
 	const fullPageTemplates = getFullPageTemplates();
 
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+			<Navbar />
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Header */}
 				<div className="text-center mb-8">
@@ -62,6 +66,12 @@ export default function TemplatesDemoPage() {
 									className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
 								>
 									{showSelector ? "Hide Selector" : "Show Selector"}
+								</button>
+								<button
+									onClick={() => router.push('/editor')}
+									className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+								>
+									Deploy Portfolio
 								</button>
 							</div>
 						</div>

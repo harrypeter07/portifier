@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Modal from "@/components/common/Modal";
 import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
 import debounce from "lodash.debounce";
+import Navbar from "@/components/Navbar";
 
 // Mock parsed resume data (in real app, get from upload step or API)
 const MOCK_RESUME = {
@@ -447,7 +448,9 @@ export default function CustomizePage() {
 	}
 
 	return (
-		<div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+			<Navbar />
+			<div className="flex">
 			{/* Left side - Form */}
 			<div className="w-1/2 p-8 overflow-y-auto">
 				<motion.div
@@ -820,6 +823,7 @@ export default function CustomizePage() {
 				onConfirm={modal.onConfirm}
 				onCancel={modal.onCancel}
 			/>
+			</div>
 		</div>
 	);
 }

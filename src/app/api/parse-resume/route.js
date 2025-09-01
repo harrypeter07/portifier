@@ -4,7 +4,23 @@ import { getGeminiModel, checkUserApiKey } from "@/lib/gemini";
 import dbConnect from "@/lib/mongodb";
 
 export async function POST(req) {
-	await dbConnect();
+	// Try to connect to database with better error handling
+	try {
+		await dbConnect();
+		console.log("✅ [PARSE-RESUME] Database connected successfully");
+	} catch (dbError) {
+		console.error("❌ [PARSE-RESUME] Database connection failed:", dbError.message);
+		return NextResponse.json(
+			{ 
+				success: false,
+				error: "Database connection failed. Please try again in a few moments.",
+				errorType: "DatabaseConnectionError",
+				details: process.env.NODE_ENV === "development" ? dbError.message : undefined
+			},
+			{ status: 503 }
+		);
+	}
+	
 	const user = await auth();
 	
 	if (!user) {
@@ -215,6 +231,17 @@ export async function GET(req) {
 
 		console.log("🔍 [HEALTH-CHECK] Environment variables:", envCheck);
 
+		// Check MongoDB connection
+		let dbStatus = "unknown";
+		try {
+			await dbConnect();
+			dbStatus = "connected";
+			console.log("✅ [HEALTH-CHECK] MongoDB connection successful");
+		} catch (dbError) {
+			dbStatus = "failed";
+			console.error("❌ [HEALTH-CHECK] MongoDB connection failed:", dbError.message);
+		}
+
 		// Try a simple test call
 		const model = await getGeminiModel(null, "gemini-1.5-flash");
 		const result = await model.generateContent("Hello");
@@ -224,7 +251,9 @@ export async function GET(req) {
 		return NextResponse.json({
 			status: "healthy",
 			available: true,
-			envCheck
+			envCheck,
+			database: dbStatus,
+			gemini: "connected"
 		});
 	} catch (error) {
 		console.error("❌ Gemini API health check failed:", error);
@@ -236,7 +265,9 @@ export async function GET(req) {
 				GEMINI_API_KEY: !!process.env.GEMINI_API_KEY,
 				JWT_SECRET: !!process.env.JWT_SECRET,
 				MONGODB_URI: !!process.env.MONGODB_URI,
-			}
+			},
+			database: "unknown",
+			gemini: "failed"
 		}, { status: 503 });
 	}
 }

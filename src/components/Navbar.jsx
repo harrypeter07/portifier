@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useLayoutStore } from "@/store/layoutStore";
 
 const publicNavLinks = [
 	{ href: "/auth/signin", label: "Sign In", icon: "🚪" },
@@ -11,6 +12,7 @@ const publicNavLinks = [
 const authenticatedNavLinks = [
 	{ href: "/", label: "Home", icon: "🏠" },
 	{ href: "/dashboard", label: "Dashboard", icon: "📊" },
+	{ href: "/templates-demo", label: "Templates", icon: "🎨" },
 	{ href: "/editor", label: "Create Portfolio", icon: "✏️" },
 	{ href: "/settings", label: "Settings", icon: "⚙️" },
 ];
