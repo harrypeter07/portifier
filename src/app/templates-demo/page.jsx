@@ -5,7 +5,6 @@ import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
 import { getComponentTemplates, getFullPageTemplates } from "@/data/templates/templateManager";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
 
 export default function TemplatesDemoPage() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
@@ -89,7 +88,6 @@ export default function TemplatesDemoPage() {
 
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-			<Navbar />
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Header */}
 				<div className="text-center mb-8">

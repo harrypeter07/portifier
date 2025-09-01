@@ -10,7 +10,6 @@ import gsap from "gsap";
 import "@/styles/customSlider.css";
 import { sampleDataCleanfolio } from "@/data/samplePortfolioData";
 import GeminiKeyModal from "@/components/common/GeminiKeyModal";
-import Navbar from "@/components/Navbar";
 
 const FULL_LAYOUT = {
   hero: "HeroA",
@@ -345,7 +344,6 @@ export default function ResumeUploadPage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-			<Navbar />
 			<div className="flex flex-col-reverse md:flex-row">
 			{/* Left Panel - Upload and Navigation */}
 			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>

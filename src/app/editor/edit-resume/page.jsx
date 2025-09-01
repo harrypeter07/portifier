@@ -10,7 +10,6 @@ import Modal from "@/components/common/Modal";
 import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
 import { motion } from "framer-motion";
 import debounce from "lodash.debounce";
-import Navbar from "@/components/Navbar";
 
 export default function EditResumePage() {
 	const {
@@ -543,7 +542,6 @@ export default function EditResumePage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-			<Navbar />
 			<div className="flex flex-col-reverse md:flex-row">
 				{/* Left Panel - Form */}
 				<div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto h-auto md:h-screen">

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLayoutStore } from "@/store/layoutStore";
-import Navbar from "@/components/Navbar";
 
 export default function Dashboard() {
 	const [user, setUser] = useState(null);
@@ -82,7 +81,6 @@ export default function Dashboard() {
 
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-			<Navbar />
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				{/* Header */}
 				<motion.div
