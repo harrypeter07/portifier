@@ -278,6 +278,18 @@ export default function Navbar() {
 				{/* Mobile Navigation */}
 				{mobileMenuOpen && (
 					<div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 animate-in slide-in-from-top-5 duration-200">
+						{/* Current Template Indicator for Mobile */}
+						{currentTemplate && (
+							<div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+								<div className="flex items-center space-x-2">
+									<span className="text-sm font-medium text-gray-900 dark:text-white">Current Template:</span>
+									<span className="px-2 py-1 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded text-xs font-medium text-purple-700 dark:text-purple-300">
+										🎨 {currentTemplate.name}
+									</span>
+								</div>
+							</div>
+						)}
+						
 						<div className="px-4 py-4 space-y-2">
 							{navLinks.map((link) => (
 								<Link
