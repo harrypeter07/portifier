@@ -20,6 +20,7 @@ const authenticatedNavLinks = [
 export default function Navbar() {
 	const pathname = usePathname();
 	const router = useRouter();
+	const { currentTemplate } = useLayoutStore();
 
 	// Hide Navbar for public portfolio pages (single segment, not app routes)
 	const isPortfolioPage =
