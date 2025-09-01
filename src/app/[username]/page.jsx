@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { componentMap } from "@/data/componentMap";
 import PortfolioLoading from "@/components/PortfolioLoading";
+import { getTemplate } from "@/data/templates/templateManager";
 
 export default function PortfolioPage({ params }) {
 	// Next.js 15: unwrap async params with React.use in client pages
@@ -69,20 +70,27 @@ export default function PortfolioPage({ params }) {
 			</div>
 		);
 	}
-	const { layout, content, portfolioData, templateId, templateName, templateType } = portfolio;
+	const { layout, content, portfolioData, templateId, templateName, templateType, currentTemplate } = portfolio;
+	
+	// Get the template definition to ensure we're using the correct layout
+	const template = getTemplate(templateId) || currentTemplate;
+	const effectiveLayout = template?.layout || layout;
 	
 	console.log("🎨 [PORTFOLIO] Rendering portfolio with template info:", {
 		templateId,
 		templateName,
 		templateType,
-		layoutKeys: Object.keys(layout || {}),
+		hasTemplate: !!template,
+		templateLayoutKeys: template?.layout ? Object.keys(template.layout) : [],
+		storedLayoutKeys: Object.keys(layout || {}),
+		effectiveLayoutKeys: Object.keys(effectiveLayout || {}),
 		hasPortfolioData: !!portfolioData
 	});
 	
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
-			{/* Render each section based on layout, edge-to-edge */}
-			{Object.entries(layout).map(([section, componentName]) => {
+			{/* Render each section based on template layout, edge-to-edge */}
+			{Object.entries(effectiveLayout || {}).map(([section, componentName]) => {
 				const Component = componentMap[componentName];
 				if (!Component) return null;
 				let componentProps = {};

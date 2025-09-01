@@ -10,6 +10,31 @@ import {
 } from "@/utils/dataTransformers";
 import { auth } from "@/lib/auth";
 
+// Utility function to generate unique slug
+async function generateUniqueSlug(portfolioData, existingId = null) {
+	if (!portfolioData?.personal?.firstName || !portfolioData?.personal?.lastName) {
+		return null;
+	}
+	
+	const fullName = `${portfolioData.personal.firstName}-${portfolioData.personal.lastName}`;
+	let baseSlug = fullName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+	
+	// Make slug unique by appending numbers if needed
+	let slug = baseSlug;
+	let counter = 1;
+	
+	while (counter <= 100) { // Limit to prevent infinite loop
+		const existingPortfolio = await Portfolio.findOne({ slug });
+		if (!existingPortfolio || (existingId && existingPortfolio._id.equals(existingId))) {
+			break; // Slug is unique or it's the same document
+		}
+		counter++;
+		slug = `${baseSlug}-${counter}`;
+	}
+	
+	return slug;
+}
+
 export async function POST(req) {
 	await dbConnect();
 
@@ -81,6 +106,9 @@ export async function POST(req) {
 			// Continue saving but log warnings
 		}
 
+		// Generate unique slug if needed
+		const uniqueSlug = await generateUniqueSlug(finalPortfolioData);
+
 		// Prepare portfolio update data
 		const updateData = {
 			userId: user._id,
@@ -98,6 +126,7 @@ export async function POST(req) {
 
 		// Add optional fields if provided
 		if (username) updateData.username = username;
+		if (uniqueSlug) updateData.slug = uniqueSlug;
 
 		// Ensure username is always set for uniqueness
 		if (!updateData.username) {

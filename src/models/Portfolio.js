@@ -249,7 +249,7 @@ const PortfolioSchema = new mongoose.Schema({
 	updatedAt: { type: Date, default: Date.now }
 });
 
-// Pre-save middleware to update timestamps and generate username/slug
+// Pre-save middleware to update timestamps and generate username
 PortfolioSchema.pre('save', function(next) {
 	this.updatedAt = new Date();
 	
@@ -257,12 +257,6 @@ PortfolioSchema.pre('save', function(next) {
 	if (!this.username && this.portfolioData?.personal?.email) {
 		const emailPrefix = this.portfolioData.personal.email.split('@')[0];
 		this.username = emailPrefix.toLowerCase().replace(/[^a-z0-9]/g, '');
-	}
-	
-	// Generate slug from name if not provided
-	if (!this.slug && this.portfolioData?.personal?.firstName && this.portfolioData?.personal?.lastName) {
-		const fullName = `${this.portfolioData.personal.firstName}-${this.portfolioData.personal.lastName}`;
-		this.slug = fullName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
 	}
 	
 	next();
