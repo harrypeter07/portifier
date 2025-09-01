@@ -36,6 +36,7 @@ export async function POST(req) {
 			// Force publish for username-only URL; no slug
 			isPublic = true,
 			resumeId, // Optional: associate with a resume
+			isNewPortfolio = false, // New: flag to create new portfolio instead of updating
 		} = requestData;
 
 		if (!layout) {
@@ -112,12 +113,22 @@ export async function POST(req) {
 			hasPortfolioData: !!finalPortfolioData
 		});
 
-		// Upsert a single portfolio per userId (username URL)
-		const portfolio = await Portfolio.findOneAndUpdate(
-			{ userId: user._id },
-			updateData,
-			{ new: true, upsert: true, setDefaultsOnInsert: true }
-		);
+		// Handle portfolio creation/update based on isNewPortfolio flag
+		let portfolio;
+		if (isNewPortfolio) {
+			// Create a new portfolio with the specified username
+			console.log("🆕 [SAVE] Creating new portfolio with username:", updateData.username);
+			portfolio = new Portfolio(updateData);
+			await portfolio.save();
+		} else {
+			// Update existing portfolio (upsert a single portfolio per userId)
+			console.log("🔄 [SAVE] Updating existing portfolio for user:", user._id);
+			portfolio = await Portfolio.findOneAndUpdate(
+				{ userId: user._id },
+				updateData,
+				{ new: true, upsert: true, setDefaultsOnInsert: true }
+			);
+		}
 
 		// Associate resume with portfolio if resumeId is provided
 		if (resumeId) {

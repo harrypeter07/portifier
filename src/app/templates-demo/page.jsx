@@ -86,6 +86,85 @@ export default function TemplatesDemoPage() {
 		}
 	};
 
+	const handlePublishNewPortfolio = async () => {
+		if (!currentTemplate) return;
+
+		setIsUpdating(true);
+		try {
+			// Get user info to generate unique username
+			const userRes = await fetch("/api/auth/me");
+			const userData = await userRes.json();
+			
+			if (!userRes.ok || !userData.user?.username) {
+				console.error("Failed to get user data for new portfolio");
+				return;
+			}
+
+			const baseUsername = userData.user.username;
+			let newUsername = `${baseUsername}-2`; // Start with -2 since -1 might exist
+			let counter = 2;
+
+			// Check if username exists and increment until we find a unique one
+			while (counter <= 10) { // Limit to 10 attempts
+				const checkRes = await fetch(`/api/portfolio/${newUsername}`);
+				if (!checkRes.ok) {
+					// Username doesn't exist, we can use it
+					break;
+				}
+				counter++;
+				newUsername = `${baseUsername}-${counter}`;
+			}
+
+			if (counter > 10) {
+				console.error("Could not generate unique username");
+				return;
+			}
+
+			console.log("🚀 [TEMPLATES-DEMO] Publishing new portfolio with unique URL:", {
+				templateId: currentTemplate.id,
+				templateName: currentTemplate.name,
+				baseUsername,
+				newUsername
+			});
+
+			const res = await fetch("/api/portfolio/save", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					layout: currentTemplate.type === "component" ? currentTemplate.layout : layout,
+					content: content,
+					portfolioData: portfolioData,
+					username: newUsername,
+					// Template information
+					templateName: currentTemplate.id,
+					templateId: currentTemplate.id,
+					templateType: currentTemplate.type,
+					portfolioType: "developer",
+					currentTemplate: currentTemplate,
+					// Mark as new portfolio creation
+					isNewPortfolio: true,
+				}),
+			});
+
+			const data = await res.json();
+			if (res.ok && data.success) {
+				console.log("✅ [TEMPLATES-DEMO] New portfolio published successfully:", {
+					templateId: data.templateId,
+					templateName: data.templateName,
+					newUsername: data.username,
+					redirectUrl: `/portfolio/${data.username}`
+				});
+				router.push(`/portfolio/${data.username}`);
+			} else {
+				console.error("Failed to publish new portfolio:", data.error);
+			}
+		} catch (error) {
+			console.error("Error publishing new portfolio:", error);
+		} finally {
+			setIsUpdating(false);
+		}
+	};
+
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
 			<div className="max-w-7xl mx-auto px-4 py-8">
@@ -149,10 +228,17 @@ export default function TemplatesDemoPage() {
 											{isUpdating ? "Updating..." : "🔄 Update Portfolio Template"}
 										</button>
 										<button
-											onClick={() => router.push('/editor')}
-											className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+											onClick={handlePublishNewPortfolio}
+											disabled={isUpdating}
+											className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 transition-colors"
 										>
-											Create New Portfolio
+											{isUpdating ? "Publishing..." : "🚀 Publish New Portfolio"}
+										</button>
+										<button
+											onClick={() => router.push('/editor')}
+											className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+										>
+											Edit Portfolio
 										</button>
 									</>
 								) : (
