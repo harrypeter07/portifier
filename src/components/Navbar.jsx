@@ -138,6 +138,15 @@ export default function Navbar() {
 								<span>{link.label}</span>
 							</Link>
 						))}
+						
+						{/* Current Template Indicator */}
+						{currentTemplate && (
+							<div className="ml-4 px-3 py-1 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded-lg border border-purple-200 dark:border-purple-700">
+								<span className="text-xs font-medium text-purple-700 dark:text-purple-300">
+									🎨 {currentTemplate.name}
+								</span>
+							</div>
+						)}
 					</div>
 
 					{/* Right Side - User Section */}
