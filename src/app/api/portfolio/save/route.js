@@ -53,6 +53,7 @@ export async function POST(req) {
 			content, // Legacy format
 			portfolioData, // New schema format
 			username,
+			portfolioId, // New: specific portfolio ID to update
 			templateName = "cleanfolio",
 			templateId, // New: specific template ID
 			templateType = "component", // New: template type
@@ -153,11 +154,53 @@ export async function POST(req) {
 			// Update existing portfolio - if username is provided, update that specific portfolio
 			if (username) {
 				console.log("🔄 [SAVE] Updating specific portfolio with username:", username);
-				portfolio = await Portfolio.findOneAndUpdate(
-					{ userId: user._id, username: username },
-					updateData,
-					{ new: true, upsert: true, setDefaultsOnInsert: true }
-				);
+				
+				// First, try to find the exact portfolio by username
+				let existingPortfolio = await Portfolio.findOne({ 
+					userId: user._id, 
+					username: username 
+				});
+				
+				if (existingPortfolio) {
+					// Update existing portfolio
+					console.log("✅ [SAVE] Found existing portfolio, updating:", existingPortfolio._id);
+					portfolio = await Portfolio.findByIdAndUpdate(
+						existingPortfolio._id,
+						updateData,
+						{ new: true }
+					);
+				} else {
+					// Check if this is a numbered username (e.g., iitz_hassan-3)
+					const isNumberedUsername = username.includes('-') && /-\d+$/.test(username);
+					
+					if (isNumberedUsername) {
+						// For numbered usernames, create new portfolio
+						console.log("🆕 [SAVE] Creating new numbered portfolio:", username);
+						portfolio = new Portfolio(updateData);
+						await portfolio.save();
+					} else {
+						// For base usernames, check if there's already a portfolio and update it
+						const basePortfolio = await Portfolio.findOne({ 
+							userId: user._id,
+							username: { $regex: new RegExp(`^${username}$|^${username}-\\d+$`) }
+						}).sort({ updatedAt: -1 });
+						
+						if (basePortfolio) {
+							// Update the most recent portfolio for this user
+							console.log("✅ [SAVE] Found base portfolio, updating:", basePortfolio._id);
+							portfolio = await Portfolio.findByIdAndUpdate(
+								basePortfolio._id,
+								updateData,
+								{ new: true }
+							);
+						} else {
+							// Create new portfolio
+							console.log("🆕 [SAVE] Creating new base portfolio:", username);
+							portfolio = new Portfolio(updateData);
+							await portfolio.save();
+						}
+					}
+				}
 			} else {
 				// Fallback: update the latest portfolio for the user
 				console.log("🔄 [SAVE] Updating latest portfolio for user:", user._id);
