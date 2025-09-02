@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { componentMap } from "@/data/componentMap";
 import PortfolioLoading from "@/components/PortfolioLoading";
-import { getTemplate } from "@/data/templates/templateManager";
+import { getTemplate, PORTFOLIO_TEMPLATES } from "@/data/templates/templateManager";
 
 export default function PortfolioPage({ params }) {
 	// Next.js 15: unwrap async params with React.use in client pages
@@ -10,6 +10,7 @@ export default function PortfolioPage({ params }) {
 	const [portfolio, setPortfolio] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [userData, setUserData] = useState(null);
 
 	console.log("🔍 [PORTFOLIO] Component initialized with username:", username);
 
@@ -48,6 +49,7 @@ export default function PortfolioPage({ params }) {
 						});
 					}
 					setPortfolio(data.portfolio);
+					setUserData(data.user);
 					// Increment views count in background
 					fetch(`/api/portfolio/${username}/views`, { method: 'POST' }).catch(() => {});
 				} else {
@@ -116,8 +118,8 @@ export default function PortfolioPage({ params }) {
 		hasCurrentTemplate: !!currentTemplate
 	});
 	
-	// Get the template definition to ensure we're using the correct layout
-	const template = getTemplate(templateId) || currentTemplate;
+		// Get the template definition to ensure we're using the correct layout
+	const template = getTemplate(templateId) || currentTemplate || getTemplate(templateName);
 	
 	console.log("🎨 [PORTFOLIO] Template resolution:", {
 		templateId,
@@ -130,7 +132,9 @@ export default function PortfolioPage({ params }) {
 		storedLayoutKeys: Object.keys(layout || {}),
 		hasPortfolioData: !!portfolioData,
 		getTemplateResult: getTemplate(templateId),
-		currentTemplate: currentTemplate
+		getTemplateByNameResult: getTemplate(templateName),
+		currentTemplate: currentTemplate,
+		availableTemplates: Object.keys(PORTFOLIO_TEMPLATES)
 	});
 	
 	// Handle full-page templates
@@ -150,11 +154,38 @@ export default function PortfolioPage({ params }) {
 						portfolioData={portfolioData}
 						content={content}
 						template={template}
+						data={portfolioData}
 					/>
 				</div>
 			);
 		} else {
 			console.error("❌ [PORTFOLIO] Full-page component not found:", template.component);
+		}
+	}
+	
+	// Fallback: Check if currentTemplate is a full-page template
+	if (currentTemplate?.type === "full" && currentTemplate?.component) {
+		console.log("🎨 [PORTFOLIO] Rendering full-page template from currentTemplate:", {
+			component: currentTemplate.component,
+			hasComponent: !!componentMap[currentTemplate.component],
+			availableComponents: Object.keys(componentMap)
+		});
+		
+		const FullPageComponent = componentMap[currentTemplate.component];
+		if (FullPageComponent) {
+			console.log("🎨 [PORTFOLIO] Rendering full-page template from currentTemplate:", currentTemplate.component);
+			return (
+				<div className="min-h-screen bg-white dark:bg-gray-900">
+					<FullPageComponent 
+						portfolioData={portfolioData}
+						content={content}
+						template={currentTemplate}
+						data={portfolioData}
+					/>
+				</div>
+			);
+		} else {
+			console.error("❌ [PORTFOLIO] Full-page component not found in currentTemplate:", currentTemplate.component);
 		}
 	}
 	
@@ -186,17 +217,41 @@ export default function PortfolioPage({ params }) {
 				}
 				let componentProps = {};
 				if (section === "hero") {
-					componentProps = { data: { personal: portfolioData?.personal } };
+					// Use user data as fallback for personal information
+					const personalData = {
+						firstName: portfolioData?.personal?.firstName || userData?.name?.split(' ')[0] || username?.split('_')[0] || username,
+						lastName: portfolioData?.personal?.lastName || userData?.name?.split(' ')[1] || username?.split('_')[1] || "",
+						title: portfolioData?.personal?.title || "Professional",
+						subtitle: portfolioData?.personal?.subtitle || "Portfolio",
+						tagline: portfolioData?.personal?.tagline || "",
+						email: portfolioData?.personal?.email || userData?.email || "",
+						phone: portfolioData?.personal?.phone || "",
+						location: portfolioData?.personal?.location || {},
+						social: portfolioData?.personal?.social || {}
+					};
+					componentProps = { data: { personal: personalData } };
+					console.log("🔍 [PORTFOLIO] Hero section props:", componentProps);
 				} else if (section === "about") {
 					componentProps = {
 						summary: portfolioData?.about?.summary || content?.about?.summary || "",
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] About section props:", componentProps);
 				} else if (section === "projects") {
+					// Map database fields to component expectations
+					const mappedProjects = (portfolioData?.projects?.items || content?.projects?.items || []).map(project => ({
+						...project,
+						name: project.title || project.name, // Map title to name for component
+						description: project.description,
+						url: project.links?.live || project.url,
+						github: project.links?.github || project.github,
+						technologies: project.technologies || []
+					}));
 					componentProps = {
-						items: portfolioData?.projects?.items || content?.projects?.items || [],
+						items: mappedProjects,
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] Projects section props:", componentProps);
 				} else if (section === "skills") {
 					componentProps = {
 						technical: portfolioData?.skills?.technical || content?.skills?.technical || [],
@@ -204,6 +259,7 @@ export default function PortfolioPage({ params }) {
 						languages: portfolioData?.skills?.languages || content?.skills?.languages || [],
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] Skills section props:", componentProps);
 				} else if (section === "achievements") {
 					componentProps = {
 						awards: portfolioData?.achievements?.awards || content?.achievements?.awards || [],
@@ -211,29 +267,62 @@ export default function PortfolioPage({ params }) {
 						publications: portfolioData?.achievements?.publications || content?.achievements?.publications || [],
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] Achievements section props:", componentProps);
 				} else if (section === "experience") {
+					// Map database fields to component expectations
+					const mappedJobs = (portfolioData?.experience?.jobs || content?.experience?.jobs || []).map(job => ({
+						...job,
+						title: job.position || job.title, // Map position to title for component
+						company: job.company,
+						location: job.location,
+						duration: job.startDate && job.endDate ? `${job.startDate} - ${job.endDate}` : 
+								 job.startDate ? `${job.startDate} - Present` : job.duration,
+						description: job.description,
+						technologies: job.technologies || []
+					}));
 					componentProps = {
-						jobs: portfolioData?.experience?.jobs || content?.experience?.jobs || [],
+						jobs: mappedJobs,
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] Experience section props:", componentProps);
 				} else if (section === "education") {
+					// Map database fields to component expectations
+					const mappedDegrees = (portfolioData?.education?.degrees || content?.education?.degrees || []).map(degree => ({
+						...degree,
+						degree: degree.degree,
+						field: degree.field,
+						institution: degree.institution,
+						year: degree.startDate && degree.endDate ? `${degree.startDate} - ${degree.endDate}` : 
+							  degree.startDate ? `${degree.startDate} - Present` : degree.year,
+						location: degree.location,
+						gpa: degree.grade || degree.gpa
+					}));
 					componentProps = {
-						degrees: portfolioData?.education?.degrees || content?.education?.degrees || [],
+						degrees: mappedDegrees,
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] Education section props:", componentProps);
 				} else if (section === "contact") {
 					componentProps = {
-						email: portfolioData?.personal?.email || content?.contact?.email || "",
+						email: portfolioData?.personal?.email || userData?.email || content?.contact?.email || "",
 						phone: portfolioData?.personal?.phone || content?.contact?.phone || "",
+						location: portfolioData?.personal?.location ? 
+							`${portfolioData.personal.location.city || ''} ${portfolioData.personal.location.state || ''} ${portfolioData.personal.location.country || ''}`.trim() : 
+							content?.contact?.location || "",
 						linkedin: portfolioData?.personal?.social?.linkedin || content?.contact?.linkedin || "",
 						github: portfolioData?.personal?.social?.github || content?.contact?.github || "",
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] Contact section props:", componentProps);
 				} else {
 					componentProps = {
 						...content?.[section],
 						data: portfolioData || content,
 					};
+					console.log("🔍 [PORTFOLIO] Generic section props:", {
+						section,
+						props: componentProps
+					});
 				}
 				return (
 					<div key={section} className="w-full">
