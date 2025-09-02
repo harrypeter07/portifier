@@ -40,6 +40,7 @@ export default function EditResumePage() {
 	const router = useRouter();
 	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
 	const [username, setUsername] = useState("");
+	const [existingPortfolio, setExistingPortfolio] = useState(null);
 
 	// Fetch username on mount
 	useEffect(() => {
@@ -50,6 +51,14 @@ export default function EditResumePage() {
 				if (res.ok && data.user?.username) {
 					console.log("👤 [EDIT-RESUME] Username fetched:", data.user.username);
 					setUsername(data.user.username);
+					
+					// Check if user has an existing portfolio
+					const portfolioRes = await fetch(`/api/portfolio/${data.user.username}`);
+					if (portfolioRes.ok) {
+						const portfolioData = await portfolioRes.json();
+						setExistingPortfolio(portfolioData.portfolio);
+						console.log("📁 [EDIT-RESUME] Found existing portfolio:", portfolioData.portfolio._id);
+					}
 				} else {
 					console.error("❌ [EDIT-RESUME] No username found in response:", data);
 				}
@@ -399,6 +408,7 @@ export default function EditResumePage() {
 							portfolioData: newPortfolioData,
 							resumeId: resumeId,
 							username,
+							portfolioId: existingPortfolio?._id, // Add portfolio ID if editing existing portfolio
 							// Include template information
 							templateName: currentTemplate?.id || currentTemplate?.name || "cleanfolio",
 							templateId: currentTemplate?.id || "cleanfolio",

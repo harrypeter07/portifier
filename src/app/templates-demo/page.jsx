@@ -59,6 +59,7 @@ export default function TemplatesDemoPage() {
 					content: existingPortfolio.content || content,
 					portfolioData: existingPortfolio.portfolioData || portfolioData,
 					username: existingPortfolio.username,
+					portfolioId: existingPortfolio._id, // Add portfolio ID for specific update
 					// Template information
 					templateName: currentTemplate.id,
 					templateId: currentTemplate.id,

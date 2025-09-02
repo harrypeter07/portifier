@@ -151,8 +151,18 @@ export async function POST(req) {
 			portfolio = new Portfolio(updateData);
 			await portfolio.save();
 		} else {
-			// Update existing portfolio - if username is provided, update that specific portfolio
-			if (username) {
+			// Update existing portfolio - prioritize portfolioId if provided
+			if (portfolioId) {
+				console.log("🔄 [SAVE] Updating specific portfolio by ID:", portfolioId);
+				portfolio = await Portfolio.findOneAndUpdate(
+					{ _id: portfolioId, userId: user._id },
+					updateData,
+					{ new: true }
+				);
+				if (!portfolio) {
+					return NextResponse.json({ error: "Portfolio not found or unauthorized" }, { status: 404 });
+				}
+			} else if (username) {
 				console.log("🔄 [SAVE] Updating specific portfolio with username:", username);
 				
 				// First, try to find the exact portfolio by username
