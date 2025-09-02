@@ -1,7 +1,7 @@
 "use client";
 import { useLayoutStore } from "@/store/layoutStore";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { componentMap, componentCategories, getRecommendedLayout } from "@/data/componentMap";
 import Preview from "@/components/Preview";
 import { motion, AnimatePresence } from "framer-motion";
@@ -247,6 +247,7 @@ export default function CustomizePage() {
 	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
 	const [username, setUsername] = useState("");
 	const [existingPortfolio, setExistingPortfolio] = useState(null);
+	const searchParams = useSearchParams();
 
 	// Fetch username on mount
 	useEffect(() => {
@@ -258,12 +259,32 @@ export default function CustomizePage() {
 					console.log("👤 [CUSTOMIZE] Username fetched:", data.user.username);
 					setUsername(data.user.username);
 					
-					// Check if user has an existing portfolio
-					const portfolioRes = await fetch(`/api/portfolio/${data.user.username}`);
-					if (portfolioRes.ok) {
-						const portfolioData = await portfolioRes.json();
-						setExistingPortfolio(portfolioData.portfolio);
-						console.log("📁 [CUSTOMIZE] Found existing portfolio:", portfolioData.portfolio._id);
+					// Check if we're editing a specific portfolio from URL parameters
+					const portfolioId = searchParams.get('portfolioId');
+					const portfolioUsername = searchParams.get('username');
+					
+					if (portfolioId && portfolioUsername) {
+						// We're editing a specific portfolio from dashboard
+						console.log("🎯 [CUSTOMIZE] Editing specific portfolio from URL:", {
+							portfolioId,
+							portfolioUsername
+						});
+						
+						// Fetch the specific portfolio data
+						const portfolioRes = await fetch(`/api/portfolio/${portfolioUsername}`);
+						if (portfolioRes.ok) {
+							const portfolioData = await portfolioRes.json();
+							setExistingPortfolio(portfolioData.portfolio);
+							console.log("📁 [CUSTOMIZE] Found specific portfolio:", portfolioData.portfolio._id);
+						}
+					} else {
+						// Check if user has an existing portfolio (general case)
+						const portfolioRes = await fetch(`/api/portfolio/${data.user.username}`);
+						if (portfolioRes.ok) {
+							const portfolioData = await portfolioRes.json();
+							setExistingPortfolio(portfolioData.portfolio);
+							console.log("📁 [CUSTOMIZE] Found existing portfolio:", portfolioData.portfolio._id);
+						}
 					}
 				} else {
 					console.error("❌ [CUSTOMIZE] No username found in response:", data);
@@ -272,7 +293,7 @@ export default function CustomizePage() {
 				console.error("❌ [CUSTOMIZE] Failed to fetch username:", error);
 			}
 		})();
-	}, []);
+	}, [searchParams]);
 
 	// No slug flow; publish to /{username}
 

@@ -549,15 +549,36 @@ export default function Dashboard() {
 												<div className="text-xs text-gray-500 dark:text-gray-400">
 													Updated {new Date(portfolio.updatedAt).toLocaleDateString()}
 												</div>
-												<Link
-													href={portfolio.portfolioUrl}
-													target="_blank"
-													className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-												>
-													<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-													</svg>
-												</Link>
+												<div className="flex items-center space-x-2">
+													<Link
+														href={portfolio.portfolioUrl}
+														target="_blank"
+														className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+														title="View Portfolio"
+													>
+														<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+														</svg>
+													</Link>
+													<Link
+														href={`/editor/customize?portfolioId=${portfolio._id}&username=${portfolio.username}`}
+														className="p-2 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
+														title="Edit Portfolio"
+													>
+														<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+														</svg>
+													</Link>
+													<Link
+														href={`/templates-demo?portfolioId=${portfolio._id}&username=${portfolio.username}`}
+														className="p-2 text-purple-400 hover:text-purple-600 dark:hover:text-purple-300 transition-colors"
+														title="Change Template"
+													>
+														<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17v.01" />
+														</svg>
+													</Link>
+												</div>
 											</div>
 										</motion.div>
 									))}

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useLayoutStore } from "@/store/layoutStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
 import Preview from "@/components/Preview";
 import AICompanionField from "@/components/AICompanionField";
@@ -41,6 +41,7 @@ export default function EditResumePage() {
 	const [modal, setModal] = useState({ open: false, title: '', message: '', onConfirm: null, onCancel: null, confirmText: 'OK', cancelText: 'Cancel', showCancel: false, error: false });
 	const [username, setUsername] = useState("");
 	const [existingPortfolio, setExistingPortfolio] = useState(null);
+	const searchParams = useSearchParams();
 
 	// Fetch username on mount
 	useEffect(() => {
@@ -52,12 +53,32 @@ export default function EditResumePage() {
 					console.log("👤 [EDIT-RESUME] Username fetched:", data.user.username);
 					setUsername(data.user.username);
 					
-					// Check if user has an existing portfolio
-					const portfolioRes = await fetch(`/api/portfolio/${data.user.username}`);
-					if (portfolioRes.ok) {
-						const portfolioData = await portfolioRes.json();
-						setExistingPortfolio(portfolioData.portfolio);
-						console.log("📁 [EDIT-RESUME] Found existing portfolio:", portfolioData.portfolio._id);
+					// Check if we're editing a specific portfolio from URL parameters
+					const portfolioId = searchParams.get('portfolioId');
+					const portfolioUsername = searchParams.get('username');
+					
+					if (portfolioId && portfolioUsername) {
+						// We're editing a specific portfolio from dashboard
+						console.log("🎯 [EDIT-RESUME] Editing specific portfolio from URL:", {
+							portfolioId,
+							portfolioUsername
+						});
+						
+						// Fetch the specific portfolio data
+						const portfolioRes = await fetch(`/api/portfolio/${portfolioUsername}`);
+						if (portfolioRes.ok) {
+							const portfolioData = await portfolioRes.json();
+							setExistingPortfolio(portfolioData.portfolio);
+							console.log("📁 [EDIT-RESUME] Found specific portfolio:", portfolioData.portfolio._id);
+						}
+					} else {
+						// Check if user has an existing portfolio (general case)
+						const portfolioRes = await fetch(`/api/portfolio/${data.user.username}`);
+						if (portfolioRes.ok) {
+							const portfolioData = await portfolioRes.json();
+							setExistingPortfolio(portfolioData.portfolio);
+							console.log("📁 [EDIT-RESUME] Found existing portfolio:", portfolioData.portfolio._id);
+						}
 					}
 				} else {
 					console.error("❌ [EDIT-RESUME] No username found in response:", data);
@@ -66,7 +87,7 @@ export default function EditResumePage() {
 				console.error("❌ [EDIT-RESUME] Failed to fetch username:", error);
 			}
 		})();
-	}, []);
+	}, [searchParams]);
 
 	// No slug flow; publish to /{username}
 

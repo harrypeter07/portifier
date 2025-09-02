@@ -4,19 +4,22 @@ import TemplateSelector from "@/components/TemplateSelector";
 import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
 import { getComponentTemplates, getFullPageTemplates } from "@/data/templates/templateManager";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function TemplatesDemoPage() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
 	const [showSelector, setShowSelector] = useState(true);
 	const [existingPortfolio, setExistingPortfolio] = useState(null);
 	const [isUpdating, setIsUpdating] = useState(false);
+	const [updateMessage, setUpdateMessage] = useState("");
+	const [isUpdatingSpecificPortfolio, setIsUpdatingSpecificPortfolio] = useState(false);
 	const router = useRouter();
+	const searchParams = useSearchParams();
 
 	const componentTemplates = getComponentTemplates();
 	const fullPageTemplates = getFullPageTemplates();
 
-	// Check if user has an existing portfolio
+	// Check if user has an existing portfolio and if we're updating a specific one
 	useEffect(() => {
 		const checkExistingPortfolio = async () => {
 			try {
@@ -24,11 +27,31 @@ export default function TemplatesDemoPage() {
 				if (res.ok) {
 					const userData = await res.json();
 					if (userData.user?.username) {
-						// Check if portfolio exists
-						const portfolioRes = await fetch(`/api/portfolio/${userData.user.username}`);
-						if (portfolioRes.ok) {
-							const portfolioData = await portfolioRes.json();
-							setExistingPortfolio(portfolioData.portfolio);
+						// Check if we're updating a specific portfolio from dashboard
+						const portfolioId = searchParams.get('portfolioId');
+						const portfolioUsername = searchParams.get('username');
+						
+						if (portfolioId && portfolioUsername) {
+							// We're updating a specific portfolio from dashboard
+							setIsUpdatingSpecificPortfolio(true);
+							console.log("🎯 [TEMPLATES-DEMO] Updating specific portfolio from dashboard:", {
+								portfolioId,
+								portfolioUsername
+							});
+							
+							// Fetch the specific portfolio data
+							const portfolioRes = await fetch(`/api/portfolio/${portfolioUsername}`);
+							if (portfolioRes.ok) {
+								const portfolioData = await portfolioRes.json();
+								setExistingPortfolio(portfolioData.portfolio);
+							}
+						} else {
+							// Check if portfolio exists (general case)
+							const portfolioRes = await fetch(`/api/portfolio/${userData.user.username}`);
+							if (portfolioRes.ok) {
+								const portfolioData = await portfolioRes.json();
+								setExistingPortfolio(portfolioData.portfolio);
+							}
 						}
 					}
 				}
@@ -38,17 +61,19 @@ export default function TemplatesDemoPage() {
 		};
 
 		checkExistingPortfolio();
-	}, []);
+	}, [searchParams]);
 
 	const handleUpdateExistingPortfolio = async () => {
 		if (!currentTemplate || !existingPortfolio) return;
 
 		setIsUpdating(true);
+		setUpdateMessage("");
 		try {
 			console.log("🔄 [TEMPLATES-DEMO] Updating existing portfolio template:", {
 				templateId: currentTemplate.id,
 				templateName: currentTemplate.name,
-				portfolioId: existingPortfolio._id
+				portfolioId: existingPortfolio._id,
+				portfolioUsername: existingPortfolio.username
 			});
 
 			const res = await fetch("/api/portfolio/save", {
@@ -76,12 +101,22 @@ export default function TemplatesDemoPage() {
 					templateName: data.templateName,
 					redirectUrl: `/portfolio/${data.username}`
 				});
-				router.push(`/portfolio/${data.username}`);
+				
+				// Show success message
+				setUpdateMessage(`✅ Portfolio "${existingPortfolio.username}" has been successfully updated with the "${currentTemplate.name}" template!`);
+				
+				// Clear message after 3 seconds and redirect
+				setTimeout(() => {
+					setUpdateMessage("");
+					router.push(`/portfolio/${data.username}`);
+				}, 3000);
 			} else {
 				console.error("Failed to update portfolio template:", data.error);
+				setUpdateMessage(`❌ Failed to update portfolio: ${data.error}`);
 			}
 		} catch (error) {
 			console.error("Error updating portfolio template:", error);
+			setUpdateMessage(`❌ Error updating portfolio: ${error.message}`);
 		} finally {
 			setIsUpdating(false);
 		}
@@ -180,6 +215,52 @@ export default function TemplatesDemoPage() {
 						while full-page templates provide complete, pre-designed layouts.
 					</p>
 				</div>
+
+				{/* Update Message */}
+				{updateMessage && (
+					<div className="mb-6 p-4 rounded-lg border-2 border-green-200 bg-green-50 dark:bg-green-900 dark:border-green-700">
+						<div className="flex items-center">
+							<div className="flex-shrink-0">
+								<svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+									<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+								</svg>
+							</div>
+							<div className="ml-3">
+								<p className="text-sm font-medium text-green-800 dark:text-green-200">
+									{updateMessage}
+								</p>
+							</div>
+						</div>
+					</div>
+				)}
+
+				{/* Portfolio Update Info */}
+				{isUpdatingSpecificPortfolio && existingPortfolio && (
+					<div className="mb-6 p-4 rounded-lg border-2 border-blue-200 bg-blue-50 dark:bg-blue-900 dark:border-blue-700">
+						<div className="flex items-center justify-between">
+							<div className="flex items-center">
+								<div className="flex-shrink-0">
+									<svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+										<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+									</svg>
+								</div>
+								<div className="ml-3">
+									<h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
+										Updating Portfolio: <span className="font-bold">{existingPortfolio.username}</span>
+									</h3>
+									<p className="text-sm text-blue-700 dark:text-blue-300">
+										Current template: <span className="font-medium">{existingPortfolio.templateName || 'Default'}</span>
+									</p>
+								</div>
+							</div>
+							<div className="text-right">
+								<p className="text-xs text-blue-600 dark:text-blue-400">
+									Portfolio ID: {existingPortfolio._id}
+								</p>
+							</div>
+						</div>
+					</div>
+				)}
 
 				{/* Template Selector */}
 				{showSelector && (
