@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
+import ExportButton from "@/components/ExportButton";
 
-export default function CreativeFull({ data = EMPTY_PORTFOLIO }) {
+export default function CreativeFull({ data = EMPTY_PORTFOLIO, portfolioId, username }) {
 	const personal = data?.personal || {};
 	const about = data?.about || {};
 	const experience = data?.experience || {};
@@ -21,6 +22,17 @@ export default function CreativeFull({ data = EMPTY_PORTFOLIO }) {
 
 	return (
 		<div className="min-h-screen bg-black text-white">
+			{/* Export Button - Floating Action Button */}
+			{portfolioId && username && (
+				<div className="fixed bottom-6 right-6 z-50">
+					<ExportButton 
+						portfolioId={portfolioId} 
+						username={username}
+						className="shadow-lg"
+					/>
+				</div>
+			)}
+			
 			{/* Hero Section */}
 			<section className="min-h-screen flex items-center justify-center relative overflow-hidden">
 				{/* Animated Background */}

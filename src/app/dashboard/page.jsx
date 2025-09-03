@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLayoutStore } from "@/store/layoutStore";
+import ExportButton from "@/components/ExportButton";
 
 export default function Dashboard() {
 	const [user, setUser] = useState(null);
@@ -550,6 +551,11 @@ export default function Dashboard() {
 													Updated {new Date(portfolio.updatedAt).toLocaleDateString()}
 												</div>
 												<div className="flex items-center space-x-2">
+													<ExportButton
+														portfolioId={portfolio._id}
+														username={portfolio.username}
+														className="p-2 text-green-400 hover:text-green-600 dark:hover:text-green-300 transition-colors"
+													/>
 													<Link
 														href={portfolio.portfolioUrl}
 														target="_blank"

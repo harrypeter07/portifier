@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { componentMap } from "@/data/componentMap";
 import PortfolioLoading from "@/components/PortfolioLoading";
 import { getTemplate, PORTFOLIO_TEMPLATES } from "@/data/templates/templateManager";
+import ExportButton from "@/components/ExportButton";
 
 export default function PortfolioPage({ params }) {
 	// Next.js 15: unwrap async params with React.use in client pages
@@ -155,6 +156,8 @@ export default function PortfolioPage({ params }) {
 						content={content}
 						template={template}
 						data={portfolioData}
+						portfolioId={portfolio._id}
+						username={username}
 					/>
 				</div>
 			);
@@ -181,6 +184,8 @@ export default function PortfolioPage({ params }) {
 						content={content}
 						template={currentTemplate}
 						data={portfolioData}
+						portfolioId={portfolio._id}
+						username={username}
 					/>
 				</div>
 			);
@@ -201,6 +206,15 @@ export default function PortfolioPage({ params }) {
 	
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
+			{/* Export Button - Floating Action Button */}
+			<div className="fixed bottom-6 right-6 z-50">
+				<ExportButton 
+					portfolioId={portfolio._id} 
+					username={username}
+					className="shadow-lg"
+				/>
+			</div>
+			
 			{/* Render each section based on template layout, edge-to-edge */}
 			{Object.entries(effectiveLayout || {}).map(([section, componentName]) => {
 				console.log("🔍 [PORTFOLIO] Rendering section:", {
