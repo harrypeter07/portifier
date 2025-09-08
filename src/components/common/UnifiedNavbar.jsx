@@ -200,7 +200,7 @@ export default function UnifiedNavbar() {
 	if (loading) {
 		return (
 			<nav className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div className="container">
 					<div className="flex justify-between items-center h-16">
 						<div className="flex items-center space-x-2">
 							<div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
