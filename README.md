@@ -512,3 +512,13 @@ See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-applicat
 ---
 
 > For further customization or questions, see code comments or ask your team lead.
+
+---
+
+## 🔑 Environment Variables (Remote Templates)
+
+- `SHARED_JWT_SECRET` – used to sign service-to-service JWTs
+- `TEMPLATES_BASE_URL` – e.g. `https://templates.portume.com`
+- `REMOTE_TEMPLATES_ENABLED` – set to `true` to attempt remote render via `/api/portfolio/render/[username]`
+
+When enabled, the client page at `/[username]` will try fetching `{ html, css }` from the internal proxy and inject it. If the proxy is disabled or unreachable, the existing local templates render as before.

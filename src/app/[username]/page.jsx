@@ -9,6 +9,7 @@ export default function PortfolioPage({ params }) {
 	// Next.js 15: unwrap async params with React.use in client pages
 	const { username } = React.use(params);
 	const [portfolio, setPortfolio] = useState(null);
+	const [remoteRender, setRemoteRender] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [userData, setUserData] = useState(null);
@@ -53,6 +54,15 @@ export default function PortfolioPage({ params }) {
 					setUserData(data.user);
 					// Increment views count in background
 					fetch(`/api/portfolio/${username}/views`, { method: 'POST' }).catch(() => {});
+
+					// Try remote render if enabled
+					try {
+						const remoteRes = await fetch(`/api/portfolio/render/${username}`);
+						if (remoteRes.ok) {
+							const rr = await remoteRes.json();
+							if (rr?.html) setRemoteRender(rr);
+						}
+					} catch {}
 				} else {
 					console.error("❌ [PORTFOLIO] API error:", data.error || "Portfolio not found");
 					setError(data.error || "Portfolio not found");
@@ -138,6 +148,20 @@ export default function PortfolioPage({ params }) {
 		availableTemplates: Object.keys(PORTFOLIO_TEMPLATES)
 	});
 	
+	// If remote render available, inject directly and skip local rendering
+	if (remoteRender?.html) {
+		return (
+			<div className="min-h-screen bg-white dark:bg-gray-900">
+				{remoteRender?.css ? (
+					<style dangerouslySetInnerHTML={{ __html: remoteRender.css }} />
+				) : null}
+				<div dangerouslySetInnerHTML={{ __html: remoteRender.html }} />
+				{/* Analytics */}
+				<script src="/analytics.js" data-portfolio-id={portfolio?._id}></script>
+			</div>
+		);
+	}
+
 	// Handle full-page templates
 	if (template?.type === "full" && template?.component) {
 		console.log("🎨 [PORTFOLIO] Rendering full-page template:", {
