@@ -440,4 +440,43 @@ Set `NODE_ENV=development` for detailed error messages.
 
 ---
 
+## 🔗 Main App Integration Status
+
+**Integration Complete**: The Main App has been successfully integrated with the Templates App for seamless template sharing and rendering.
+
+### New API Routes Added to Main App:
+- `GET /api/templates/manifest` - Fetches available templates from Templates App
+- `POST /api/render-portfolio` - Renders portfolios using Templates App (enhanced)
+- `GET /api/render-portfolio?username=<username>` - Alternative render endpoint
+
+### Templates Demo Page Enhanced:
+- **Remote Templates Section**: Displays templates from Templates App (`modern-resume`, `minimal-card`)
+- **Connection Status**: Shows loading states and error handling
+- **Template Preview**: Direct links to preview templates
+- **Local vs Remote**: Clear distinction between local and remote templates
+
+### Integration Features:
+- ✅ **Template Discovery**: Automatically fetches and displays remote templates
+- ✅ **Error Handling**: Graceful fallback when Templates App is unavailable
+- ✅ **Visual Indicators**: Version numbers, tags, and source identification
+- ✅ **Preview Links**: Direct access to template previews
+
+### Testing Setup:
+- **Main App**: `localhost:3000` (portfolio app)
+- **Templates App**: `localhost:3001` (templates service)
+- **Environment**: Set `TEMPLATES_BASE_URL=http://localhost:3001` for local testing
+
+### Required Environment Variables:
+```bash
+# Main App
+JWT_SECRET=your-super-secret-jwt-key-here
+SHARED_JWT_SECRET=your-super-secret-jwt-key-here
+TEMPLATES_BASE_URL=https://portumet.vercel.app  # or http://localhost:3001 for local
+
+# Templates App
+SHARED_JWT_SECRET=your-super-secret-jwt-key-here  # Must match Main App
+```
+
+---
+
 **Ready for Production**: The Templates App is fully implemented, tested, and ready for deployment. It provides a robust, scalable solution for portfolio rendering with comprehensive data handling and professional templates.
