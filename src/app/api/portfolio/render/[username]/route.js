@@ -15,7 +15,8 @@ async function fetchPortfolioByUsername(username, origin) {
 }
 
 export async function GET(request, { params }) {
-	if (!process.env.REMOTE_TEMPLATES_ENABLED || process.env.REMOTE_TEMPLATES_ENABLED === "false") {
+	// Enable remote templates by default, can be disabled with env var
+	if (process.env.REMOTE_TEMPLATES_ENABLED === "false") {
 		return new NextResponse(null, { status: 204 });
 	}
 	const { username } = params;

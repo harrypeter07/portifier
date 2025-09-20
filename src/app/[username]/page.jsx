@@ -57,12 +57,14 @@ export default function PortfolioPage({ params }) {
 
 					// Try remote render if enabled
 					try {
-						const remoteRes = await fetch(`/api/portfolio/render/${username}`);
+						const remoteRes = await fetch(`/api/render-portfolio?username=${username}`);
 						if (remoteRes.ok) {
-							const rr = await remoteRes.json();
-							if (rr?.html) setRemoteRender(rr);
+							const html = await remoteRes.text();
+							if (html) setRemoteRender({ html });
 						}
-					} catch {}
+					} catch (error) {
+						console.log("Remote render failed, falling back to local:", error);
+					}
 				} else {
 					console.error("❌ [PORTFOLIO] API error:", data.error || "Portfolio not found");
 					setError(data.error || "Portfolio not found");
@@ -152,9 +154,6 @@ export default function PortfolioPage({ params }) {
 	if (remoteRender?.html) {
 		return (
 			<div className="min-h-screen bg-white dark:bg-gray-900">
-				{remoteRender?.css ? (
-					<style dangerouslySetInnerHTML={{ __html: remoteRender.css }} />
-				) : null}
 				<div dangerouslySetInnerHTML={{ __html: remoteRender.html }} />
 				{/* Analytics */}
 				<script src="/analytics.js" data-portfolio-id={portfolio?._id}></script>

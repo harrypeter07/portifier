@@ -2,7 +2,7 @@ import { makeServiceJWT } from "./serviceJwt";
 
 export async function renderRemoteTemplate({ portfolio, options = {} }) {
 	try {
-		const baseUrl = process.env.TEMPLATES_BASE_URL || "";
+		const baseUrl = process.env.TEMPLATES_BASE_URL || "https://portumet.vercel.app";
 		if (!baseUrl) return null;
 		const token = await makeServiceJWT({ sub: String(portfolio?._id || portfolio?.id || ""), scope: "render" });
 		const res = await fetch(`${baseUrl}/api/render`, {
