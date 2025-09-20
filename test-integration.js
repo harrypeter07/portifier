@@ -162,18 +162,159 @@ async function runComprehensiveTest() {
       const renderData = {
         templateId: 'modern-resume',
         data: {
-          username: 'test_user',
-          templateId: 'modern-resume',
-          portfolioData: {
-            personal: {
-              firstName: 'John',
-              lastName: 'Doe',
-              email: 'john@example.com',
-              title: 'Full Stack Developer'
+          personal: {
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john@example.com',
+            title: 'Full Stack Developer',
+            subtitle: 'Building digital experiences that matter',
+            phone: '+1 (555) 123-4567',
+            location: {
+              city: 'San Francisco',
+              state: 'CA',
+              country: 'USA'
             },
-            about: {
-              summary: 'Passionate developer with 5+ years of experience.'
-            }
+            social: {
+              linkedin: 'linkedin.com/in/johndoe',
+              github: 'github.com/johndoe',
+              portfolio: 'johndoe.dev'
+            },
+            tagline: 'Passionate about creating scalable web applications',
+            availability: 'Available for new opportunities'
+          },
+          about: {
+            summary: 'Experienced full-stack developer with 5+ years building web applications. Passionate about clean code, user experience, and modern technologies.',
+            bio: 'I\'m a dedicated software engineer who loves solving complex problems through code. When I\'m not coding, you can find me contributing to open source projects or exploring new technologies.',
+            interests: ['Open Source', 'Machine Learning', 'Web Performance'],
+            personalValues: ['Quality', 'Collaboration', 'Continuous Learning'],
+            funFacts: ['Coffee enthusiast', 'Marathon runner', 'Tech blogger']
+          },
+          experience: {
+            jobs: [
+              {
+                id: '1',
+                company: 'Tech Corp',
+                position: 'Senior Full Stack Developer',
+                location: 'San Francisco, CA',
+                startDate: 'Jan 2022',
+                endDate: '',
+                current: true,
+                description: 'Lead development of scalable web applications using React and Node.js. Mentor junior developers and drive technical decisions.',
+                responsibilities: [
+                  'Architected and built microservices handling 100k+ daily requests',
+                  'Led a team of 4 developers in building core platform features',
+                  'Implemented CI/CD pipelines reducing deployment time by 70%'
+                ],
+                achievements: [
+                  'Increased application performance by 40%',
+                  'Reduced bug reports by 60% through comprehensive testing'
+                ],
+                technologies: ['React', 'Node.js', 'TypeScript', 'AWS', 'Docker'],
+                projects: ['E-commerce Platform', 'Analytics Dashboard'],
+                companyLogo: '',
+                companyWebsite: 'https://techcorp.com'
+              }
+            ]
+          },
+          skills: {
+            technical: [
+              {
+                category: 'Frontend',
+                skills: [
+                  {
+                    name: 'React',
+                    level: 'expert',
+                    years: 4,
+                    icon: '',
+                    certified: false
+                  },
+                  {
+                    name: 'JavaScript',
+                    level: 'expert',
+                    years: 5,
+                    icon: '',
+                    certified: false
+                  }
+                ]
+              }
+            ],
+            soft: [
+              {
+                name: 'Leadership',
+                description: 'Led multiple development teams',
+                examples: ['Team Lead at Tech Corp']
+              }
+            ],
+            languages: [
+              { name: 'English', proficiency: 'native', certification: '' }
+            ]
+          },
+          projects: {
+            items: [
+              {
+                id: '1',
+                title: 'E-commerce Platform',
+                description: 'Full-stack e-commerce solution with payment integration',
+                longDescription: 'Built a complete e-commerce platform handling thousands of transactions daily with advanced features like real-time inventory, payment processing, and analytics.',
+                category: 'Web Application',
+                tags: ['E-commerce', 'Full-stack', 'Payments'],
+                technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'AWS'],
+                status: 'completed',
+                startDate: '2023-01',
+                endDate: '2023-06',
+                images: [],
+                videos: [],
+                links: {
+                  live: 'https://shop.example.com',
+                  github: 'https://github.com/johndoe/ecommerce',
+                  demo: 'https://demo.shop.example.com',
+                  documentation: 'https://docs.shop.example.com'
+                },
+                features: ['Payment Processing', 'Inventory Management', 'User Analytics'],
+                challenges: ['Scaling to handle high traffic', 'Real-time inventory updates'],
+                learnings: ['Microservices architecture', 'Payment security'],
+                teamSize: 3,
+                role: 'Lead Developer',
+                client: 'Retail Corp',
+                metrics: {
+                  users: '10,000+ active users',
+                  performance: '99.9% uptime',
+                  impact: '$2M+ in processed transactions'
+                },
+                testimonial: {
+                  text: 'John delivered an exceptional e-commerce platform that exceeded our expectations.',
+                  author: 'Sarah Johnson',
+                  title: 'CTO, Retail Corp',
+                  avatar: '/testimonials/sarah.jpg'
+                }
+              }
+            ]
+          },
+          contact: {
+            email: 'john@example.com',
+            phone: '+1 (555) 123-4567',
+            preferredContact: 'email',
+            timezone: 'PST',
+            availability: 'Available for freelance and full-time opportunities',
+            rates: {
+              hourly: '$75-100',
+              project: 'Varies by scope',
+              retainer: 'Available'
+            },
+            services: ['Web Development', 'Technical Consulting', 'Code Reviews'],
+            workingHours: '9 AM - 5 PM PST',
+            responseTime: 'Within 24 hours'
+          },
+          theme: {
+            primaryColor: '#3B82F6',
+            secondaryColor: '#1E40AF',
+            accentColor: '#F59E0B',
+            backgroundColor: '#FFFFFF',
+            textColor: '#1F2937',
+            font: 'Inter',
+            darkMode: false,
+            animations: true,
+            layout: 'modern'
           }
         },
         options: { draft: false, version: "v1" }

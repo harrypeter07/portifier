@@ -67,10 +67,11 @@ export async function POST(request) {
 				'Authorization': `Bearer ${apiKey}`,
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({
-				templateId: portfolioData.templateId,
-				data: portfolioData
-			})
+		body: JSON.stringify({
+			templateId: portfolioData.templateId,
+			data: portfolioData.portfolioData, // ✅ Send only portfolioData, not entire object
+			options: { draft: false, version: "v1" }
+		})
 		});
 
 		if (!response.ok) {
