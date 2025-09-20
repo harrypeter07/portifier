@@ -5,6 +5,7 @@ import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
 import { getComponentTemplates, getFullPageTemplates } from "@/data/templates/templateManager";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useRemoteTemplates } from "@/hooks/useRemoteTemplates";
 
 // Component that handles search params
 function TemplatesDemoPageContent() {
@@ -19,6 +20,7 @@ function TemplatesDemoPageContent() {
 
 	const componentTemplates = getComponentTemplates();
 	const fullPageTemplates = getFullPageTemplates();
+	const { templates: remoteTemplates, loading: remoteLoading, error: remoteError } = useRemoteTemplates();
 
 	// Check if user has an existing portfolio and if we're updating a specific one
 	useEffect(() => {
@@ -371,11 +373,108 @@ function TemplatesDemoPageContent() {
 					</div>
 				)}
 
-				{/* Template Statistics */}
+				{/* Remote Templates from Templates App */}
+				<div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+					<div className="flex items-center justify-between mb-4">
+						<h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+							🚀 Remote Templates (from Templates App)
+						</h3>
+						<div className="flex items-center space-x-2">
+							<span className="text-sm text-gray-500 dark:text-gray-400">
+								Source: https://portumet.vercel.app
+							</span>
+							{remoteLoading && (
+								<div className="w-4 h-4 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+							)}
+						</div>
+					</div>
+					
+					{remoteError ? (
+						<div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+							<div className="flex items-center">
+								<div className="flex-shrink-0">
+									<svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+										<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+									</svg>
+								</div>
+								<div className="ml-3">
+									<h3 className="text-sm font-medium text-red-800 dark:text-red-200">
+										Connection Error
+									</h3>
+									<div className="mt-2 text-sm text-red-700 dark:text-red-300">
+										<p>{remoteError}</p>
+										<p className="mt-1">Make sure your templates app is deployed and JWT secrets are configured.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					) : (
+						<div className="space-y-2">
+							{remoteTemplates.length > 0 ? (
+								remoteTemplates.map((template) => (
+									<div key={template.id} className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+										<div className="flex-1">
+											<div className="flex items-center space-x-2">
+												<div className="font-medium text-gray-900 dark:text-white">
+													{template.name}
+												</div>
+												<span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
+													v{template.version}
+												</span>
+												<span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full">
+													Remote
+												</span>
+											</div>
+											<div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+												{template.description}
+											</div>
+											<div className="flex items-center space-x-2 mt-2">
+												{template.tags?.map((tag, index) => (
+													<span key={index} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded">
+														{tag}
+													</span>
+												))}
+											</div>
+										</div>
+										<div className="flex items-center space-x-2">
+											<button
+												onClick={() => {
+													// For remote templates, we'll use the render API
+													console.log("Selected remote template:", template);
+													// You can implement remote template selection logic here
+												}}
+												className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+											>
+												Use Template
+											</button>
+											<button
+												onClick={() => {
+													// Test the template by rendering it
+													window.open(`https://portumet.vercel.app/preview/test?template=${template.id}`, '_blank');
+												}}
+												className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 transition-colors"
+											>
+												Preview
+											</button>
+										</div>
+									</div>
+								))
+							) : (
+								<div className="text-center py-8">
+									<div className="text-gray-500 dark:text-gray-400">
+										{remoteLoading ? "Loading remote templates..." : "No remote templates available"}
+									</div>
+								</div>
+							)}
+						</div>
+					)}
+				</div>
+
+				{/* Local Template Statistics */}
 				<div className="mt-8 grid md:grid-cols-2 gap-6">
 					<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
 						<h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-							Component-Based Templates
+							🏠 Local Component-Based Templates
 						</h3>
 						<div className="space-y-2">
 							{componentTemplates.map((template) => (
@@ -401,7 +500,7 @@ function TemplatesDemoPageContent() {
 
 					<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
 						<h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-							Full Page Templates
+							🏠 Local Full Page Templates
 						</h3>
 						<div className="space-y-2">
 							{fullPageTemplates.map((template) => (
