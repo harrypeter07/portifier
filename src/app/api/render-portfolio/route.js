@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { makeServiceJWT } from "@/lib/serviceJwt";
+import { getTemplatesApiKey } from "@/lib/serviceJwt";
 import dbConnect from "@/lib/mongodb";
 import Portfolio from "@/models/Portfolio";
 import User from "@/models/User";
@@ -56,18 +56,15 @@ export async function POST(request) {
 			);
 		}
 
-		// 2. Create JWT token for templates app
-		const jwt = await makeServiceJWT({ 
-			scope: "render",
-			sub: String(portfolioData._id || portfolioData.id || username)
-		});
+		// 2. Get API Key for templates app
+		const apiKey = getTemplatesApiKey();
 
 		// 3. Call Templates App
-		const templatesAppUrl = process.env.TEMPLATES_BASE_URL || "https://portumet.vercel.app";
+		const templatesAppUrl = process.env.TEMPLATES_BASE_URL || process.env.TEMPLATES_APP_URL || "https://portumet.vercel.app";
 		const response = await fetch(`${templatesAppUrl}/api/render`, {
 			method: 'POST',
 			headers: {
-				'Authorization': `Bearer ${jwt}`,
+				'Authorization': `Bearer ${apiKey}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({

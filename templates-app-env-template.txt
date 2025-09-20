@@ -1,0 +1,12 @@
+# Environment Variables Template for Templates App
+# Copy this content to .env.local in your templates app directory
+
+# API Key Authentication - Comma-separated list of valid API keys
+VALID_API_KEYS=85af0b404444140bc4573c07a30ca9e6537125fce1b89ffb721aed3e94a24e02,eed0c172295f25a9eb99c7298fc5be2604d5db50ce5f49f729c7942ba50a2f3d
+
+# Main App Configuration (optional)
+MAIN_API_BASE=http://localhost:3000
+ALLOWED_ORIGINS=http://localhost:3000
+
+# Legacy JWT (for backward compatibility)
+SHARED_JWT_SECRET=your-super-secret-jwt-key-here

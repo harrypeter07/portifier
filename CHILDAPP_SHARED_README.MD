@@ -469,12 +469,11 @@ Set `NODE_ENV=development` for detailed error messages.
 ### Required Environment Variables:
 ```bash
 # Main App
-JWT_SECRET=your-super-secret-jwt-key-here
-SHARED_JWT_SECRET=your-super-secret-jwt-key-here
-TEMPLATES_BASE_URL=https://portumet.vercel.app  # or http://localhost:3001 for local
+TEMPLATES_API_KEY=85af0b404444140bc4573c07a30ca9e6537125fce1b89ffb721aed3e94a24e02
+TEMPLATES_APP_URL=http://localhost:3001  # or https://portumet.vercel.app for production
 
 # Templates App
-SHARED_JWT_SECRET=your-super-secret-jwt-key-here  # Must match Main App
+VALID_API_KEYS=85af0b404444140bc4573c07a30ca9e6537125fce1b89ffb721aed3e94a24e02,eed0c172295f25a9eb99c7298fc5be2604d5db50ce5f49f729c7942ba50a2f3d
 ```
 
 ---

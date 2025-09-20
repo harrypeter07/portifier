@@ -1,3 +1,15 @@
+// API Key Authentication for Templates App
+// This replaces JWT authentication with simpler API Key approach
+
+export function getTemplatesApiKey() {
+	const apiKey = process.env.TEMPLATES_API_KEY || "";
+	if (!apiKey) {
+		throw new Error("TEMPLATES_API_KEY is not set");
+	}
+	return apiKey;
+}
+
+// Legacy JWT function for backward compatibility
 import { SignJWT } from "jose";
 
 export async function makeServiceJWT(payload = {}) {
@@ -14,6 +26,6 @@ export async function makeServiceJWT(payload = {}) {
 	return jwt;
 }
 
-export default makeServiceJWT;
+export default getTemplatesApiKey;
 
 

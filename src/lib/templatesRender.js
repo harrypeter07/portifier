@@ -1,15 +1,16 @@
-import { makeServiceJWT } from "./serviceJwt";
+import { getTemplatesApiKey } from "./serviceJwt";
 
 export async function renderRemoteTemplate({ portfolio, options = {} }) {
 	try {
-		const baseUrl = process.env.TEMPLATES_BASE_URL || "https://portumet.vercel.app";
+		const baseUrl = process.env.TEMPLATES_BASE_URL || process.env.TEMPLATES_APP_URL || "https://portumet.vercel.app";
 		if (!baseUrl) return null;
-		const token = await makeServiceJWT({ sub: String(portfolio?._id || portfolio?.id || ""), scope: "render" });
+		
+		const apiKey = getTemplatesApiKey();
 		const res = await fetch(`${baseUrl}/api/render`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${apiKey}`,
 			},
 			body: JSON.stringify({
 				templateId: portfolio?.templateId || portfolio?.templateName,
