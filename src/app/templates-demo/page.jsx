@@ -376,9 +376,16 @@ function TemplatesDemoPageContent() {
 				{/* Remote Templates from Templates App */}
 				<div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
 					<div className="flex items-center justify-between mb-4">
-						<h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-							🚀 Remote Templates (from Templates App)
-						</h3>
+						<div className="flex items-center space-x-3">
+							<h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+								🚀 Remote Templates (from Templates App)
+							</h3>
+							{remoteTemplates.length > 0 && (
+								<span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-sm rounded-full font-medium">
+									{remoteTemplates.length} Available
+								</span>
+							)}
+						</div>
 						<div className="flex items-center space-x-2">
 							<span className="text-sm text-gray-500 dark:text-gray-400">
 								Source: https://portumet.vercel.app
@@ -411,54 +418,59 @@ function TemplatesDemoPageContent() {
 					) : (
 						<div className="space-y-2">
 							{remoteTemplates.length > 0 ? (
-								remoteTemplates.map((template) => (
-									<div key={template.id} className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
-										<div className="flex-1">
-											<div className="flex items-center space-x-2">
-												<div className="font-medium text-gray-900 dark:text-white">
-													{template.name}
-												</div>
-												<span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
-													v{template.version}
-												</span>
-												<span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full">
-													Remote
-												</span>
-											</div>
-											<div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-												{template.description}
-											</div>
-											<div className="flex items-center space-x-2 mt-2">
-												{template.tags?.map((tag, index) => (
-													<span key={index} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded">
-														{tag}
+								<div className="space-y-3">
+									{remoteTemplates.map((template) => (
+										<div key={template.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+											<div className="flex-1">
+												<div className="flex items-center space-x-3 mb-2">
+													<div className="font-semibold text-lg text-gray-900 dark:text-white">
+														{template.name}
+													</div>
+													<span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full font-medium">
+														v{template.version}
 													</span>
-												))}
+													<span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full font-medium">
+														🌐 Remote
+													</span>
+													<span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs rounded-full font-medium">
+														{template.source}
+													</span>
+												</div>
+												<div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+													{template.description}
+												</div>
+												<div className="flex items-center space-x-2">
+													{template.tags?.map((tag, index) => (
+														<span key={index} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded">
+															{tag}
+														</span>
+													))}
+												</div>
+											</div>
+											<div className="flex items-center space-x-2 ml-4">
+												<button
+													onClick={() => {
+														// For remote templates, we'll use the render API
+														console.log("Selected remote template:", template);
+														// You can implement remote template selection logic here
+													}}
+													className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors font-medium"
+												>
+													🚀 Use Template
+												</button>
+												<button
+													onClick={() => {
+														// Test the template by rendering it
+														window.open(`https://portumet.vercel.app/preview/test?template=${template.id}`, '_blank');
+													}}
+													className="px-4 py-2 bg-gray-500 text-white rounded-lg text-sm hover:bg-gray-600 transition-colors font-medium"
+												>
+													👁️ Preview
+												</button>
 											</div>
 										</div>
-										<div className="flex items-center space-x-2">
-											<button
-												onClick={() => {
-													// For remote templates, we'll use the render API
-													console.log("Selected remote template:", template);
-													// You can implement remote template selection logic here
-												}}
-												className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
-											>
-												Use Template
-											</button>
-											<button
-												onClick={() => {
-													// Test the template by rendering it
-													window.open(`https://portumet.vercel.app/preview/test?template=${template.id}`, '_blank');
-												}}
-												className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 transition-colors"
-											>
-												Preview
-											</button>
-										</div>
-									</div>
-								))
+									))}
+								</div>
 							) : (
 								<div className="text-center py-8">
 									<div className="text-gray-500 dark:text-gray-400">

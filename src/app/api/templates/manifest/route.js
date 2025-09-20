@@ -21,6 +21,8 @@ export async function GET() {
 
 		const templates = await response.json();
 		
+		console.log("🔍 [TEMPLATES-MANIFEST] Raw templates from templates app:", templates);
+		
 		// Transform templates from templates app format to our local format
 		const transformedTemplates = templates.map(template => ({
 			id: template.id,
@@ -36,6 +38,8 @@ export async function GET() {
 			source: "templates-app",
 			preview: `/templates/${template.id}-preview.jpg`, // Placeholder
 		}));
+		
+		console.log("🔍 [TEMPLATES-MANIFEST] Transformed templates:", transformedTemplates);
 
 		return NextResponse.json({
 			success: true,
