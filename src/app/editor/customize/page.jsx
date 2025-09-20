@@ -1,6 +1,6 @@
 "use client";
 import { useLayoutStore } from "@/store/layoutStore";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { componentMap, componentCategories, getRecommendedLayout } from "@/data/componentMap";
 import Preview from "@/components/Preview";
@@ -221,7 +221,8 @@ function SectionSlider({ sectionKey, category, localContent, localLayout, handle
   );
 }
 
-export default function CustomizePage() {
+// Component that handles search params
+function CustomizePageContent() {
 	const {
 		layout,
 		content,
@@ -871,5 +872,21 @@ export default function CustomizePage() {
 			/>
 			</div>
 		</div>
+	);
+}
+
+// Main export with Suspense boundary
+export default function CustomizePage() {
+	return (
+		<Suspense fallback={
+			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+				<div className="text-center">
+					<div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4 animate-spin"></div>
+					<p className="text-gray-600 dark:text-gray-400">Loading customize page...</p>
+				</div>
+			</div>
+		}>
+			<CustomizePageContent />
+		</Suspense>
 	);
 }
