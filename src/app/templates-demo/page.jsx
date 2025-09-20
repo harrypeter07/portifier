@@ -1,12 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import TemplateSelector from "@/components/TemplateSelector";
 import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
 import { getComponentTemplates, getFullPageTemplates } from "@/data/templates/templateManager";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function TemplatesDemoPage() {
+// Component that handles search params
+function TemplatesDemoPageContent() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
 	const [showSelector, setShowSelector] = useState(true);
 	const [existingPortfolio, setExistingPortfolio] = useState(null);
@@ -426,5 +427,21 @@ export default function TemplatesDemoPage() {
 				</div>
 			</div>
 		</div>
+	);
+}
+
+// Main export with Suspense boundary
+export default function TemplatesDemoPage() {
+	return (
+		<Suspense fallback={
+			<div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+				<div className="text-center">
+					<div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4 animate-spin"></div>
+					<p className="text-gray-600 dark:text-gray-400">Loading templates demo...</p>
+				</div>
+			</div>
+		}>
+			<TemplatesDemoPageContent />
+		</Suspense>
 	);
 } 
