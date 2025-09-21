@@ -2,7 +2,6 @@
 import { getTemplatesApiKey } from './serviceJwt';
 
 const TEMPLATES_APP_URL = process.env.TEMPLATES_APP_URL || process.env.TEMPLATES_BASE_URL || 'https://portumet.vercel.app';
-const REMOTE_TEMPLATES_URL = process.env.REMOTE_TEMPLATES_URL || 'https://api.github.com/repos/your-org/portfolio-templates/contents';
 
 class TemplateManager {
 	constructor() {
@@ -12,79 +11,23 @@ class TemplateManager {
 	}
 
 	/**
-	 * Fetch templates from remote origin (GitHub, GitLab, etc.)
+	 * Fetch templates from remote origin (disabled - using local templates only)
 	 */
 	async fetchRemoteTemplates() {
-		try {
-			console.log('🔍 [TEMPLATE-MANAGER] Fetching remote templates...');
-			
-			const response = await fetch(REMOTE_TEMPLATES_URL, {
-				headers: {
-					'Accept': 'application/vnd.github.v3+json',
-					'User-Agent': 'Portfolio-App'
-				}
-			});
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch remote templates: ${response.status}`);
-			}
-
-			const files = await response.json();
-			const templates = [];
-
-			for (const file of files) {
-				if (file.name.endsWith('.json') && file.type === 'file') {
-					try {
-						const templateResponse = await fetch(file.download_url);
-						const templateData = await templateResponse.json();
-						
-						templates.push({
-							id: templateData.id || file.name.replace('.json', ''),
-							name: templateData.name || file.name.replace('.json', ''),
-							description: templateData.description || '',
-							category: templateData.category || 'general',
-							preview: templateData.preview || '',
-							version: templateData.version || '1.0.0',
-							author: templateData.author || 'Unknown',
-							remote: true,
-							source: 'remote',
-							downloadUrl: file.download_url,
-							sha: file.sha
-						});
-
-						this.remoteTemplates.set(templateData.id, {
-							...templateData,
-							remote: true,
-							source: 'remote',
-							downloadUrl: file.download_url,
-							sha: file.sha
-						});
-					} catch (error) {
-						console.warn(`⚠️ [TEMPLATE-MANAGER] Failed to parse template ${file.name}:`, error);
-					}
-				}
-			}
-
-			console.log(`✅ [TEMPLATE-MANAGER] Fetched ${templates.length} remote templates`);
-			return templates;
-
-		} catch (error) {
-			console.error('❌ [TEMPLATE-MANAGER] Error fetching remote templates:', error);
-			return [];
-		}
+		console.log('🔍 [TEMPLATE-MANAGER] Remote templates disabled - using local templates only');
+		return [];
 	}
 
 	/**
-	 * Get all available templates (local + remote)
+	 * Get all available templates (local only)
 	 */
 	async getAllTemplates() {
 		const localTemplates = this.getLocalTemplates();
-		const remoteTemplates = await this.fetchRemoteTemplates();
 		
 		return {
 			local: localTemplates,
-			remote: remoteTemplates,
-			all: [...localTemplates, ...remoteTemplates]
+			remote: [],
+			all: localTemplates
 		};
 	}
 
