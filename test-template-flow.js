@@ -115,6 +115,68 @@ const samplePortfolioData = {
 	}
 };
 
+// Authentication helper functions
+async function loginUser() {
+	try {
+		console.log('🔐 [AUTH] Logging in user...');
+		
+		const response = await fetch(`${BASE_URL}/api/auth/signin`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: TEST_USER.email,
+				password: TEST_USER.password
+			})
+		});
+
+		if (response.ok) {
+			const result = await response.json();
+			console.log('✅ [AUTH] User logged in successfully');
+			return result.token || 'authenticated';
+		} else {
+			console.log('❌ [AUTH] Login failed, trying to create user...');
+			return await createUser();
+		}
+	} catch (error) {
+		console.log('❌ [AUTH] Login error:', error.message);
+		return null;
+	}
+}
+
+async function createUser() {
+	try {
+		console.log('👤 [AUTH] Creating test user...');
+		
+		const response = await fetch(`${BASE_URL}/api/auth/signup`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: TEST_USER.email,
+				password: TEST_USER.password,
+				name: 'Test User',
+				username: TEST_USER.username
+			})
+		});
+
+		if (response.ok) {
+			const result = await response.json();
+			console.log('✅ [AUTH] User created successfully');
+			return result.token || 'authenticated';
+		} else {
+			const error = await response.json();
+			console.log('❌ [AUTH] User creation failed:', error.error);
+			return null;
+		}
+	} catch (error) {
+		console.log('❌ [AUTH] User creation error:', error.message);
+		return null;
+	}
+}
+
 async function testTemplateFlow() {
 	console.log('🧪 Testing Complete Template Flow...\n');
 
