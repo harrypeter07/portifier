@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { getTemplatesApiKey } from "@/lib/serviceJwt";
+import dbConnect from "@/lib/mongodb";
+import Portfolio from "@/models/Portfolio";
+import User from "@/models/User";
 
-// Simplified Architecture: Main App just proxies requests to Templates App
+// Load Balanced Architecture: Main App proxies to Templates App
 // Templates App handles all database operations and rendering logic
+// This route now fetches portfolio data and sends minimal data to Templates App
 
 export async function POST(request) {
 	const requestId = Math.random().toString(36).substr(2, 9);
@@ -25,18 +29,101 @@ export async function POST(request) {
 		console.log(`🔍 [RENDER-PORTFOLIO-${requestId}] Templates app URL: ${templatesAppUrl}`);
 		console.log(`🔍 [RENDER-PORTFOLIO-${requestId}] API Key: ${apiKey ? 'Present' : 'Missing'}`);
 
-		// Call Templates App - it will handle all database operations
-		const response = await fetch(`${templatesAppUrl}/api/render-portfolio`, {
+		// If we have portfolio data in request, use it directly
+		// Otherwise, fetch from database using username
+		let portfolioData = requestData.portfolioData;
+		
+		if (!portfolioData && requestData.username) {
+			console.log(`🔍 [RENDER-PORTFOLIO-${requestId}] Fetching portfolio data for username: ${requestData.username}`);
+			
+			await dbConnect();
+			
+			// Check if this is a numbered username (e.g., iitz_hassan-2)
+			const isNumberedUsername = requestData.username.includes('-') && /-\d+$/.test(requestData.username);
+			
+			let portfolio;
+			let user;
+			
+			if (isNumberedUsername) {
+				// For numbered usernames, find portfolio directly by username
+				portfolio = await Portfolio.findOne({ username: requestData.username, isPublic: true });
+				if (portfolio) {
+					user = await User.findById(portfolio.userId);
+				}
+			} else {
+				// For regular usernames, find user first then portfolio
+				user = await User.findOne({ username: requestData.username });
+				if (user) {
+					portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true }).sort({ updatedAt: -1 });
+				}
+			}
+			
+			if (!portfolio) {
+				console.log(`❌ [RENDER-PORTFOLIO-${requestId}] Portfolio not found for username: ${requestData.username}`);
+				return new Response(`
+					<!DOCTYPE html>
+					<html lang="en">
+					<head>
+						<meta charset="UTF-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1.0">
+						<title>Portfolio Not Found</title>
+						<style>
+							body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+							.container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+							.error { color: #e74c3c; text-align: center; }
+						</style>
+					</head>
+					<body>
+						<div class="container">
+							<div class="error">
+								<h1>📄 Portfolio Not Found</h1>
+								<p>The portfolio for username "${requestData.username}" was not found.</p>
+								<p>Please check the username and try again.</p>
+							</div>
+						</div>
+					</body>
+					</html>
+				`, {
+					headers: { 'Content-Type': 'text/html' },
+					status: 404
+				});
+			}
+			
+			// Get portfolio data
+			portfolioData = portfolio.getPublicData();
+			console.log(`✅ [RENDER-PORTFOLIO-${requestId}] Portfolio data fetched successfully`);
+		}
+
+		// Prepare minimal data for Templates App
+		const templatesAppData = {
+			username: requestData.username,
+			templateId: requestData.templateId || 'cleanfolio',
+			options: {
+				draft: requestData.preview || false,
+				version: 'v1'
+			},
+			// Only send portfolio data if we have it
+			...(portfolioData && { portfolioData })
+		};
+
+		console.log(`🔍 [RENDER-PORTFOLIO-${requestId}] Sending to Templates App:`, {
+			username: templatesAppData.username,
+			templateId: templatesAppData.templateId,
+			hasPortfolioData: !!templatesAppData.portfolioData
+		});
+
+		// Call Templates App with minimal data
+		const response = await fetch(`${templatesAppUrl}/api/render`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${apiKey}`,
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(requestData),
+			body: JSON.stringify(templatesAppData),
 			timeout: 30000 // 30 second timeout for rendering
 		});
 
-		console.log(`🔍 [RENDER-PORTFOLIO-${requestId}] Response status: ${response.status}`);
+		console.log(`🔍 [RENDER-PORTFOLIO-${requestId}] Templates App response status: ${response.status}`);
 
 		if (!response.ok) {
 			const errorText = await response.text();
@@ -66,9 +153,9 @@ export async function POST(request) {
 						</div>
 						<div class="template-info">
 							<h3>Request Details:</h3>
-							<p><strong>Template ID:</strong> ${requestData.templateId || 'N/A'}</p>
-							<p><strong>Username:</strong> ${requestData.username || 'N/A'}</p>
-							<p><strong>Preview Mode:</strong> ${requestData.preview ? 'Yes' : 'No'}</p>
+							<p><strong>Template ID:</strong> ${templatesAppData.templateId || 'N/A'}</p>
+							<p><strong>Username:</strong> ${templatesAppData.username || 'N/A'}</p>
+							<p><strong>Preview Mode:</strong> ${templatesAppData.options?.draft ? 'Yes' : 'No'}</p>
 							<p><strong>Error:</strong> ${response.status} - ${errorText}</p>
 						</div>
 						<div class="info">

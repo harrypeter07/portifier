@@ -36,7 +36,7 @@ export default function PortfolioDashboardPage({ params }) {
 					method: 'POST'
 				});
 
-				// Fetch portfolio data
+				// Fetch portfolio data using the new API route
 				const portfolioRes = await fetch(`/api/portfolio/${username}`);
 				const portfolioData = await portfolioRes.json();
 				
