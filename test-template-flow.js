@@ -242,16 +242,23 @@ async function testTemplatePreview(template) {
 	return null;
 }
 
-async function testTemplatePublish(template) {
+async function testTemplatePublish(template, authToken) {
 	console.log('\n3️⃣ Testing Template Publishing...');
 	try {
+		const headers = {
+			'Content-Type': 'application/json'
+		};
+		
+		// Add authentication header if available
+		if (authToken) {
+			headers['Authorization'] = `Bearer ${authToken}`;
+		}
+
 		const response = await fetch(`${BASE_URL}/api/templates/publish`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
+			headers,
 			body: JSON.stringify({
-				username: 'testuser',
+				username: TEST_USER.username,
 				templateId: template.id,
 				templateName: template.name,
 				templateType: 'component',
@@ -321,6 +328,14 @@ async function testTemplateValidation(template) {
 async function runCompleteTest() {
 	console.log('🚀 Starting Complete Template Flow Test...\n');
 
+	// Step 0: Authenticate user
+	console.log('0️⃣ Testing User Authentication...');
+	const authToken = await loginUser();
+	if (!authToken) {
+		console.log('❌ Authentication failed - cannot proceed with publishing test');
+		console.log('⚠️ Continuing with other tests...');
+	}
+
 	// Step 1: Fetch templates
 	const template = await testTemplateFlow();
 	if (!template) {
@@ -340,16 +355,21 @@ async function runCompleteTest() {
 		console.log('\n⚠️ Template validation failed, but continuing...');
 	}
 
-	// Step 4: Test publishing
-	const publishResult = await testTemplatePublish(template);
-	if (!publishResult) {
-		console.log('\n❌ Publishing failed');
-		return;
+	// Step 4: Test publishing (only if authenticated)
+	let publishResult = null;
+	if (authToken) {
+		publishResult = await testTemplatePublish(template, authToken);
+		if (!publishResult) {
+			console.log('\n❌ Publishing failed');
+		}
+	} else {
+		console.log('\n⚠️ Skipping publishing test - authentication required');
 	}
 
 	// Summary
 	console.log('\n🎉 Complete Template Flow Test Results:');
 	console.log('=====================================');
+	console.log(`✅ User Authentication: ${authToken ? 'PASSED' : 'FAILED'}`);
 	console.log(`✅ Template Fetching: ${template ? 'PASSED' : 'FAILED'}`);
 	console.log(`✅ Template Preview: ${previewResult ? 'PASSED' : 'FAILED'}`);
 	console.log(`✅ Template Validation: ${isValid ? 'PASSED' : 'FAILED'}`);
