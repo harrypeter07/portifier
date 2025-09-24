@@ -91,7 +91,7 @@ export async function POST(request) {
 		};
 
 		// Send publish request to Templates App
-		const response = await fetch(`${TEMPLATES_APP_URL}/api/publish`, {
+		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/publish`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${apiKey}`,

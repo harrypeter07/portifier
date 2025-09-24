@@ -26,7 +26,7 @@ export async function POST(request) {
 		};
 
 		// Send preview request to Templates App
-		const response = await fetch(`${TEMPLATES_APP_URL}/api/preview`, {
+		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${apiKey}`,
