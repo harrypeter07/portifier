@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TemplatePreview from './TemplatePreview';
+import LiveTemplatePreview from './LiveTemplatePreview';
 
 const TemplateSelector = ({ 
 	portfolioData, 
@@ -14,6 +15,7 @@ const TemplateSelector = ({
 	const [error, setError] = useState(null);
 	const [selectedTemplate, setSelectedTemplate] = useState(null);
 	const [showPreview, setShowPreview] = useState(false);
+	const [showLivePreview, setShowLivePreview] = useState(false);
 	const [source, setSource] = useState('all'); // 'local', 'remote', 'all'
 	const [category, setCategory] = useState('all');
 
@@ -53,6 +55,11 @@ const TemplateSelector = ({
 	const handlePreview = (template) => {
 		setSelectedTemplate(template);
 		setShowPreview(true);
+	};
+
+	const handleLivePreview = (template) => {
+		setSelectedTemplate(template);
+		setShowLivePreview(true);
 	};
 
 	const handlePublish = (result) => {
@@ -176,21 +183,21 @@ const TemplateSelector = ({
 								transition={{ delay: index * 0.1 }}
 								className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
 							>
-								{/* Template Preview Image */}
-								<div className="aspect-video bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
-									{template.preview ? (
-										<img
-											src={template.preview}
-											alt={template.name}
-											className="w-full h-full object-cover"
-										/>
-									) : (
-										<div className="text-6xl text-gray-400">
+								{/* Live Template Preview */}
+								<div className="aspect-video bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center relative group">
+									<div className="text-center">
+										<div className="text-6xl text-gray-400 mb-2">
 											{template.category === 'developer' ? '💻' : 
 											 template.category === 'designer' ? '🎨' : 
 											 template.category === 'marketing' ? '📈' : '🎓'}
 										</div>
-									)}
+										<button
+											onClick={() => handleLivePreview(template)}
+											className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-all opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0"
+										>
+											👁️ Live Preview
+										</button>
+									</div>
 								</div>
 
 								{/* Template Info */}
@@ -270,6 +277,18 @@ const TemplateSelector = ({
 						portfolioData={portfolioData}
 						onClose={() => setShowPreview(false)}
 						onPublish={handlePublish}
+					/>
+				)}
+			</AnimatePresence>
+
+			{/* Live Template Preview Modal */}
+			<AnimatePresence>
+				{showLivePreview && selectedTemplate && (
+					<LiveTemplatePreview
+						template={selectedTemplate}
+						portfolioData={portfolioData}
+						onClose={() => setShowLivePreview(false)}
+						onSelect={handleTemplateSelect}
 					/>
 				)}
 			</AnimatePresence>

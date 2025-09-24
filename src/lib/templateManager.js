@@ -11,23 +11,62 @@ class TemplateManager {
 	}
 
 	/**
-	 * Fetch templates from remote origin (disabled - using local templates only)
+	 * Fetch templates from remote origin
 	 */
 	async fetchRemoteTemplates() {
-		console.log('🔍 [TEMPLATE-MANAGER] Remote templates disabled - using local templates only');
-		return [];
+		try {
+			console.log('🔍 [TEMPLATE-MANAGER] Fetching remote templates...');
+			
+			const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/manifest`, {
+				method: 'GET',
+				headers: {
+					'Authorization': `Bearer ${this.apiKey}`,
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				throw new Error(`Remote templates fetch failed: ${response.status}`);
+			}
+
+			const data = await response.json();
+			console.log('✅ [TEMPLATE-MANAGER] Remote templates fetched successfully');
+			
+			// Transform remote templates to match expected format
+			const remoteTemplates = Array.isArray(data) ? data : (data.templates || []);
+			
+			return remoteTemplates.map(template => ({
+				id: template.id,
+				name: template.name,
+				description: template.description,
+				category: template.category,
+				preview: template.preview,
+				version: template.version || '1.0.0',
+				author: template.author || 'Remote Team',
+				remote: true,
+				source: 'remote',
+				type: template.type || 'component',
+				layout: template.layout,
+				theme: template.theme
+			}));
+
+		} catch (error) {
+			console.error('❌ [TEMPLATE-MANAGER] Remote templates fetch error:', error);
+			return [];
+		}
 	}
 
 	/**
-	 * Get all available templates (local only)
+	 * Get all available templates (local + remote)
 	 */
 	async getAllTemplates() {
 		const localTemplates = this.getLocalTemplates();
+		const remoteTemplates = await this.fetchRemoteTemplates();
 		
 		return {
 			local: localTemplates,
-			remote: [],
-			all: localTemplates
+			remote: remoteTemplates,
+			all: [...localTemplates, ...remoteTemplates]
 		};
 	}
 
@@ -79,7 +118,7 @@ class TemplateManager {
 			};
 
 			// Send preview request to Templates App
-			const response = await fetch(`${TEMPLATES_APP_URL}/api/preview`, {
+			const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {
 				method: 'POST',
 				headers: {
 					'Authorization': `Bearer ${this.apiKey}`,
@@ -136,7 +175,7 @@ class TemplateManager {
 			};
 
 			// Send publish request to Templates App
-			const response = await fetch(`${TEMPLATES_APP_URL}/api/publish`, {
+			const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/publish`, {
 				method: 'POST',
 				headers: {
 					'Authorization': `Bearer ${this.apiKey}`,

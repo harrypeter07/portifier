@@ -1,5 +1,10 @@
 // Templates API - Fetch and manage templates
 import { NextResponse } from "next/server";
+import { 
+	getAllTemplates, 
+	getTemplatesByCategory, 
+	getTemplateById 
+} from "@/data/templates/templateManager";
 import TemplateManager from "@/lib/templateManager";
 
 const templateManager = new TemplateManager();
@@ -16,14 +21,30 @@ export async function GET(request) {
 		let templates;
 
 		if (source === 'local') {
-			templates = templateManager.getLocalTemplates();
+			templates = getAllTemplates();
 		} else if (source === 'remote') {
 			templates = await templateManager.fetchRemoteTemplates();
 		} else {
-			// Fetch all templates
+			// Fetch all templates (local + remote)
 			const allTemplates = await templateManager.getAllTemplates();
 			templates = allTemplates.all;
 		}
+
+		// Transform templates to match expected API format
+		templates = templates.map(template => ({
+			id: template.id,
+			name: template.name,
+			description: template.description,
+			category: template.category,
+			preview: template.preview,
+			version: '1.0.0',
+			author: 'Portfolio Team',
+			remote: false,
+			source: 'local',
+			type: template.type,
+			layout: template.layout,
+			theme: template.theme
+		}));
 
 		// Filter by category if specified
 		if (category) {
