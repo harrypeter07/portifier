@@ -4,13 +4,14 @@ import { getTemplatesApiKey } from "@/lib/serviceJwt";
 import dbConnect from "@/lib/mongodb";
 import Portfolio from "@/models/Portfolio";
 import User from "@/models/User";
+import { auth } from "@/lib/auth";
 
 const TEMPLATES_APP_URL = process.env.TEMPLATES_APP_URL || process.env.TEMPLATES_BASE_URL || 'https://portumet.vercel.app';
 
 export async function POST(request) {
 	try {
 		const requestData = await request.json();
-		const { templateId, portfolioData, layout, username, portfolioId, resumeId, useDb = false, options = {} } = requestData;
+		const { templateId, portfolioData, layout, username, portfolioId, resumeId, useDb = false, useClientData = false, options = {} } = requestData;
 
 		// Optional mapping for local->remote template ids
 		const templateIdMap = process.env.TEMPLATE_ID_MAP ? (() => { try { return JSON.parse(process.env.TEMPLATE_ID_MAP); } catch (_) { return {}; } })() : {};
@@ -22,15 +23,24 @@ export async function POST(request) {
 		const apiKey = getTemplatesApiKey();
 
 		// If portfolioData is missing, try to populate from DB using username
-		let finalPortfolioData = portfolioData;
+		let finalPortfolioData = (useClientData ? portfolioData : null) || null;
 		let dataSource = null;
 		// Priorities to populate missing data:
 		// 1) Explicit portfolioId
 		// 2) Username (latest portfolio)
 		// 3) ResumeId -> linked portfolio if present (fallback later possible)
-		if (useDb && (!finalPortfolioData || Object.keys(finalPortfolioData || {}).length === 0)) {
+		if (!useClientData && (!finalPortfolioData || Object.keys(finalPortfolioData || {}).length === 0)) {
 			try {
 				await dbConnect();
+				let effectiveUsername = username;
+				if (!effectiveUsername) {
+					// Use authenticated user's username as a fallback
+					try {
+						const me = await auth();
+						if (me?.username) effectiveUsername = me.username;
+						else if (me?.email) effectiveUsername = me.email.split('@')[0];
+					} catch {}
+				}
 				if (portfolioId) {
 					const p = await Portfolio.findById(portfolioId);
 					if (p) {
@@ -39,8 +49,8 @@ export async function POST(request) {
 					}
 				}
 
-				if (!finalPortfolioData && username) {
-					const user = await User.findOne({ username });
+				if (!finalPortfolioData && effectiveUsername) {
+					const user = await User.findOne({ username: effectiveUsername });
 					if (user) {
 						const portfolio = await Portfolio.findOne({ userId: user._id }).sort({ updatedAt: -1 });
 						if (portfolio) {
@@ -55,7 +65,7 @@ export async function POST(request) {
 
 				if (finalPortfolioData) {
 					console.log('🧩 [TEMPLATE-PREVIEW] Loaded portfolioData from DB for preview:', {
-						username: username || null,
+						username: effectiveUsername || null,
 						templateId: mappedTemplateId,
 						sections: Object.keys(finalPortfolioData),
 						personal: {

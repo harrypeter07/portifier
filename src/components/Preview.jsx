@@ -12,7 +12,7 @@ const SECTION_ORDER = [
   "contact"
 ];
 
-export default function Preview({ layout, content, portfolioData, currentTemplate }) {
+export default function Preview({ layout = {}, content = {}, portfolioData = null, currentTemplate = null }) {
   console.log("👁️ [PREVIEW] Component received props:", {
     hasLayout: !!layout,
     layoutKeys: layout ? Object.keys(layout) : [],
@@ -55,7 +55,8 @@ export default function Preview({ layout, content, portfolioData, currentTemplat
       className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
     >
       {SECTION_ORDER.map((section) => {
-        const componentName = layout[section];
+        const safeLayout = layout || {};
+        const componentName = safeLayout[section];
         if (!componentName) return null;
         console.log(`👁️ [PREVIEW] Rendering section: ${section} with component: ${componentName}`);
         

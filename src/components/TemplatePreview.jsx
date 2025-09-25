@@ -57,6 +57,7 @@ const TemplatePreview = ({
 					portfolioData: hasData ? effectiveData : undefined,
 					username: inferredUsername || undefined,
 					useDb: hasData ? false : true,
+					useClientData: hasData ? true : false,
 					options: {
 						preview: true,
 						version: 'v1'
