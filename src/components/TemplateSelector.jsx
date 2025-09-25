@@ -32,12 +32,21 @@ const TemplateSelector = ({
 			if (source !== 'all') params.append('source', source);
 			if (category !== 'all') params.append('category', category);
 
-			const response = await fetch(`/api/templates?${params}`);
-			const result = await response.json();
+            const response = await fetch(`/api/templates?${params}`);
+            const result = await response.json();
 
-			if (result.success) {
-				setTemplates(result.templates);
-			} else {
+            if (result.success) {
+                // De-duplicate templates by composite key (id+source+version)
+                const seen = new Set();
+                const deduped = [];
+                for (const t of result.templates || []) {
+                    const compositeKey = `${t.id}:${t.source || (t.remote ? 'remote' : 'local')}:${t.version || '0'}`;
+                    if (seen.has(compositeKey)) continue;
+                    seen.add(compositeKey);
+                    deduped.push(t);
+                }
+                setTemplates(deduped);
+            } else {
 				setError(result.error || 'Failed to fetch templates');
 			}
 		} catch (err) {
@@ -174,9 +183,9 @@ const TemplateSelector = ({
 			{!loading && !error && (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					<AnimatePresence>
-						{templates.map((template, index) => (
+                        {templates.map((template, index) => (
 							<motion.div
-								key={template.id}
+                                key={`${template.id}-${template.source || (template.remote ? 'remote' : 'local')}-${template.version || '0'}-${index}`}
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								exit={{ opacity: 0, y: -20 }}

@@ -74,9 +74,67 @@ export async function POST(request) {
 		}
 
 		// Prepare preview data for Templates App
+		// Transform data to a shape commonly expected by Templates App
+		function transformToTemplatesShape(data) {
+			if (!data || typeof data !== 'object') return {};
+			const personal = data.personal || {};
+			const about = data.about || {};
+			const experience = Array.isArray(data?.experience?.jobs) ? data.experience.jobs.map(j => ({
+				company: j.company,
+				position: j.position,
+				location: j.location,
+				startDate: j.startDate,
+				endDate: j.endDate,
+				current: !!j.current,
+				description: j.description
+			})) : [];
+			const skills = {
+				technical: Array.isArray(data?.skills?.technical) ? data.skills.technical.flatMap(cat => Array.isArray(cat.skills) ? cat.skills.map(s => s.name || s) : []) : [],
+				soft: Array.isArray(data?.skills?.soft) ? data.skills.soft.map(s => s.name || s) : []
+			};
+			const projects = Array.isArray(data?.projects?.items) ? data.projects.items.map(p => ({
+				title: p.title,
+				description: p.description,
+				technologies: p.technologies,
+				links: p.links
+			})) : [];
+			const education = Array.isArray(data?.education?.degrees) ? data.education.degrees.map(d => ({
+				institution: d.institution,
+				degree: d.degree,
+				field: d.field,
+				startDate: d.startDate,
+				endDate: d.endDate
+			})) : [];
+
+			return {
+				personal: {
+					firstName: personal.firstName,
+					lastName: personal.lastName,
+					title: personal.title,
+					subtitle: personal.subtitle,
+					email: personal.email,
+					phone: personal.phone,
+					location: personal.location,
+					social: personal.social,
+					avatar: personal.avatar,
+					tagline: personal.tagline
+				},
+				about: { summary: about.summary, bio: about.bio },
+				experience,
+				skills,
+				projects,
+				education
+			};
+		}
+
+		const transformedData = transformToTemplatesShape(finalPortfolioData);
+
+		const includeRaw = (process.env.TEMPLATE_SEND_RAW || '').toLowerCase() === 'true';
+
 		const previewData = {
 			templateId: mappedTemplateId,
-			portfolioData: finalPortfolioData,
+			portfolioData: transformedData,
+			...(includeRaw ? { rawPortfolioData: finalPortfolioData } : {}),
 			// Forward optional params if provided for better rendering fidelity
 			...(layout ? { layout } : {}),
 			...(username ? { username } : {}),
@@ -97,14 +155,17 @@ export async function POST(request) {
 			mappedTemplateId,
 			username: username || null,
 			hasPortfolioData: !!finalPortfolioData,
-			portfolioSections: finalPortfolioData ? Object.keys(finalPortfolioData) : [],
-			personal: finalPortfolioData?.personal ? {
-				firstName: finalPortfolioData.personal.firstName,
-				lastName: finalPortfolioData.personal.lastName,
-				email: finalPortfolioData.personal.email
-			} : null,
-			experienceJobs: Array.isArray(finalPortfolioData?.experience?.jobs) ? finalPortfolioData.experience.jobs.length : 0,
-			projects: Array.isArray(finalPortfolioData?.projects?.items) ? finalPortfolioData.projects.items.length : 0
+			rawSections: finalPortfolioData ? Object.keys(finalPortfolioData) : [],
+			transformed: {
+				experienceCount: Array.isArray(transformedData?.experience) ? transformedData.experience.length : 0,
+				projectsCount: Array.isArray(transformedData?.projects) ? transformedData.projects.length : 0,
+				skillsTechCount: Array.isArray(transformedData?.skills?.technical) ? transformedData.skills.technical.length : 0,
+				personal: transformedData?.personal ? {
+					firstName: transformedData.personal.firstName,
+					lastName: transformedData.personal.lastName,
+					email: transformedData.personal.email
+				} : null
+			}
 		});
 
 		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {

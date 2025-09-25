@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useLayoutStore } from '@/store/layoutStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TemplatePreview = ({ 
@@ -13,18 +14,39 @@ const TemplatePreview = ({
 	const [previewData, setPreviewData] = useState(null);
 	const [error, setError] = useState(null);
 	const [previewMode, setPreviewMode] = useState('iframe'); // 'iframe' or 'redirect'
+	const storePortfolioData = useLayoutStore((s) => s.portfolioData);
+	const [me, setMe] = useState(null);
 
 	useEffect(() => {
-		if (templateId && portfolioData) {
+		(async () => {
+			try {
+				const res = await fetch('/api/auth/me');
+				if (res.ok) {
+					const json = await res.json();
+					setMe(json);
+				}
+			} catch {}
+		})();
+	}, []);
+
+	useEffect(() => {
+		if (templateId) {
 			generatePreview();
 		}
-	}, [templateId, portfolioData]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [templateId, JSON.stringify(storePortfolioData), JSON.stringify(portfolioData)]);
 
 	const generatePreview = async () => {
 		try {
 			setLoading(true);
 			setError(null);
 
+			const effectiveData = (portfolioData && Object.keys(portfolioData).length > 0)
+				? portfolioData
+				: storePortfolioData;
+			const emailForUsername = effectiveData?.personal?.email || me?.user?.email || '';
+			const inferredUsername = (me?.user?.username) || (emailForUsername ? emailForUsername.split('@')[0] : '');
+			const hasData = !!effectiveData && Object.keys(effectiveData || {}).length > 0;
 			const response = await fetch('/api/templates/preview', {
 				method: 'POST',
 				headers: {
@@ -32,7 +54,9 @@ const TemplatePreview = ({
 				},
 				body: JSON.stringify({
 					templateId,
-					portfolioData,
+					portfolioData: hasData ? effectiveData : undefined,
+					username: inferredUsername || undefined,
+					useDb: hasData ? false : true,
 					options: {
 						preview: true,
 						version: 'v1'
