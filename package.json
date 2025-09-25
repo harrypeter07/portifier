@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:publish-render": "node test-publish-render.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

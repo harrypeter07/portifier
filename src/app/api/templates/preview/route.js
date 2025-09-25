@@ -7,7 +7,7 @@ const TEMPLATES_APP_URL = process.env.TEMPLATES_APP_URL || process.env.TEMPLATES
 export async function POST(request) {
 	try {
 		const requestData = await request.json();
-		const { templateId, portfolioData, options = {} } = requestData;
+		const { templateId, portfolioData, layout, username, options = {} } = requestData;
 
 		console.log('🔍 [TEMPLATE-PREVIEW] Previewing template:', templateId);
 
@@ -18,6 +18,9 @@ export async function POST(request) {
 		const previewData = {
 			templateId,
 			portfolioData,
+			// Forward optional params if provided for better rendering fidelity
+			...(layout ? { layout } : {}),
+			...(username ? { username } : {}),
 			options: {
 				preview: true,
 				version: 'v1',

@@ -191,8 +191,8 @@ export async function GET(request, { params }) {
 			personalKeys: portfolio.portfolioData?.personal ? Object.keys(portfolio.portfolioData.personal) : []
 		});
 
-		// Get portfolio data
-		const portfolioData = portfolio.getPublicData();
+        // Get ONLY the portfolio data expected by templates app
+        const portfolioData = portfolio.portfolioData || portfolio.content || {};
 
 		// Prepare minimal data for Templates App
 		const templatesAppData = {
@@ -211,8 +211,9 @@ export async function GET(request, { params }) {
 			hasPortfolioData: !!templatesAppData.portfolioData
 		});
 
-		// Call Templates App with minimal data
-		const response = await fetch(`${templatesAppUrl}/api/render`, {
+		// Call Templates App with minimal data (configurable path)
+		const renderPath = process.env.TEMPLATES_RENDER_PATH || '/api/render';
+		const response = await fetch(`${templatesAppUrl}${renderPath}`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${apiKey}`,
