@@ -7,6 +7,8 @@
 //   node test-publish-render.js
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const TEMPLATES_APP_URL = process.env.TEMPLATES_APP_URL || process.env.TEMPLATES_BASE_URL || 'http://localhost:3001';
+const TEMPLATES_API_KEY = process.env.TEMPLATES_API_KEY || process.env.TEMPLATES_APP_API_KEY || '';
 const TEST_USERNAME = process.env.TEST_USERNAME || 'testuser';
 const TEST_EMAIL = process.env.TEST_EMAIL || 'test@example.com';
 const TEST_PASSWORD = process.env.TEST_PASSWORD || 'pass1234';
@@ -116,15 +118,15 @@ async function ensureAuth() {
 	return signup.ok;
 }
 
-async function publishPortfolio(templateId = 'cleanfolio', templateName = 'Cleanfolio') {
+async function publishPortfolioFromTemplate(template) {
 	console.log('📤 Publish: /api/templates/publish');
 	const payload = {
 		username: TEST_USERNAME,
-		templateId,
-		templateName,
-		templateType: 'component',
-		templateSource: 'local',
-		isRemoteTemplate: false,
+		templateId: template?.id || 'cleanfolio',
+		templateName: template?.name || 'Cleanfolio',
+		templateType: template?.type || 'component',
+		templateSource: template?.source || (template?.remote ? 'templates-app' : 'local'),
+		isRemoteTemplate: !!template?.remote,
 		portfolioData: buildMockPortfolioData(),
 		layout: {},
 		options: { publish: true, version: 'v1' }
@@ -149,6 +151,25 @@ async function renderPortfolio(username) {
 	return text;
 }
 
+async function fetchTemplatesFromTemplatesApp() {
+    try {
+        const res = await fetch(`${TEMPLATES_APP_URL}/api/templates/manifest`, {
+            headers: TEMPLATES_API_KEY ? { Authorization: `Bearer ${TEMPLATES_API_KEY}` } : {}
+        });
+        if (!res.ok) {
+            console.log('ℹ️ Templates App manifest not OK:', res.status);
+            return null;
+        }
+        const list = await res.json();
+        if (!Array.isArray(list) || list.length === 0) return null;
+        console.log(`📦 Templates App manifest: ${list.length} templates`);
+        return list;
+    } catch (e) {
+        console.log('ℹ️ Templates App manifest fetch failed:', e.message);
+        return null;
+    }
+}
+
 (async function run() {
 	try {
 		console.log('🚀 E2E Publish + Render Test');
@@ -157,27 +178,44 @@ async function renderPortfolio(username) {
 		if (!ok) throw new Error('Auth failed');
 
 		// Try to discover a valid templateId from main app templates endpoint
-		let chosenTemplateId = process.env.TEMPLATE_ID || 'cleanfolio';
-		let chosenTemplateName = 'Cleanfolio';
-		try {
-			const tRes = await fetch(`${BASE_URL}/api/templates`);
-			if (tRes.ok) {
-				const tJson = await tRes.json();
-				if (tJson?.success && Array.isArray(tJson.templates) && tJson.templates.length > 0) {
-					chosenTemplateId = tJson.templates[0].id || chosenTemplateId;
-					chosenTemplateName = tJson.templates[0].name || chosenTemplateName;
-					console.log('🎯 Using discovered template:', { chosenTemplateId, chosenTemplateName });
-				} else {
-					console.log('ℹ️ Templates endpoint returned no templates, falling back to default');
-				}
-			} else {
-				console.log('ℹ️ Templates endpoint not OK, falling back to default');
-			}
-		} catch (e) {
-			console.log('ℹ️ Templates discovery failed, falling back to default');
+        let chosenTemplate = null;
+
+        // 1) Prefer fetching directly from Templates App manifest
+        const manifest = await fetchTemplatesFromTemplatesApp();
+        if (manifest && manifest.length) {
+            chosenTemplate = manifest[0];
+            console.log('🎯 Using Templates App template:', { id: chosenTemplate.id, name: chosenTemplate.name });
+        }
+
+        // 2) Fallback to main app /api/templates if manifest missing
+        if (!chosenTemplate) {
+            try {
+                const tRes = await fetch(`${BASE_URL}/api/templates`);
+                if (tRes.ok) {
+                    const tJson = await tRes.json();
+                    if (tJson?.success && Array.isArray(tJson.templates) && tJson.templates.length > 0) {
+                        // Prefer remote entries
+                        chosenTemplate = tJson.templates.find(t => t.remote || t.source === 'templates-app')
+                            || tJson.templates[0];
+                        console.log('🎯 Using Main App template:', { id: chosenTemplate.id, name: chosenTemplate.name, remote: chosenTemplate.remote, source: chosenTemplate.source });
+                    } else {
+                        console.log('ℹ️ /api/templates returned no templates');
+                    }
+                } else {
+                    console.log('ℹ️ /api/templates not OK:', tRes.status);
+                }
+            } catch (e) {
+                console.log('ℹ️ Main App templates fetch failed');
+            }
+        }
+
+		// Allow overriding via env TEMPLATE_ID
+		if (process.env.TEMPLATE_ID) {
+			chosenTemplate = { id: process.env.TEMPLATE_ID, name: process.env.TEMPLATE_ID, remote: true, source: 'templates-app', type: 'component' };
+			console.log('🎯 Using TEMPLATE_ID override:', process.env.TEMPLATE_ID);
 		}
 
-		const pub = await publishPortfolio(chosenTemplateId, chosenTemplateName);
+		const pub = await publishPortfolioFromTemplate(chosenTemplate);
 		await renderPortfolio(pub.username);
 		console.log('🎉 All steps passed');
 	} catch (e) {

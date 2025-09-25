@@ -194,10 +194,14 @@ export async function GET(request, { params }) {
         // Get ONLY the portfolio data expected by templates app
         const portfolioData = portfolio.portfolioData || portfolio.content || {};
 
+		// Optional remapping of template id to remote id
+		const templateIdMap = process.env.TEMPLATE_ID_MAP ? (() => { try { return JSON.parse(process.env.TEMPLATE_ID_MAP); } catch (_) { return {}; } })() : {};
+		const finalTemplateId = templateIdMap[portfolio.templateId] || portfolio.templateId || 'cleanfolio';
+
 		// Prepare minimal data for Templates App
 		const templatesAppData = {
 			username: portfolio.username || username,
-			templateId: portfolio.templateId || 'cleanfolio',
+			templateId: finalTemplateId,
 			options: {
 				draft: false,
 				version: 'v1'

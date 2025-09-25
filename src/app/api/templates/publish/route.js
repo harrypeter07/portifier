@@ -36,12 +36,19 @@ export async function POST(request) {
 			);
 		}
 
+		// Optional remapping: allow local->remote template id mapping via env
+		const templateIdMap = process.env.TEMPLATE_ID_MAP ? (() => {
+			try { return JSON.parse(process.env.TEMPLATE_ID_MAP); } catch (_) { return {}; }
+		})() : {};
+		const mappedTemplateId = templateIdMap[templateId] || templateId;
+		const mappedTemplateName = templateIdMap[templateName] || templateName;
+
 		// Prepare portfolio data for database
 		const portfolioUpdateData = {
 			userId: user._id,
 			username,
-			templateId,
-			templateName,
+			templateId: mappedTemplateId,
+			templateName: mappedTemplateName,
 			templateType,
 			templateSource,
 			isRemoteTemplate,
@@ -77,8 +84,8 @@ export async function POST(request) {
 		// Prepare publish data for Templates App
 		const publishData = {
 			username,
-			templateId,
-			templateName,
+			templateId: mappedTemplateId,
+			templateName: mappedTemplateName,
 			templateType,
 			templateSource,
 			isRemoteTemplate,

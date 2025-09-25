@@ -94,10 +94,14 @@ export async function POST(request) {
 			console.log(`✅ [RENDER-PORTFOLIO-${requestId}] Portfolio data fetched successfully`);
 		}
 
+		// Optional template id mapping
+		const templateIdMap = process.env.TEMPLATE_ID_MAP ? (() => { try { return JSON.parse(process.env.TEMPLATE_ID_MAP); } catch (_) { return {}; } })() : {};
+		const mappedTemplateId = templateIdMap[requestData.templateId] || requestData.templateId || 'cleanfolio';
+
 		// Prepare minimal data for Templates App
 		const templatesAppData = {
 			username: requestData.username,
-			templateId: requestData.templateId || 'cleanfolio',
+			templateId: mappedTemplateId,
 			options: {
 				draft: requestData.preview || false,
 				version: 'v1'
@@ -112,7 +116,9 @@ export async function POST(request) {
 			hasPortfolioData: !!templatesAppData.portfolioData
 		});
 
-		// Call Templates App with minimal data
+		// Call Templates App with minimal data (with timeout)
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000);
 		const response = await fetch(`${templatesAppUrl}/api/render`, {
 			method: 'POST',
 			headers: {
@@ -120,8 +126,9 @@ export async function POST(request) {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(templatesAppData),
-			timeout: 30000 // 30 second timeout for rendering
+			signal: controller.signal
 		});
+		clearTimeout(timeoutId);
 
 		console.log(`🔍 [RENDER-PORTFOLIO-${requestId}] Templates App response status: ${response.status}`);
 

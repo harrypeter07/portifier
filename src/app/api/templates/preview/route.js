@@ -9,6 +9,10 @@ export async function POST(request) {
 		const requestData = await request.json();
 		const { templateId, portfolioData, layout, username, options = {} } = requestData;
 
+		// Optional mapping for local->remote template ids
+		const templateIdMap = process.env.TEMPLATE_ID_MAP ? (() => { try { return JSON.parse(process.env.TEMPLATE_ID_MAP); } catch (_) { return {}; } })() : {};
+		const mappedTemplateId = templateIdMap[templateId] || templateId;
+
 		console.log('🔍 [TEMPLATE-PREVIEW] Previewing template:', templateId);
 
 		// Get API Key for templates app
@@ -16,7 +20,7 @@ export async function POST(request) {
 
 		// Prepare preview data for Templates App
 		const previewData = {
-			templateId,
+			templateId: mappedTemplateId,
 			portfolioData,
 			// Forward optional params if provided for better rendering fidelity
 			...(layout ? { layout } : {}),
@@ -29,14 +33,19 @@ export async function POST(request) {
 		};
 
 		// Send preview request to Templates App
+		// Add timeout to avoid long hangs
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000);
 		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${apiKey}`,
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(previewData)
+			body: JSON.stringify(previewData),
+			signal: controller.signal
 		});
+		clearTimeout(timeoutId);
 
 		if (!response.ok) {
 			const errorText = await response.text();
