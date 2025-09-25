@@ -10,7 +10,7 @@ const TEMPLATES_APP_URL = process.env.TEMPLATES_APP_URL || process.env.TEMPLATES
 export async function POST(request) {
 	try {
 		const requestData = await request.json();
-		const { templateId, portfolioData, layout, username, options = {} } = requestData;
+		const { templateId, portfolioData, layout, username, portfolioId, resumeId, useDb = false, options = {} } = requestData;
 
 		// Optional mapping for local->remote template ids
 		const templateIdMap = process.env.TEMPLATE_ID_MAP ? (() => { try { return JSON.parse(process.env.TEMPLATE_ID_MAP); } catch (_) { return {}; } })() : {};
@@ -23,31 +23,50 @@ export async function POST(request) {
 
 		// If portfolioData is missing, try to populate from DB using username
 		let finalPortfolioData = portfolioData;
-		if ((!finalPortfolioData || Object.keys(finalPortfolioData || {}).length === 0) && username) {
+		let dataSource = null;
+		// Priorities to populate missing data:
+		// 1) Explicit portfolioId
+		// 2) Username (latest portfolio)
+		// 3) ResumeId -> linked portfolio if present (fallback later possible)
+		if (useDb && (!finalPortfolioData || Object.keys(finalPortfolioData || {}).length === 0)) {
 			try {
 				await dbConnect();
-				const user = await User.findOne({ username });
-				if (user) {
-					const portfolio = await Portfolio.findOne({ userId: user._id }).sort({ updatedAt: -1 });
-					if (portfolio) {
-						finalPortfolioData = portfolio.portfolioData || portfolio.content || {};
-						console.log('🧩 [TEMPLATE-PREVIEW] Loaded portfolioData from DB for preview:', {
-							username,
-							templateId: mappedTemplateId,
-							sections: finalPortfolioData ? Object.keys(finalPortfolioData) : [],
-							personal: {
-								firstName: finalPortfolioData?.personal?.firstName,
-								lastName: finalPortfolioData?.personal?.lastName,
-								email: finalPortfolioData?.personal?.email
-							},
-							experienceJobs: Array.isArray(finalPortfolioData?.experience?.jobs) ? finalPortfolioData.experience.jobs.length : 0,
-							projects: Array.isArray(finalPortfolioData?.projects?.items) ? finalPortfolioData.projects.items.length : 0
-						});
-					} else {
-						console.log('⚠️ [TEMPLATE-PREVIEW] No portfolio found for user; preview will use empty data', { username });
+				if (portfolioId) {
+					const p = await Portfolio.findById(portfolioId);
+					if (p) {
+						finalPortfolioData = p.portfolioData || p.content || {};
+						dataSource = { collection: 'portfolios', id: p._id.toString() };
 					}
+				}
+
+				if (!finalPortfolioData && username) {
+					const user = await User.findOne({ username });
+					if (user) {
+						const portfolio = await Portfolio.findOne({ userId: user._id }).sort({ updatedAt: -1 });
+						if (portfolio) {
+							finalPortfolioData = portfolio.portfolioData || portfolio.content || {};
+							dataSource = { collection: 'portfolios', id: portfolio._id.toString() };
+						}
+					}
+				}
+
+				// Note: resumeId fetch can be added here if resume documents link to portfolio
+				// Keeping placeholder for future extension
+
+				if (finalPortfolioData) {
+					console.log('🧩 [TEMPLATE-PREVIEW] Loaded portfolioData from DB for preview:', {
+						username: username || null,
+						templateId: mappedTemplateId,
+						sections: Object.keys(finalPortfolioData),
+						personal: {
+							firstName: finalPortfolioData?.personal?.firstName,
+							lastName: finalPortfolioData?.personal?.lastName,
+							email: finalPortfolioData?.personal?.email
+						},
+						source: dataSource
+					});
 				} else {
-					console.log('⚠️ [TEMPLATE-PREVIEW] Username not found while trying to load preview data', { username });
+					console.log('⚠️ [TEMPLATE-PREVIEW] No portfolio data found in DB for given identifiers', { username, portfolioId, resumeId });
 				}
 			} catch (dbErr) {
 				console.log('⚠️ [TEMPLATE-PREVIEW] Failed to fetch portfolioData from DB:', dbErr?.message);
@@ -61,6 +80,8 @@ export async function POST(request) {
 			// Forward optional params if provided for better rendering fidelity
 			...(layout ? { layout } : {}),
 			...(username ? { username } : {}),
+			// Include source metadata for Templates App to optionally fetch directly
+			...(dataSource ? { source: dataSource } : {}),
 			options: {
 				preview: true,
 				version: 'v1',
