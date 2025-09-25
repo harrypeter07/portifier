@@ -155,7 +155,29 @@ async function renderPortfolio(username) {
 		console.log('🔧 Config', { BASE_URL, TEST_USERNAME, TEST_EMAIL });
 		const ok = await ensureAuth();
 		if (!ok) throw new Error('Auth failed');
-		const pub = await publishPortfolio();
+
+		// Try to discover a valid templateId from main app templates endpoint
+		let chosenTemplateId = process.env.TEMPLATE_ID || 'cleanfolio';
+		let chosenTemplateName = 'Cleanfolio';
+		try {
+			const tRes = await fetch(`${BASE_URL}/api/templates`);
+			if (tRes.ok) {
+				const tJson = await tRes.json();
+				if (tJson?.success && Array.isArray(tJson.templates) && tJson.templates.length > 0) {
+					chosenTemplateId = tJson.templates[0].id || chosenTemplateId;
+					chosenTemplateName = tJson.templates[0].name || chosenTemplateName;
+					console.log('🎯 Using discovered template:', { chosenTemplateId, chosenTemplateName });
+				} else {
+					console.log('ℹ️ Templates endpoint returned no templates, falling back to default');
+				}
+			} else {
+				console.log('ℹ️ Templates endpoint not OK, falling back to default');
+			}
+		} catch (e) {
+			console.log('ℹ️ Templates discovery failed, falling back to default');
+		}
+
+		const pub = await publishPortfolio(chosenTemplateId, chosenTemplateName);
 		await renderPortfolio(pub.username);
 		console.log('🎉 All steps passed');
 	} catch (e) {

@@ -91,32 +91,50 @@ export async function POST(request) {
 		};
 
 		// Send publish request to Templates App
-		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/publish`, {
-			method: 'POST',
-			headers: {
-				'Authorization': `Bearer ${apiKey}`,
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(publishData)
-		});
+		let result;
+		try {
+			// Add explicit timeout to avoid long hangs
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s
+			const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/publish`, {
+				method: 'POST',
+				headers: {
+					'Authorization': `Bearer ${apiKey}`,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(publishData),
+				signal: controller.signal
+			});
+			clearTimeout(timeoutId);
 
-		if (!response.ok) {
-			const errorText = await response.text();
-			console.error(`❌ [TEMPLATE-PUBLISH] Templates App error: ${response.status} - ${errorText}`);
-			
-			// Even if Templates App fails, we still have the portfolio in our database
+			if (!response.ok) {
+				const errorText = await response.text();
+				console.error(`❌ [TEMPLATE-PUBLISH] Templates App error: ${response.status} - ${errorText}`);
+				// Fall through to local-success response below
+				return NextResponse.json({
+					success: true,
+					portfolioId: portfolio._id,
+					username,
+					portfolioUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${username}`,
+					templateId,
+					warning: 'Portfolio saved locally but Templates App publish failed',
+					templatesAppError: errorText
+				});
+			}
+
+			result = await response.json();
+		} catch (templatesError) {
+			console.error('❌ [TEMPLATE-PUBLISH] Templates App request error:', templatesError);
 			return NextResponse.json({
 				success: true,
 				portfolioId: portfolio._id,
 				username,
 				portfolioUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${username}`,
 				templateId,
-				warning: 'Portfolio saved locally but Templates App publish failed',
-				templatesAppError: errorText
+				warning: 'Portfolio saved locally; Templates App unreachable',
+				templatesAppError: templatesError.message
 			});
 		}
-
-		const result = await response.json();
 		console.log('✅ [TEMPLATE-PUBLISH] Portfolio published to Templates App');
 
 		return NextResponse.json({
