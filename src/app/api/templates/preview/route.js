@@ -1,6 +1,9 @@
 // Template Preview API - Handle template previews
 import { NextResponse } from "next/server";
 import { getTemplatesApiKey } from "@/lib/serviceJwt";
+import dbConnect from "@/lib/mongodb";
+import Portfolio from "@/models/Portfolio";
+import User from "@/models/User";
 
 const TEMPLATES_APP_URL = process.env.TEMPLATES_APP_URL || process.env.TEMPLATES_BASE_URL || 'https://portumet.vercel.app';
 
@@ -18,10 +21,43 @@ export async function POST(request) {
 		// Get API Key for templates app
 		const apiKey = getTemplatesApiKey();
 
+		// If portfolioData is missing, try to populate from DB using username
+		let finalPortfolioData = portfolioData;
+		if ((!finalPortfolioData || Object.keys(finalPortfolioData || {}).length === 0) && username) {
+			try {
+				await dbConnect();
+				const user = await User.findOne({ username });
+				if (user) {
+					const portfolio = await Portfolio.findOne({ userId: user._id }).sort({ updatedAt: -1 });
+					if (portfolio) {
+						finalPortfolioData = portfolio.portfolioData || portfolio.content || {};
+						console.log('🧩 [TEMPLATE-PREVIEW] Loaded portfolioData from DB for preview:', {
+							username,
+							templateId: mappedTemplateId,
+							sections: finalPortfolioData ? Object.keys(finalPortfolioData) : [],
+							personal: {
+								firstName: finalPortfolioData?.personal?.firstName,
+								lastName: finalPortfolioData?.personal?.lastName,
+								email: finalPortfolioData?.personal?.email
+							},
+							experienceJobs: Array.isArray(finalPortfolioData?.experience?.jobs) ? finalPortfolioData.experience.jobs.length : 0,
+							projects: Array.isArray(finalPortfolioData?.projects?.items) ? finalPortfolioData.projects.items.length : 0
+						});
+					} else {
+						console.log('⚠️ [TEMPLATE-PREVIEW] No portfolio found for user; preview will use empty data', { username });
+					}
+				} else {
+					console.log('⚠️ [TEMPLATE-PREVIEW] Username not found while trying to load preview data', { username });
+				}
+			} catch (dbErr) {
+				console.log('⚠️ [TEMPLATE-PREVIEW] Failed to fetch portfolioData from DB:', dbErr?.message);
+			}
+		}
+
 		// Prepare preview data for Templates App
 		const previewData = {
 			templateId: mappedTemplateId,
-			portfolioData,
+			portfolioData: finalPortfolioData,
 			// Forward optional params if provided for better rendering fidelity
 			...(layout ? { layout } : {}),
 			...(username ? { username } : {}),
@@ -36,6 +72,20 @@ export async function POST(request) {
 		// Add timeout to avoid long hangs
 		const controller = new AbortController();
 		const timeoutId = setTimeout(() => controller.abort(), 10000);
+		console.log('📦 [TEMPLATE-PREVIEW] Sending preview payload summary:', {
+			mappedTemplateId,
+			username: username || null,
+			hasPortfolioData: !!finalPortfolioData,
+			portfolioSections: finalPortfolioData ? Object.keys(finalPortfolioData) : [],
+			personal: finalPortfolioData?.personal ? {
+				firstName: finalPortfolioData.personal.firstName,
+				lastName: finalPortfolioData.personal.lastName,
+				email: finalPortfolioData.personal.email
+			} : null,
+			experienceJobs: Array.isArray(finalPortfolioData?.experience?.jobs) ? finalPortfolioData.experience.jobs.length : 0,
+			projects: Array.isArray(finalPortfolioData?.projects?.items) ? finalPortfolioData.projects.items.length : 0
+		});
+
 		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {
 			method: 'POST',
 			headers: {
