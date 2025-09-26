@@ -29,14 +29,38 @@ export async function getGeminiInstance(userId = null) {
 	return new GoogleGenerativeAI(apiKey);
 }
 
-// Function to get model instance
-export async function getGeminiModel(userId = null, modelName = "gemini-1.5-flash") {
+// Function to get model instance with fallback
+export async function getGeminiModel(userId = null, modelName = "gemini-1.5-pro") {
 	const genAI = await getGeminiInstance(userId);
-	return genAI.getGenerativeModel({ model: modelName });
+	
+	// If specific model requested, try it first
+	if (modelName && modelName !== "gemini-1.5-pro") {
+		try {
+			return genAI.getGenerativeModel({ model: modelName });
+		} catch (error) {
+			console.log(`⚠️ [GEMINI] Model ${modelName} not available, trying fallbacks...`);
+		}
+	}
+	
+	// Try models in order of preference
+	for (const model of GEMINI_MODELS) {
+		try {
+			const modelInstance = genAI.getGenerativeModel({ model });
+			// Test if model is actually available by making a simple call
+			await modelInstance.generateContent("test");
+			console.log(`✅ [GEMINI] Using model: ${model}`);
+			return modelInstance;
+		} catch (error) {
+			console.log(`❌ [GEMINI] Model ${model} failed:`, error.message);
+			continue;
+		}
+	}
+	
+	throw new Error("No available Gemini models found");
 }
 
-// Function to generate content with user's API key
-export async function generateContent(prompt, userId = null, modelName = "gemini-1.5-flash") {
+// Function to generate content with user's API key and automatic model fallback
+export async function generateContent(prompt, userId = null, modelName = "gemini-1.5-pro") {
 	try {
 		const model = await getGeminiModel(userId, modelName);
 		const result = await model.generateContent(prompt);
@@ -80,11 +104,12 @@ const RETRY_CONFIG = {
 	timeout: 30000, // 30 seconds timeout
 };
 
-// Available Gemini models to try as fallbacks
+// Available Gemini models to try as fallbacks (in order of preference)
 const GEMINI_MODELS = [
-	"gemini-2.0-flash-exp",
-	"gemini-1.5-flash",
 	"gemini-1.5-pro",
+	"gemini-1.5-flash-latest",
+	"gemini-1.0-pro",
+	"gemini-pro",
 ];
 
 // Default portfolio schema - you can modify this or pass it as a parameter

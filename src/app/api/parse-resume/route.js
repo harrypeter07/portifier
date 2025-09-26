@@ -121,7 +121,7 @@ export async function POST(req) {
 		`;
 
 		// Use user's API key if available, otherwise fall back to environment variable
-		const model = await getGeminiModel(user._id, "gemini-1.5-flash");
+		const model = await getGeminiModel(user._id, "gemini-1.5-pro");
 
 		// Generate content with image
 		const result = await model.generateContent([
@@ -242,21 +242,49 @@ export async function GET(req) {
 			console.error("❌ [HEALTH-CHECK] MongoDB connection failed:", dbError.message);
 		}
 
-		// Try a simple test call
-		const model = await getGeminiModel(null, "gemini-1.5-flash");
-		const result = await model.generateContent("Hello");
-		const response = await result.response;
-		const text = response.text();
+		// Skip Gemini test if quota exceeded to avoid blocking the health check
+		let geminiStatus = "connected";
+		try {
+			const model = await getGeminiModel(null, "gemini-1.5-pro");
+			const result = await model.generateContent("Hello");
+			const response = await result.response;
+			const text = response.text();
+		} catch (geminiError) {
+			if (geminiError.message.includes('quota') || geminiError.message.includes('Too Many Requests')) {
+				geminiStatus = "quota_exceeded";
+				console.log("⚠️ [HEALTH-CHECK] Gemini quota exceeded, but API key is valid");
+			} else {
+				geminiStatus = "failed";
+				console.error("❌ [HEALTH-CHECK] Gemini API failed:", geminiError.message);
+			}
+		}
 
 		return NextResponse.json({
 			status: "healthy",
 			available: true,
 			envCheck,
 			database: dbStatus,
-			gemini: "connected"
+			gemini: geminiStatus
 		});
 	} catch (error) {
 		console.error("❌ Gemini API health check failed:", error);
+		
+		// Handle rate limiting gracefully
+		if (error.message.includes('Too Many Requests') || error.message.includes('429')) {
+			return NextResponse.json({
+				status: "rate_limited",
+				available: false,
+				error: "API rate limit exceeded. Please try again later.",
+				envCheck: {
+					GEMINI_API_KEY: !!process.env.GEMINI_API_KEY,
+					JWT_SECRET: !!process.env.JWT_SECRET,
+					MONGODB_URI: !!process.env.MONGODB_URI,
+				},
+				database: "unknown",
+				gemini: "rate_limited"
+			}, { status: 429 });
+		}
+		
 		return NextResponse.json({
 			status: "unhealthy",
 			available: false,

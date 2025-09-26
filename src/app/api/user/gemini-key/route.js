@@ -49,11 +49,19 @@ export async function POST(req) {
 		try {
 			const { GoogleGenerativeAI } = await import('@google/generative-ai');
 			const genAI = new GoogleGenerativeAI(apiKey.trim());
-			const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+			const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 			
 			const result = await model.generateContent("Test");
 			await result.response.text();
 		} catch (apiError) {
+			// Handle rate limiting specifically
+			if (apiError.message.includes('Too Many Requests') || apiError.message.includes('429')) {
+				return NextResponse.json({ 
+					error: "API rate limit exceeded. Please try again in a few minutes.",
+					details: "Too many requests to Gemini API. Please wait before trying again."
+				}, { status: 429 });
+			}
+			
 			return NextResponse.json({ 
 				error: "Invalid API key or API service unavailable",
 				details: apiError.message 

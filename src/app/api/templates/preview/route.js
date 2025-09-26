@@ -161,6 +161,7 @@ export async function POST(request) {
 		// Add timeout to avoid long hangs
 		const controller = new AbortController();
 		const timeoutId = setTimeout(() => controller.abort(), 10000);
+		// Detailed logging of the exact payload being sent
 		console.log('📦 [TEMPLATE-PREVIEW] Sending preview payload summary:', {
 			mappedTemplateId,
 			username: username || null,
@@ -177,6 +178,33 @@ export async function POST(request) {
 				} : null
 			}
 		});
+
+		console.log('🔍 [TEMPLATE-PREVIEW] DETAILED PAYLOAD BREAKDOWN:');
+		console.log('Template ID:', mappedTemplateId);
+		console.log('Username:', username);
+		console.log('Data Source:', dataSource);
+		console.log('Raw Portfolio Data Keys:', Object.keys(finalPortfolioData || {}));
+		console.log('Transformed Data Keys:', Object.keys(transformedData || {}));
+		
+		// Log each section of the transformed data
+		if (transformedData) {
+			console.log('📋 [TEMPLATE-PREVIEW] TRANSFORMED DATA SECTIONS:');
+			Object.entries(transformedData).forEach(([key, value]) => {
+				if (Array.isArray(value)) {
+					console.log(`  ${key}: [${value.length} items]`, value.slice(0, 2));
+				} else if (typeof value === 'object' && value !== null) {
+					console.log(`  ${key}:`, Object.keys(value));
+					if (key === 'personal') {
+						console.log(`    personal details:`, value);
+					}
+				} else {
+					console.log(`  ${key}:`, value);
+				}
+			});
+		}
+
+		console.log('🎯 [TEMPLATE-PREVIEW] COMPLETE PAYLOAD OBJECT:');
+		console.log(JSON.stringify(previewData, null, 2));
 
 		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {
 			method: 'POST',
