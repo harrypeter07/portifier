@@ -242,17 +242,21 @@ export async function GET(req) {
 			console.error("❌ [HEALTH-CHECK] MongoDB connection failed:", dbError.message);
 		}
 
-		// Skip Gemini test if quota exceeded to avoid blocking the health check
+		// Test Gemini with automatic model fallback
 		let geminiStatus = "connected";
 		try {
 			const model = await getGeminiModel(null, "gemini-1.5-pro");
 			const result = await model.generateContent("Hello");
 			const response = await result.response;
 			const text = response.text();
+			console.log("✅ [HEALTH-CHECK] Gemini API working with fallback model");
 		} catch (geminiError) {
 			if (geminiError.message.includes('quota') || geminiError.message.includes('Too Many Requests')) {
 				geminiStatus = "quota_exceeded";
 				console.log("⚠️ [HEALTH-CHECK] Gemini quota exceeded, but API key is valid");
+			} else if (geminiError.message.includes('No available Gemini models found')) {
+				geminiStatus = "no_models";
+				console.log("❌ [HEALTH-CHECK] No Gemini models available");
 			} else {
 				geminiStatus = "failed";
 				console.error("❌ [HEALTH-CHECK] Gemini API failed:", geminiError.message);

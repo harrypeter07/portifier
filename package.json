@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test:publish-render": "node test-publish-render.js",
     "dump:portfolio": "node dump-current-portfolio.js",
-    "test:gemini": "node test-gemini-key.js"
+    "test:gemini": "node test-gemini-key.js",
+    "check:models": "node check-available-models.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

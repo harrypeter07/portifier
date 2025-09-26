@@ -106,10 +106,14 @@ const RETRY_CONFIG = {
 
 // Available Gemini models to try as fallbacks (in order of preference)
 const GEMINI_MODELS = [
-	"gemini-1.5-pro",
-	"gemini-1.5-flash-latest",
-	"gemini-1.0-pro",
-	"gemini-pro",
+	"gemini-1.5-flash-8b",        // ✅ Working - smallest and most cost effective
+	"gemini-2.0-flash-exp",       // ✅ Working - experimental but available
+	"gemini-2.0-flash-thinking-exp", // ✅ Working - thinking model
+	"gemini-1.5-pro",             // ⚠️ Quota exceeded but exists
+	"gemini-1.5-flash-latest",    // From API list
+	"gemini-1.5-flash-002",       // From API list
+	"gemini-2.0-flash",           // From API list
+	"gemini-2.0-flash-001",       // From API list
 ];
 
 // Default portfolio schema - you can modify this or pass it as a parameter
