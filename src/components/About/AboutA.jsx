@@ -15,17 +15,17 @@ export default function AboutA({
 
 	return (
 		<section className="py-12 px-6">
-			<h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+			<h2 className="text-2xl font-semibold mb-6 text-foreground">
 				About Me
 			</h2>
 			<div className="max-w-4xl space-y-6">
 				{/* Main summary/bio */}
-				<div className="prose prose-lg dark:prose-invert max-w-none">
-					<p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg mb-4">
+				<div className="prose prose-lg max-w-none">
+					<p className="text-foreground leading-relaxed text-lg mb-4">
 						{displaySummary}
 					</p>
 					{bio && bio !== displaySummary && (
-						<p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+						<p className="text-muted-foreground leading-relaxed">
 							{bio}
 						</p>
 					)}

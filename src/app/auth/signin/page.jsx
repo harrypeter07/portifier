@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Signin() {
 	const [form, setForm] = useState({
@@ -62,82 +65,70 @@ export default function Signin() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-			<div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
-				<div className="text-center mb-8">
-					<h1 className="text-3xl font-bold text-gray-900 mb-2">
+		<div className="min-h-screen bg-background flex items-center justify-center p-4">
+			<Card className="w-full max-w-md">
+				<CardHeader className="text-center">
+					<CardTitle className="text-3xl font-bold">
 						Welcome Back
-					</h1>
-					<p className="text-gray-600">
+					</CardTitle>
+					<CardDescription>
 						Sign in to access your portfolio
-					</p>
-				</div>
+					</CardDescription>
+				</CardHeader>
 
-				{verifiedMsg && (
-					<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-						<p className="text-green-700 text-sm">{verifiedMsg}</p>
-					</div>
-				)}
+				<CardContent>
+					{verifiedMsg && (
+						<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+							<p className="text-green-700 text-sm">{verifiedMsg}</p>
+						</div>
+					)}
 
-				{error && (
-					<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-						<p className="text-red-700 text-sm">{error}</p>
-					</div>
-				)}
+					{error && (
+						<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+							<p className="text-red-700 text-sm">{error}</p>
+						</div>
+					)}
 
 					{/* Form */}
 					<form onSubmit={handleSubmit} className="space-y-6">
 						{/* Email Field */}
 						<div>
-							<label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+							<label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
 								Email Address
 							</label>
-							<div className="relative">
-								<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-									<svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-									</svg>
-								</div>
-								<input
-									id="email"
-									required
-									type="email"
-									placeholder="Enter your email"
-									className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-									value={form.email}
-									onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-									disabled={loading}
-								/>
-							</div>
+							<Input
+								id="email"
+								required
+								type="email"
+								placeholder="Enter your email"
+								value={form.email}
+								onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+								disabled={loading}
+							/>
 						</div>
 
 						{/* Password Field */}
 						<div>
-							<label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+							<label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
 								Password
 							</label>
 							<div className="relative">
-								<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-									<svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-									</svg>
-								</div>
-								<input
+								<Input
 									id="password"
 									required
 									type={showPassword ? "text" : "password"}
 									placeholder="Enter your password"
-									className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
 									value={form.password}
 									onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
 									disabled={loading}
+									className="pr-10"
 								/>
 								<button
 									type="button"
 									className="absolute inset-y-0 right-0 pr-3 flex items-center"
 									onClick={() => setShowPassword(!showPassword)}
 								>
-									<svg className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg className="w-5 h-5 text-muted-foreground hover:text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										{showPassword ? (
 											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
 										) : (
@@ -151,34 +142,35 @@ export default function Signin() {
 
 
 						{/* Submit Button */}
-						<button
+						<Button
 							type="submit"
 							disabled={loading}
-							className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-60 disabled:transform-none disabled:hover:shadow-lg"
+							className="w-full"
 						>
 							{loading ? (
 								<div className="flex items-center justify-center">
-									<div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+									<div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-3"></div>
 									Signing In...
 								</div>
 							) : (
 								"Sign In"
 							)}
-						</button>
+						</Button>
 					</form>
 
-				<div className="mt-6 text-center">
-					<p className="text-gray-600">
-						Don't have an account?{" "}
-						<Link
-							href="/auth/signup"
-							className="text-blue-600 hover:text-blue-700 font-medium"
-						>
-							Sign up
-						</Link>
-					</p>
-				</div>
-			</div>
+					<div className="mt-6 text-center">
+						<p className="text-muted-foreground">
+							Don't have an account?{" "}
+							<Link
+								href="/auth/signup"
+								className="text-primary hover:text-primary/80 font-medium"
+							>
+								Sign up
+							</Link>
+						</p>
+					</div>
+				</CardContent>
+			</Card>
 		</div>
 	);
 }

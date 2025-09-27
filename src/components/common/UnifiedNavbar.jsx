@@ -4,18 +4,23 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useLayoutStore } from "@/store/layoutStore";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, ChevronDown } from "lucide-react";
 
 const publicNavLinks = [
-	{ href: "/auth/signin", label: "Sign In", icon: "🚪" },
-	{ href: "/auth/signup", label: "Sign Up", icon: "📝" },
+	{ href: "/auth/signin", label: "Sign In", icon: User },
+	{ href: "/auth/signup", label: "Sign Up", icon: User },
 ];
 
 const authenticatedNavLinks = [
-	{ href: "/", label: "Home", icon: "🏠" },
-	{ href: "/dashboard", label: "Dashboard", icon: "📊" },
-	{ href: "/templates-demo", label: "Templates", icon: "🎨" },
-	{ href: "/editor", label: "Create Portfolio", icon: "✏️" },
-	{ href: "/settings", label: "Settings", icon: "⚙️" },
+	{ href: "/", label: "Home", icon: Home },
+	{ href: "/dashboard", label: "Dashboard", icon: BarChart3 },
+	{ href: "/templates-demo", label: "Templates", icon: Palette },
+	{ href: "/editor", label: "Create Portfolio", icon: Edit },
+	{ href: "/settings", label: "Settings", icon: Settings },
 ];
 
 const editorSteps = [
@@ -199,18 +204,18 @@ export default function UnifiedNavbar() {
 
 	if (loading) {
 		return (
-			<nav className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+			<nav className="bg-background/95 backdrop-blur-lg border-b border-border sticky top-0 z-50 shadow-sm">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						<div className="flex items-center space-x-2">
-							<div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-							<div className="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+							<div className="w-8 h-8 bg-muted rounded-lg animate-pulse"></div>
+							<div className="w-24 h-4 bg-muted rounded animate-pulse"></div>
 						</div>
 						<div className="hidden md:flex items-center space-x-1">
-							<div className="w-20 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-							<div className="w-20 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+							<div className="w-20 h-8 bg-muted rounded-lg animate-pulse"></div>
+							<div className="w-20 h-8 bg-muted rounded-lg animate-pulse"></div>
 						</div>
-						<div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+						<div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
 					</div>
 				</div>
 			</nav>
@@ -220,45 +225,45 @@ export default function UnifiedNavbar() {
 	return (
 		<>
 			{/* Main Navigation Bar */}
-			<nav className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+			<nav className="bg-background/95 backdrop-blur-lg border-b border-border sticky top-0 z-50 shadow-sm">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						{/* Logo/Brand */}
 						<Link href="/" className="flex items-center space-x-2 group">
-							<div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
-								<span className="text-white font-bold text-sm">P</span>
+							<div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
+								<span className="text-primary-foreground font-bold text-sm">P</span>
 							</div>
-							<span className="font-bold text-xl text-gray-900 dark:text-white hidden sm:block">
+							<span className="font-bold text-xl text-foreground hidden sm:block">
 								Portfolio Maker
 							</span>
 						</Link>
 
 						{/* Desktop Navigation */}
 						<div className="hidden md:flex items-center space-x-1">
-							{navLinks.map((link) => (
-								<Link
-									key={link.href}
-									href={link.href}
-									className={`group flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-										pathname === link.href
-											? "bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 shadow-sm"
-											: "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
-									}`}
-								>
-									<span className="group-hover:scale-110 transition-transform duration-200">
-										{link.icon}
-									</span>
-									<span>{link.label}</span>
-								</Link>
-							))}
+							{navLinks.map((link) => {
+								const IconComponent = link.icon;
+								return (
+									<Link
+										key={link.href}
+										href={link.href}
+										className={`group flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+											pathname === link.href
+												? "bg-accent text-accent-foreground shadow-sm"
+												: "text-muted-foreground hover:text-foreground hover:bg-accent"
+										}`}
+									>
+										<IconComponent className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
+										<span>{link.label}</span>
+									</Link>
+								);
+							})}
 							
 							{/* Current Template Indicator */}
 							{currentTemplate && (
-								<div className="ml-4 px-3 py-1 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded-lg border border-purple-200 dark:border-purple-700">
-									<span className="text-xs font-medium text-purple-700 dark:text-purple-300">
-										🎨 {currentTemplate.name}
-									</span>
-								</div>
+								<Badge variant="secondary" className="ml-4">
+									<Palette className="w-3 h-3 mr-1" />
+									{currentTemplate.name}
+								</Badge>
 							)}
 						</div>
 
@@ -266,160 +271,140 @@ export default function UnifiedNavbar() {
 						<div className="flex items-center space-x-4">
 							{user ? (
 								<div className="relative">
-									<button
+									<Button
+										variant="ghost"
 										onClick={() => setDropdownOpen(!dropdownOpen)}
-										className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 group"
+										className="flex items-center space-x-2 p-2 h-auto"
 									>
 										{user.avatar ? (
 											<img
 												src={user.avatar}
 												alt={user.name}
-												className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 dark:ring-gray-600 group-hover:ring-blue-500 transition-all duration-200"
+												className="w-8 h-8 rounded-full object-cover ring-2 ring-border hover:ring-primary transition-all duration-200"
 											/>
 										) : (
-											<div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center ring-2 ring-gray-200 dark:ring-gray-600 group-hover:ring-blue-500 transition-all duration-200">
-												<span className="text-white font-medium text-sm">
+											<div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center ring-2 ring-border hover:ring-primary transition-all duration-200">
+												<span className="text-primary-foreground font-medium text-sm">
 													{user.name?.charAt(0)?.toUpperCase() || "U"}
 												</span>
 											</div>
 										)}
-										<span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200">
+										<span className="hidden sm:block text-sm font-medium text-foreground">
 											{user.name || "User"}
 										</span>
-										<svg
-											className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-all duration-200"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth={2}
-												d="M19 9l-7 7-7-7"
-											/>
-										</svg>
-									</button>
+										<ChevronDown className="w-4 h-4 text-muted-foreground" />
+									</Button>
 
 									{/* User Dropdown */}
 									{dropdownOpen && (
-										<div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-5 duration-200">
-											<div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-												<p className="text-sm font-medium text-gray-900 dark:text-white">
+										<Card className="absolute right-0 mt-2 w-56 z-50 animate-fade-in">
+											<div className="p-4 border-b border-border">
+												<p className="text-sm font-medium text-foreground">
 													{user.name}
 												</p>
-												<p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+												<p className="text-xs text-muted-foreground truncate">
 													{user.email}
 												</p>
 											</div>
 
-											<Link
-												href="/dashboard"
-												className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
-											>
-												<span className="mr-3">📊</span>
-												Dashboard
-											</Link>
-
-											<Link
-												href="/editor"
-												className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
-											>
-												<span className="mr-3">✏️</span>
-												Create Portfolio
-											</Link>
-
-											<Link
-												href="/settings"
-												className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
-											>
-												<span className="mr-3">⚙️</span>
-												Settings
-											</Link>
-
-											<div className="border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
-												<button
-													onClick={handleLogout}
-													className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+											<div className="p-2">
+												<Link
+													href="/dashboard"
+													className="flex items-center px-3 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200"
 												>
-													<span className="mr-3">🚪</span>
+													<BarChart3 className="w-4 h-4 mr-3" />
+													Dashboard
+												</Link>
+
+												<Link
+													href="/editor"
+													className="flex items-center px-3 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200"
+												>
+													<Edit className="w-4 h-4 mr-3" />
+													Create Portfolio
+												</Link>
+
+												<Link
+													href="/settings"
+													className="flex items-center px-3 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200"
+												>
+													<Settings className="w-4 h-4 mr-3" />
+													Settings
+												</Link>
+
+												<Separator className="my-2" />
+												<Button
+													variant="ghost"
+													onClick={handleLogout}
+													className="flex items-center w-full px-3 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors duration-200"
+												>
+													<LogOut className="w-4 h-4 mr-3" />
 													Sign Out
-												</button>
+												</Button>
 											</div>
-										</div>
+										</Card>
 									)}
 								</div>
 							) : (
 								<div className="flex items-center space-x-3">
-									<Link
-										href="/auth/signup"
-										className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
-									>
-										Get Started
-									</Link>
+									<Button asChild>
+										<Link href="/auth/signup">
+											Get Started
+										</Link>
+									</Button>
 								</div>
 							)}
 
 							{/* Mobile menu button */}
-							<button
+							<Button
+								variant="ghost"
+								size="icon"
 								onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-								className="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+								className="md:hidden"
 							>
-								<svg
-									className="w-6 h-6"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d={
-											mobileMenuOpen
-												? "M6 18L18 6M6 6l12 12"
-												: "M4 6h16M4 12h16M4 18h16"
-										}
-									/>
-								</svg>
-							</button>
+								{mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+							</Button>
 						</div>
 					</div>
 
 					{/* Mobile Navigation */}
 					{mobileMenuOpen && (
-						<div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 animate-in slide-in-from-top-5 duration-200">
+						<div className="md:hidden border-t border-border bg-background animate-slide-in">
 							{/* Current Template Indicator for Mobile */}
 							{currentTemplate && (
-								<div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+								<div className="px-4 py-3 border-b border-border">
 									<div className="flex items-center space-x-2">
-										<span className="text-sm font-medium text-gray-900 dark:text-white">Current Template:</span>
-										<span className="px-2 py-1 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded text-xs font-medium text-purple-700 dark:text-purple-300">
-											🎨 {currentTemplate.name}
-										</span>
+										<span className="text-sm font-medium text-foreground">Current Template:</span>
+										<Badge variant="secondary">
+											<Palette className="w-3 h-3 mr-1" />
+											{currentTemplate.name}
+										</Badge>
 									</div>
 								</div>
 							)}
 							
 							<div className="px-4 py-4 space-y-2">
-								{navLinks.map((link) => (
-									<Link
-										key={link.href}
-										href={link.href}
-										onClick={() => setMobileMenuOpen(false)}
-										className={`flex items-center space-x-3 px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
-											pathname === link.href
-												? "bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200"
-												: "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
-										}`}
-									>
-										<span>{link.icon}</span>
-										<span>{link.label}</span>
-									</Link>
-								))}
+								{navLinks.map((link) => {
+									const IconComponent = link.icon;
+									return (
+										<Link
+											key={link.href}
+											href={link.href}
+											onClick={() => setMobileMenuOpen(false)}
+											className={`flex items-center space-x-3 px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
+												pathname === link.href
+													? "bg-accent text-accent-foreground"
+													: "text-muted-foreground hover:text-foreground hover:bg-accent"
+											}`}
+										>
+											<IconComponent className="w-5 h-5" />
+											<span>{link.label}</span>
+										</Link>
+									);
+								})}
 
 								{user && (
-									<div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+									<div className="border-t border-border pt-4 mt-4">
 										<div className="flex items-center space-x-3 px-3 py-2 mb-3">
 											{user.avatar ? (
 												<img
@@ -428,29 +413,30 @@ export default function UnifiedNavbar() {
 													className="w-10 h-10 rounded-full object-cover"
 												/>
 											) : (
-												<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-													<span className="text-white font-medium">
+												<div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+													<span className="text-primary-foreground font-medium">
 														{user.name?.charAt(0)?.toUpperCase() || "U"}
 													</span>
 												</div>
 											)}
 											<div>
-												<p className="text-sm font-medium text-gray-900 dark:text-white">
+												<p className="text-sm font-medium text-foreground">
 													{user.name}
 												</p>
-												<p className="text-xs text-gray-500 dark:text-gray-400">
+												<p className="text-xs text-muted-foreground">
 													{user.email}
 												</p>
 											</div>
 										</div>
 
-										<button
+										<Button
+											variant="ghost"
 											onClick={handleLogout}
-											className="flex items-center space-x-3 w-full px-3 py-2 text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+											className="flex items-center space-x-3 w-full px-3 py-2 text-base font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors duration-200"
 										>
-											<span>🚪</span>
+											<LogOut className="w-5 h-5" />
 											<span>Sign Out</span>
-										</button>
+										</Button>
 									</div>
 								)}
 							</div>
@@ -463,7 +449,7 @@ export default function UnifiedNavbar() {
 			{(pathname.startsWith('/editor') || pathname.startsWith('/preview') || pathname.startsWith('/templates-demo')) && (
 				<AnimatePresence>
 					<motion.div
-						className={`fixed left-4 top-20 z-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ${
+						className={`fixed left-4 top-20 z-40 bg-card rounded-lg shadow-lg border border-border transition-all duration-300 ${
 							isEditorNavMinimized ? 'w-12 h-12' : 'w-16 md:w-20'
 						}`}
 						initial={{ opacity: 0, x: -20 }}
@@ -496,22 +482,23 @@ export default function UnifiedNavbar() {
 						}}
 					>
 						{/* Minimize/Maximize Button */}
-						<button
+						<Button
+							size="icon"
 							onClick={handleEditorNavMinimizeToggle}
-							className="absolute -top-2 -right-2 w-6 h-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center text-xs shadow-lg transition-all duration-200 z-50"
+							className="absolute -top-2 -right-2 w-6 h-6 rounded-full shadow-lg transition-all duration-200 z-50"
 							title={isEditorNavMinimized ? "Expand" : "Minimize"}
 						>
 							{isEditorNavMinimized ? "🔽" : "🔼"}
-						</button>
+						</Button>
 
 						{isEditorNavMinimized ? (
 							// Minimized state - just show current step
 							<div className="flex items-center justify-center h-full">
 								<div className="text-center">
-									<div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center mb-1 mx-auto">
+									<div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-1 mx-auto">
 										<span className="text-xs">{editorSteps[currentEditorStepIndex]?.icon}</span>
 									</div>
-									<div className="text-[8px] font-medium text-gray-900 dark:text-white">
+									<div className="text-[8px] font-medium text-foreground">
 										{currentEditorStepIndex + 1}/{editorSteps.length}
 									</div>
 								</div>
@@ -522,13 +509,13 @@ export default function UnifiedNavbar() {
 								{/* Progress Bar */}
 								<div className="mb-3">
 									<div className="text-center mb-2">
-										<div className="text-xs font-medium text-gray-900 dark:text-white">
+										<div className="text-xs font-medium text-foreground">
 											{currentEditorStepIndex + 1}/{editorSteps.length}
 										</div>
 									</div>
-									<div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1">
+									<div className="w-full bg-muted rounded-full h-1">
 										<motion.div
-											className="bg-blue-600 h-1 rounded-full"
+											className="bg-primary h-1 rounded-full"
 											initial={{ width: 0 }}
 											animate={{ width: `${((currentEditorStepIndex + 1) / editorSteps.length) * 100}%` }}
 											transition={{ duration: 0.5 }}
@@ -549,12 +536,12 @@ export default function UnifiedNavbar() {
 												href={step.href}
 												className={`group flex flex-col items-center p-2 rounded-lg transition-all duration-200 ${
 													isActive
-														? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200"
+														? "bg-accent text-accent-foreground"
 														: isCompleted
-														? "text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20"
+														? "text-green-600 hover:bg-green-50"
 														: isClickable
-														? "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-														: "text-gray-400 dark:text-gray-500 cursor-not-allowed"
+														? "text-muted-foreground hover:text-foreground hover:bg-accent"
+														: "text-muted-foreground/50 cursor-not-allowed"
 												}`}
 												onClick={(e) => {
 													if (!isClickable) {
@@ -565,10 +552,10 @@ export default function UnifiedNavbar() {
 											>
 												<div className={`w-6 h-6 rounded-full flex items-center justify-center mb-1 transition-all duration-200 ${
 													isActive
-														? "bg-blue-600 text-white"
+														? "bg-primary text-primary-foreground"
 														: isCompleted
-														? "bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400"
-														: "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+														? "bg-green-100 text-green-600"
+														: "bg-muted text-muted-foreground"
 												}`}>
 													{isCompleted ? (
 														<span className="text-xs">✓</span>

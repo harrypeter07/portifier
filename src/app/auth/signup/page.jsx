@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormField, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 export default function Signup() {
 	const [form, setForm] = useState({
@@ -65,118 +69,116 @@ export default function Signup() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-			<div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
-				<div className="text-center mb-8">
-					<h1 className="text-3xl font-bold text-gray-900 mb-2">
+		<div className="min-h-screen bg-background flex items-center justify-center p-4">
+			<Card className="w-full max-w-md">
+				<CardHeader className="text-center">
+					<CardTitle className="text-3xl font-bold">
 						Create Account
-					</h1>
-					<p className="text-gray-600">
+					</CardTitle>
+					<CardDescription>
 						Join us to build your amazing portfolio
-					</p>
-				</div>
+					</CardDescription>
+				</CardHeader>
 
-				{success && (
-					<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-						<p className="text-green-700 text-sm">{success}</p>
-					</div>
-				)}
+				<CardContent>
+					{success && (
+						<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+							<p className="text-green-700 text-sm">{success}</p>
+						</div>
+					)}
 
-				{error && (
-					<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-						<p className="text-red-700 text-sm">{error}</p>
-					</div>
-				)}
+					{error && (
+						<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+							<p className="text-red-700 text-sm">{error}</p>
+						</div>
+					)}
 
-				<form onSubmit={handleSubmit} className="space-y-6">
-					<div>
-						<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-							Full Name
-						</label>
-						<input
-							id="name"
-							type="text"
-							required
-							placeholder="Enter your full name"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={form.name}
-							onChange={(e) => setForm({ ...form, name: e.target.value })}
+					<Form onSubmit={handleSubmit} className="space-y-6">
+						<FormField>
+							<FormLabel htmlFor="name">Full Name</FormLabel>
+							<FormControl>
+								<Input
+									id="name"
+									type="text"
+									required
+									placeholder="Enter your full name"
+									value={form.name}
+									onChange={(e) => setForm({ ...form, name: e.target.value })}
+									disabled={loading}
+								/>
+							</FormControl>
+						</FormField>
+
+						<FormField>
+							<FormLabel htmlFor="username">Username</FormLabel>
+							<FormControl>
+								<Input
+									id="username"
+									type="text"
+									required
+									placeholder="Choose a username"
+									value={form.username}
+									onChange={(e) => setForm({ ...form, username: e.target.value })}
+									disabled={loading}
+								/>
+							</FormControl>
+							<p className="text-xs text-muted-foreground mt-1">
+								This will be your portfolio URL (e.g., yoursite.com/username)
+							</p>
+						</FormField>
+
+						<FormField>
+							<FormLabel htmlFor="email">Email Address</FormLabel>
+							<FormControl>
+								<Input
+									id="email"
+									type="email"
+									required
+									placeholder="Enter your email"
+									value={form.email}
+									onChange={(e) => setForm({ ...form, email: e.target.value })}
+									disabled={loading}
+								/>
+							</FormControl>
+						</FormField>
+
+						<FormField>
+							<FormLabel htmlFor="password">Password</FormLabel>
+							<FormControl>
+								<Input
+									id="password"
+									type="password"
+									required
+									placeholder="Create a password"
+									value={form.password}
+									onChange={(e) => setForm({ ...form, password: e.target.value })}
+									disabled={loading}
+								/>
+							</FormControl>
+						</FormField>
+
+						<Button
+							type="submit"
 							disabled={loading}
-						/>
-					</div>
+							className="w-full"
+						>
+							{loading ? "Creating Account..." : "Create Account"}
+						</Button>
+					</Form>
 
-					<div>
-						<label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-							Username
-						</label>
-						<input
-							id="username"
-							type="text"
-							required
-							placeholder="Choose a username"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={form.username}
-							onChange={(e) => setForm({ ...form, username: e.target.value })}
-							disabled={loading}
-						/>
-						<p className="text-xs text-gray-500 mt-1">
-							This will be your portfolio URL (e.g., yoursite.com/username)
+					<div className="mt-6 text-center">
+						<p className="text-muted-foreground">
+							Already have an account?{" "}
+							<Link
+								href="/auth/signin"
+								className="text-primary hover:text-primary/80 font-medium"
+							>
+								Sign in
+							</Link>
 						</p>
 					</div>
-
-					<div>
-						<label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-							Email Address
-						</label>
-						<input
-							id="email"
-							type="email"
-							required
-							placeholder="Enter your email"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={form.email}
-							onChange={(e) => setForm({ ...form, email: e.target.value })}
-							disabled={loading}
-						/>
-					</div>
-
-					<div>
-						<label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-							Password
-						</label>
-						<input
-							id="password"
-							type="password"
-							required
-							placeholder="Create a password"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={form.password}
-							onChange={(e) => setForm({ ...form, password: e.target.value })}
-							disabled={loading}
-						/>
-					</div>
-
-					<button
-						type="submit"
-						disabled={loading}
-						className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-					>
-						{loading ? "Creating Account..." : "Create Account"}
-					</button>
-				</form>
-
-				<div className="mt-6 text-center">
-					<p className="text-gray-600">
-						Already have an account?{" "}
-						<Link
-							href="/auth/signin"
-							className="text-blue-600 hover:text-blue-700 font-medium"
-						>
-							Sign in
-						</Link>
-					</p>
-				</div>
-			</div>
+				</CardContent>
+			</Card>
 		</div>
 	);
 }

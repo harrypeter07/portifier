@@ -20,13 +20,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
 	return (
-		<html lang="en">
+		<html lang="en" className="dark">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen`}
 			>
 				<ErrorBoundary>
 					<UnifiedNavbar />
-					<main>{children}</main>
+					<main className="min-h-screen">{children}</main>
 				</ErrorBoundary>
 			</body>
 		</html>

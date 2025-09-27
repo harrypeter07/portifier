@@ -10,6 +10,9 @@ import gsap from "gsap";
 import "@/styles/customSlider.css";
 import { sampleDataCleanfolio } from "@/data/samplePortfolioData";
 import GeminiKeyModal from "@/components/common/GeminiKeyModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const FULL_LAYOUT = {
   hero: "HeroA",
@@ -343,97 +346,95 @@ export default function ResumeUploadPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen bg-background">
 			<div className="flex flex-col-reverse md:flex-row">
 			{/* Left Panel - Upload and Navigation */}
 			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>
-				<h1 className="text-3xl font-extrabold mb-4 text-blue-700 dark:text-blue-200">Start Your Portfolio</h1>
-				<div className="mb-6 text-gray-700 dark:text-gray-300 text-base">
+				<h1 className="text-3xl font-extrabold mb-4 text-foreground">Start Your Portfolio</h1>
+				<div className="mb-6 text-muted-foreground text-base">
 					Upload your resume (PDF) to auto-fill your portfolio, or use the navigation below to explore different editing options.
 				</div>
-				<div className="flex flex-col gap-2 mb-6 p-4 border-2 border-blue-300 dark:border-blue-700 rounded-xl bg-white dark:bg-gray-900 shadow-md">
-					{/* API Status Indicator */}
-					<div className={`flex items-center gap-2 mb-3 p-2 rounded text-sm ${
-						apiStatus.available 
-							? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700' 
-							: 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700'
-					}`}>
-						<div className={`w-2 h-2 rounded-full ${apiStatus.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
-						<span>{apiStatus.message}</span>
-					</div>
-					
-					<input
-						type="file"
-						accept="application/pdf"
-						onChange={handleFileChange}
-						disabled={loading}
-						className="mb-2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-					/>
-					<button
-						className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-60 block font-bold text-lg"
-						onClick={handleUpload}
-						disabled={!file || loading || !apiStatus.available}
-					>
-						{loading ? "Parsing..." : "Upload & Parse Resume"}
-					</button>
-					{error && <div className="text-red-600 mb-2">{error}</div>}
-					{!file && !parsedData && (
-						<div className="text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded p-2 mt-1">
-							Tip: You can also start with the navigation options below!
-						</div>
-					)}
-				</div>
+				<Card className="mb-6">
+					<CardContent className="p-4">
+						{/* API Status Indicator */}
+						<Badge variant={apiStatus.available ? "default" : "destructive"} className="mb-3">
+							<div className={`w-2 h-2 rounded-full mr-2 ${apiStatus.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+							{apiStatus.message}
+						</Badge>
+						
+						<input
+							type="file"
+							accept="application/pdf"
+							onChange={handleFileChange}
+							disabled={loading}
+							className="mb-2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+						/>
+						<Button
+							onClick={handleUpload}
+							disabled={!file || loading || !apiStatus.available}
+							className="w-full"
+						>
+							{loading ? "Parsing..." : "Upload & Parse Resume"}
+						</Button>
+						{error && <div className="text-destructive mb-2">{error}</div>}
+						{!file && !parsedData && (
+							<div className="text-xs text-muted-foreground bg-muted border rounded p-2 mt-1">
+								Tip: You can also start with the navigation options below!
+							</div>
+						)}
+					</CardContent>
+				</Card>
 
 				{/* Navigation Buttons */}
 				<div className="mt-8">
-					<div className="font-semibold text-gray-700 dark:text-gray-200 mb-4">Portfolio Editor Options:</div>
+					<div className="font-semibold text-foreground mb-4">Portfolio Editor Options:</div>
 					<div className="grid gap-4 md:grid-cols-3">
-						<motion.button
-							onClick={handleNavigateToCustomize}
-							className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group"
-							whileHover={{ scale: 1.02 }}
-							whileTap={{ scale: 0.98 }}
-						>
-							<div className="text-2xl mb-2">🎨</div>
-							<div className="font-bold text-lg mb-1">Customize</div>
-							<div className="text-sm text-blue-100 text-center">
-								Choose and customize individual components
-							</div>
-						</motion.button>
+						<Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
+							<CardContent 
+								className="p-6 flex flex-col items-center justify-center min-h-[120px]"
+								onClick={handleNavigateToCustomize}
+							>
+								<div className="text-2xl mb-2">🎨</div>
+								<div className="font-bold text-lg mb-1">Customize</div>
+								<div className="text-sm text-muted-foreground text-center">
+									Choose and customize individual components
+								</div>
+							</CardContent>
+						</Card>
 
-						<motion.button
-							onClick={handleNavigateToEditResume}
-							className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group"
-							whileHover={{ scale: 1.02 }}
-							whileTap={{ scale: 0.98 }}
-						>
-							<div className="text-2xl mb-2">✏️</div>
-							<div className="font-bold text-lg mb-1">Edit Resume</div>
-							<div className="text-sm text-green-100 text-center">
-								Edit your resume content and details
-							</div>
-						</motion.button>
+						<Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
+							<CardContent 
+								className="p-6 flex flex-col items-center justify-center min-h-[120px]"
+								onClick={handleNavigateToEditResume}
+							>
+								<div className="text-2xl mb-2">✏️</div>
+								<div className="font-bold text-lg mb-1">Edit Resume</div>
+								<div className="text-sm text-muted-foreground text-center">
+									Edit your resume content and details
+								</div>
+							</CardContent>
+						</Card>
 
-						<motion.button
-							onClick={handleNavigateToTemplatesDemo}
-							className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group"
-							whileHover={{ scale: 1.02 }}
-							whileTap={{ scale: 0.98 }}
-						>
-							<div className="text-2xl mb-2">📋</div>
-							<div className="font-bold text-lg mb-1">Templates</div>
-							<div className="text-sm text-purple-100 text-center">
-								Browse all available templates
-							</div>
-						</motion.button>
+						<Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
+							<CardContent 
+								className="p-6 flex flex-col items-center justify-center min-h-[120px]"
+								onClick={handleNavigateToTemplatesDemo}
+							>
+								<div className="text-2xl mb-2">📋</div>
+								<div className="font-bold text-lg mb-1">Templates</div>
+								<div className="text-sm text-muted-foreground text-center">
+									Browse all available templates
+								</div>
+							</CardContent>
+						</Card>
 					</div>
 				</div>
 			</div>
 			{/* Right Panel - Live Preview (hidden until parsed) */}
 			{parsed && (
-				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 fixed md:static top-0 right-0 z-30 transition-all duration-500 order-1 md:order-2">
-					<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
-						<h2 className="text-xl font-semibold">Live Preview</h2>
+				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-border bg-card fixed md:static top-0 right-0 z-30 transition-all duration-500 order-1 md:order-2">
+					<div className="sticky top-0 bg-card p-4 border-b border-border z-10">
+						<h2 className="text-xl font-semibold text-foreground">Live Preview</h2>
 					</div>
 					<div className="p-4">
 						{layout && Object.keys(layout).length > 0 ? (
