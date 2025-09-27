@@ -30,11 +30,11 @@ export async function getGeminiInstance(userId = null) {
 }
 
 // Function to get model instance with fallback
-export async function getGeminiModel(userId = null, modelName = "gemini-1.5-pro") {
+export async function getGeminiModel(userId = null, modelName = "gemini-1.5-flash-8b") {
 	const genAI = await getGeminiInstance(userId);
 	
 	// If specific model requested, try it first
-	if (modelName && modelName !== "gemini-1.5-pro") {
+	if (modelName && modelName !== "gemini-1.5-flash-8b") {
 		try {
 			return genAI.getGenerativeModel({ model: modelName });
 		} catch (error) {
@@ -60,7 +60,7 @@ export async function getGeminiModel(userId = null, modelName = "gemini-1.5-pro"
 }
 
 // Function to generate content with user's API key and automatic model fallback
-export async function generateContent(prompt, userId = null, modelName = "gemini-1.5-pro") {
+export async function generateContent(prompt, userId = null, modelName = "gemini-1.5-flash-8b") {
 	try {
 		const model = await getGeminiModel(userId, modelName);
 		const result = await model.generateContent(prompt);

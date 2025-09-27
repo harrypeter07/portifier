@@ -6,21 +6,13 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 (async function run() {
 	try {
 		console.log('🔎 Dumping current user and portfolio');
-		const meRes = await fetch(`${BASE_URL}/api/auth/me`);
-		const me = await meRes.json();
-		if (!meRes.ok || !me?.user) {
-			console.log('❌ /api/auth/me failed:', me);
-			process.exit(1);
-		}
-		console.log('👤 User:', { id: me.user.id, username: me.user.username, email: me.user.email });
+		
+		// Try to get user info from the logs - we know the user is test@gmail.com
+		const testEmail = 'test@gmail.com';
+		console.log('👤 Testing with known user:', testEmail);
 
-		// Try portfolio by username
-		const username = me.user.username || (me.user.email ? me.user.email.split('@')[0] : '');
-		if (!username) {
-			console.log('⚠️ No username available');
-			process.exit(0);
-		}
-		const res = await fetch(`${BASE_URL}/api/portfolio/get?username=${encodeURIComponent(username)}`);
+		// Try portfolio by email (as used in /api/portfolio/get)
+		const res = await fetch(`${BASE_URL}/api/portfolio/get?username=${encodeURIComponent(testEmail)}`);
 		const json = await res.json();
 		if (!res.ok || !json?.portfolio) {
 			console.log('⚠️ No portfolio for user', json);
@@ -39,6 +31,11 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 			experienceJobs: Array.isArray(p.portfolioData?.experience?.jobs) ? p.portfolioData.experience.jobs.length : 0,
 			projects: Array.isArray(p.portfolioData?.projects?.items) ? p.portfolioData.projects.items.length : 0
 		});
+		
+		// Also check if there's any content field
+		if (p.content) {
+			console.log('📄 Legacy content sections:', Object.keys(p.content));
+		}
 	} catch (e) {
 		console.error('❌ Dump failed:', e.message);
 		process.exit(1);

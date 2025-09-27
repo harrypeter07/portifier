@@ -50,18 +50,93 @@ export async function POST(request) {
 				}
 
 				if (!finalPortfolioData && effectiveUsername) {
-					const user = await User.findOne({ username: effectiveUsername });
+					// Try both username and email lookup (since /api/portfolio/get uses email)
+					let user = await User.findOne({ username: effectiveUsername });
+					if (!user) {
+						user = await User.findOne({ email: effectiveUsername });
+					}
+					if (!user && effectiveUsername.includes('@')) {
+						user = await User.findOne({ email: effectiveUsername });
+					}
+					
 					if (user) {
 						const portfolio = await Portfolio.findOne({ userId: user._id }).sort({ updatedAt: -1 });
 						if (portfolio) {
 							finalPortfolioData = portfolio.portfolioData || portfolio.content || {};
 							dataSource = { collection: 'portfolios', id: portfolio._id.toString() };
+							console.log('🔍 [TEMPLATE-PREVIEW] Found user and portfolio:', {
+								userId: user._id,
+								username: user.username,
+								email: user.email,
+								portfolioId: portfolio._id,
+								hasPortfolioData: !!finalPortfolioData,
+								personalName: finalPortfolioData?.personal?.firstName + ' ' + finalPortfolioData?.personal?.lastName
+							});
+						} else {
+							console.log('⚠️ [TEMPLATE-PREVIEW] User found but no portfolio:', {
+								userId: user._id,
+								username: user.username,
+								email: user.email
+							});
 						}
+					} else {
+						console.log('⚠️ [TEMPLATE-PREVIEW] User not found:', { effectiveUsername });
 					}
 				}
 
-				// Note: resumeId fetch can be added here if resume documents link to portfolio
-				// Keeping placeholder for future extension
+				// If still no portfolio data, try to get from latest parsed resume
+				if (!finalPortfolioData && user) {
+					const { default: Resume } = await import('@/models/Resume');
+					const latestResume = await Resume.findOne({ userId: user._id, status: 'parsed' })
+						.sort({ updatedAt: -1 });
+					
+					if (latestResume?.parsedData) {
+						// Transform resume parsedData to portfolio format
+						const resumeData = latestResume.parsedData;
+						finalPortfolioData = {
+							personal: {
+								firstName: resumeData.hero?.title?.split(' ')[0] || '',
+								lastName: resumeData.hero?.title?.split(' ').slice(1).join(' ') || '',
+								title: resumeData.hero?.subtitle || '',
+								subtitle: resumeData.hero?.subtitle || '',
+								email: resumeData.contact?.email || '',
+								phone: resumeData.contact?.phone || '',
+								location: resumeData.contact?.location || '',
+								social: {
+									linkedin: resumeData.contact?.linkedin || '',
+									github: resumeData.contact?.github || ''
+								},
+								tagline: resumeData.hero?.tagline || ''
+							},
+							about: {
+								summary: resumeData.about?.summary || '',
+								bio: resumeData.about?.bio || ''
+							},
+							experience: {
+								jobs: resumeData.experience?.jobs || []
+							},
+							education: {
+								degrees: resumeData.education?.degrees || []
+							},
+							skills: {
+								technical: resumeData.skills?.technical || [],
+								soft: resumeData.skills?.soft || []
+							},
+							projects: {
+								items: resumeData.projects?.items || []
+							},
+							achievements: {
+								awards: resumeData.achievements?.awards || []
+							}
+						};
+						dataSource = { collection: 'resumes', id: latestResume._id.toString() };
+						console.log('🔍 [TEMPLATE-PREVIEW] Found parsed resume data:', {
+							resumeId: latestResume._id,
+							hasParsedData: !!latestResume.parsedData,
+							personalName: finalPortfolioData?.personal?.firstName + ' ' + finalPortfolioData?.personal?.lastName
+						});
+					}
+				}
 
 				if (finalPortfolioData) {
 					console.log('🧩 [TEMPLATE-PREVIEW] Loaded portfolioData from DB for preview:', {
