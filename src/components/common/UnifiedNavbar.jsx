@@ -208,14 +208,14 @@ export default function UnifiedNavbar() {
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						<div className="flex items-center space-x-2">
-							<div className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
-							<div className="w-24 h-4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+							<div className="w-8 h-8 bg-white/20 dark:bg-white/20 rounded-lg animate-pulse"></div>
+							<div className="w-24 h-4 bg-white/20 dark:bg-white/20 rounded animate-pulse"></div>
 						</div>
 						<div className="hidden md:flex items-center space-x-1">
-							<div className="w-20 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
-							<div className="w-20 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
+							<div className="w-20 h-8 bg-white/20 dark:bg-white/20 rounded-lg animate-pulse"></div>
+							<div className="w-20 h-8 bg-white/20 dark:bg-white/20 rounded-lg animate-pulse"></div>
 						</div>
-						<div className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full animate-pulse"></div>
+						<div className="w-8 h-8 bg-white/20 dark:bg-white/20 rounded-full animate-pulse"></div>
 					</div>
 				</div>
 			</nav>
@@ -231,7 +231,7 @@ export default function UnifiedNavbar() {
 						{/* Logo/Brand */}
 						<Link href="/" className="flex items-center space-x-2 group">
 							<div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
-								<span className="text-white dark:text-gray-900 font-bold text-sm">P</span>
+								<span className="text-white dark:text-black font-bold text-sm">P</span>
 							</div>
 							<span className="font-bold text-xl text-black dark:text-white hidden sm:block">
 								Portfolio Maker
@@ -248,8 +248,8 @@ export default function UnifiedNavbar() {
 										href={link.href}
 										className={`group flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
 											pathname === link.href
-												? "bg-gray-100 dark:bg-gray-800 text-black dark:text-white shadow-sm"
-												: "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800"
+												? "bg-white/20 dark:bg-white/20 text-black dark:text-white shadow-sm"
+												: "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-white/20 dark:bg-white/20"
 										}`}
 									>
 										<IconComponent className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
@@ -284,7 +284,7 @@ export default function UnifiedNavbar() {
 											/>
 										) : (
 											<div className="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center ring-2 ring-border hover:ring-primary transition-all duration-200">
-												<span className="text-white dark:text-gray-900 font-medium text-sm">
+												<span className="text-white dark:text-black font-medium text-sm">
 													{user.name?.charAt(0)?.toUpperCase() || "U"}
 												</span>
 											</div>
@@ -298,7 +298,7 @@ export default function UnifiedNavbar() {
 									{/* User Dropdown */}
 									{dropdownOpen && (
 										<Card className="absolute right-0 mt-2 w-56 z-50 animate-fade-in">
-											<div className="p-4 border-b border-gray-200 dark:border-gray-700">
+											<div className="p-4 border-b border-white dark:border-white">
 												<p className="text-sm font-medium text-black dark:text-white">
 													{user.name}
 												</p>
@@ -310,7 +310,7 @@ export default function UnifiedNavbar() {
 											<div className="p-2">
 												<Link
 													href="/dashboard"
-													className="flex items-center px-3 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800 rounded-md transition-colors duration-200"
+													className="flex items-center px-3 py-2 text-sm text-black dark:text-white hover:bg-white/20 dark:bg-white/20 rounded-md transition-colors duration-200"
 												>
 													<BarChart3 className="w-4 h-4 mr-3" />
 													Dashboard
@@ -318,7 +318,7 @@ export default function UnifiedNavbar() {
 
 												<Link
 													href="/editor"
-													className="flex items-center px-3 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800 rounded-md transition-colors duration-200"
+													className="flex items-center px-3 py-2 text-sm text-black dark:text-white hover:bg-white/20 dark:bg-white/20 rounded-md transition-colors duration-200"
 												>
 													<Edit className="w-4 h-4 mr-3" />
 													Create Portfolio
@@ -326,7 +326,7 @@ export default function UnifiedNavbar() {
 
 												<Link
 													href="/settings"
-													className="flex items-center px-3 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800 rounded-md transition-colors duration-200"
+													className="flex items-center px-3 py-2 text-sm text-black dark:text-white hover:bg-white/20 dark:bg-white/20 rounded-md transition-colors duration-200"
 												>
 													<Settings className="w-4 h-4 mr-3" />
 													Settings
@@ -369,10 +369,10 @@ export default function UnifiedNavbar() {
 
 					{/* Mobile Navigation */}
 					{mobileMenuOpen && (
-						<div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 animate-slide-in">
+						<div className="md:hidden border-t border-white dark:border-white bg-white dark:bg-black animate-slide-in">
 							{/* Current Template Indicator for Mobile */}
 							{currentTemplate && (
-								<div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+								<div className="px-4 py-3 border-b border-white dark:border-white">
 									<div className="flex items-center space-x-2">
 										<span className="text-sm font-medium text-black dark:text-white">Current Template:</span>
 										<Badge variant="secondary">
@@ -393,8 +393,8 @@ export default function UnifiedNavbar() {
 											onClick={() => setMobileMenuOpen(false)}
 											className={`flex items-center space-x-3 px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
 												pathname === link.href
-													? "bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
-													: "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800"
+													? "bg-white/20 dark:bg-white/20 text-black dark:text-white"
+													: "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-white/20 dark:bg-white/20"
 											}`}
 										>
 											<IconComponent className="w-5 h-5" />
@@ -404,7 +404,7 @@ export default function UnifiedNavbar() {
 								})}
 
 								{user && (
-									<div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+									<div className="border-t border-white dark:border-white pt-4 mt-4">
 										<div className="flex items-center space-x-3 px-3 py-2 mb-3">
 											{user.avatar ? (
 												<img
@@ -414,7 +414,7 @@ export default function UnifiedNavbar() {
 												/>
 											) : (
 												<div className="w-10 h-10 bg-black dark:bg-white rounded-full flex items-center justify-center">
-													<span className="text-white dark:text-gray-900 font-medium">
+													<span className="text-white dark:text-black font-medium">
 														{user.name?.charAt(0)?.toUpperCase() || "U"}
 													</span>
 												</div>
@@ -449,7 +449,7 @@ export default function UnifiedNavbar() {
 			{(pathname.startsWith('/editor') || pathname.startsWith('/preview') || pathname.startsWith('/templates-demo')) && (
 				<AnimatePresence>
 					<motion.div
-						className={`fixed left-4 top-20 z-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ${
+						className={`fixed left-4 top-20 z-40 bg-white dark:bg-black rounded-lg shadow-lg border border-white dark:border-white transition-all duration-300 ${
 							isEditorNavMinimized ? 'w-12 h-12' : 'w-16 md:w-20'
 						}`}
 						initial={{ opacity: 0, x: -20 }}
@@ -495,7 +495,7 @@ export default function UnifiedNavbar() {
 							// Minimized state - just show current step
 							<div className="flex items-center justify-center h-full">
 								<div className="text-center">
-									<div className="w-6 h-6 rounded-full bg-black dark:bg-white text-white dark:text-gray-900 flex items-center justify-center mb-1 mx-auto">
+									<div className="w-6 h-6 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center mb-1 mx-auto">
 										<span className="text-xs">{editorSteps[currentEditorStepIndex]?.icon}</span>
 									</div>
 									<div className="text-[8px] font-medium text-black dark:text-white">
@@ -513,7 +513,7 @@ export default function UnifiedNavbar() {
 											{currentEditorStepIndex + 1}/{editorSteps.length}
 										</div>
 									</div>
-									<div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1">
+									<div className="w-full bg-white/20 dark:bg-white/20 rounded-full h-1">
 										<motion.div
 											className="bg-black dark:bg-white h-1 rounded-full"
 											initial={{ width: 0 }}
@@ -536,11 +536,11 @@ export default function UnifiedNavbar() {
 												href={step.href}
 												className={`group flex flex-col items-center p-2 rounded-lg transition-all duration-200 ${
 													isActive
-														? "bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+														? "bg-white/20 dark:bg-white/20 text-black dark:text-white"
 														: isCompleted
 														? "text-green-600 hover:bg-green-50"
 														: isClickable
-														? "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800"
+														? "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-white/20 dark:bg-white/20"
 														: "text-black/70 dark:text-white/70/50 cursor-not-allowed"
 												}`}
 												onClick={(e) => {
@@ -552,10 +552,10 @@ export default function UnifiedNavbar() {
 											>
 												<div className={`w-6 h-6 rounded-full flex items-center justify-center mb-1 transition-all duration-200 ${
 													isActive
-														? "bg-black dark:bg-white text-white dark:text-gray-900"
+														? "bg-black dark:bg-white text-white dark:text-black"
 														: isCompleted
 														? "bg-green-100 text-green-600"
-														: "bg-gray-100 dark:bg-gray-800 text-black/70 dark:text-white/70"
+														: "bg-white/20 dark:bg-white/20 text-black/70 dark:text-white/70"
 												}`}>
 													{isCompleted ? (
 														<span className="text-xs">✓</span>

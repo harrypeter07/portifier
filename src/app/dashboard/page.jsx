@@ -44,14 +44,14 @@ export default function Dashboard() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
 				<div className="text-center">
 					<motion.div
 						animate={{ rotate: 360 }}
 						transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
 						className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 border-t-primary rounded-full mx-auto mb-4"
 					></motion.div>
-					<p className="text-gray-600 dark:text-gray-400">Loading your dashboard...</p>
+					<p className="text-black/70 dark:text-white/70">Loading your dashboard...</p>
 				</div>
 			</div>
 		);
@@ -81,7 +81,7 @@ export default function Dashboard() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-gray-900">
+		<div className="min-h-screen bg-white dark:bg-black">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				{/* Header */}
 				<motion.div
@@ -91,16 +91,16 @@ export default function Dashboard() {
 				>
 					<div className="flex items-center justify-between">
 						<div>
-							<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+							<h1 className="text-3xl font-bold text-black dark:text-white">
 								Welcome back, {user.name}! 👋
 							</h1>
-							<p className="text-gray-600 dark:text-gray-400 mt-1">
+							<p className="text-black/70 dark:text-white/70 mt-1">
 								Manage your resumes and portfolios
 							</p>
 						</div>
 						<Link
 							href="/editor"
-							className="px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+							className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
 						>
 							Create Portfolio
 						</Link>
@@ -114,56 +114,56 @@ export default function Dashboard() {
 					transition={{ delay: 0.1 }}
 					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
 				>
-					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Portfolios</p>
-								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{portfolios.stats.total}</p>
+								<p className="text-sm font-medium text-black/70 dark:text-white/70">Total Portfolios</p>
+								<p className="text-3xl font-bold text-black dark:text-white">{portfolios.stats.total}</p>
 							</div>
 							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
-								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg className="w-6 h-6 text-black dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
 								</svg>
 							</div>
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Uploaded Resumes</p>
-								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{resumes.stats.total}</p>
+								<p className="text-sm font-medium text-black/70 dark:text-white/70">Uploaded Resumes</p>
+								<p className="text-3xl font-bold text-black dark:text-white">{resumes.stats.total}</p>
 							</div>
 							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
-								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg className="w-6 h-6 text-black dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 								</svg>
 							</div>
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Published</p>
-								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{portfolios.stats.public}</p>
+								<p className="text-sm font-medium text-black/70 dark:text-white/70">Published</p>
+								<p className="text-3xl font-bold text-black dark:text-white">{portfolios.stats.public}</p>
 							</div>
 							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
-								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg className="w-6 h-6 text-black dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
 								</svg>
 							</div>
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Complete</p>
-								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{portfolios.stats.complete}</p>
+								<p className="text-sm font-medium text-black/70 dark:text-white/70">Complete</p>
+								<p className="text-3xl font-bold text-black dark:text-white">{portfolios.stats.complete}</p>
 							</div>
 							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
-								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg className="w-6 h-6 text-black dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 								</svg>
 							</div>
@@ -182,7 +182,7 @@ export default function Dashboard() {
 						className={`px-6 py-3 font-medium rounded-t-lg transition-all duration-200 ${
 							activeTab === "overview"
 								? "text-primary border-b-2 border-primary bg-gray-100 dark:bg-gray-800"
-								: "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800"
+								: "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800"
 						}`}
 						onClick={() => setActiveTab("overview")}
 					>
@@ -192,7 +192,7 @@ export default function Dashboard() {
 						className={`px-6 py-3 font-medium rounded-t-lg transition-all duration-200 ${
 							activeTab === "resumes"
 								? "text-primary border-b-2 border-primary bg-gray-100 dark:bg-gray-800"
-								: "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800"
+								: "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800"
 						}`}
 						onClick={() => setActiveTab("resumes")}
 					>
@@ -202,7 +202,7 @@ export default function Dashboard() {
 						className={`px-6 py-3 font-medium rounded-t-lg transition-all duration-200 ${
 							activeTab === "portfolios"
 								? "text-primary border-b-2 border-primary bg-gray-100 dark:bg-gray-800"
-								: "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800"
+								: "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-gray-100 dark:bg-gray-800"
 						}`}
 						onClick={() => setActiveTab("portfolios")}
 					>
@@ -237,7 +237,7 @@ export default function Dashboard() {
 											</div>
 											<div>
 												<h3 className="font-semibold text-gray-900 dark:text-white">Create New Portfolio</h3>
-												<p className="text-sm text-gray-600 dark:text-gray-400">Start building your portfolio</p>
+												<p className="text-sm text-black/70 dark:text-white/70">Start building your portfolio</p>
 											</div>
 										</Link>
 
@@ -252,7 +252,7 @@ export default function Dashboard() {
 											</div>
 											<div>
 												<h3 className="font-semibold text-gray-900 dark:text-white">Upload Resume</h3>
-												<p className="text-sm text-gray-600 dark:text-gray-400">Auto-generate from resume</p>
+												<p className="text-sm text-black/70 dark:text-white/70">Auto-generate from resume</p>
 											</div>
 										</Link>
 
@@ -267,7 +267,7 @@ export default function Dashboard() {
 											</div>
 											<div>
 												<h3 className="font-semibold text-gray-900 dark:text-white">Browse Templates</h3>
-												<p className="text-sm text-gray-600 dark:text-gray-400">Explore beautiful designs</p>
+												<p className="text-sm text-black/70 dark:text-white/70">Explore beautiful designs</p>
 											</div>
 										</Link>
 									</div>
@@ -300,7 +300,7 @@ export default function Dashboard() {
 															<h3 className="font-semibold text-gray-900 dark:text-white">
 																{portfolio.portfolioData?.personal?.firstName} {portfolio.portfolioData?.personal?.lastName} Portfolio
 															</h3>
-															<p className="text-sm text-gray-600 dark:text-gray-400">
+															<p className="text-sm text-black/70 dark:text-white/70">
 																{portfolio.portfolioType} • {portfolio.completeness}% complete
 															</p>
 														</div>
@@ -344,7 +344,7 @@ export default function Dashboard() {
 														</div>
 														<div>
 															<h3 className="font-semibold text-gray-900 dark:text-white">{resume.originalName}</h3>
-															<p className="text-sm text-gray-600 dark:text-gray-400">
+															<p className="text-sm text-black/70 dark:text-white/70">
 																{(resume.fileSize / 1024).toFixed(1)} KB • {resume.status}
 															</p>
 														</div>
@@ -368,7 +368,7 @@ export default function Dashboard() {
 											<svg className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
 											</svg>
-											<p className="text-gray-600 dark:text-gray-400 mb-4">No activity yet. Start by creating your first portfolio!</p>
+											<p className="text-black/70 dark:text-white/70 mb-4">No activity yet. Start by creating your first portfolio!</p>
 											<Link
 												href="/editor"
 												className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
@@ -422,7 +422,7 @@ export default function Dashboard() {
 												</div>
 												<div className="flex-1">
 													<h3 className="font-semibold text-gray-900 dark:text-white truncate">{resume.originalName}</h3>
-													<p className="text-sm text-gray-600 dark:text-gray-400">
+													<p className="text-sm text-black/70 dark:text-white/70">
 														{(resume.fileSize / 1024).toFixed(1)} KB
 													</p>
 												</div>
@@ -430,7 +430,7 @@ export default function Dashboard() {
 											
 											<div className="space-y-2 mb-4">
 												<div className="flex items-center justify-between">
-													<span className="text-sm text-gray-600 dark:text-gray-400">Status:</span>
+													<span className="text-sm text-black/70 dark:text-white/70">Status:</span>
 													<span className={`px-2 py-1 text-xs font-medium rounded-lg ${
 														resume.status === 'parsed' 
 															? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
@@ -442,11 +442,11 @@ export default function Dashboard() {
 													</span>
 												</div>
 												<div className="flex items-center justify-between">
-													<span className="text-sm text-gray-600 dark:text-gray-400">Portfolio:</span>
+													<span className="text-sm text-black/70 dark:text-white/70">Portfolio:</span>
 													<span className={`px-2 py-1 text-xs font-medium rounded-lg ${
 														resume.portfolioId 
 															? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
-															: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+															: 'bg-gray-100 dark:bg-gray-700 text-black/70 dark:text-white/70'
 													}`}>
 														{resume.portfolioId ? 'Created' : 'Not used'}
 													</span>
@@ -464,7 +464,7 @@ export default function Dashboard() {
 									<svg className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 									</svg>
-									<p className="text-gray-600 dark:text-gray-400 mb-4">No resumes uploaded yet</p>
+									<p className="text-black/70 dark:text-white/70 mb-4">No resumes uploaded yet</p>
 									<Link
 										href="/editor"
 										className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
@@ -515,7 +515,7 @@ export default function Dashboard() {
 													<h3 className="font-semibold text-gray-900 dark:text-white">
 														{portfolio.portfolioData?.personal?.firstName} {portfolio.portfolioData?.personal?.lastName}
 													</h3>
-													<p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+													<p className="text-sm text-black/70 dark:text-white/70 capitalize">
 														{portfolio.portfolioType} Portfolio
 													</p>
 												</div>
@@ -523,7 +523,7 @@ export default function Dashboard() {
 											
 											<div className="space-y-2 mb-4">
 												<div className="flex items-center justify-between">
-													<span className="text-sm text-gray-600 dark:text-gray-400">Completeness:</span>
+													<span className="text-sm text-black/70 dark:text-white/70">Completeness:</span>
 													<span className={`px-2 py-1 text-xs font-medium rounded-lg ${
 														portfolio.completeness >= 80 
 															? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
@@ -535,7 +535,7 @@ export default function Dashboard() {
 													</span>
 												</div>
 												<div className="flex items-center justify-between">
-													<span className="text-sm text-gray-600 dark:text-gray-400">Status:</span>
+													<span className="text-sm text-black/70 dark:text-white/70">Status:</span>
 													<span className={`px-2 py-1 text-xs font-medium rounded-lg ${
 														portfolio.isPublic 
 															? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
@@ -594,7 +594,7 @@ export default function Dashboard() {
 									<svg className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
 									</svg>
-									<p className="text-gray-600 dark:text-gray-400 mb-4">No portfolios created yet</p>
+									<p className="text-black/70 dark:text-white/70 mb-4">No portfolios created yet</p>
 									<Link
 										href="/editor"
 										className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
