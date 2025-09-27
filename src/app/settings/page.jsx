@@ -96,12 +96,12 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen bg-background">
 			{/* Header */}
-			<div className="bg-white dark:bg-gray-900 shadow-sm border-b">
+			<div className="bg-card shadow-sm border-b border-border">
 				<div className="max-w-4xl mx-auto px-4 py-6">
-					<h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
-					<p className="text-gray-600 dark:text-gray-400 mt-2">Manage your account and preferences</p>
+					<h1 className="text-3xl font-bold text-foreground">Settings</h1>
+					<p className="text-muted-foreground mt-2">Manage your account and preferences</p>
 				</div>
 			</div>
 
