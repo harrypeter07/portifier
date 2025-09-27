@@ -25,10 +25,23 @@ export default function SettingsPage() {
 			const res = await fetch("/api/auth/me");
 			const data = await res.json();
 			if (res.ok) {
-				setUser(data);
+				console.log("User data received:", data);
+				// Handle different response structures
+				if (data.user) {
+					setUser(data.user);
+				} else if (data.username || data.email) {
+					setUser(data);
+				} else {
+					console.error("Unexpected user data structure:", data);
+					setUser(null);
+				}
+			} else {
+				console.error("Failed to fetch user data:", data.error);
+				setUser(null);
 			}
 		} catch (error) {
 			console.error("Failed to fetch user data:", error);
+			setUser(null);
 		}
 	};
 
@@ -84,11 +97,11 @@ export default function SettingsPage() {
 
 	if (!user) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+			<div className="min-h-screen bg-white dark:bg-black">
 				<div className="flex items-center justify-center min-h-screen">
 					<div className="text-center">
-						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-						<p className="text-gray-600 dark:text-gray-300">Loading settings...</p>
+						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+						<p className="text-black/70 dark:text-white/70">Loading settings...</p>
 					</div>
 				</div>
 			</div>
