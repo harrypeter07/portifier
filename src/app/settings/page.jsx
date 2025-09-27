@@ -96,12 +96,12 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-background">
+		<div className="min-h-screen bg-white dark:bg-gray-900">
 			{/* Header */}
-			<div className="bg-card shadow-sm border-b border-border">
+			<div className="bg-card shadow-sm border-b border-gray-200 dark:border-gray-700">
 				<div className="max-w-4xl mx-auto px-4 py-6">
-					<h1 className="text-3xl font-bold text-foreground">Settings</h1>
-					<p className="text-muted-foreground mt-2">Manage your account and preferences</p>
+					<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
+					<p className="text-gray-600 dark:text-gray-400 mt-2">Manage your account and preferences</p>
 				</div>
 			</div>
 
@@ -114,14 +114,14 @@ export default function SettingsPage() {
 						animate={{ opacity: 1, y: 0 }}
 						className={`mb-6 p-4 rounded-lg ${
 							message.type === "success"
-								? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
-								: "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+								? "bg-green-50 border border-green-200"
+								: "bg-red-50 border border-red-200"
 						}`}
 					>
 						<p className={`text-sm ${
 							message.type === "success"
-								? "text-green-600 dark:text-green-400"
-								: "text-red-600 dark:text-red-400"
+								? "text-green-600"
+								: "text-red-600"
 						}`}>
 							{message.text}
 						</p>
@@ -130,132 +130,128 @@ export default function SettingsPage() {
 
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 					{/* Account Information */}
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg"
-					>
-						<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-							Account Information
-						</h2>
-						<div className="space-y-4">
-							<div>
-								<label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-									Username
-								</label>
-								<p className="text-gray-900 dark:text-white font-medium">@{user.username}</p>
-							</div>
-							<div>
-								<label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-									Email
-								</label>
-								<p className="text-gray-900 dark:text-white font-medium">{user.email}</p>
-							</div>
-							<div>
-								<label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-									Name
-								</label>
-								<p className="text-gray-900 dark:text-white font-medium">{user.name}</p>
-							</div>
-							<div>
-								<label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-									Member Since
-								</label>
-								<p className="text-gray-900 dark:text-white font-medium">
-									{new Date(user.createdAt).toLocaleDateString()}
-								</p>
-							</div>
-						</div>
-					</motion.div>
-
-					{/* AI Settings */}
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ delay: 0.1 }}
-						className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg"
-					>
-						<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-							AI Settings
-						</h2>
-						
-						{/* Gemini API Key Status */}
-						<div className="mb-6">
-							<div className="flex items-center justify-between mb-4">
+					<Card>
+						<CardHeader>
+							<CardTitle>Account Information</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<div className="space-y-4">
 								<div>
-									<h3 className="text-lg font-medium text-gray-900 dark:text-white">
-										Gemini API Key
-									</h3>
-									<p className="text-sm text-gray-600 dark:text-gray-400">
-										Use your own API key for better reliability
+									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+										Username
+									</Label>
+									<p className="text-gray-900 dark:text-gray-100 font-medium">@{user.username}</p>
+								</div>
+								<div>
+									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+										Email
+									</Label>
+									<p className="text-gray-900 dark:text-gray-100 font-medium">{user.email}</p>
+								</div>
+								<div>
+									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+										Name
+									</Label>
+									<p className="text-gray-900 dark:text-gray-100 font-medium">{user.name}</p>
+								</div>
+								<div>
+									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+										Member Since
+									</Label>
+									<p className="text-gray-900 dark:text-gray-100 font-medium">
+										{new Date(user.createdAt).toLocaleDateString()}
 									</p>
 								</div>
-								<div className="flex items-center">
-									{apiKeyStatus.loading ? (
-										<div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-									) : apiKeyStatus.hasKey ? (
-										<div className="flex items-center text-green-600 dark:text-green-400">
-											<svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-											</svg>
-											<span className="text-sm font-medium">Configured</span>
-										</div>
-									) : (
-										<div className="flex items-center text-yellow-600 dark:text-yellow-400">
-											<svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-											</svg>
-											<span className="text-sm font-medium">Not Configured</span>
-										</div>
-									)}
+							</div>
+						</CardContent>
+					</Card>
+
+					{/* AI Settings */}
+					<Card>
+						<CardHeader>
+							<CardTitle>AI Settings</CardTitle>
+						</CardHeader>
+						<CardContent>
+						
+							{/* Gemini API Key Status */}
+							<div className="mb-6">
+								<div className="flex items-center justify-between mb-4">
+									<div>
+										<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+											Gemini API Key
+										</h3>
+										<p className="text-sm text-gray-600 dark:text-gray-400">
+											Use your own API key for better reliability
+										</p>
+									</div>
+									<div className="flex items-center">
+										{apiKeyStatus.loading ? (
+											<div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+										) : apiKeyStatus.hasKey ? (
+											<Badge variant="default" className="flex items-center">
+												<svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+												</svg>
+												Configured
+											</Badge>
+										) : (
+											<Badge variant="secondary" className="flex items-center">
+												<svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+												</svg>
+												Not Configured
+											</Badge>
+										)}
+									</div>
 								</div>
+
+								{apiKeyStatus.hasKey ? (
+									<div className="space-y-3">
+										<div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+											<p className="text-sm text-green-600">
+												✅ Your Gemini API key is configured and working
+											</p>
+										</div>
+										<Button
+											onClick={handleRemoveApiKey}
+											disabled={isRemoving}
+											variant="destructive"
+											className="w-full"
+										>
+											{isRemoving ? "Removing..." : "Remove API Key"}
+										</Button>
+									</div>
+								) : (
+									<div className="space-y-3">
+										<div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+											<p className="text-sm text-yellow-600">
+												⚠️ Add your Gemini API key to enable AI features
+											</p>
+										</div>
+										<Button
+											onClick={() => setIsModalOpen(true)}
+											className="w-full"
+										>
+											Add API Key
+										</Button>
+									</div>
+								)}
 							</div>
 
-							{apiKeyStatus.hasKey ? (
-								<div className="space-y-3">
-									<div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-										<p className="text-sm text-green-600 dark:text-green-400">
-											✅ Your Gemini API key is configured and working
-										</p>
-									</div>
-									<button
-										onClick={handleRemoveApiKey}
-										disabled={isRemoving}
-										className="w-full px-4 py-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors disabled:opacity-50"
-									>
-										{isRemoving ? "Removing..." : "Remove API Key"}
-									</button>
-								</div>
-							) : (
-								<div className="space-y-3">
-									<div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-										<p className="text-sm text-yellow-600 dark:text-yellow-400">
-											⚠️ Add your Gemini API key to enable AI features
-										</p>
-									</div>
-									<button
-										onClick={() => setIsModalOpen(true)}
-										className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-									>
-										Add API Key
-									</button>
-								</div>
-							)}
-						</div>
-
-						{/* AI Features Info */}
-						<div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-							<h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-								AI Features
-							</h4>
-							<ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-								<li>• Resume parsing and data extraction</li>
-								<li>• AI-powered content suggestions</li>
-								<li>• Smart field completion</li>
-								<li>• Professional content optimization</li>
-							</ul>
-						</div>
-					</motion.div>
+							{/* AI Features Info */}
+							<div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+								<h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+									AI Features
+								</h4>
+								<ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+									<li>• Resume parsing and data extraction</li>
+									<li>• AI-powered content suggestions</li>
+									<li>• Smart field completion</li>
+									<li>• Professional content optimization</li>
+								</ul>
+							</div>
+						</CardContent>
+					</Card>
 				</div>
 
 				{/* Additional Settings */}

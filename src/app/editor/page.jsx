@@ -346,12 +346,12 @@ export default function ResumeUploadPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-background">
+		<div className="min-h-screen bg-white dark:bg-gray-900">
 			<div className="flex flex-col-reverse md:flex-row">
 			{/* Left Panel - Upload and Navigation */}
 			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>
-				<h1 className="text-3xl font-extrabold mb-4 text-foreground">Start Your Portfolio</h1>
-				<div className="mb-6 text-muted-foreground text-base">
+				<h1 className="text-3xl font-extrabold mb-4 text-gray-900 dark:text-gray-100">Start Your Portfolio</h1>
+				<div className="mb-6 text-gray-600 dark:text-gray-400 text-base">
 					Upload your resume (PDF) to auto-fill your portfolio, or use the navigation below to explore different editing options.
 				</div>
 				<Card className="mb-6">
@@ -367,7 +367,7 @@ export default function ResumeUploadPage() {
 							accept="application/pdf"
 							onChange={handleFileChange}
 							disabled={loading}
-							className="mb-2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+							className="mb-2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-900 dark:bg-gray-100 file:text-white dark:text-gray-900 hover:file:bg-gray-900 dark:bg-gray-100/90"
 						/>
 						<Button
 							onClick={handleUpload}
@@ -378,7 +378,7 @@ export default function ResumeUploadPage() {
 						</Button>
 						{error && <div className="text-destructive mb-2">{error}</div>}
 						{!file && !parsedData && (
-							<div className="text-xs text-muted-foreground bg-muted border rounded p-2 mt-1">
+							<div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border rounded p-2 mt-1">
 								Tip: You can also start with the navigation options below!
 							</div>
 						)}
@@ -387,7 +387,7 @@ export default function ResumeUploadPage() {
 
 				{/* Navigation Buttons */}
 				<div className="mt-8">
-					<div className="font-semibold text-foreground mb-4">Portfolio Editor Options:</div>
+					<div className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Portfolio Editor Options:</div>
 					<div className="grid gap-4 md:grid-cols-3">
 						<Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
 							<CardContent 
@@ -396,7 +396,7 @@ export default function ResumeUploadPage() {
 							>
 								<div className="text-2xl mb-2">🎨</div>
 								<div className="font-bold text-lg mb-1">Customize</div>
-								<div className="text-sm text-muted-foreground text-center">
+								<div className="text-sm text-gray-600 dark:text-gray-400 text-center">
 									Choose and customize individual components
 								</div>
 							</CardContent>
@@ -409,7 +409,7 @@ export default function ResumeUploadPage() {
 							>
 								<div className="text-2xl mb-2">✏️</div>
 								<div className="font-bold text-lg mb-1">Edit Resume</div>
-								<div className="text-sm text-muted-foreground text-center">
+								<div className="text-sm text-gray-600 dark:text-gray-400 text-center">
 									Edit your resume content and details
 								</div>
 							</CardContent>
@@ -422,7 +422,7 @@ export default function ResumeUploadPage() {
 							>
 								<div className="text-2xl mb-2">📋</div>
 								<div className="font-bold text-lg mb-1">Templates</div>
-								<div className="text-sm text-muted-foreground text-center">
+								<div className="text-sm text-gray-600 dark:text-gray-400 text-center">
 									Browse all available templates
 								</div>
 							</CardContent>
@@ -432,9 +432,9 @@ export default function ResumeUploadPage() {
 			</div>
 			{/* Right Panel - Live Preview (hidden until parsed) */}
 			{parsed && (
-				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-border bg-card fixed md:static top-0 right-0 z-30 transition-all duration-500 order-1 md:order-2">
-					<div className="sticky top-0 bg-card p-4 border-b border-border z-10">
-						<h2 className="text-xl font-semibold text-foreground">Live Preview</h2>
+				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 fixed md:static top-0 right-0 z-30 transition-all duration-500 order-1 md:order-2">
+					<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
+						<h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Live Preview</h2>
 					</div>
 					<div className="p-4">
 						{layout && Object.keys(layout).length > 0 ? (

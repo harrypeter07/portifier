@@ -5,6 +5,9 @@ import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
 import { getComponentTemplates, getFullPageTemplates } from "@/data/templates/templateManager";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function TemplatesDemoPage() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
@@ -202,14 +205,14 @@ export default function TemplatesDemoPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+		<div className="min-h-screen bg-white dark:bg-gray-900">
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Header */}
 				<div className="text-center mb-8">
-					<h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+					<h1 className="text-4xl font-bold text-foreground mb-4">
 						Portfolio Template System
 					</h1>
-					<p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+					<p className="text-lg text-muted-foreground max-w-3xl mx-auto">
 						Choose from our collection of component-based and full-page templates. 
 						Component-based templates let you mix and match individual sections, 
 						while full-page templates provide complete, pre-designed layouts.
@@ -218,48 +221,52 @@ export default function TemplatesDemoPage() {
 
 				{/* Update Message */}
 				{updateMessage && (
-					<div className="mb-6 p-4 rounded-lg border-2 border-green-200 bg-green-50 dark:bg-green-900 dark:border-green-700">
-						<div className="flex items-center">
-							<div className="flex-shrink-0">
-								<svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-									<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-								</svg>
+					<Card className="mb-6 border-green-200 bg-green-50">
+						<CardContent className="p-4">
+							<div className="flex items-center">
+								<div className="flex-shrink-0">
+									<svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+										<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+									</svg>
+								</div>
+								<div className="ml-3">
+									<p className="text-sm font-medium text-green-800">
+										{updateMessage}
+									</p>
+								</div>
 							</div>
-							<div className="ml-3">
-								<p className="text-sm font-medium text-green-800 dark:text-green-200">
-									{updateMessage}
-								</p>
-							</div>
-						</div>
-					</div>
+						</CardContent>
+					</Card>
 				)}
 
 				{/* Portfolio Update Info */}
 				{isUpdatingSpecificPortfolio && existingPortfolio && (
-					<div className="mb-6 p-4 rounded-lg border-2 border-blue-200 bg-blue-50 dark:bg-blue-900 dark:border-blue-700">
-						<div className="flex items-center justify-between">
-							<div className="flex items-center">
-								<div className="flex-shrink-0">
-									<svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-										<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-									</svg>
+					<Card className="mb-6 border-blue-200 bg-blue-50">
+						<CardContent className="p-4">
+							<div className="flex items-center justify-between">
+								<div className="flex items-center">
+									<div className="flex-shrink-0">
+										<svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+											<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+										</svg>
+									</div>
+									<div className="ml-3">
+										<h3 className="text-sm font-medium text-blue-800">
+											Updating Portfolio: <span className="font-bold">{existingPortfolio.username}</span>
+										</h3>
+										<p className="text-sm text-blue-700">
+											Current template: <span className="font-medium">{existingPortfolio.templateName || 'Default'}</span>
+										</p>
+									</div>
 								</div>
-								<div className="ml-3">
-									<h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
-										Updating Portfolio: <span className="font-bold">{existingPortfolio.username}</span>
-									</h3>
-									<p className="text-sm text-blue-700 dark:text-blue-300">
-										Current template: <span className="font-medium">{existingPortfolio.templateName || 'Default'}</span>
+								<div className="text-right">
+									<p className="text-xs text-blue-600">
+										Portfolio ID: {existingPortfolio._id}
 									</p>
 								</div>
 							</div>
-							<div className="text-right">
-								<p className="text-xs text-blue-600 dark:text-blue-400">
-									Portfolio ID: {existingPortfolio._id}
-								</p>
-							</div>
-						</div>
-					</div>
+						</CardContent>
+					</Card>
 				)}
 
 				{/* Template Selector */}

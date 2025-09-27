@@ -44,14 +44,14 @@ export default function Dashboard() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-background">
+			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
 				<div className="text-center">
 					<motion.div
 						animate={{ rotate: 360 }}
 						transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-						className="w-16 h-16 border-4 border-muted border-t-primary rounded-full mx-auto mb-4"
+						className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 border-t-primary rounded-full mx-auto mb-4"
 					></motion.div>
-					<p className="text-muted-foreground">Loading your dashboard...</p>
+					<p className="text-gray-600 dark:text-gray-400">Loading your dashboard...</p>
 				</div>
 			</div>
 		);
@@ -81,7 +81,7 @@ export default function Dashboard() {
 	}
 
 	return (
-		<div className="min-h-screen bg-background">
+		<div className="min-h-screen bg-white dark:bg-gray-900">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				{/* Header */}
 				<motion.div
@@ -91,16 +91,16 @@ export default function Dashboard() {
 				>
 					<div className="flex items-center justify-between">
 						<div>
-							<h1 className="text-3xl font-bold text-foreground">
+							<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
 								Welcome back, {user.name}! 👋
 							</h1>
-							<p className="text-muted-foreground mt-1">
+							<p className="text-gray-600 dark:text-gray-400 mt-1">
 								Manage your resumes and portfolios
 							</p>
 						</div>
 						<Link
 							href="/editor"
-							className="px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+							className="px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
 						>
 							Create Portfolio
 						</Link>
@@ -114,56 +114,56 @@ export default function Dashboard() {
 					transition={{ delay: 0.1 }}
 					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
 				>
-					<div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
+					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-muted-foreground">Total Portfolios</p>
-								<p className="text-3xl font-bold text-foreground">{portfolios.stats.total}</p>
+								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Portfolios</p>
+								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{portfolios.stats.total}</p>
 							</div>
-							<div className="p-3 bg-accent rounded-xl">
-								<svg className="w-6 h-6 text-accent-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
+								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
 								</svg>
 							</div>
 						</div>
 					</div>
 
-					<div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
+					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-muted-foreground">Uploaded Resumes</p>
-								<p className="text-3xl font-bold text-foreground">{resumes.stats.total}</p>
+								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Uploaded Resumes</p>
+								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{resumes.stats.total}</p>
 							</div>
-							<div className="p-3 bg-accent rounded-xl">
-								<svg className="w-6 h-6 text-accent-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
+								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 								</svg>
 							</div>
 						</div>
 					</div>
 
-					<div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
+					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-muted-foreground">Published</p>
-								<p className="text-3xl font-bold text-foreground">{portfolios.stats.public}</p>
+								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Published</p>
+								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{portfolios.stats.public}</p>
 							</div>
-							<div className="p-3 bg-accent rounded-xl">
-								<svg className="w-6 h-6 text-accent-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
+								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
 								</svg>
 							</div>
 						</div>
 					</div>
 
-					<div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
+					<div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-muted-foreground">Complete</p>
-								<p className="text-3xl font-bold text-foreground">{portfolios.stats.complete}</p>
+								<p className="text-sm font-medium text-gray-600 dark:text-gray-400">Complete</p>
+								<p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{portfolios.stats.complete}</p>
 							</div>
-							<div className="p-3 bg-accent rounded-xl">
-								<svg className="w-6 h-6 text-accent-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
+								<svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 								</svg>
 							</div>
@@ -176,13 +176,13 @@ export default function Dashboard() {
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ delay: 0.2 }}
-					className="flex mb-8 border-b border-border"
+					className="flex mb-8 border-b border-gray-200 dark:border-gray-700"
 				>
 					<button
 						className={`px-6 py-3 font-medium rounded-t-lg transition-all duration-200 ${
 							activeTab === "overview"
-								? "text-primary border-b-2 border-primary bg-accent"
-								: "text-muted-foreground hover:text-foreground hover:bg-accent"
+								? "text-primary border-b-2 border-primary bg-gray-100 dark:bg-gray-800"
+								: "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800"
 						}`}
 						onClick={() => setActiveTab("overview")}
 					>
@@ -191,8 +191,8 @@ export default function Dashboard() {
 					<button
 						className={`px-6 py-3 font-medium rounded-t-lg transition-all duration-200 ${
 							activeTab === "resumes"
-								? "text-primary border-b-2 border-primary bg-accent"
-								: "text-muted-foreground hover:text-foreground hover:bg-accent"
+								? "text-primary border-b-2 border-primary bg-gray-100 dark:bg-gray-800"
+								: "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800"
 						}`}
 						onClick={() => setActiveTab("resumes")}
 					>
@@ -201,8 +201,8 @@ export default function Dashboard() {
 					<button
 						className={`px-6 py-3 font-medium rounded-t-lg transition-all duration-200 ${
 							activeTab === "portfolios"
-								? "text-primary border-b-2 border-primary bg-accent"
-								: "text-muted-foreground hover:text-foreground hover:bg-accent"
+								? "text-primary border-b-2 border-primary bg-gray-100 dark:bg-gray-800"
+								: "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800"
 						}`}
 						onClick={() => setActiveTab("portfolios")}
 					>
