@@ -6,18 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test:publish-render": "node test-publish-render.js",
-    "dump:portfolio": "node dump-current-portfolio.js",
-    "test:gemini": "node test-gemini-key.js",
-    "check:models": "node check-available-models.js",
-    "check:db": "node check-database.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",
-    "dotenv": "^17.2.2",
     "framer-motion": "^12.23.12",
     "gsap": "^3.13.0",
     "html2pdf.js": "^0.12.0",

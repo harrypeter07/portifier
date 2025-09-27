@@ -1,308 +1,151 @@
-"use client";
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import TemplatePreview from './TemplatePreview';
-import LiveTemplatePreview from './LiveTemplatePreview';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { 
+	getComponentTemplates, 
+	getFullPageTemplates,
+	getTemplatesByCategory 
+} from "@/data/templates/templateManager";
+import { useLayoutStore } from "@/store/layoutStore";
 
-const TemplateSelector = ({ 
-	portfolioData, 
-	onTemplateSelect, 
-	onPublish,
-	className = "" 
-}) => {
-	const [templates, setTemplates] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-	const [selectedTemplate, setSelectedTemplate] = useState(null);
-	const [showPreview, setShowPreview] = useState(false);
-	const [showLivePreview, setShowLivePreview] = useState(false);
-	const [source, setSource] = useState('all'); // 'local', 'remote', 'all'
-	const [category, setCategory] = useState('all');
+export default function TemplateSelector() {
+	const [selectedType, setSelectedType] = useState("component"); // "component" or "full"
+	const [selectedCategory, setSelectedCategory] = useState("all");
+	
+	const { currentTemplate, applyTemplate } = useLayoutStore();
 
-	useEffect(() => {
-		fetchTemplates();
-	}, [source, category]);
+	const componentTemplates = getComponentTemplates();
+	const fullPageTemplates = getFullPageTemplates();
+	
+	const allTemplates = selectedType === "component" ? componentTemplates : fullPageTemplates;
+	const filteredTemplates = selectedCategory === "all" 
+		? allTemplates 
+		: allTemplates.filter(template => template.category === selectedCategory);
 
-	const fetchTemplates = async () => {
-		try {
-			setLoading(true);
-			setError(null);
-
-			const params = new URLSearchParams();
-			if (source !== 'all') params.append('source', source);
-			if (category !== 'all') params.append('category', category);
-
-            const response = await fetch(`/api/templates?${params}`);
-            const result = await response.json();
-
-            if (result.success) {
-                // De-duplicate templates by composite key (id+source+version)
-                const seen = new Set();
-                const deduped = [];
-                for (const t of result.templates || []) {
-                    const compositeKey = `${t.id}:${t.source || (t.remote ? 'remote' : 'local')}:${t.version || '0'}`;
-                    if (seen.has(compositeKey)) continue;
-                    seen.add(compositeKey);
-                    deduped.push(t);
-                }
-                setTemplates(deduped);
-            } else {
-				setError(result.error || 'Failed to fetch templates');
-			}
-		} catch (err) {
-			setError(err.message);
-		} finally {
-			setLoading(false);
-		}
-	};
+	const categories = ["all", "developer", "designer", "marketing"];
 
 	const handleTemplateSelect = (template) => {
-		setSelectedTemplate(template);
-		onTemplateSelect?.(template);
+		applyTemplate(template);
 	};
-
-	const handlePreview = (template) => {
-		setSelectedTemplate(template);
-		setShowPreview(true);
-	};
-
-	const handleLivePreview = (template) => {
-		setSelectedTemplate(template);
-		setShowLivePreview(true);
-	};
-
-	const handlePublish = (result) => {
-		setShowPreview(false);
-		onPublish?.(result);
-	};
-
-	const categories = [
-		{ id: 'all', name: 'All Templates', icon: '🎨' },
-		{ id: 'developer', name: 'Developer', icon: '💻' },
-		{ id: 'designer', name: 'Designer', icon: '🎨' },
-		{ id: 'marketing', name: 'Marketing', icon: '📈' },
-		{ id: 'academic', name: 'Academic', icon: '🎓' }
-	];
-
-	const sources = [
-		{ id: 'all', name: 'All Sources', icon: '📦' },
-		{ id: 'local', name: 'Local', icon: '🏠' },
-		{ id: 'remote', name: 'Remote', icon: '☁️' }
-	];
 
 	return (
-		<div className={`w-full ${className}`}>
-			{/* Header */}
+		<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+			<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+				Choose Your Template
+			</h2>
+
+			{/* Template Type Selector */}
 			<div className="mb-6">
-				<h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-					🎨 Choose Your Template
-				</h2>
-				<p className="text-gray-600 dark:text-gray-400">
-					Select a template to preview and publish your portfolio
+				<div className="flex space-x-4 mb-4">
+					<button
+						onClick={() => setSelectedType("component")}
+						className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+							selectedType === "component"
+								? "bg-blue-500 text-white"
+								: "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+						}`}
+					>
+						Component-Based
+					</button>
+					<button
+						onClick={() => setSelectedType("full")}
+						className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+							selectedType === "full"
+								? "bg-blue-500 text-white"
+								: "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+						}`}
+					>
+						Full Page Templates
+					</button>
+				</div>
+				<p className="text-sm text-gray-600 dark:text-gray-400">
+					{selectedType === "component" 
+						? "Mix and match individual components to create your perfect portfolio"
+						: "Complete portfolio pages with pre-designed layouts"
+					}
 				</p>
 			</div>
 
-			{/* Filters */}
-			<div className="flex flex-wrap gap-4 mb-6">
-				{/* Category Filter */}
-				<div className="flex items-center space-x-2">
-					<label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-						Category:
-					</label>
-					<select
-						value={category}
-						onChange={(e) => setCategory(e.target.value)}
-						className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-					>
-						{categories.map(cat => (
-							<option key={cat.id} value={cat.id}>
-								{cat.icon} {cat.name}
-							</option>
-						))}
-					</select>
+			{/* Category Filter */}
+			<div className="mb-6">
+				<div className="flex flex-wrap gap-2">
+					{categories.map((category) => (
+						<button
+							key={category}
+							onClick={() => setSelectedCategory(category)}
+							className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+								selectedCategory === category
+									? "bg-purple-500 text-white"
+									: "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+							}`}
+						>
+							{category.charAt(0).toUpperCase() + category.slice(1)}
+						</button>
+					))}
 				</div>
-
-				{/* Source Filter */}
-				<div className="flex items-center space-x-2">
-					<label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-						Source:
-					</label>
-					<select
-						value={source}
-						onChange={(e) => setSource(e.target.value)}
-						className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-					>
-						{sources.map(src => (
-							<option key={src.id} value={src.id}>
-								{src.icon} {src.name}
-							</option>
-						))}
-					</select>
-				</div>
-
-				{/* Refresh Button */}
-				<button
-					onClick={fetchTemplates}
-					disabled={loading}
-					className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-				>
-					{loading ? '🔄' : '🔄'} Refresh
-				</button>
 			</div>
 
-			{/* Loading State */}
-			{loading && (
-				<div className="flex items-center justify-center py-12">
-					<div className="text-center">
-						<div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
-						<p className="text-gray-600 dark:text-gray-400">Loading templates...</p>
-					</div>
-				</div>
-			)}
+			{/* Template Grid */}
+			<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{filteredTemplates.map((template) => (
+					<motion.div
+						key={template.id}
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.3 }}
+						className={`relative bg-gray-50 dark:bg-gray-700 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-lg ${
+							currentTemplate?.id === template.id
+								? "ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/20"
+								: "hover:bg-gray-100 dark:hover:bg-gray-600"
+						}`}
+						onClick={() => handleTemplateSelect(template)}
+					>
+						{/* Template Preview Placeholder */}
+						<div className="w-full h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center text-white font-bold">
+							{template.name}
+						</div>
+						
+						{/* Template Info */}
+						<div>
+							<h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+								{template.name}
+							</h3>
+							<p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+								{template.description}
+							</p>
+							
+							{/* Template Type Badge */}
+							<div className="flex items-center justify-between">
+								<span className={`px-2 py-1 rounded-full text-xs font-medium ${
+									template.type === "component"
+										? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+										: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+								}`}>
+									{template.type === "component" ? "Component" : "Full Page"}
+								</span>
+								
+								<span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-200">
+									{template.category}
+								</span>
+							</div>
+						</div>
 
-			{/* Error State */}
-			{error && (
-				<div className="flex items-center justify-center py-12">
-					<div className="text-center">
-						<div className="text-red-600 text-6xl mb-4">⚠️</div>
-						<h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-							Failed to Load Templates
-						</h3>
-						<p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
-						<button
-							onClick={fetchTemplates}
-							className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-						>
-							Try Again
-						</button>
-					</div>
-				</div>
-			)}
+						{/* Selected Indicator */}
+						{currentTemplate?.id === template.id && (
+							<div className="absolute top-2 right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+								<svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+									<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+								</svg>
+							</div>
+						)}
+					</motion.div>
+				))}
+			</div>
 
-			{/* Templates Grid */}
-			{!loading && !error && (
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-					<AnimatePresence>
-                        {templates.map((template, index) => (
-							<motion.div
-                                key={`${template.id}-${template.source || (template.remote ? 'remote' : 'local')}-${template.version || '0'}-${index}`}
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								exit={{ opacity: 0, y: -20 }}
-								transition={{ delay: index * 0.1 }}
-								className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-							>
-								{/* Live Template Preview */}
-								<div className="aspect-video bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center relative group">
-									<div className="text-center">
-										<div className="text-6xl text-gray-400 mb-2">
-											{template.category === 'developer' ? '💻' : 
-											 template.category === 'designer' ? '🎨' : 
-											 template.category === 'marketing' ? '📈' : '🎓'}
-										</div>
-										<button
-											onClick={() => handleLivePreview(template)}
-											className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-all opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0"
-										>
-											👁️ Live Preview
-										</button>
-									</div>
-								</div>
-
-								{/* Template Info */}
-								<div className="p-6">
-									<div className="flex items-start justify-between mb-3">
-										<div>
-											<h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-												{template.name}
-											</h3>
-											<p className="text-sm text-gray-600 dark:text-gray-400">
-												by {template.author}
-											</p>
-										</div>
-										<div className="flex items-center space-x-2">
-											{template.remote && (
-												<span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 text-xs rounded-full">
-													☁️ Remote
-												</span>
-											)}
-											<span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 text-xs rounded-full">
-												{template.category}
-											</span>
-										</div>
-									</div>
-
-									<p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">
-										{template.description}
-									</p>
-
-									<div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
-										<span>v{template.version}</span>
-										<span>{template.source}</span>
-									</div>
-
-									{/* Action Buttons */}
-									<div className="flex space-x-2">
-										<button
-											onClick={() => handlePreview(template)}
-											className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-										>
-											👁️ Preview
-										</button>
-										<button
-											onClick={() => handleTemplateSelect(template)}
-											className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-										>
-											✅ Select
-										</button>
-									</div>
-								</div>
-							</motion.div>
-						))}
-					</AnimatePresence>
-				</div>
-			)}
-
-			{/* Empty State */}
-			{!loading && !error && templates.length === 0 && (
-				<div className="flex items-center justify-center py-12">
-					<div className="text-center">
-						<div className="text-6xl text-gray-400 mb-4">📦</div>
-						<h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-							No Templates Found
-						</h3>
-						<p className="text-gray-600 dark:text-gray-400">
-							No templates match your current filters
-						</p>
-					</div>
-				</div>
-			)}
-
-			{/* Template Preview Modal */}
-			<AnimatePresence>
-				{showPreview && selectedTemplate && (
-					<TemplatePreview
-						templateId={selectedTemplate.id}
-						portfolioData={portfolioData}
-						onClose={() => setShowPreview(false)}
-						onPublish={handlePublish}
-					/>
-				)}
-			</AnimatePresence>
-
-			{/* Live Template Preview Modal */}
-			<AnimatePresence>
-				{showLivePreview && selectedTemplate && (
-					<LiveTemplatePreview
-						template={selectedTemplate}
-						portfolioData={portfolioData}
-						onClose={() => setShowLivePreview(false)}
-						onSelect={handleTemplateSelect}
-					/>
-				)}
-			</AnimatePresence>
+			{/* Template Count */}
+			<div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+				Showing {filteredTemplates.length} {selectedType === "component" ? "component-based" : "full-page"} templates
+				{selectedCategory !== "all" && ` for ${selectedCategory}`}
+			</div>
 		</div>
 	);
-};
-
-export default TemplateSelector;
+} 

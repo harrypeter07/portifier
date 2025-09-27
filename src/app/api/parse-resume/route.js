@@ -121,8 +121,7 @@ export async function POST(req) {
 		`;
 
 		// Use user's API key if available, otherwise fall back to environment variable
-		// Let the system automatically select the best available model
-		const model = await getGeminiModel(user._id);
+		const model = await getGeminiModel(user._id, "gemini-1.5-flash");
 
 		// Generate content with image
 		const result = await model.generateContent([
@@ -243,53 +242,21 @@ export async function GET(req) {
 			console.error("❌ [HEALTH-CHECK] MongoDB connection failed:", dbError.message);
 		}
 
-		// Test Gemini with automatic model fallback
-		let geminiStatus = "connected";
-		try {
-			const model = await getGeminiModel(null);
-			const result = await model.generateContent("Hello");
-			const response = await result.response;
-			const text = response.text();
-			console.log("✅ [HEALTH-CHECK] Gemini API working with fallback model");
-		} catch (geminiError) {
-			if (geminiError.message.includes('quota') || geminiError.message.includes('Too Many Requests')) {
-				geminiStatus = "quota_exceeded";
-				console.log("⚠️ [HEALTH-CHECK] Gemini quota exceeded, but API key is valid");
-			} else if (geminiError.message.includes('No available Gemini models found')) {
-				geminiStatus = "no_models";
-				console.log("❌ [HEALTH-CHECK] No Gemini models available");
-			} else {
-				geminiStatus = "failed";
-				console.error("❌ [HEALTH-CHECK] Gemini API failed:", geminiError.message);
-			}
-		}
+		// Try a simple test call
+		const model = await getGeminiModel(null, "gemini-1.5-flash");
+		const result = await model.generateContent("Hello");
+		const response = await result.response;
+		const text = response.text();
 
 		return NextResponse.json({
 			status: "healthy",
 			available: true,
 			envCheck,
 			database: dbStatus,
-			gemini: geminiStatus
+			gemini: "connected"
 		});
 	} catch (error) {
 		console.error("❌ Gemini API health check failed:", error);
-		
-		// Handle rate limiting gracefully
-		if (error.message.includes('Too Many Requests') || error.message.includes('429')) {
-			return NextResponse.json({
-				status: "rate_limited",
-				available: false,
-				error: "API rate limit exceeded. Please try again later.",
-				envCheck: {
-					GEMINI_API_KEY: !!process.env.GEMINI_API_KEY,
-					JWT_SECRET: !!process.env.JWT_SECRET,
-					MONGODB_URI: !!process.env.MONGODB_URI,
-				},
-				database: "unknown",
-				gemini: "rate_limited"
-			}, { status: 429 });
-		}
-		
 		return NextResponse.json({
 			status: "unhealthy",
 			available: false,

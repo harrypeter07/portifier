@@ -45,30 +45,15 @@ export async function POST(req) {
 			return NextResponse.json({ error: "Invalid Gemini API key format" }, { status: 400 });
 		}
 
-		// Test the API key with automatic model fallback
+		// Test the API key with a simple call
 		try {
-			const { getGeminiModel } = await import('@/lib/gemini');
-			const model = await getGeminiModel(null);
+			const { GoogleGenerativeAI } = await import('@google/generative-ai');
+			const genAI = new GoogleGenerativeAI(apiKey.trim());
+			const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 			
 			const result = await model.generateContent("Test");
 			await result.response.text();
 		} catch (apiError) {
-			// Handle rate limiting specifically
-			if (apiError.message.includes('Too Many Requests') || apiError.message.includes('429') || apiError.message.includes('quota')) {
-				return NextResponse.json({ 
-					error: "API rate limit exceeded. Please try again in a few minutes.",
-					details: "Too many requests to Gemini API. Please wait before trying again."
-				}, { status: 429 });
-			}
-			
-			// Handle no available models
-			if (apiError.message.includes('No available Gemini models found')) {
-				return NextResponse.json({ 
-					error: "No Gemini models available with this API key",
-					details: "Please check your API key permissions or try a different key."
-				}, { status: 400 });
-			}
-			
 			return NextResponse.json({ 
 				error: "Invalid API key or API service unavailable",
 				details: apiError.message 

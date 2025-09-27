@@ -85,9 +85,7 @@ export async function POST(req) {
 			finalTemplateId,
 			finalTemplateName,
 			finalTemplateType,
-			portfolioType,
-			isRemoteTemplate: currentTemplate?.remote || false,
-			templateSource: currentTemplate?.source || 'local'
+			portfolioType
 		});
 
 		// Determine data format and transform if needed
@@ -124,9 +122,6 @@ export async function POST(req) {
 			currentTemplate: currentTemplate, // Store full template object for reference
 			portfolioType,
 			isPublic,
-			// Store remote template information
-			isRemoteTemplate: currentTemplate?.remote || false,
-			templateSource: currentTemplate?.source || 'local',
 			updatedAt: new Date(),
 		};
 
@@ -254,8 +249,6 @@ export async function POST(req) {
 			templateId: finalTemplateId,
 			templateName: finalTemplateName,
 			templateType: finalTemplateType,
-			isRemoteTemplate: currentTemplate?.remote || false,
-			templateSource: currentTemplate?.source || 'local',
 			completeness: portfolio.calculateCompleteness()
 		});
 
@@ -277,9 +270,6 @@ export async function POST(req) {
 			templateName: finalTemplateName,
 			templateType: finalTemplateType,
 			template: currentTemplate, // Full template object
-			// Include remote template information
-			isRemoteTemplate: currentTemplate?.remote || false,
-			templateSource: currentTemplate?.source || 'local',
 		});
 	} catch (err) {
 		console.error("Error saving portfolio:", err);

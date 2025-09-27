@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter, useSearchParams } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
@@ -11,8 +11,7 @@ import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
 import { motion } from "framer-motion";
 import debounce from "lodash.debounce";
 
-// Component that handles search params
-function EditResumePageContent() {
+export default function EditResumePage() {
 	const {
 		content,
 		setContent,
@@ -1211,21 +1210,5 @@ function EditResumePageContent() {
 				onCancel={modal.onCancel}
 			/>
 		</div>
-	);
-}
-
-// Main export with Suspense boundary
-export default function EditResumePage() {
-	return (
-		<Suspense fallback={
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-				<div className="text-center">
-					<div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4 animate-spin"></div>
-					<p className="text-gray-600 dark:text-gray-400">Loading edit resume page...</p>
-				</div>
-			</div>
-		}>
-			<EditResumePageContent />
-		</Suspense>
 	);
 }
