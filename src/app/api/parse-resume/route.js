@@ -121,7 +121,8 @@ export async function POST(req) {
 		`;
 
 		// Use user's API key if available, otherwise fall back to environment variable
-		const model = await getGeminiModel(user._id, "gemini-1.5-pro");
+		// Let the system automatically select the best available model
+		const model = await getGeminiModel(user._id);
 
 		// Generate content with image
 		const result = await model.generateContent([
@@ -245,7 +246,7 @@ export async function GET(req) {
 		// Test Gemini with automatic model fallback
 		let geminiStatus = "connected";
 		try {
-			const model = await getGeminiModel(null, "gemini-1.5-pro");
+			const model = await getGeminiModel(null);
 			const result = await model.generateContent("Hello");
 			const response = await result.response;
 			const text = response.text();

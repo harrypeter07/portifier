@@ -41,12 +41,20 @@ const TemplatePreview = ({
 			setLoading(true);
 			setError(null);
 
+			// Only use store data if it's not sample/mock data
+			const isSampleData = storePortfolioData?.personal?.firstName === 'John' && 
+								 storePortfolioData?.personal?.lastName === 'Doe' &&
+								 storePortfolioData?.personal?.email === 'john.doe@example.com';
+			
 			const effectiveData = (portfolioData && Object.keys(portfolioData).length > 0)
 				? portfolioData
-				: storePortfolioData;
+				: (!isSampleData && storePortfolioData && Object.keys(storePortfolioData).length > 0)
+					? storePortfolioData
+					: null;
+			
 			const emailForUsername = effectiveData?.personal?.email || me?.user?.email || '';
 			const inferredUsername = (me?.user?.username) || (emailForUsername ? emailForUsername.split('@')[0] : '');
-			const hasData = !!effectiveData && Object.keys(effectiveData || {}).length > 0;
+			const hasData = !!effectiveData && Object.keys(effectiveData || {}).length > 0 && !isSampleData;
 			const response = await fetch('/api/templates/preview', {
 				method: 'POST',
 				headers: {
@@ -56,8 +64,8 @@ const TemplatePreview = ({
 					templateId,
 					portfolioData: hasData ? effectiveData : undefined,
 					username: inferredUsername || undefined,
-					useDb: hasData ? false : true,
-					useClientData: hasData ? true : false,
+					useDb: true, // Always try to fetch from database first
+					useClientData: hasData && !isSampleData, // Only use client data if it's real data
 					options: {
 						preview: true,
 						version: 'v1'

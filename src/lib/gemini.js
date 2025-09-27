@@ -1,5 +1,87 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// Function to get available models dynamically
+export async function getAvailableModels(userId = null) {
+	try {
+		const genAI = await getGeminiInstance(userId);
+		
+		// Check if listModels method exists
+		if (typeof genAI.listModels !== 'function') {
+			console.log("⚠️ [GEMINI] listModels method not available, using fallback approach");
+			return [];
+		}
+		
+		const models = await genAI.listModels();
+		
+		// Filter models that support generateContent
+		const availableModels = models.models
+			.filter(model => 
+				model.supportedGenerationMethods && 
+				model.supportedGenerationMethods.includes('generateContent')
+			)
+			.map(model => model.name)
+			.sort((a, b) => {
+				// Prioritize newer models and stable versions
+				if (a.includes('2.5') && !b.includes('2.5')) return -1;
+				if (b.includes('2.5') && !a.includes('2.5')) return 1;
+				if (a.includes('2.0') && !b.includes('2.0')) return -1;
+				if (b.includes('2.0') && !a.includes('2.0')) return 1;
+				if (a.includes('flash') && !b.includes('flash')) return -1;
+				if (b.includes('flash') && !a.includes('flash')) return 1;
+				return 0;
+			});
+		
+		console.log(`🔍 [GEMINI] Found ${availableModels.length} available models`);
+		return availableModels;
+	} catch (error) {
+		console.error("❌ [GEMINI] Failed to get available models:", error.message);
+		return [];
+	}
+}
+
+// Function to get the best available model dynamically
+export async function getBestAvailableModel(userId = null) {
+	try {
+		const availableModels = await getAvailableModels(userId);
+		
+		if (availableModels.length === 0) {
+			console.log("⚠️ [GEMINI] No models available from API, using fallback approach");
+			throw new Error("No available models found");
+		}
+		
+		// Prefer models in this order
+		const preferredModels = [
+			'gemini-2.5-flash',
+			'gemini-2.5-flash-lite', 
+			'gemini-2.0-flash-exp',
+			'gemini-2.0-flash-thinking-exp',
+			'gemini-2.0-flash',
+			'gemini-2.0-flash-001',
+			'gemini-2.5-pro',
+			'gemini-2.5-flash-lite'
+		];
+		
+		// Find the first preferred model that's available
+		for (const preferred of preferredModels) {
+			const fullModelName = `models/${preferred}`;
+			if (availableModels.includes(fullModelName)) {
+				console.log(`✅ [GEMINI] Selected best available model: ${preferred}`);
+				return preferred;
+			}
+		}
+		
+		// If no preferred model found, use the first available
+		const firstAvailable = availableModels[0].replace('models/', '');
+		console.log(`✅ [GEMINI] Using first available model: ${firstAvailable}`);
+		return firstAvailable;
+		
+	} catch (error) {
+		console.error("❌ [GEMINI] Failed to get best model:", error.message);
+		// Fallback to hardcoded list
+		return "gemini-2.0-flash-exp";
+	}
+}
+
 // Function to get Gemini instance with user's API key or fallback to env
 export async function getGeminiInstance(userId = null) {
 	let apiKey = process.env.GEMINI_API_KEY;
@@ -29,29 +111,45 @@ export async function getGeminiInstance(userId = null) {
 	return new GoogleGenerativeAI(apiKey);
 }
 
-// Function to get model instance with fallback
-export async function getGeminiModel(userId = null, modelName = "gemini-1.5-flash-8b") {
+// Function to get model instance with dynamic model selection
+export async function getGeminiModel(userId = null, modelName = null) {
 	const genAI = await getGeminiInstance(userId);
 	
 	// If specific model requested, try it first
-	if (modelName && modelName !== "gemini-1.5-flash-8b") {
+	if (modelName) {
 		try {
-			return genAI.getGenerativeModel({ model: modelName });
+			const modelInstance = genAI.getGenerativeModel({ model: modelName });
+			// Test if model is actually available by making a simple call
+			await modelInstance.generateContent("test");
+			console.log(`✅ [GEMINI] Using requested model: ${modelName}`);
+			return modelInstance;
 		} catch (error) {
-			console.log(`⚠️ [GEMINI] Model ${modelName} not available, trying fallbacks...`);
+			console.log(`⚠️ [GEMINI] Requested model ${modelName} not available, finding best alternative...`);
 		}
 	}
 	
-	// Try models in order of preference
+	// Get the best available model dynamically
+	try {
+		const bestModel = await getBestAvailableModel(userId);
+		const modelInstance = genAI.getGenerativeModel({ model: bestModel });
+		// Test if model is actually available by making a simple call
+		await modelInstance.generateContent("test");
+		console.log(`✅ [GEMINI] Using best available model: ${bestModel}`);
+		return modelInstance;
+	} catch (error) {
+		console.log(`❌ [GEMINI] Best model failed, trying fallback models...`);
+	}
+	
+	// Fallback to hardcoded models if dynamic selection fails
 	for (const model of GEMINI_MODELS) {
 		try {
 			const modelInstance = genAI.getGenerativeModel({ model });
 			// Test if model is actually available by making a simple call
 			await modelInstance.generateContent("test");
-			console.log(`✅ [GEMINI] Using model: ${model}`);
+			console.log(`✅ [GEMINI] Using fallback model: ${model}`);
 			return modelInstance;
 		} catch (error) {
-			console.log(`❌ [GEMINI] Model ${model} failed:`, error.message);
+			console.log(`❌ [GEMINI] Fallback model ${model} failed:`, error.message);
 			continue;
 		}
 	}
@@ -60,7 +158,7 @@ export async function getGeminiModel(userId = null, modelName = "gemini-1.5-flas
 }
 
 // Function to generate content with user's API key and automatic model fallback
-export async function generateContent(prompt, userId = null, modelName = "gemini-1.5-flash-8b") {
+export async function generateContent(prompt, userId = null, modelName = null) {
 	try {
 		const model = await getGeminiModel(userId, modelName);
 		const result = await model.generateContent(prompt);
@@ -106,14 +204,13 @@ const RETRY_CONFIG = {
 
 // Available Gemini models to try as fallbacks (in order of preference)
 const GEMINI_MODELS = [
-	"gemini-1.5-flash-8b",        // ✅ Working - smallest and most cost effective
 	"gemini-2.0-flash-exp",       // ✅ Working - experimental but available
 	"gemini-2.0-flash-thinking-exp", // ✅ Working - thinking model
-	"gemini-1.5-pro",             // ⚠️ Quota exceeded but exists
-	"gemini-1.5-flash-latest",    // From API list
-	"gemini-1.5-flash-002",       // From API list
-	"gemini-2.0-flash",           // From API list
-	"gemini-2.0-flash-001",       // From API list
+	"gemini-2.0-flash",           // ✅ Working - stable version
+	"gemini-2.0-flash-001",       // ✅ Working - stable version
+	"gemini-2.5-flash",           // ✅ Working - latest stable
+	"gemini-2.5-flash-lite",     // ✅ Working - lite version
+	"gemini-2.5-pro",            // ✅ Working - pro version
 ];
 
 // Default portfolio schema - you can modify this or pass it as a parameter
@@ -229,8 +326,20 @@ export async function parseResumeWithGemini(buffer, customSchema = null) {
 	const schema = customSchema || DEFAULT_PORTFOLIO_SCHEMA;
 	let lastError = null;
 
-	// Try different models
-	for (const modelName of GEMINI_MODELS) {
+	// Get the best available model dynamically
+	let bestModel;
+	try {
+		bestModel = await getBestAvailableModel(null);
+		console.log(`🤖 Using best available model: ${bestModel}`);
+	} catch (error) {
+		console.log(`⚠️ Failed to get best model, using fallback approach`);
+		bestModel = null;
+	}
+	
+	// Try the best model first, then fallback to hardcoded list
+	const modelsToTry = bestModel ? [bestModel, ...GEMINI_MODELS] : GEMINI_MODELS;
+	
+	for (const modelName of modelsToTry) {
 		console.log(`🤖 Trying Gemini model: ${modelName}`);
 		
 		// Retry loop for each model
@@ -624,3 +733,4 @@ export function createPortfolioSchema(type = "developer") {
 
 	return schemas[type] || DEFAULT_PORTFOLIO_SCHEMA;
 }
+

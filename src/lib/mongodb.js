@@ -29,7 +29,10 @@ export default async function dbConnect() {
 			heartbeatFrequencyMS: 10000, // Check connection health every 10 seconds
 		};
 
-		cached.promise = mongoose.connect(MONGODB_URI, options)
+		// Use the MONGODB_URI as provided, without forcing a specific database
+		const mongoUri = MONGODB_URI;
+		
+		cached.promise = mongoose.connect(mongoUri, options)
 			.then((mongoose) => {
 				console.log("✅ [MONGODB] Successfully connected to MongoDB");
 				return mongoose;

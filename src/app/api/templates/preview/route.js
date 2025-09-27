@@ -281,43 +281,64 @@ export async function POST(request) {
 		console.log('🎯 [TEMPLATE-PREVIEW] COMPLETE PAYLOAD OBJECT:');
 		console.log(JSON.stringify(previewData, null, 2));
 
-		const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {
-			method: 'POST',
-			headers: {
-				'Authorization': `Bearer ${apiKey}`,
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(previewData),
-			signal: controller.signal
-		});
-		clearTimeout(timeoutId);
-
-		if (!response.ok) {
-			const errorText = await response.text();
-			console.error(`❌ [TEMPLATE-PREVIEW] Templates App error: ${response.status} - ${errorText}`);
-			
-			return NextResponse.json(
-				{ 
-					success: false, 
-					error: `Templates App preview failed: ${response.status}`,
-					details: errorText
+		// Try to connect to external templates app first
+		let result;
+		try {
+			const response = await fetch(`${TEMPLATES_APP_URL}/api/templates/preview`, {
+				method: 'POST',
+				headers: {
+					'Authorization': `Bearer ${apiKey}`,
+					'Content-Type': 'application/json'
 				},
-				{ status: response.status }
-			);
+				body: JSON.stringify(previewData),
+				signal: controller.signal
+			});
+			clearTimeout(timeoutId);
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				console.error(`❌ [TEMPLATE-PREVIEW] Templates App error: ${response.status} - ${errorText}`);
+				throw new Error(`Templates App preview failed: ${response.status}`);
+			}
+
+			result = await response.json();
+			console.log('✅ [TEMPLATE-PREVIEW] External preview generated successfully');
+
+			return NextResponse.json({
+				success: true,
+				previewUrl: result.previewUrl,
+				html: result.html,
+				templateId,
+				expiresAt: result.expiresAt,
+				// Include the full URL for direct access
+				fullPreviewUrl: result.previewUrl ? `${TEMPLATES_APP_URL}${result.previewUrl}` : null
+			});
+
+		} catch (externalError) {
+			console.log('⚠️ [TEMPLATE-PREVIEW] External templates app unavailable, using local preview:', externalError.message);
+			
+			// Fallback to local preview using existing editor preview system
+			try {
+				// Use the existing editor preview system
+				const localPreviewUrl = `/preview/live?templateId=${mappedTemplateId}&data=${encodeURIComponent(JSON.stringify(transformedData))}`;
+				
+				console.log('✅ [TEMPLATE-PREVIEW] Local preview generated successfully');
+				
+				return NextResponse.json({
+					success: true,
+					previewUrl: localPreviewUrl,
+					html: null, // Local preview doesn't need HTML
+					templateId,
+					expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+					// Include the full URL for direct access
+					fullPreviewUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}${localPreviewUrl}`,
+					isLocalPreview: true
+				});
+			} catch (localError) {
+				console.error('❌ [TEMPLATE-PREVIEW] Local preview also failed:', localError.message);
+				throw localError;
+			}
 		}
-
-		const result = await response.json();
-		console.log('✅ [TEMPLATE-PREVIEW] Preview generated successfully');
-
-		return NextResponse.json({
-			success: true,
-			previewUrl: result.previewUrl,
-			html: result.html,
-			templateId,
-			expiresAt: result.expiresAt,
-			// Include the full URL for direct access
-			fullPreviewUrl: result.previewUrl ? `${TEMPLATES_APP_URL}${result.previewUrl}` : null
-		});
 
 	} catch (error) {
 		console.error('❌ [TEMPLATE-PREVIEW] Preview error:', error);

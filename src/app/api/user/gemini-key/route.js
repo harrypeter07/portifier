@@ -48,7 +48,7 @@ export async function POST(req) {
 		// Test the API key with automatic model fallback
 		try {
 			const { getGeminiModel } = await import('@/lib/gemini');
-			const model = await getGeminiModel(null, "gemini-1.5-pro");
+			const model = await getGeminiModel(null);
 			
 			const result = await model.generateContent("Test");
 			await result.response.text();
