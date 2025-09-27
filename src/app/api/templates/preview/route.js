@@ -11,7 +11,7 @@ const TEMPLATES_APP_URL = process.env.TEMPLATES_APP_URL || process.env.TEMPLATES
 export async function POST(request) {
 	try {
 		const requestData = await request.json();
-		const { templateId, portfolioData, layout, username, portfolioId, resumeId, useDb = false, useClientData = false, options = {} } = requestData;
+		const { templateId, portfolioData, layout, username, portfolioId, resumeId, userId, useDb = false, useClientData = false, options = {} } = requestData;
 
 		// Optional mapping for local->remote template ids
 		const templateIdMap = process.env.TEMPLATE_ID_MAP ? (() => { try { return JSON.parse(process.env.TEMPLATE_ID_MAP); } catch (_) { return {}; } })() : {};
@@ -25,6 +25,8 @@ export async function POST(request) {
 		// If portfolioData is missing, try to populate from DB using username
 		let finalPortfolioData = (useClientData ? portfolioData : null) || null;
 		let dataSource = null;
+		let user = null;
+		
 		// Priorities to populate missing data:
 		// 1) Explicit portfolioId
 		// 2) Username (latest portfolio)
@@ -32,14 +34,26 @@ export async function POST(request) {
 		if (!useClientData && (!finalPortfolioData || Object.keys(finalPortfolioData || {}).length === 0)) {
 			try {
 				await dbConnect();
+				
+				// Get authenticated user first
+				try {
+					user = await auth();
+					console.log('🔍 [TEMPLATE-PREVIEW] Authenticated user:', {
+						userId: user?._id,
+						username: user?.username,
+						email: user?.email
+					});
+				} catch (authError) {
+					console.log('⚠️ [TEMPLATE-PREVIEW] No authenticated user:', authError.message);
+					// If no authenticated user, we'll use empty data
+					user = null;
+				}
+				
 				let effectiveUsername = username;
-				if (!effectiveUsername) {
+				if (!effectiveUsername && user) {
 					// Use authenticated user's username as a fallback
-					try {
-						const me = await auth();
-						if (me?.username) effectiveUsername = me.username;
-						else if (me?.email) effectiveUsername = me.email.split('@')[0];
-					} catch {}
+					if (user?.username) effectiveUsername = user.username;
+					else if (user?.email) effectiveUsername = user.email.split('@')[0];
 				}
 				if (portfolioId) {
 					const p = await Portfolio.findById(portfolioId);
@@ -84,11 +98,30 @@ export async function POST(request) {
 					}
 				}
 
-				// If still no portfolio data, try to get from latest parsed resume
-				if (!finalPortfolioData && user) {
+				// If still no portfolio data, try to get from latest parsed resume for authenticated user or provided userId
+				if (!finalPortfolioData && (user || userId)) {
+					const targetUserId = user?._id || userId;
+					console.log('🔍 [TEMPLATE-PREVIEW] Looking for parsed resume data for user:', {
+						userId: targetUserId,
+						username: user?.username,
+						email: user?.email,
+						providedUserId: userId
+					});
+					
 					const { default: Resume } = await import('@/models/Resume');
-					const latestResume = await Resume.findOne({ userId: user._id, status: 'parsed' })
+					const latestResume = await Resume.findOne({ userId: targetUserId, status: 'parsed' })
 						.sort({ updatedAt: -1 });
+					
+					console.log('📄 [TEMPLATE-PREVIEW] Resume query result for authenticated user:', {
+						foundResume: !!latestResume,
+						resumeId: latestResume?._id,
+						hasParsedData: !!latestResume?.parsedData,
+						parsedDataKeys: latestResume?.parsedData ? Object.keys(latestResume.parsedData) : [],
+						status: latestResume?.status,
+						updatedAt: latestResume?.updatedAt,
+						heroTitle: latestResume?.parsedData?.hero?.title,
+						contactEmail: latestResume?.parsedData?.contact?.email
+					});
 					
 					if (latestResume?.parsedData) {
 						// Transform resume parsedData to portfolio format
@@ -133,7 +166,16 @@ export async function POST(request) {
 						console.log('🔍 [TEMPLATE-PREVIEW] Found parsed resume data:', {
 							resumeId: latestResume._id,
 							hasParsedData: !!latestResume.parsedData,
-							personalName: finalPortfolioData?.personal?.firstName + ' ' + finalPortfolioData?.personal?.lastName
+							personalName: finalPortfolioData?.personal?.firstName + ' ' + finalPortfolioData?.personal?.lastName,
+							transformedSections: Object.keys(finalPortfolioData || {}),
+							personalData: finalPortfolioData?.personal ? {
+								firstName: finalPortfolioData.personal.firstName,
+								lastName: finalPortfolioData.personal.lastName,
+								email: finalPortfolioData.personal.email,
+								title: finalPortfolioData.personal.title
+							} : null,
+							experienceCount: finalPortfolioData?.experience?.jobs?.length || 0,
+							skillsCount: finalPortfolioData?.skills?.technical?.length || 0
 						});
 					}
 				}
@@ -148,10 +190,24 @@ export async function POST(request) {
 							lastName: finalPortfolioData?.personal?.lastName,
 							email: finalPortfolioData?.personal?.email
 						},
-						source: dataSource
+						source: dataSource,
+						authenticatedUser: user ? {
+							userId: user._id,
+							username: user.username,
+							email: user.email
+						} : null
 					});
 				} else {
-					console.log('⚠️ [TEMPLATE-PREVIEW] No portfolio data found in DB for given identifiers', { username, portfolioId, resumeId });
+					console.log('⚠️ [TEMPLATE-PREVIEW] No portfolio data found in DB for authenticated user:', { 
+						username, 
+						portfolioId, 
+						resumeId,
+						authenticatedUser: user ? {
+							userId: user._id,
+							username: user.username,
+							email: user.email
+						} : null
+					});
 				}
 			} catch (dbErr) {
 				console.log('⚠️ [TEMPLATE-PREVIEW] Failed to fetch portfolioData from DB:', dbErr?.message);
