@@ -69,7 +69,7 @@ export default function Signup() {
 	};
 
 	return (
-		<div className="min-h-screen bg-background flex items-center justify-center p-4">
+		<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center p-4">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<CardTitle className="text-3xl font-bold">
@@ -122,7 +122,7 @@ export default function Signup() {
 									disabled={loading}
 								/>
 							</FormControl>
-							<p className="text-xs text-muted-foreground mt-1">
+							<p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
 								This will be your portfolio URL (e.g., yoursite.com/username)
 							</p>
 						</FormField>
@@ -167,11 +167,11 @@ export default function Signup() {
 					</Form>
 
 					<div className="mt-6 text-center">
-						<p className="text-muted-foreground">
+						<p className="text-gray-600 dark:text-gray-400">
 							Already have an account?{" "}
 							<Link
 								href="/auth/signin"
-								className="text-primary hover:text-primary/80 font-medium"
+								className="text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:text-gray-100/80 font-medium"
 							>
 								Sign in
 							</Link>

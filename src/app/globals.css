@@ -59,11 +59,11 @@
 
 @layer base {
   * {
-    @apply border-gray-200 dark:border-gray-700;
+    @apply border-white dark:border-white;
   }
   
   body {
-    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+    @apply bg-white dark:bg-black text-black dark:text-white;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

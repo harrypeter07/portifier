@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang="en" className="dark">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen`}
 			>
 				<ErrorBoundary>
 					<UnifiedNavbar />

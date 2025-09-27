@@ -209,10 +209,10 @@ export default function TemplatesDemoPage() {
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Header */}
 				<div className="text-center mb-8">
-					<h1 className="text-4xl font-bold text-foreground mb-4">
+					<h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
 						Portfolio Template System
 					</h1>
-					<p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+					<p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
 						Choose from our collection of component-based and full-page templates. 
 						Component-based templates let you mix and match individual sections, 
 						while full-page templates provide complete, pre-designed layouts.

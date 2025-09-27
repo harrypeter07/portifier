@@ -37,12 +37,12 @@ export default function HeroA({ data = EMPTY_PORTFOLIO, ...personalData }) {
 	});
 
 	return (
-		<section className="py-6 sm:py-10 md:py-16 text-center bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+		<section className="py-6 sm:py-10 md:py-16 text-center bg-gradient-to-r from-gray-900 to-gray-700 text-white">
 			<div className="max-w-full px-2 sm:px-4 mx-auto">
 				<h1 className="font-bold mb-2 sm:mb-4" style={{ fontSize: 'clamp(1.5rem, 6vw, 3rem)' }}>{fullName}</h1>
-				{subtitle && <h2 className="text-base sm:text-xl text-primary-foreground/80 mb-2 sm:mb-6">{subtitle}</h2>}
+				{subtitle && <h2 className="text-base sm:text-xl text-white/80 mb-2 sm:mb-6">{subtitle}</h2>}
 				{tagline && (
-					<p className="text-sm sm:text-lg text-primary-foreground/70 max-w-full sm:max-w-2xl mx-auto">{tagline}</p>
+					<p className="text-sm sm:text-lg text-white/70 max-w-full sm:max-w-2xl mx-auto">{tagline}</p>
 				)}
 			</div>
 		</section>
