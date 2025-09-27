@@ -96,12 +96,12 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-gray-900">
+		<div className="min-h-screen bg-white dark:bg-black">
 			{/* Header */}
 			<div className="bg-card shadow-sm border-b border-gray-200 dark:border-gray-700">
 				<div className="max-w-4xl mx-auto px-4 py-6">
-					<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
-					<p className="text-gray-600 dark:text-gray-400 mt-2">Manage your account and preferences</p>
+					<h1 className="text-3xl font-bold text-black dark:text-white">Settings</h1>
+					<p className="text-black/70 dark:text-white/70 mt-2">Manage your account and preferences</p>
 				</div>
 			</div>
 
@@ -137,28 +137,28 @@ export default function SettingsPage() {
 						<CardContent>
 							<div className="space-y-4">
 								<div>
-									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
 										Username
 									</Label>
-									<p className="text-gray-900 dark:text-gray-100 font-medium">@{user.username}</p>
+									<p className="text-black dark:text-white font-medium">@{user.username}</p>
 								</div>
 								<div>
-									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
 										Email
 									</Label>
-									<p className="text-gray-900 dark:text-gray-100 font-medium">{user.email}</p>
+									<p className="text-black dark:text-white font-medium">{user.email}</p>
 								</div>
 								<div>
-									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
 										Name
 									</Label>
-									<p className="text-gray-900 dark:text-gray-100 font-medium">{user.name}</p>
+									<p className="text-black dark:text-white font-medium">{user.name}</p>
 								</div>
 								<div>
-									<Label className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
 										Member Since
 									</Label>
-									<p className="text-gray-900 dark:text-gray-100 font-medium">
+									<p className="text-black dark:text-white font-medium">
 										{new Date(user.createdAt).toLocaleDateString()}
 									</p>
 								</div>
@@ -177,10 +177,10 @@ export default function SettingsPage() {
 							<div className="mb-6">
 								<div className="flex items-center justify-between mb-4">
 									<div>
-										<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+										<h3 className="text-lg font-medium text-black dark:text-white">
 											Gemini API Key
 										</h3>
-										<p className="text-sm text-gray-600 dark:text-gray-400">
+										<p className="text-sm text-black/70 dark:text-white/70">
 											Use your own API key for better reliability
 										</p>
 									</div>
@@ -240,10 +240,10 @@ export default function SettingsPage() {
 
 							{/* AI Features Info */}
 							<div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-								<h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+								<h4 className="text-sm font-medium text-black dark:text-white mb-2">
 									AI Features
 								</h4>
-								<ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+								<ul className="text-sm text-black/70 dark:text-white/70 space-y-1">
 									<li>• Resume parsing and data extraction</li>
 									<li>• AI-powered content suggestions</li>
 									<li>• Smart field completion</li>
@@ -259,7 +259,7 @@ export default function SettingsPage() {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ delay: 0.2 }}
-					className="mt-8 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg"
+					className="mt-8 bg-white dark:bg-black p-6 rounded-xl shadow-lg"
 				>
 					<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
 						Quick Actions
@@ -275,7 +275,7 @@ export default function SettingsPage() {
 								</svg>
 								<div>
 									<h3 className="font-medium text-gray-900 dark:text-white">Dashboard</h3>
-									<p className="text-sm text-gray-600 dark:text-gray-400">View your portfolios</p>
+									<p className="text-sm text-black/70 dark:text-white/70">View your portfolios</p>
 								</div>
 							</div>
 						</button>
@@ -289,7 +289,7 @@ export default function SettingsPage() {
 								</svg>
 								<div>
 									<h3 className="font-medium text-gray-900 dark:text-white">Create Portfolio</h3>
-									<p className="text-sm text-gray-600 dark:text-gray-400">Start a new portfolio</p>
+									<p className="text-sm text-black/70 dark:text-white/70">Start a new portfolio</p>
 								</div>
 							</div>
 						</button>
@@ -303,7 +303,7 @@ export default function SettingsPage() {
 								</svg>
 								<div>
 									<h3 className="font-medium text-gray-900 dark:text-white">Sign Out</h3>
-									<p className="text-sm text-gray-600 dark:text-gray-400">Log out of your account</p>
+									<p className="text-sm text-black/70 dark:text-white/70">Log out of your account</p>
 								</div>
 							</div>
 						</button>

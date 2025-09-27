@@ -205,14 +205,14 @@ export default function TemplatesDemoPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-gray-900">
+		<div className="min-h-screen bg-white dark:bg-black">
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Header */}
 				<div className="text-center mb-8">
-					<h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+					<h1 className="text-4xl font-bold text-black dark:text-white mb-4">
 						Portfolio Template System
 					</h1>
-					<p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+					<p className="text-lg text-black/70 dark:text-white/70 max-w-3xl mx-auto">
 						Choose from our collection of component-based and full-page templates. 
 						Component-based templates let you mix and match individual sections, 
 						while full-page templates provide complete, pre-designed layouts.
@@ -284,7 +284,7 @@ export default function TemplatesDemoPage() {
 								<h2 className="text-2xl font-bold text-gray-900 dark:text-white">
 									{currentTemplate.name}
 								</h2>
-								<p className="text-gray-600 dark:text-gray-400">
+								<p className="text-black/70 dark:text-white/70">
 									{currentTemplate.description}
 								</p>
 							</div>
@@ -348,7 +348,7 @@ export default function TemplatesDemoPage() {
 										<div className="text-sm font-medium text-gray-900 dark:text-white capitalize">
 											{section}
 										</div>
-										<div className="text-xs text-gray-600 dark:text-gray-400">
+										<div className="text-xs text-black/70 dark:text-white/70">
 											{component}
 										</div>
 									</div>
@@ -390,7 +390,7 @@ export default function TemplatesDemoPage() {
 										<div className="font-medium text-gray-900 dark:text-white">
 											{template.name}
 										</div>
-										<div className="text-sm text-gray-600 dark:text-gray-400">
+										<div className="text-sm text-black/70 dark:text-white/70">
 											{template.category}
 										</div>
 									</div>
@@ -416,7 +416,7 @@ export default function TemplatesDemoPage() {
 										<div className="font-medium text-gray-900 dark:text-white">
 											{template.name}
 										</div>
-										<div className="text-sm text-gray-600 dark:text-gray-400">
+										<div className="text-sm text-black/70 dark:text-white/70">
 											{template.category}
 										</div>
 									</div>

@@ -65,7 +65,7 @@ export default function Signin() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center p-4">
+		<div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-4">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<CardTitle className="text-3xl font-bold">
@@ -93,7 +93,7 @@ export default function Signin() {
 					<form onSubmit={handleSubmit} className="space-y-6">
 						{/* Email Field */}
 						<div>
-							<label htmlFor="email" className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+							<label htmlFor="email" className="block text-sm font-medium text-black dark:text-white mb-2">
 								Email Address
 							</label>
 							<Input
@@ -109,7 +109,7 @@ export default function Signin() {
 
 						{/* Password Field */}
 						<div>
-							<label htmlFor="password" className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+							<label htmlFor="password" className="block text-sm font-medium text-black dark:text-white mb-2">
 								Password
 							</label>
 							<div className="relative">
@@ -128,7 +128,7 @@ export default function Signin() {
 									className="absolute inset-y-0 right-0 pr-3 flex items-center"
 									onClick={() => setShowPassword(!showPassword)}
 								>
-									<svg className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg className="w-5 h-5 text-black/70 dark:text-white/70 hover:text-black dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										{showPassword ? (
 											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
 										) : (
@@ -159,11 +159,11 @@ export default function Signin() {
 					</form>
 
 					<div className="mt-6 text-center">
-						<p className="text-gray-600 dark:text-gray-400">
+						<p className="text-black/70 dark:text-white/70">
 							Don't have an account?{" "}
 							<Link
 								href="/auth/signup"
-								className="text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:text-gray-100/80 font-medium"
+								className="text-black dark:text-white hover:text-black dark:text-white/80 font-medium"
 							>
 								Sign up
 							</Link>

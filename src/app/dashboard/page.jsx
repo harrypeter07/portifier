@@ -49,7 +49,7 @@ export default function Dashboard() {
 					<motion.div
 						animate={{ rotate: 360 }}
 						transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-						className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 border-t-primary rounded-full mx-auto mb-4"
+						className="w-16 h-16 border-4 border-white dark:border-white border-t-primary rounded-full mx-auto mb-4"
 					></motion.div>
 					<p className="text-black/70 dark:text-white/70">Loading your dashboard...</p>
 				</div>
@@ -114,7 +114,7 @@ export default function Dashboard() {
 					transition={{ delay: 0.1 }}
 					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
 				>
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Total Portfolios</p>
@@ -128,7 +128,7 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Uploaded Resumes</p>
@@ -142,7 +142,7 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Published</p>
@@ -156,7 +156,7 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Complete</p>
@@ -176,7 +176,7 @@ export default function Dashboard() {
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ delay: 0.2 }}
-					className="flex mb-8 border-b border-gray-200 dark:border-gray-700"
+					className="flex mb-8 border-b border-white dark:border-white"
 				>
 					<button
 						className={`px-6 py-3 font-medium rounded-t-lg transition-all duration-200 ${
@@ -223,7 +223,7 @@ export default function Dashboard() {
 						>
 							{/* Quick Actions */}
 							<div className="lg:col-span-1">
-								<div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+								<div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 									<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Quick Actions</h2>
 									<div className="space-y-4">
 										<Link
@@ -276,7 +276,7 @@ export default function Dashboard() {
 
 							{/* Recent Activity */}
 							<div className="lg:col-span-2">
-								<div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+								<div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 									<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Recent Activity</h2>
 									
 									{portfolios.list.length > 0 || resumes.list.length > 0 ? (
@@ -288,7 +288,7 @@ export default function Dashboard() {
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 													transition={{ delay: index * 0.1 }}
-													className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300"
+													className="flex items-center justify-between p-4 border border-white dark:border-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300"
 												>
 													<div className="flex items-center">
 														<div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
@@ -333,7 +333,7 @@ export default function Dashboard() {
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 													transition={{ delay: (index + 3) * 0.1 }}
-													className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300 cursor-pointer"
+													className="flex items-center justify-between p-4 border border-white dark:border-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300 cursor-pointer"
 													onClick={() => handleResumeClick(resume)}
 												>
 													<div className="flex items-center">
@@ -392,7 +392,7 @@ export default function Dashboard() {
 							animate={{ opacity: 1, x: 0 }}
 							exit={{ opacity: 0, x: 20 }}
 							transition={{ duration: 0.3 }}
-							className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+							className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-white dark:border-white"
 						>
 							<div className="flex items-center justify-between mb-6">
 								<h2 className="text-xl font-semibold text-gray-900 dark:text-white">Your Resumes</h2>
@@ -412,7 +412,7 @@ export default function Dashboard() {
 											initial={{ opacity: 0, y: 20 }}
 											animate={{ opacity: 1, y: 0 }}
 											transition={{ delay: index * 0.1 }}
-											className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition-all duration-300"
+											className="border border-white dark:border-white rounded-xl p-4 hover:shadow-lg transition-all duration-300"
 										>
 											<div className="flex items-center mb-4">
 												<div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-3">
@@ -483,7 +483,7 @@ export default function Dashboard() {
 							animate={{ opacity: 1, x: 0 }}
 							exit={{ opacity: 0, x: 20 }}
 							transition={{ duration: 0.3 }}
-							className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+							className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-white dark:border-white"
 						>
 							<div className="flex items-center justify-between mb-6">
 								<h2 className="text-xl font-semibold text-gray-900 dark:text-white">Your Portfolios</h2>
@@ -503,7 +503,7 @@ export default function Dashboard() {
 											initial={{ opacity: 0, y: 20 }}
 											animate={{ opacity: 1, y: 0 }}
 											transition={{ delay: index * 0.1 }}
-											className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition-all duration-300"
+											className="border border-white dark:border-white rounded-xl p-4 hover:shadow-lg transition-all duration-300"
 										>
 											<div className="flex items-center mb-4">
 												<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">

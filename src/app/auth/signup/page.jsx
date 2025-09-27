@@ -69,7 +69,7 @@ export default function Signup() {
 	};
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center p-4">
+		<div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-4">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<CardTitle className="text-3xl font-bold">
@@ -171,7 +171,7 @@ export default function Signup() {
 							Already have an account?{" "}
 							<Link
 								href="/auth/signin"
-								className="text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:text-gray-100/80 font-medium"
+								className="text-black dark:text-white hover:text-black dark:text-white/80 font-medium"
 							>
 								Sign in
 							</Link>

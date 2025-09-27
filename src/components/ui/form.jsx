@@ -17,7 +17,7 @@ const FormLabel = React.forwardRef(({ className, ...props }, ref) => (
   <label
     ref={ref}
     className={cn(
-      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 dark:text-gray-100",
+      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-black dark:text-white",
       className
     )}
     {...props}
@@ -33,7 +33,7 @@ FormControl.displayName = "FormControl"
 const FormDescription = React.forwardRef(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-gray-600 dark:text-gray-400", className)}
+    className={cn("text-sm text-black/70 dark:text-white/70", className)}
     {...props}
   />
 ))

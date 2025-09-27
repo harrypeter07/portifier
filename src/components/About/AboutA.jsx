@@ -15,17 +15,17 @@ export default function AboutA({
 
 	return (
 		<section className="py-12 px-6">
-			<h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100">
+			<h2 className="text-2xl font-semibold mb-6 text-black dark:text-white">
 				About Me
 			</h2>
 			<div className="max-w-4xl space-y-6">
 				{/* Main summary/bio */}
 				<div className="prose prose-lg max-w-none">
-					<p className="text-gray-900 dark:text-gray-100 leading-relaxed text-lg mb-4">
+					<p className="text-black dark:text-white leading-relaxed text-lg mb-4">
 						{displaySummary}
 					</p>
 					{bio && bio !== displaySummary && (
-						<p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+						<p className="text-black/70 dark:text-white/70 leading-relaxed">
 							{bio}
 						</p>
 					)}
@@ -45,7 +45,7 @@ export default function AboutA({
 									{interests.map((interest, index) => (
 										<li
 											key={index}
-											className="text-gray-600 dark:text-gray-400 flex items-center"
+											className="text-black/70 dark:text-white/70 flex items-center"
 										>
 											<span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
 											{interest}
@@ -64,7 +64,7 @@ export default function AboutA({
 									{personalValues.map((value, index) => (
 										<li
 											key={index}
-											className="text-gray-600 dark:text-gray-400 flex items-center"
+											className="text-black/70 dark:text-white/70 flex items-center"
 										>
 											<span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
 											{value}
@@ -83,7 +83,7 @@ export default function AboutA({
 									{funFacts.map((fact, index) => (
 										<li
 											key={index}
-											className="text-gray-600 dark:text-gray-400 flex items-center"
+											className="text-black/70 dark:text-white/70 flex items-center"
 										>
 											<span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
 											{fact}
