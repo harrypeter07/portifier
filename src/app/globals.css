@@ -63,7 +63,8 @@
   }
   
   body {
-    @apply bg-white dark:bg-black text-black dark:text-white;
+    @apply bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
+ text-black dark:text-white;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

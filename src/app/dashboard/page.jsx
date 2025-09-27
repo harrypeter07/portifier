@@ -44,7 +44,8 @@ export default function Dashboard() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
+">
 				<div className="text-center">
 					<motion.div
 						animate={{ rotate: 360 }}
@@ -81,7 +82,9 @@ export default function Dashboard() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-black">
+		<div className="min-h-screen bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
+">
+			
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				{/* Header */}
 				<motion.div
@@ -114,7 +117,8 @@ export default function Dashboard() {
 					transition={{ delay: 0.1 }}
 					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
 				>
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
+ rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Total Portfolios</p>
@@ -128,7 +132,8 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
+ rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Uploaded Resumes</p>
@@ -142,7 +147,8 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
+ rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Published</p>
@@ -156,7 +162,8 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-black rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
+ rounded-2xl p-6 shadow-lg border border-white dark:border-white">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Complete</p>

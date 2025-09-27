@@ -2,7 +2,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import UnifiedNavbar from "@/components/common/UnifiedNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
-
 const geistSans = Geist({
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
@@ -26,6 +25,9 @@ export default function RootLayout({ children }) {
 			>
 				<ErrorBoundary>
 					<UnifiedNavbar />
+					
+ 
+
 					<main className="min-h-screen">{children}</main>
 				</ErrorBoundary>
 			</body>
