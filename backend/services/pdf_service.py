@@ -13,8 +13,8 @@ import pytesseract
 import cv2
 import numpy as np
 
-from ..models.pdf_models import TextElement, ImageElement, PDFDocument
-from ..utils.file_utils import FileHandler, FileValidator
+from models.pdf_models import TextElement, ImageElement, PDFDocument
+from utils.file_utils import FileHandler, FileValidator
 
 class PDFService:
     """Service for PDF processing operations"""
