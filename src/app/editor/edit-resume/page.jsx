@@ -575,9 +575,9 @@ function EditResumeContent() {
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
 			<div className="flex flex-col-reverse md:flex-row">
 				{/* Left Panel - Form */}
-				<div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto h-auto md:h-screen">
-					<div className="flex items-center justify-between mb-4 md:mb-6">
-						<h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+				<div className="overflow-y-auto p-4 w-full h-auto md:w-1/2 md:p-6 md:h-screen">
+					<div className="flex justify-between items-center mb-4 md:mb-6">
+						<h1 className="text-2xl font-bold text-gray-900 md:text-3xl dark:text-white">
 							Edit Resume Details
 						</h1>
 						
@@ -585,7 +585,7 @@ function EditResumeContent() {
 						<div className="flex items-center space-x-2">
 							<motion.button
 								onClick={() => router.push("/editor")}
-								className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+								className="px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg transition-colors duration-200 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
 								whileHover={{ scale: 1.02 }}
 								whileTap={{ scale: 0.98 }}
 							>
@@ -593,7 +593,7 @@ function EditResumeContent() {
 							</motion.button>
 							<motion.button
 								onClick={() => router.push("/editor/customize")}
-								className="px-3 py-2 text-sm bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-200"
+								className="px-3 py-2 text-sm text-blue-700 bg-blue-100 rounded-lg transition-colors duration-200 dark:bg-blue-900/50 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800"
 								whileHover={{ scale: 1.02 }}
 								whileTap={{ scale: 0.98 }}
 							>
@@ -603,8 +603,8 @@ function EditResumeContent() {
 					</div>
 
 					{/* Personal Information */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Personal Information</h2>
 						<div className="grid grid-cols-1 gap-4">
 							<AICompanionField
 								type="input"
@@ -654,8 +654,8 @@ function EditResumeContent() {
 					</div>
 
 					{/* Contact Information */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Contact Information</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Contact Information</h2>
 						<div className="grid grid-cols-1 gap-4">
 							<AICompanionField
 								type="email"
@@ -705,8 +705,8 @@ function EditResumeContent() {
 					</div>
 
 					{/* Professional Summary & About */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Professional Summary & About</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Professional Summary & About</h2>
 						<div className="space-y-4">
 							<AICompanionField
 								type="textarea"
@@ -793,12 +793,12 @@ function EditResumeContent() {
 					</div>
 
 					{/* Experience */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Work Experience</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Work Experience</h2>
 						{(formData.experience?.jobs || []).map((job, index) => (
 							<div
 								key={index}
-								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
+								className="p-4 mb-6 rounded-lg border dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
 									<AICompanionField
@@ -879,19 +879,19 @@ function EditResumeContent() {
 						<button
 							type="button"
 							onClick={addJob}
-							className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+							className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
 						>
 							Add Job
 						</button>
 					</div>
 
 					{/* Education */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Education</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Education</h2>
 						{(formData.education?.degrees || []).map((degree, index) => (
 							<div
 								key={index}
-								className="mb-4 p-4 border rounded-lg dark:border-gray-600"
+								className="p-4 mb-4 rounded-lg border dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
 									<AICompanionField
@@ -955,18 +955,18 @@ function EditResumeContent() {
 						<button
 							type="button"
 							onClick={addDegree}
-							className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+							className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
 						>
 							Add Education
 						</button>
 					</div>
 
 					{/* Skills */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Skills</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Skills</h2>
 						<div className="space-y-4">
 							<div>
-								<label className="block text-sm font-medium mb-2">
+								<label className="block mb-2 text-sm font-medium">
 									Technical Skills (comma-separated)
 								</label>
 								<AICompanionField
@@ -991,7 +991,7 @@ function EditResumeContent() {
 								/>
 							</div>
 							<div>
-								<label className="block text-sm font-medium mb-2">
+								<label className="block mb-2 text-sm font-medium">
 									Soft Skills (comma-separated)
 								</label>
 								<AICompanionField
@@ -1019,12 +1019,12 @@ function EditResumeContent() {
 					</div>
 
 					{/* Projects */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Projects</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Projects</h2>
 						{(formData.projects?.items || []).map((project, index) => (
 							<div
 								key={index}
-								className="mb-6 p-4 border rounded-lg dark:border-gray-600"
+								className="p-4 mb-6 rounded-lg border dark:border-gray-600"
 							>
 								<div className="grid grid-cols-1 gap-3 mb-3">
 									<AICompanionField
@@ -1093,15 +1093,15 @@ function EditResumeContent() {
 						<button
 							type="button"
 							onClick={addProject}
-							className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+							className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
 						>
 							Add Project
 						</button>
 					</div>
 
 					{/* Languages */}
-					<div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-						<h2 className="text-xl font-semibold mb-4">Languages</h2>
+					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+						<h2 className="mb-4 text-xl font-semibold">Languages</h2>
 						<AICompanionField
 							type="textarea"
 							placeholder="Languages you speak (comma-separated) e.g., English, Hindi, Spanish"
@@ -1125,31 +1125,31 @@ function EditResumeContent() {
 					</div>
 
 					{/* Action Buttons */}
-					<div className="flex flex-col md:flex-row gap-2 md:gap-4 mb-8">
+					<div className="flex flex-col gap-2 mb-8 md:flex-row md:gap-4">
 						{/* Public URL (username only) */}
 						<div className="mb-6">
-							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+							<label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
 								🔗 Portfolio URL
 							</label>
-							<div className="flex items-center gap-2">
+							<div className="flex gap-2 items-center">
 								<PortfolioUrlDisplay username={username} />
 							</div>
 						</div>
 						<button
 							onClick={handleSave}
-							className="bg-blue-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-blue-700 font-semibold"
+							className="px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg md:px-6 md:py-3 hover:bg-blue-700"
 						>
 							Save Changes
 						</button>
 						<button
 							onClick={handlePreview}
-							className="bg-green-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-green-700 font-semibold"
+							className="px-4 py-2 font-semibold text-white bg-green-600 rounded-lg md:px-6 md:py-3 hover:bg-green-700"
 						>
 							Preview Portfolio
 						</button>
 						<button
 							onClick={() => router.push("/editor")}
-							className="bg-gray-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-gray-700 font-semibold"
+							className="px-4 py-2 font-semibold text-white bg-gray-600 rounded-lg md:px-6 md:py-3 hover:bg-gray-700"
 						>
 							Back to Upload
 						</button>
@@ -1157,9 +1157,9 @@ function EditResumeContent() {
 				</div>
 
 				{/* Right Panel - Live Preview */}
-				<div className="w-full md:w-1/2 h-auto md:h-screen overflow-x-auto overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-					<div className="sticky top-0 bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700 z-10">
-						<h2 className="text-lg md:text-xl font-semibold">Live Preview</h2>
+				<div className="overflow-x-auto overflow-y-auto w-full h-auto bg-white border-t border-gray-200 md:w-1/2 md:h-screen custom-thin-slider md:border-t-0 md:border-l dark:border-gray-700 dark:bg-gray-900">
+					<div className="sticky top-0 z-10 p-4 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+						<h2 className="text-lg font-semibold md:text-xl">Live Preview</h2>
 					</div>
 					<div className="p-2 md:p-4">
 						{layout && Object.entries(layout).length > 0 ? (
@@ -1170,7 +1170,7 @@ function EditResumeContent() {
 								currentTemplate={currentTemplate}
 							/>
 						) : (
-							<div className="text-center py-8 md:py-12">
+							<div className="py-8 text-center md:py-12">
 								<p className="text-gray-500">
 									No layout selected. Please go back and choose a template
 									first.
@@ -1182,13 +1182,13 @@ function EditResumeContent() {
 			</div>
 			{/* Floating Action Button for Save */}
 			<motion.div
-				className="fixed bottom-6 right-6 z-50"
+				className="fixed right-6 bottom-6 z-50"
 				initial={{ opacity: 0, scale: 0.8 }}
 				animate={{ opacity: 1, scale: 1 }}
 				transition={{ duration: 0.3, delay: 0.5 }}
 			>
 				<motion.button
-					className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
+					className="flex items-center px-6 py-3 space-x-2 font-medium text-white bg-blue-600 rounded-full shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl"
 					onClick={handleSave}
 					whileHover={{ scale: 1.05 }}
 					whileTap={{ scale: 0.95 }}
