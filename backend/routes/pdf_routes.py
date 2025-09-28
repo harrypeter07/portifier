@@ -97,13 +97,20 @@ def get_pdf_info():
 def get_page(page_num):
     """Get specific page with all elements"""
     try:
-        # Check if PDF is loaded
-        if not pdf_service.current_document:
+        global current_pdf_path
+        
+        # Check if we have a current PDF path
+        if not current_pdf_path:
             return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
         
         # Check if file exists
-        if not os.path.exists(pdf_service.current_document.file_path):
+        if not os.path.exists(current_pdf_path):
             return jsonify({'error': 'PDF file not found. Please re-upload the PDF.'}), 404
+        
+        # Reload PDF if needed
+        if not pdf_service.current_document or pdf_service.current_document.file_path != current_pdf_path:
+            if not pdf_service.load_pdf(current_pdf_path):
+                return jsonify({'error': 'Failed to reload PDF'}), 500
         
         # Get page image
         page_image = pdf_service.get_page_image(page_num)
