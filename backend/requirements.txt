@@ -62,3 +62,6 @@ flake8==6.1.0
 # Production
 gunicorn==21.2.0
 waitress==2.1.2
+
+# Additional production dependencies
+psutil==5.9.6

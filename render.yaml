@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: portfolio-backend
+    env: python
+    plan: starter
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && python app.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: MONGODB_URI
+        fromDatabase:
+          name: portfolio-mongodb
+          property: connectionString
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: HUGGINGFACE_API_KEY
+        sync: false
+      - key: TESSERACT_CMD
+        value: /usr/bin/tesseract
+      - key: CORS_ORIGINS
+        value: https://your-frontend-domain.onrender.com,http://localhost:3000
+
+databases:
+  - name: portfolio-mongodb
+    plan: starter
