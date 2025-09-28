@@ -4,8 +4,8 @@ File handling API routes
 from flask import Blueprint, request, jsonify, send_file
 import os
 
-from ..services.file_service import FileService
-from ..utils.file_utils import FileHandler, FileValidator
+from services.file_service import FileService
+from utils.file_utils import FileHandler, FileValidator
 
 file_bp = Blueprint('file', __name__, url_prefix='/api/file')
 
