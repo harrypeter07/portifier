@@ -5,11 +5,11 @@ from flask import Blueprint, request, jsonify, send_file
 import os
 from datetime import datetime
 
-from ..services.resume_service import ResumeService
-from ..services.ai_service import AIService
-from ..services.file_service import FileService
-from ..utils.file_utils import FileHandler, FileValidator
-from ..utils.database import get_database
+from services.resume_service import ResumeService
+from services.ai_service import AIService
+from services.file_service import FileService
+from utils.file_utils import FileHandler, FileValidator
+from utils.database import get_database
 
 resume_bp = Blueprint('resume', __name__, url_prefix='/api/resume')
 
