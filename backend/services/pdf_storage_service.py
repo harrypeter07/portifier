@@ -29,7 +29,7 @@ class PDFStorageService:
             print("🔄 Initializing PDFStorageService database...")
             try:
                 self.db_manager = get_database()
-                if self.db_manager and self.db_manager.db:
+                if self.db_manager is not None and self.db_manager.db is not None:
                     self.fs = gridfs.GridFS(self.db_manager.db)
                     self.collection = self.db_manager.get_collection('pdf_documents')
                     self._initialized = True

@@ -28,7 +28,7 @@ def get_storage_service():
     if storage_service is None:
         # Ensure database is connected before creating storage service
         db_manager = get_database()
-        if not db_manager or not db_manager.db:
+        if db_manager is None or db_manager.db is None:
             raise Exception("Database not connected")
         storage_service = PDFStorageService()
     return storage_service
