@@ -1,7 +1,7 @@
 import React from "react";
 import {HighlightMenu} from "react-highlight-menu";
 import {FaAlignCenter, FaAlignLeft, FaAlignRight, FaBold, FaItalic, FaMinus, FaPlus, FaUnderline} from "react-icons/fa";
-import useKeyboardShortcut from "../../../hooks/useKeyboardShortcut";
+import useKeyboardShortcut from "../../../../hooks/useKeyboardShortcut";
 
 const ModalHighlightMenu = () => {
   const formatText = (command, value = null) => {
