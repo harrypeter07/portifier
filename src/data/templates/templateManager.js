@@ -2,7 +2,15 @@
 // Provides scalable template configurations with full schema support
 
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
-import { getRecommendedLayout } from "@/data/componentMap";
+// Simple layout recommendation function to avoid React context issues in server-side code
+const getRecommendedLayout = (templateId) => {
+  const layouts = {
+    cleanfolio: ['hero', 'about', 'experience', 'skills', 'showcase', 'contact'],
+    creative: ['hero', 'about', 'experience', 'skills', 'achievements', 'contact'],
+    business: ['hero', 'about', 'experience', 'education', 'skills', 'contact']
+  };
+  return layouts[templateId] || layouts.cleanfolio;
+};
 import {
 	sampleDataCleanfolio,
 	sampleDataCreative,
