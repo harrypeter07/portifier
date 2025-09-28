@@ -15,7 +15,7 @@ import ColorSelector from "../components/ColorSelector";
 
 const Form = () => {
   return (
-    <form className="p-4 bg-fuchsia-600 exclude-print md:max-w-[40%] md:h-screen md:overflow-y-scroll">
+    <form className="resume-form p-4 bg-fuchsia-600 exclude-print md:max-w-[40%] md:h-screen md:overflow-y-scroll">
       <LoadUnload/>
       <PersonalInformation/>
       <TemplateSelector/>

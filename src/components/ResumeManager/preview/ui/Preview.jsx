@@ -51,7 +51,7 @@ const Preview = () => {
   };
 
   return (
-    <div className="md:max-w-[60%] sticky top-0 preview rm-padding-print p-6 md:overflow-y-scroll md:h-screen">
+    <div className="preview md:max-w-[60%] sticky top-0 rm-padding-print p-6 md:overflow-y-scroll md:h-screen">
       <A4PageWrapper>
         <ModalHighlightMenu/>
         <DragDropContext onDragEnd={onDragEndHandler}>
