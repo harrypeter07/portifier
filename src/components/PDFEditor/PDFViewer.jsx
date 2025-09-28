@@ -27,6 +27,12 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
   }, [pdfData]);
 
   const loadPage = async (pageNum) => {
+    // Safety check
+    if (pageNum < 0 || pageNum >= (pdfData?.pages || 1)) {
+      console.error(`Invalid page number: ${pageNum}. Valid range: 0 to ${(pdfData?.pages || 1) - 1}`);
+      return;
+    }
+    
     setLoading(true);
     try {
       console.log(`Loading page ${pageNum} with zoom ${zoom}`);
@@ -56,9 +62,12 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
   };
 
   const handlePageChange = (newPage) => {
+    console.log(`Attempting to change to page ${newPage}, total pages: ${pdfData?.pages || 1}`);
     if (newPage >= 0 && newPage < (pdfData?.pages || 1)) {
       setCurrentPage(newPage);
       onPageChange?.(newPage);
+    } else {
+      console.warn(`Invalid page number: ${newPage}. Valid range: 0 to ${(pdfData?.pages || 1) - 1}`);
     }
   };
 
@@ -74,7 +83,7 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
     onElementClick?.(element);
   };
 
-  if (!pdfData) {
+  if (!pdfData || !pdfData.pages) {
     return (
       <div className="flex items-center justify-center h-full">
         <p className="text-gray-500 dark:text-gray-400">No PDF loaded</p>
