@@ -6,8 +6,8 @@ import os
 import requests
 import json
 
-from ..utils.ai_utils import AIAnalyzer, TextProcessor
-from ..models.resume_models import ResumeAnalysis
+from utils.ai_utils import AIAnalyzer, TextProcessor
+from models.resume_models import ResumeAnalysis
 
 class AIService:
     """Service for AI-powered analysis and processing"""

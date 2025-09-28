@@ -6,9 +6,9 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 import os
 
-from ..models.resume_models import Resume, Experience, Education, Skill, ResumeAnalysis
-from ..utils.file_utils import FileHandler, FileValidator
-from ..utils.database import get_database
+from models.resume_models import Resume, Experience, Education, Skill, ResumeAnalysis
+from utils.file_utils import FileHandler, FileValidator
+from utils.database import get_database
 
 class ResumeService:
     """Service for resume management operations"""
