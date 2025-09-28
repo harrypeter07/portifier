@@ -2,17 +2,8 @@ import Skills from "../components/Skills";
 import DateRange from "../../utility/DateRange";
 import Language from "../components/Language";
 import Certification from "../components/Certification";
-import dynamic from "next/dynamic";
 import React from 'react';
-
-const Droppable = dynamic(
-  () => import("react-beautiful-dnd").then((mod) => mod.Droppable),
-  { ssr: false }
-);
-const Draggable = dynamic(
-  () => import("react-beautiful-dnd").then((mod) => mod.Draggable),
-  { ssr: false }
-);
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 const LeftSide = ({ resumeData }) => {
   // Get column span based on template style
@@ -114,34 +105,16 @@ const LeftSide = ({ resumeData }) => {
         </div>
       )}
 
-      <Droppable droppableId="skills" type="SKILLS" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {resumeData.skills.map((skill, index) => (
-              <Draggable
-                key={`SKILLS-${index}`}
-                draggableId={`SKILLS-${index}`}
-                index={index}
-              >
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    className={`mb-1 ${
-                      snapshot.isDragging &&
-                      "outline-dashed outline-2 outline-gray-400 bg-white"
-                    }`}
-                  >
-                    <Skills title={skill.title} skills={skill.skills} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
+      <SortableContext 
+        items={resumeData.skills.map((_, index) => `skill-${index}`)}
+        strategy={verticalListSortingStrategy}
+      >
+        {resumeData.skills.map((skill, index) => (
+          <div key={`skill-${index}`} className="mb-1">
+            <Skills title={skill.title} skills={skill.skills} />
           </div>
-        )}
-      </Droppable>
+        ))}
+      </SortableContext>
 
       <Language title="Languages" languages={resumeData.languages} />
       <Certification

@@ -54,17 +54,12 @@
     "tailwindcss": "^4.1.11"
   },
   "overrides": {
-    "react-beautiful-dnd": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    },
     "react-highlight-menu": {
       "react": "$react",
       "react-dom": "$react-dom"
     }
   },
   "resolutions": {
-    "react-beautiful-dnd": "^13.1.1",
     "react-highlight-menu": "^2.1.1"
   }
 }
