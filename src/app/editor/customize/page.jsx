@@ -1,6 +1,6 @@
 "use client";
 import { useLayoutStore } from "@/store/layoutStore";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { componentMap, componentCategories, getRecommendedLayout } from "@/data/componentMap";
 import Preview from "@/components/Preview";
@@ -221,7 +221,7 @@ function SectionSlider({ sectionKey, category, localContent, localLayout, handle
   );
 }
 
-export default function CustomizePage() {
+function CustomizeContent() {
 	const {
 		layout,
 		content,
@@ -871,5 +871,13 @@ export default function CustomizePage() {
 			/>
 			</div>
 		</div>
+	);
+}
+
+export default function CustomizePage() {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<CustomizeContent />
+		</Suspense>
 	);
 }
