@@ -23,7 +23,13 @@ class PDFService:
     def __init__(self, file_handler: FileHandler):
         self.file_handler = file_handler
         self.current_document: Optional[PDFDocument] = None
-        self.storage_service = PDFStorageService()
+        self.storage_service = None  # Initialize lazily
+    
+    def _get_storage_service(self):
+        """Get storage service instance (lazy initialization)"""
+        if self.storage_service is None:
+            self.storage_service = PDFStorageService()
+        return self.storage_service
     
     def load_pdf_from_bytes(self, file_data: bytes, filename: str) -> bool:
         """Load and process a PDF from bytes data"""
@@ -73,7 +79,8 @@ class PDFService:
             print(f"📖 Loading PDF from MongoDB: {document_id}")
             
             # Retrieve PDF document from MongoDB
-            pdf_document = self.storage_service.get_pdf_document(document_id)
+            storage_service = self._get_storage_service()
+            pdf_document = storage_service.get_pdf_document(document_id)
             if not pdf_document:
                 print(f"❌ Failed to retrieve PDF document from MongoDB")
                 return False
