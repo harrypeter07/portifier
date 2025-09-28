@@ -15,6 +15,7 @@ import numpy as np
 
 from models.pdf_models import TextElement, ImageElement, PDFDocument
 from utils.file_utils import FileHandler, FileValidator
+from services.pdf_storage_service import PDFStorageService
 
 class PDFService:
     """Service for PDF processing operations"""
@@ -22,9 +23,30 @@ class PDFService:
     def __init__(self, file_handler: FileHandler):
         self.file_handler = file_handler
         self.current_document: Optional[PDFDocument] = None
+        self.storage_service = PDFStorageService()
+    
+    def load_pdf_from_mongodb(self, document_id: str) -> bool:
+        """Load and process a PDF from MongoDB"""
+        try:
+            print(f"📖 Loading PDF from MongoDB: {document_id}")
+            
+            # Retrieve PDF document from MongoDB
+            pdf_document = self.storage_service.get_pdf_document(document_id)
+            if not pdf_document:
+                print(f"❌ Failed to retrieve PDF document from MongoDB")
+                return False
+            
+            # Set as current document
+            self.current_document = pdf_document
+            print(f"✅ PDF loaded from MongoDB successfully")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error loading PDF from MongoDB: {e}")
+            return False
     
     def load_pdf(self, file_path: str) -> bool:
-        """Load and process a PDF file"""
+        """Load and process a PDF file from local filesystem"""
         try:
             # Validate file
             if not FileValidator.validate_file_type(file_path):
@@ -88,9 +110,16 @@ class PDFService:
                         
                         element_id = f"p{page_num}_b{block_num}_l{line_num}_w{word_num}"
                         
+                        # Ensure bbox is a list, not a Rect object
+                        bbox = word["bbox"]
+                        if hasattr(bbox, '__iter__') and not isinstance(bbox, (str, bytes)):
+                            bbox = list(bbox)
+                        else:
+                            bbox = [0, 0, 0, 0]  # fallback
+                        
                         text_element = TextElement(
                             text=word["text"],
-                            bbox=word["bbox"],
+                            bbox=tuple(bbox),
                             font_name=word["font"],
                             font_size=word["size"],
                             font_flags=word["flags"],
