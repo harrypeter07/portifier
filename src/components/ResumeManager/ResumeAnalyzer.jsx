@@ -23,6 +23,7 @@ const ResumeAnalyzer = ({ resume, onBack }) => {
       // Call the real API for resume analysis
       const response = await apiClient.analyzeResume(resume.id);
       setAnalysis(response);
+      setLoading(false);
     } catch (apiError) {
       console.warn('API analysis failed, using fallback data:', apiError);
       
@@ -59,9 +60,6 @@ const ResumeAnalyzer = ({ resume, onBack }) => {
         });
         setLoading(false);
       }, 2000);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
     }
   };
 
@@ -172,7 +170,7 @@ const ResumeAnalyzer = ({ resume, onBack }) => {
                 <Star
                   key={i}
                   className={`w-5 h-5 ${
-                    i < Math.floor(analysis.overallScore / 20) ? 'fill-current' : ''
+                    i < Math.floor(analysis.overallScore / 20) ? 'fill-current text-yellow-300' : 'text-indigo-200'
                   }`}
                 />
               ))}
