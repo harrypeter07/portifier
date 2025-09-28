@@ -63,7 +63,7 @@ class DatabaseManager:
     
     async def get_async_collection(self, collection_name: str):
         """Get a collection from the async database"""
-        if not self.async_db:
+        if self.async_db is None:
             raise Exception("Async database not connected")
         return self.async_db[collection_name]
     
