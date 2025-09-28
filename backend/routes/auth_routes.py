@@ -4,8 +4,8 @@ Authentication API routes
 from flask import Blueprint, request, jsonify
 from datetime import datetime, timedelta
 
-from ..utils.security import SecurityManager
-from ..utils.database import get_database
+from utils.security import SecurityManager
+from utils.database import get_database
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
