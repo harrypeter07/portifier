@@ -9,7 +9,7 @@ import Header from "../components/Header";
 import LeftSide from "../components/LeftSide";
 import RightSide from "../components/RightSide";
 import A4PageWrapper from "../components/A4PageWrapper";
-import {onDragEndHandler} from "../utils/onDrugEndHandler";
+import {onDragEndHandler} from "../../utility/onDragEndHandler";
 
 const DragDropContext = dynamic(
   () =>
