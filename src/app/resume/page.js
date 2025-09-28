@@ -8,6 +8,47 @@ import ResumeManager from '@/components/ResumeManager/ResumeManager';
 
 export default function ResumePage() {
   const [activeTab, setActiveTab] = useState('pdf-editor');
+  const [backendStatus, setBackendStatus] = useState({
+    connected: false,
+    loading: true,
+    error: null
+  });
+
+  // Check backend connection status
+  useEffect(() => {
+    const checkBackendStatus = async () => {
+      try {
+        setBackendStatus(prev => ({ ...prev, loading: true }));
+        const response = await fetch('/api/health', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setBackendStatus({
+            connected: true,
+            loading: false,
+            error: null
+          });
+          console.log('✅ Backend connected successfully:', data);
+        } else {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error('❌ Backend connection failed:', error);
+        setBackendStatus({
+          connected: false,
+          loading: false,
+          error: error.message
+        });
+      }
+    };
+
+    checkBackendStatus();
+  }, []);
 
   const tabs = [
     { id: 'pdf-editor', label: 'PDF Editor', icon: FileText },
@@ -25,6 +66,32 @@ export default function ResumePage() {
           <p className="text-gray-600 dark:text-gray-300">
             Advanced PDF editing and AI-powered resume management
           </p>
+          
+          {/* Backend Status */}
+          <div className="mt-4 flex items-center space-x-2">
+            {backendStatus.loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                <span className="text-sm text-blue-600 dark:text-blue-400">
+                  Connecting to backend...
+                </span>
+              </>
+            ) : backendStatus.connected ? (
+              <>
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span className="text-sm text-green-600 dark:text-green-400">
+                  Backend connected successfully
+                </span>
+              </>
+            ) : (
+              <>
+                <XCircle className="w-4 h-4 text-red-500" />
+                <span className="text-sm text-red-600 dark:text-red-400">
+                  Backend connection failed: {backendStatus.error}
+                </span>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Navigation Tabs */}
