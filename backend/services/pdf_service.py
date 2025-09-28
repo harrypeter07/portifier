@@ -25,6 +25,48 @@ class PDFService:
         self.current_document: Optional[PDFDocument] = None
         self.storage_service = PDFStorageService()
     
+    def load_pdf_from_bytes(self, file_data: bytes, filename: str) -> bool:
+        """Load and process a PDF from bytes data"""
+        try:
+            print(f"📖 Loading PDF from bytes: {filename}")
+            
+            # Create a temporary file-like object
+            import io
+            file_obj = io.BytesIO(file_data)
+            
+            # Open PDF document from bytes
+            pdf_doc = fitz.open(stream=file_data, filetype="pdf")
+            
+            # Extract elements
+            text_elements = self._extract_text_elements(pdf_doc)
+            images = self._extract_images(pdf_doc)
+            fonts = self._extract_fonts(text_elements)
+            colors = self._extract_colors(text_elements)
+            
+            # Create PDF document model
+            self.current_document = PDFDocument(
+                document_id=str(uuid.uuid4()),
+                filename=filename,
+                file_path=f"mongodb://{filename}",  # Placeholder for MongoDB storage
+                file_size=len(file_data),
+                page_count=len(pdf_doc),
+                text_elements=text_elements,
+                images=images,
+                fonts=fonts,
+                colors=colors,
+                metadata=self._extract_metadata(pdf_doc),
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
+            
+            pdf_doc.close()
+            print(f"✅ PDF loaded from bytes successfully")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error loading PDF from bytes: {e}")
+            return False
+    
     def load_pdf_from_mongodb(self, document_id: str) -> bool:
         """Load and process a PDF from MongoDB"""
         try:
@@ -272,9 +314,26 @@ class PDFService:
             if new_color:
                 element.color = new_color
             
-            # Save changes
-            pdf_doc.save(self.current_document.file_path)
+            # Save changes to a new file (avoid incremental save issue)
+            import tempfile
+            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+            pdf_doc.save(temp_file.name)
             pdf_doc.close()
+            
+            # Update the document in MongoDB
+            if self.storage_service:
+                # Read the updated PDF data
+                with open(temp_file.name, 'rb') as f:
+                    updated_pdf_data = f.read()
+                
+                # Update in MongoDB
+                self.storage_service.update_pdf_document(
+                    self.current_document.document_id,
+                    {'updated_at': datetime.now()}
+                )
+            
+            # Clean up temp file
+            os.unlink(temp_file.name)
             
             return True
             

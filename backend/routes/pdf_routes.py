@@ -45,25 +45,39 @@ def upload_pdf():
         if not FileValidator.validate_file_size(file_size, 'pdf'):
             return jsonify({'error': 'File too large. Maximum size is 16MB.'}), 400
         
-        # Save file
-        file_path = file_handler.save_file(file, file.filename, 'pdfs')
+        # Read file data
+        file_data = file.read()
+        file.seek(0)  # Reset file pointer
         
-        # Process PDF
-        if pdf_service.load_pdf(file_path):
-            global current_pdf_path
-            current_pdf_path = file_path  # Store the current PDF path
+        # Store PDF in MongoDB
+        storage_result = storage_service.store_pdf(file_data, file.filename)
+        if not storage_result['success']:
+            return jsonify({'error': f"Failed to store PDF: {storage_result['error']}"}), 500
+        
+        document_id = storage_result['document_id']
+        
+        # Process PDF from file data
+        if pdf_service.load_pdf_from_bytes(file_data, file.filename):
+            global current_pdf_document_id
+            current_pdf_document_id = document_id  # Store the current PDF document ID
+            
+            # Store processed document in MongoDB
+            pdf_document = pdf_service.current_document
+            pdf_document.document_id = document_id  # Use the same document ID
+            storage_service.store_pdf_document(pdf_document)
+            
             document_info = pdf_service.get_document_info()
             return jsonify({
                 'success': True,
                 'message': 'PDF uploaded and processed successfully',
                 'document_info': document_info,
-                'file_path': file_path,
+                'document_id': document_id,
                 'page_count': document_info.get('page_count', 1),
                 'pages': document_info.get('page_count', 1)
             })
         else:
-            # Clean up file if processing failed
-            file_handler.delete_file(file_path)
+            # Clean up from MongoDB if processing failed
+            storage_service.delete_pdf_document(document_id)
             return jsonify({'error': 'Failed to process PDF'}), 500
         
     except Exception as e:
@@ -73,16 +87,16 @@ def upload_pdf():
 def get_pdf_info():
     """Get PDF information"""
     try:
-        global current_pdf_path
+        global current_pdf_document_id
         
-        # Check if we have a current PDF path
-        if not current_pdf_path:
+        # Check if we have a current PDF document ID
+        if not current_pdf_document_id:
             return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
         
-        # Reload PDF if needed
-        if not pdf_service.current_document or pdf_service.current_document.file_path != current_pdf_path:
-            if not pdf_service.load_pdf(current_pdf_path):
-                return jsonify({'error': 'Failed to reload PDF'}), 500
+        # Reload PDF from MongoDB if needed
+        if not pdf_service.current_document or pdf_service.current_document.document_id != current_pdf_document_id:
+            if not pdf_service.load_pdf_from_mongodb(current_pdf_document_id):
+                return jsonify({'error': 'Failed to reload PDF from MongoDB'}), 500
         
         document_info = pdf_service.get_document_info()
         if document_info:
@@ -99,20 +113,16 @@ def get_pdf_info():
 def get_page(page_num):
     """Get specific page with all elements"""
     try:
-        global current_pdf_path
+        global current_pdf_document_id
         
-        # Check if we have a current PDF path
-        if not current_pdf_path:
+        # Check if we have a current PDF document ID
+        if not current_pdf_document_id:
             return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
         
-        # Check if file exists
-        if not os.path.exists(current_pdf_path):
-            return jsonify({'error': 'PDF file not found. Please re-upload the PDF.'}), 404
-        
-        # Reload PDF if needed
-        if not pdf_service.current_document or pdf_service.current_document.file_path != current_pdf_path:
-            if not pdf_service.load_pdf(current_pdf_path):
-                return jsonify({'error': 'Failed to reload PDF'}), 500
+        # Reload PDF from MongoDB if needed
+        if not pdf_service.current_document or pdf_service.current_document.document_id != current_pdf_document_id:
+            if not pdf_service.load_pdf_from_mongodb(current_pdf_document_id):
+                return jsonify({'error': 'Failed to reload PDF from MongoDB'}), 500
         
         # Get page image
         page_image = pdf_service.get_page_image(page_num)
