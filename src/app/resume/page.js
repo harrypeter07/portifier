@@ -1,54 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { FileText, User, Settings, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileText, User } from 'lucide-react';
 import PDFEditorApp from '@/components/PDFEditor/PDFEditorApp';
 import ResumeManager from '@/components/ResumeManager/ResumeManager';
+import BackendStatus from '@/components/BackendStatus';
 // CSS styles are now in globals.css
 
 export default function ResumePage() {
   const [activeTab, setActiveTab] = useState('pdf-editor');
-  const [backendStatus, setBackendStatus] = useState({
-    connected: false,
-    loading: true,
-    error: null
-  });
-
-  // Check backend connection status
-  useEffect(() => {
-    const checkBackendStatus = async () => {
-      try {
-        setBackendStatus(prev => ({ ...prev, loading: true }));
-        const response = await fetch('/api/health', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          setBackendStatus({
-            connected: true,
-            loading: false,
-            error: null
-          });
-          console.log('✅ Backend connected successfully:', data);
-        } else {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-      } catch (error) {
-        console.error('❌ Backend connection failed:', error);
-        setBackendStatus({
-          connected: false,
-          loading: false,
-          error: error.message
-        });
-      }
-    };
-
-    checkBackendStatus();
-  }, []);
 
   const tabs = [
     { id: 'pdf-editor', label: 'PDF Editor', icon: FileText },

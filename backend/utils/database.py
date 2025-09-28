@@ -22,14 +22,17 @@ class DatabaseManager:
     def connect(self) -> bool:
         """Connect to MongoDB"""
         try:
+            print(f"🔌 Connecting to MongoDB: {self.database_name}")
             self.client = MongoClient(self.connection_string)
             self.db = self.client[self.database_name]
             
             # Test connection
+            print("🏓 Testing database connection...")
             self.client.admin.command('ping')
+            print("✅ Database connected successfully!")
             return True
         except Exception as e:
-            print(f"Database connection failed: {e}")
+            print(f"❌ Database connection failed: {e}")
             return False
     
     async def async_connect(self) -> bool:
@@ -67,37 +70,51 @@ class DatabaseManager:
     def create_indexes(self):
         """Create database indexes for better performance"""
         try:
-            # Check if database is connected
+            # Check if database is connected with explicit None comparison
             if self.db is None or self.client is None:
-                print("Database not connected, skipping index creation")
+                print("⚠️ Database not connected, skipping index creation")
+                return
+            
+            # Test connection before creating indexes
+            try:
+                self.client.admin.command('ping')
+                print("🔍 Database connection verified, creating indexes...")
+            except Exception as ping_error:
+                print(f"❌ Database ping failed: {ping_error}")
                 return
                 
             # Users collection indexes
+            print("📝 Creating users collection indexes...")
             users_collection = self.get_collection('users')
             users_collection.create_index('email', unique=True)
             users_collection.create_index('username', unique=True)
             users_collection.create_index('created_at')
             
             # Resumes collection indexes
+            print("📄 Creating resumes collection indexes...")
             resumes_collection = self.get_collection('resumes')
             resumes_collection.create_index('user_id')
             resumes_collection.create_index([('user_id', 1), ('updated_at', -1)])
             resumes_collection.create_index('created_at')
             
             # PDF documents collection indexes
+            print("📋 Creating PDF documents collection indexes...")
             pdf_collection = self.get_collection('pdf_documents')
             pdf_collection.create_index('user_id')
             pdf_collection.create_index('created_at')
             pdf_collection.create_index('file_hash')
             
             # Resume analyses collection indexes
+            print("🔍 Creating resume analyses collection indexes...")
             analyses_collection = self.get_collection('resume_analyses')
             analyses_collection.create_index('resume_id')
             analyses_collection.create_index('created_at')
             
-            print("✅ Database indexes created successfully")
+            print("✅ All database indexes created successfully!")
         except Exception as e:
             print(f"❌ Error creating indexes: {e}")
+            import traceback
+            traceback.print_exc()
     
     def get_stats(self) -> Dict[str, Any]:
         """Get database statistics"""

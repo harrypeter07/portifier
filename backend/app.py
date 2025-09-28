@@ -35,10 +35,11 @@ def create_app(config_name='default'):
     CORS(app, origins=app.config['CORS_ORIGINS'])
     
     # Connect to database
+    print("🚀 Initializing database connection...")
     if not db_manager.connect():
-        print("Warning: Database connection failed")
+        print("⚠️ Warning: Database connection failed")
     else:
-        print("Database connected successfully")
+        print("🎯 Database connected successfully, creating indexes...")
         # Create indexes
         db_manager.create_indexes()
     
@@ -61,7 +62,7 @@ def create_app(config_name='default'):
                 'database': db_stats
             })
         except Exception as e:
-            return jsonify({
+                return jsonify({
                 'status': 'unhealthy',
                 'message': 'PDF Editor API is running but database connection failed',
                 'error': str(e),
