@@ -26,6 +26,10 @@ def get_storage_service():
     """Get storage service instance (lazy initialization)"""
     global storage_service
     if storage_service is None:
+        # Ensure database is connected before creating storage service
+        db_manager = get_database()
+        if not db_manager or not db_manager.db:
+            raise Exception("Database not connected")
         storage_service = PDFStorageService()
     return storage_service
 
