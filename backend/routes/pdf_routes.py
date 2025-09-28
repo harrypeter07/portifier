@@ -5,10 +5,10 @@ from flask import Blueprint, request, jsonify, send_file
 import os
 from datetime import datetime
 
-from ..services.pdf_service import PDFService
-from ..services.file_service import FileService
-from ..utils.file_utils import FileHandler, FileValidator
-from ..utils.database import get_database
+from services.pdf_service import PDFService
+from services.file_service import FileService
+from utils.file_utils import FileHandler, FileValidator
+from utils.database import get_database
 
 pdf_bp = Blueprint('pdf', __name__, url_prefix='/api/pdf')
 
