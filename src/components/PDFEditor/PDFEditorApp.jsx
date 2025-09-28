@@ -27,22 +27,34 @@ const PDFEditorApp = () => {
     setError(null);
     
     try {
+      console.log('Uploading file:', file.name, 'Type:', type);
       const response = await apiClient.uploadFile(file, type);
+      console.log('Upload response:', response);
       
       if (response.success) {
         setCurrentFile(file);
         setFileType(type);
         
         if (type === 'pdf') {
-          setPdfData(response);
           // Get PDF info
+          console.log('Getting PDF info...');
           const info = await apiClient.getPdfInfo();
-          setPdfData(prev => ({ ...prev, info }));
+          console.log('PDF info:', info);
+          
+          const pdfData = {
+            ...response,
+            info,
+            pages: info.page_count || 1,
+            currentPage: 0
+          };
+          console.log('Setting PDF data:', pdfData);
+          setPdfData(pdfData);
         }
       } else {
         setError(response.error || 'Failed to upload file');
       }
     } catch (err) {
+      console.error('Upload error:', err);
       setError(err.message);
     } finally {
       setLoading(false);

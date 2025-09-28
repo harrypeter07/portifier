@@ -50,7 +50,9 @@ def upload_pdf():
                 'success': True,
                 'message': 'PDF uploaded and processed successfully',
                 'document_info': document_info,
-                'file_path': file_path
+                'file_path': file_path,
+                'page_count': document_info.get('page_count', 1),
+                'pages': document_info.get('page_count', 1)
             })
         else:
             # Clean up file if processing failed

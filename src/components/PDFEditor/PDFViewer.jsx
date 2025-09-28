@@ -12,10 +12,19 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log('PDFViewer - pdfData changed:', pdfData);
     if (pdfData && pdfData.pages) {
+      console.log('PDFViewer - Loading page:', currentPage);
       loadPage(currentPage);
     }
   }, [pdfData, currentPage, zoom]);
+
+  // Initialize current page when PDF data changes
+  useEffect(() => {
+    if (pdfData && pdfData.currentPage !== undefined) {
+      setCurrentPage(pdfData.currentPage);
+    }
+  }, [pdfData]);
 
   const loadPage = async (pageNum) => {
     setLoading(true);

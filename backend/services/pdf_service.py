@@ -319,12 +319,15 @@ class PDFService:
             return None
         
         return {
+            'page_count': self.current_document.page_count,
             'pages': self.current_document.page_count,
             'fonts': self.current_document.fonts,
             'colors': self.current_document.colors,
             'text_elements_count': len(self.current_document.text_elements),
             'images_count': len(self.current_document.images),
-            'metadata': self.current_document.metadata
+            'metadata': self.current_document.metadata,
+            'filename': self.current_document.filename,
+            'file_size': self.current_document.file_size
         }
     
     def get_page_image(self, page_num: int, zoom: float = 1.0) -> Optional[str]:
