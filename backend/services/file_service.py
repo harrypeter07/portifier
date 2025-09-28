@@ -14,7 +14,7 @@ from PIL import Image
 import io
 import base64
 
-from ..utils.file_utils import FileHandler, FileValidator
+from utils.file_utils import FileHandler, FileValidator
 
 class FileService:
     """Service for file operations and conversions"""
