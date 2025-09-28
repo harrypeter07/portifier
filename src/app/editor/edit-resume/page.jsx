@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useLayoutStore } from "@/store/layoutStore";
 import { useRouter, useSearchParams } from "next/navigation";
 import { componentMap } from "@/data/componentMap";
@@ -11,7 +11,7 @@ import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
 import { motion } from "framer-motion";
 import debounce from "lodash.debounce";
 
-export default function EditResumePage() {
+function EditResumeContent() {
 	const {
 		content,
 		setContent,
@@ -1210,5 +1210,13 @@ export default function EditResumePage() {
 				onCancel={modal.onCancel}
 			/>
 		</div>
+	);
+}
+
+export default function EditResumePage() {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<EditResumeContent />
+		</Suspense>
 	);
 }
