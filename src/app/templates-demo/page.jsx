@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export default function TemplatesDemoPage() {
+function TemplatesDemoContent() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
 	const [showSelector, setShowSelector] = useState(true);
 	const [existingPortfolio, setExistingPortfolio] = useState(null);
