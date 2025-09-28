@@ -1,27 +1,34 @@
 "use client"
 
-import React, {createContext, useState} from "react";
-import Meta from "../components/meta/Meta";
-import FormCloseOpenBtn from "../components/FormCloseOpenBtn";
-import Preview from "../components/preview/ui/Preview";
-import DefaultResumeData from "../components/utility/DefaultResumeData";
+import React, {createContext, useState, useEffect} from "react";
+import FormCloseOpenBtn from "./FormCloseOpenBtn";
+import Preview from "./preview/ui/Preview";
+import DefaultResumeData from "./utility/DefaultResumeData";
 import dynamic from "next/dynamic";
-import Form from "../components/form/ui/Form";
-import Navbar from "../components/navbar/Navbar";
+import Form from "./form/ui/Form";
+import { ArrowLeft, Save, Download } from "lucide-react";
 
 const ResumeContext = createContext(DefaultResumeData);
 
 // server side rendering false
-const Print = dynamic(() => import("../components/utility/WinPrint"), {
+const Print = dynamic(() => import("./utility/WinPrint"), {
   ssr: false,
 });
 
-export default function Builder() {
+export default function Builder({ initialData = null, onSave, onBack }) {
   // resume data
-  const [resumeData, setResumeData] = useState(DefaultResumeData);
+  const [resumeData, setResumeData] = useState(initialData || DefaultResumeData);
+  const [saving, setSaving] = useState(false);
 
   // form hide/show
   const [formClose, setFormClose] = useState(false);
+
+  // Update resume data when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setResumeData(initialData);
+    }
+  }, [initialData]);
 
   // profile picture
   const handleProfilePicture = (e) => {
@@ -40,7 +47,19 @@ export default function Builder() {
 
   const handleChange = (e) => {
     setResumeData({...resumeData, [e.target.name]: e.target.value});
-    console.log(resumeData);
+  };
+
+  const handleSave = async () => {
+    if (!onSave) return;
+    
+    setSaving(true);
+    try {
+      await onSave(resumeData);
+    } catch (error) {
+      console.error('Error saving resume:', error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -53,20 +72,45 @@ export default function Builder() {
           handleChange,
         }}
       >
-        <Meta
-          title="ATSResume | Get hired with an ATS-optimized resume"
-          description="ATSResume is a cutting-edge resume builder that helps job seekers create a professional, ATS-friendly resume in minutes. Our platform uses the latest technology to analyze and optimize your resume for maximum visibility and success with applicant tracking systems. Say goodbye to frustration and wasted time spent on manual resume formatting. Create your winning resume with ATSResume today and get noticed by employers."
-          keywords="ATS-friendly, Resume optimization, Keyword-rich resume, Applicant Tracking System, ATS resume builder, ATS resume templates, ATS-compliant resume, ATS-optimized CV, ATS-friendly format, ATS resume tips, Resume writing services, Career guidance, Job search in India, Resume tips for India, Professional resume builder, Cover letter writing, Interview preparation, Job interview tips, Career growth, Online job applications, resume builder, free resume builder, resume ats, best free resume builder, resume creator, resume cv, resume design, resume editor, resume maker"
-        />
-        <Navbar />
-        <div className="f-col gap-4 md:flex-row justify-evenly max-w-7xl md:mx-auto md:h-screen pt-16">
+        {/* Header with navigation and actions */}
+        <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={onBack}
+                className="flex items-center px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Resumes
+              </button>
+              <div className="h-6 w-px bg-gray-300 dark:bg-gray-600" />
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {initialData ? 'Edit Resume' : 'Create New Resume'}
+              </h1>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {saving ? 'Saving...' : 'Save Resume'}
+              </button>
+              <Print />
+            </div>
+          </div>
+        </div>
+
+        {/* Main content */}
+        <div className="flex gap-4 justify-evenly max-w-7xl mx-auto h-[calc(100vh-120px)]">
           {!formClose && (
             <Form/>
           )}
           <Preview/>
         </div>
         <FormCloseOpenBtn formClose={formClose} setFormClose={setFormClose}/>
-        <Print/>
       </ResumeContext.Provider>
     </>
   );

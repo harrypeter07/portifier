@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "../styles/resume-builder.css";
 import UnifiedNavbar from "@/components/common/UnifiedNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 const geistSans = Geist({

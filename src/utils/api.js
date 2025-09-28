@@ -115,9 +115,20 @@ class APIClient {
   
   // Resume management
   saveResume(resumeData) {
+    const formData = new FormData();
+    
+    // Add file if present
+    if (resumeData.file) {
+      formData.append('file', resumeData.file);
+    }
+    
+    // Add resume data as JSON
+    const { file, ...dataWithoutFile } = resumeData;
+    formData.append('resumeData', JSON.stringify(dataWithoutFile));
+    
     return this.request('/api/resume/save', {
       method: 'POST',
-      body: resumeData,
+      body: formData,
     });
   }
   

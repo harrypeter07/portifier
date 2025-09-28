@@ -6,25 +6,25 @@ import { FileText, Edit, Trash2, Download, Eye, Search, Calendar, User, Plus } f
 const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, onCreateNew }) => {
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+      <div className="flex justify-center items-center h-64">
+        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 animate-spin border-t-transparent" />
       </div>
     );
   }
 
   if (resumes.length === 0) {
     return (
-      <div className="text-center py-12">
-        <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
+      <div className="py-12 text-center">
+        <FileText className="mx-auto mb-4 w-16 h-16 text-gray-400" />
+        <h3 className="mb-2 text-xl font-semibold text-gray-600 dark:text-gray-300">
           No resumes found
         </h3>
-        <p className="text-gray-500 dark:text-gray-400 mb-6">
+        <p className="mb-6 text-gray-500 dark:text-gray-400">
           Upload your first resume to get started
         </p>
         <button
           onClick={onRefresh}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          className="px-4 py-2 text-white bg-indigo-600 rounded-lg transition-colors hover:bg-indigo-700"
         >
           Refresh
         </button>
@@ -34,37 +34,37 @@ const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, 
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           My Resumes ({resumes.length})
         </h2>
         <div className="flex items-center space-x-3">
           <button
             onClick={onCreateNew}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center"
+            className="flex items-center px-4 py-2 text-white bg-indigo-600 rounded-lg transition-colors hover:bg-indigo-700"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="mr-2 w-4 h-4" />
             Create New
           </button>
           <button
             onClick={onRefresh}
-            className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg transition-colors dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
           >
             Refresh
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {resumes.map((resume) => (
           <div
             key={resume.id}
-            className="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-6 hover:shadow-lg transition-shadow"
+            className="p-6 bg-white rounded-lg border border-gray-200 transition-shadow dark:bg-gray-700 dark:border-gray-600 hover:shadow-lg"
           >
             {/* Resume Header */}
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex justify-between items-start mb-4">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
+                <div className="p-2 bg-indigo-100 rounded-lg dark:bg-indigo-900">
                   <FileText className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
@@ -79,16 +79,16 @@ const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, 
             </div>
 
             {/* Resume Info */}
-            <div className="space-y-2 mb-4">
+            <div className="mb-4 space-y-2">
               {resume.email && (
                 <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <User className="w-4 h-4 mr-2" />
+                  <User className="mr-2 w-4 h-4" />
                   {resume.email}
                 </div>
               )}
               {resume.createdAt && (
                 <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Calendar className="w-4 h-4 mr-2" />
+                  <Calendar className="mr-2 w-4 h-4" />
                   {new Date(resume.createdAt).toLocaleDateString()}
                 </div>
               )}
@@ -110,13 +110,13 @@ const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, 
                   {resume.skills.slice(0, 3).map((skill, index) => (
                     <span
                       key={index}
-                      className="px-2 py-1 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs rounded-full"
+                      className="px-2 py-1 text-xs text-gray-700 bg-gray-100 rounded-full dark:bg-gray-600 dark:text-gray-300"
                     >
                       {skill.name}
                     </span>
                   ))}
                   {resume.skills.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs rounded-full">
+                    <span className="px-2 py-1 text-xs text-gray-700 bg-gray-100 rounded-full dark:bg-gray-600 dark:text-gray-300">
                       +{resume.skills.length - 3} more
                     </span>
                   )}
@@ -128,22 +128,22 @@ const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, 
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => onAnalyze(resume)}
-                className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                className="flex flex-1 justify-center items-center px-3 py-2 text-sm text-white bg-blue-600 rounded-lg transition-colors hover:bg-blue-700"
               >
-                <Search className="w-4 h-4 mr-1" />
+                <Search className="mr-1 w-4 h-4" />
                 Analyze
               </button>
               
               <button
                 onClick={() => onEdit(resume)}
-                className="flex items-center justify-center px-3 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+                className="flex justify-center items-center px-3 py-2 text-gray-700 bg-gray-200 rounded-lg transition-colors dark:bg-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500"
               >
                 <Edit className="w-4 h-4" />
               </button>
               
               <button
                 onClick={() => onDelete(resume.id)}
-                className="flex items-center justify-center px-3 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+                className="flex justify-center items-center px-3 py-2 text-red-700 bg-red-100 rounded-lg transition-colors dark:bg-red-900 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
