@@ -28,29 +28,8 @@ export default function ResumePage() {
           </p>
           
           {/* Backend Status */}
-          <div className="mt-4 flex items-center space-x-2">
-            {backendStatus.loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-                <span className="text-sm text-blue-600 dark:text-blue-400">
-                  Connecting to backend...
-                </span>
-              </>
-            ) : backendStatus.connected ? (
-              <>
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                <span className="text-sm text-green-600 dark:text-green-400">
-                  Backend connected successfully
-                </span>
-              </>
-            ) : (
-              <>
-                <XCircle className="w-4 h-4 text-red-500" />
-                <span className="text-sm text-red-600 dark:text-red-400">
-                  Backend connection failed: {backendStatus.error}
-                </span>
-              </>
-            )}
+          <div className="mt-4">
+            <BackendStatus />
           </div>
         </div>
 
