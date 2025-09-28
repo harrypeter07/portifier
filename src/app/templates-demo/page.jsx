@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import TemplateSelector from "@/components/TemplateSelector";
 import Preview from "@/components/Preview";
 import { useLayoutStore } from "@/store/layoutStore";
