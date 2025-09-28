@@ -9,6 +9,10 @@ import sys
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Add the backend directory to the Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

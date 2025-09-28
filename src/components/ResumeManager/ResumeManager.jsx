@@ -87,14 +87,14 @@ const ResumeManager = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-black">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Resume Manager
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-gray-300">
             Create, analyze, and manage your resumes with AI-powered insights and professional templates
           </p>
         </div>
@@ -137,7 +137,7 @@ const ResumeManager = () => {
 
         {/* Main Content */}
         {activeTab === 'builder' ? (
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-gray-900 rounded-xl shadow-lg overflow-hidden">
             <ResumeBuilder 
               initialData={selectedResume}
               onSave={async (resumeData) => {
@@ -153,7 +153,7 @@ const ResumeManager = () => {
             />
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+          <div className="bg-gray-900 rounded-xl shadow-lg p-6">
             {activeTab === 'list' && (
               <ResumeList
                 resumes={resumes}
