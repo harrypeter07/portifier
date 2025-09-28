@@ -97,13 +97,16 @@ class DatabaseManager:
     def get_stats(self) -> Dict[str, Any]:
         """Get database statistics"""
         try:
+            if self.db is None:
+                return {'error': 'Database not connected'}
+            
             stats = {
                 'users_count': self.get_collection('users').count_documents({}),
                 'resumes_count': self.get_collection('resumes').count_documents({}),
                 'pdf_documents_count': self.get_collection('pdf_documents').count_documents({}),
                 'analyses_count': self.get_collection('resume_analyses').count_documents({}),
                 'database_name': self.database_name,
-                'connection_status': 'connected' if self.client else 'disconnected'
+                'connection_status': 'connected' if self.client is not None else 'disconnected'
             }
             return stats
         except Exception as e:

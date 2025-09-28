@@ -34,12 +34,7 @@ def create_app(config_name='default'):
     # Initialize CORS
     CORS(app, origins=app.config['CORS_ORIGINS'])
     
-    # Initialize database
-    db_manager = init_database(
-        app.config['MONGODB_URI'],
-        'pdf_editor_db'
-    )
-    
+    # Connect to database
     if not db_manager.connect():
         print("Warning: Database connection failed")
     else:
