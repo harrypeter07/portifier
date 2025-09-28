@@ -17,6 +17,9 @@ file_handler = FileHandler('uploads', 'temp')
 pdf_service = PDFService(file_handler)
 file_service = FileService(file_handler)
 
+# Global variable to store current PDF file path
+current_pdf_path = None
+
 @pdf_bp.route('/upload', methods=['POST'])
 def upload_pdf():
     """Upload and process PDF file"""
@@ -45,6 +48,8 @@ def upload_pdf():
         
         # Process PDF
         if pdf_service.load_pdf(file_path):
+            global current_pdf_path
+            current_pdf_path = file_path  # Store the current PDF path
             document_info = pdf_service.get_document_info()
             return jsonify({
                 'success': True,
@@ -66,9 +71,16 @@ def upload_pdf():
 def get_pdf_info():
     """Get PDF information"""
     try:
-        # Check if PDF is loaded
-        if not pdf_service.current_document:
+        global current_pdf_path
+        
+        # Check if we have a current PDF path
+        if not current_pdf_path:
             return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
+        
+        # Reload PDF if needed
+        if not pdf_service.current_document or pdf_service.current_document.file_path != current_pdf_path:
+            if not pdf_service.load_pdf(current_pdf_path):
+                return jsonify({'error': 'Failed to reload PDF'}), 500
         
         document_info = pdf_service.get_document_info()
         if document_info:
