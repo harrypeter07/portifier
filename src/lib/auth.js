@@ -59,6 +59,25 @@ async function auth() {
 	}
 }
 
+// NextAuth configuration
+export const authOptions = {
+  providers: [],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.userId = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token.userId) {
+        session.user.id = token.userId;
+      }
+      return session;
+    },
+  },
+};
+
 // Export both named and default for compatibility
 export { auth };
 export default auth;

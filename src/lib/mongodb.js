@@ -54,6 +54,9 @@ export default async function dbConnect() {
 	}
 }
 
+// Alias for compatibility
+export const connectDB = dbConnect;
+
 // Graceful shutdown function
 export async function dbDisconnect() {
 	if (cached.conn) {
