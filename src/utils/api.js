@@ -45,10 +45,11 @@ class APIClient {
     const formData = new FormData();
     formData.append('file', file);
     
-    let endpoint = '/api/upload';
-    if (fileType === 'python') endpoint = '/api/python/view';
-    else if (fileType === 'jupyter') endpoint = '/api/jupyter/view';
-    else if (fileType === 'word') endpoint = '/api/convert/word-to-pdf';
+    let endpoint = '/api/pdf/upload';
+    if (fileType === 'python') endpoint = '/api/file/python/view';
+    else if (fileType === 'jupyter') endpoint = '/api/file/jupyter/view';
+    else if (fileType === 'word') endpoint = '/api/file/convert/word-to-pdf';
+    else if (fileType === 'image') endpoint = '/api/file/upload';
     
     return this.request(endpoint, {
       method: 'POST',
@@ -82,7 +83,7 @@ class APIClient {
   }
   
   searchReplace(searchTerm, replaceWith) {
-    return this.request('/api/search-replace', {
+    return this.request('/api/pdf/search-replace', {
       method: 'POST',
       body: {
         search_term: searchTerm,
