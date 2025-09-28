@@ -294,7 +294,8 @@ class PDFService:
                 return False
             
             # Get PDF data from MongoDB
-            pdf_data = self.storage_service.retrieve_pdf(self.current_document.document_id)
+            storage_service = self._get_storage_service()
+            pdf_data = storage_service.retrieve_pdf(self.current_document.document_id)
             if not pdf_data:
                 print("Failed to retrieve PDF data from MongoDB")
                 return False
@@ -339,7 +340,7 @@ class PDFService:
             
             # Update in MongoDB GridFS
             # For now, just update the document metadata
-            self.storage_service.update_pdf_document(
+            storage_service.update_pdf_document(
                 self.current_document.document_id,
                 {'updated_at': datetime.now()}
             )
