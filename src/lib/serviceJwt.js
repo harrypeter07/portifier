@@ -14,6 +14,10 @@ export async function makeServiceJWT(payload = {}) {
 	return jwt;
 }
 
+export async function getTemplatesApiKey() {
+  return await makeServiceJWT({ service: 'templates' });
+}
+
 export default makeServiceJWT;
 
 
