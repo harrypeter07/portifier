@@ -16,26 +16,50 @@ const BackendStatus = () => {
     try {
       setStatus(prev => ({ ...prev, loading: true, error: null }));
       
-      const response = await fetch('/api/health', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      // Try multiple backend URLs
+      const backendUrls = [
+        process.env.NEXT_PUBLIC_API_URL,
+        'http://localhost:5000',
+        'http://127.0.0.1:5000',
+        'https://127.0.0.1:5000'
+      ].filter(Boolean);
       
-      if (response.ok) {
-        const data = await response.json();
-        setStatus({
-          connected: true,
-          loading: false,
-          error: null,
-          lastChecked: new Date().toLocaleTimeString(),
-          details: data
-        });
-        console.log('✅ Backend connected successfully:', data);
-      } else {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      let lastError = null;
+      
+      for (const backendUrl of backendUrls) {
+        try {
+          console.log(`🔍 Trying backend URL: ${backendUrl}`);
+          const response = await fetch(`${backendUrl}/api/health`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            setStatus({
+              connected: true,
+              loading: false,
+              error: null,
+              lastChecked: new Date().toLocaleTimeString(),
+              details: { ...data, backendUrl }
+            });
+            console.log('✅ Backend connected successfully:', data);
+            return; // Success, exit the function
+          } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+        } catch (urlError) {
+          console.log(`❌ Failed to connect to ${backendUrl}:`, urlError.message);
+          lastError = urlError;
+          continue; // Try next URL
+        }
       }
+      
+      // If we get here, all URLs failed
+      throw lastError || new Error('All backend URLs failed');
+      
     } catch (error) {
       console.error('❌ Backend connection failed:', error);
       setStatus({
@@ -130,6 +154,11 @@ const BackendStatus = () => {
         {status.details && (
           <div className="text-xs text-gray-600 dark:text-gray-400">
             API: {status.details.message || 'Running'}
+            {status.details.backendUrl && (
+              <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                Connected to: {status.details.backendUrl}
+              </div>
+            )}
           </div>
         )}
       </div>
