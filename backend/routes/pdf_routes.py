@@ -57,6 +57,7 @@ def upload_pdf():
         file.seek(0)  # Reset file pointer
         
         # Store PDF in MongoDB
+        storage_service = get_storage_service()
         storage_result = storage_service.store_pdf(file_data, file.filename)
         if not storage_result['success']:
             return jsonify({'error': f"Failed to store PDF: {storage_result['error']}"}), 500
