@@ -17,13 +17,38 @@ class PDFStorageService:
     """Service for storing and retrieving PDFs from MongoDB"""
     
     def __init__(self):
-        self.db_manager = get_database()
-        self.fs = gridfs.GridFS(self.db_manager.db)
-        self.collection = self.db_manager.get_collection('pdf_documents')
+        self.db_manager = None
+        self.fs = None
+        self.collection = None
+        self._initialize_database()
+    
+    def _initialize_database(self):
+        """Initialize database connection"""
+        try:
+            self.db_manager = get_database()
+            if self.db_manager and self.db_manager.db:
+                self.fs = gridfs.GridFS(self.db_manager.db)
+                self.collection = self.db_manager.get_collection('pdf_documents')
+                print("✅ PDFStorageService database initialized successfully")
+            else:
+                print("❌ Failed to initialize database in PDFStorageService")
+        except Exception as e:
+            print(f"❌ Error initializing database in PDFStorageService: {e}")
+    
+    def _ensure_database_initialized(self) -> bool:
+        """Ensure database is initialized"""
+        if not self.db_manager or not self.fs or not self.collection:
+            print("🔄 Re-initializing database...")
+            self._initialize_database()
+            return self.db_manager is not None and self.fs is not None and self.collection is not None
+        return True
     
     def store_pdf(self, file_data: bytes, filename: str, user_id: str = None) -> Dict[str, Any]:
         """Store PDF file in MongoDB GridFS"""
         try:
+            if not self._ensure_database_initialized():
+                return {'success': False, 'error': 'Database not initialized'}
+            
             print(f"📁 Storing PDF in MongoDB: {filename}")
             
             # Generate unique document ID

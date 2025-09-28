@@ -17,9 +17,10 @@ pdf_bp = Blueprint('pdf', __name__, url_prefix='/api/pdf')
 file_handler = FileHandler('uploads', 'temp')
 pdf_service = PDFService(file_handler)
 file_service = FileService(file_handler)
+storage_service = PDFStorageService()
 
-# Global variable to store current PDF file path
-current_pdf_path = None
+# Global variable to store current PDF document ID
+current_pdf_document_id = None
 
 @pdf_bp.route('/upload', methods=['POST'])
 def upload_pdf():
