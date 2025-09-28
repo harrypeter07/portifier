@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw } from 'lucide-react';
+import apiClient from '../../utils/api';
 
 const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -14,21 +15,28 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
     if (pdfData && pdfData.pages) {
       loadPage(currentPage);
     }
-  }, [pdfData, currentPage]);
+  }, [pdfData, currentPage, zoom]);
 
   const loadPage = async (pageNum) => {
     setLoading(true);
     try {
-      // In a real implementation, you would call the API here
-      // const pageData = await apiClient.getPage(pageNum);
-      // setPageImage(pageData.page_image);
-      // setTextElements(pageData.text_elements);
+      // Call the backend API to get the page image and elements
+      const pageData = await apiClient.getPage(pageNum, zoom);
       
-      // For now, we'll simulate the data
-      setPageImage('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
-      setTextElements([]);
+      if (pageData && pageData.page_image) {
+        setPageImage(pageData.page_image);
+        setTextElements(pageData.text_elements || []);
+      } else {
+        console.error('Failed to load page data');
+        // Fallback to placeholder
+        setPageImage('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+        setTextElements([]);
+      }
     } catch (error) {
       console.error('Error loading page:', error);
+      // Fallback to placeholder
+      setPageImage('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+      setTextElements([]);
     } finally {
       setLoading(false);
     }

@@ -327,6 +327,39 @@ class PDFService:
             'metadata': self.current_document.metadata
         }
     
+    def get_page_image(self, page_num: int, zoom: float = 1.0) -> Optional[str]:
+        """Get a page rendered as a base64 image"""
+        if not self.current_document:
+            return None
+        
+        try:
+            # Open the PDF file
+            pdf_doc = fitz.open(self.current_document.file_path)
+            
+            if page_num >= pdf_doc.page_count:
+                return None
+            
+            # Get the page
+            page = pdf_doc[page_num]
+            
+            # Create transformation matrix for zoom
+            mat = fitz.Matrix(zoom, zoom)
+            
+            # Render page to pixmap
+            pix = page.get_pixmap(matrix=mat)
+            
+            # Convert to base64
+            img_data = pix.tobytes("png")
+            img_base64 = base64.b64encode(img_data).decode()
+            
+            pdf_doc.close()
+            
+            return f"data:image/png;base64,{img_base64}"
+            
+        except Exception as e:
+            print(f"Error rendering page {page_num}: {e}")
+            return None
+    
     def get_page_elements(self, page_num: int) -> Dict[str, Any]:
         """Get all elements for a specific page"""
         if not self.current_document:

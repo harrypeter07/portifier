@@ -62,8 +62,8 @@ class APIClient {
     return this.request('/api/pdf/info');
   }
   
-  getPage(pageNum) {
-    return this.request(`/api/pdf/page/${pageNum}`);
+  getPage(pageNum, zoom = 1.0) {
+    return this.request(`/api/pdf/page/${pageNum}?zoom=${zoom}`);
   }
   
   updateText(elementId, newText, fontSize, color) {
