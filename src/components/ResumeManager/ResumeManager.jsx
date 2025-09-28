@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FileText, Upload, Plus, Edit, Trash2, Download, Eye, Search } from 'lucide-react';
+import { FileText, Upload, Plus, Edit, Trash2, Download, Eye, Search, Palette, FileEdit } from 'lucide-react';
 import ResumeUploader from './ResumeUploader';
 import ResumeList from './ResumeList';
 import ResumeAnalyzer from './ResumeAnalyzer';
-import ResumeEditor from './ResumeEditor';
+import ResumeBuilder from './builder';
 import apiClient from '../../utils/api';
 
 const ResumeManager = () => {
   const [resumes, setResumes] = useState([]);
   const [selectedResume, setSelectedResume] = useState(null);
-  const [activeTab, setActiveTab] = useState('list'); // 'list', 'upload', 'analyze', 'edit'
+  const [activeTab, setActiveTab] = useState('list'); // 'list', 'upload', 'analyze', 'builder'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -66,7 +66,7 @@ const ResumeManager = () => {
 
   const handleResumeEdit = (resume) => {
     setSelectedResume(resume);
-    setActiveTab('edit');
+    setActiveTab('builder');
   };
 
   const handleResumeAnalyze = (resume) => {
@@ -74,9 +74,15 @@ const ResumeManager = () => {
     setActiveTab('analyze');
   };
 
+  const handleCreateNew = () => {
+    setSelectedResume(null);
+    setActiveTab('builder');
+  };
+
   const tabs = [
     { id: 'list', label: 'My Resumes', icon: FileText },
     { id: 'upload', label: 'Upload New', icon: Upload },
+    { id: 'builder', label: 'Resume Builder', icon: Palette },
     { id: 'analyze', label: 'Analyze', icon: Search },
   ];
 
@@ -89,7 +95,7 @@ const ResumeManager = () => {
             Resume Manager
           </h1>
           <p className="text-gray-600 dark:text-gray-300">
-            Upload, analyze, and manage your resumes with AI-powered insights
+            Create, analyze, and manage your resumes with AI-powered insights and professional templates
           </p>
         </div>
 
@@ -130,38 +136,13 @@ const ResumeManager = () => {
         </div>
 
         {/* Main Content */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-          {activeTab === 'list' && (
-            <ResumeList
-              resumes={resumes}
-              loading={loading}
-              onEdit={handleResumeEdit}
-              onDelete={handleResumeDelete}
-              onAnalyze={handleResumeAnalyze}
-              onRefresh={loadResumes}
-            />
-          )}
-
-          {activeTab === 'upload' && (
-            <ResumeUploader
-              onUpload={handleResumeUpload}
-              loading={loading}
-            />
-          )}
-
-          {activeTab === 'analyze' && selectedResume && (
-            <ResumeAnalyzer
-              resume={selectedResume}
-              onBack={() => setActiveTab('list')}
-            />
-          )}
-
-          {activeTab === 'edit' && selectedResume && (
-            <ResumeEditor
-              resume={selectedResume}
-              onSave={async (updatedResume) => {
+        {activeTab === 'builder' ? (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+            <ResumeBuilder 
+              initialData={selectedResume}
+              onSave={async (resumeData) => {
                 try {
-                  await apiClient.saveResume(updatedResume);
+                  await apiClient.saveResume(resumeData);
                   await loadResumes();
                   setActiveTab('list');
                 } catch (err) {
@@ -170,8 +151,36 @@ const ResumeManager = () => {
               }}
               onBack={() => setActiveTab('list')}
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+            {activeTab === 'list' && (
+              <ResumeList
+                resumes={resumes}
+                loading={loading}
+                onEdit={handleResumeEdit}
+                onDelete={handleResumeDelete}
+                onAnalyze={handleResumeAnalyze}
+                onRefresh={loadResumes}
+                onCreateNew={handleCreateNew}
+              />
+            )}
+
+            {activeTab === 'upload' && (
+              <ResumeUploader
+                onUpload={handleResumeUpload}
+                loading={loading}
+              />
+            )}
+
+            {activeTab === 'analyze' && selectedResume && (
+              <ResumeAnalyzer
+                resume={selectedResume}
+                onBack={() => setActiveTab('list')}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

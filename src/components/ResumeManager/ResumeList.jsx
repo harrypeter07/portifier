@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { FileText, Edit, Trash2, Download, Eye, Search, Calendar, User } from 'lucide-react';
+import { FileText, Edit, Trash2, Download, Eye, Search, Calendar, User, Plus } from 'lucide-react';
 
-const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh }) => {
+const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, onCreateNew }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -38,12 +38,21 @@ const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh }
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           My Resumes ({resumes.length})
         </h2>
-        <button
-          onClick={onRefresh}
-          className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-        >
-          Refresh
-        </button>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={onCreateNew}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Create New
+          </button>
+          <button
+            onClick={onRefresh}
+            className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
