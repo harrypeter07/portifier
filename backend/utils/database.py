@@ -67,6 +67,11 @@ class DatabaseManager:
     def create_indexes(self):
         """Create database indexes for better performance"""
         try:
+            # Check if database is connected
+            if self.db is None or self.client is None:
+                print("Database not connected, skipping index creation")
+                return
+                
             # Users collection indexes
             users_collection = self.get_collection('users')
             users_collection.create_index('email', unique=True)
@@ -90,9 +95,9 @@ class DatabaseManager:
             analyses_collection.create_index('resume_id')
             analyses_collection.create_index('created_at')
             
-            print("Database indexes created successfully")
+            print("✅ Database indexes created successfully")
         except Exception as e:
-            print(f"Error creating indexes: {e}")
+            print(f"❌ Error creating indexes: {e}")
     
     def get_stats(self) -> Dict[str, Any]:
         """Get database statistics"""

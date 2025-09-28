@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { FileText, User, Settings } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { FileText, User, Settings, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import PDFEditorApp from '@/components/PDFEditor/PDFEditorApp';
 import ResumeManager from '@/components/ResumeManager/ResumeManager';
 // CSS styles are now in globals.css
