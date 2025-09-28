@@ -15,6 +15,13 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from config import config
 from utils.database import init_database, get_database
+
+# Initialize database first
+db_manager = init_database(
+    config['default'].MONGODB_URI,
+    'pdf_editor_db'
+)
+
 from routes import pdf_bp, resume_bp, file_bp, auth_bp
 
 def create_app(config_name='default'):
