@@ -66,22 +66,37 @@ def upload_pdf():
 def get_pdf_info():
     """Get PDF information"""
     try:
+        # Check if PDF is loaded
+        if not pdf_service.current_document:
+            return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
+        
         document_info = pdf_service.get_document_info()
         if document_info:
             return jsonify(document_info)
         else:
-            return jsonify({'error': 'No PDF loaded'}), 400
+            return jsonify({'error': 'Failed to get document info'}), 500
     except Exception as e:
+        print(f"Error in get_pdf_info: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @pdf_bp.route('/page/<int:page_num>', methods=['GET'])
 def get_page(page_num):
     """Get specific page with all elements"""
     try:
+        # Check if PDF is loaded
+        if not pdf_service.current_document:
+            return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
+        
+        # Check if file exists
+        if not os.path.exists(pdf_service.current_document.file_path):
+            return jsonify({'error': 'PDF file not found. Please re-upload the PDF.'}), 404
+        
         # Get page image
         page_image = pdf_service.get_page_image(page_num)
         if not page_image:
-            return jsonify({'error': 'Failed to get page image'}), 500
+            return jsonify({'error': f'Failed to get page image for page {page_num}'}), 500
         
         # Get page elements
         page_elements = pdf_service.get_page_elements(page_num)
@@ -93,6 +108,9 @@ def get_page(page_num):
             'page_num': page_num
         })
     except Exception as e:
+        print(f"Error in get_page: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @pdf_bp.route('/update-text', methods=['POST'])

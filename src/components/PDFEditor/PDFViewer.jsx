@@ -29,20 +29,24 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
   const loadPage = async (pageNum) => {
     setLoading(true);
     try {
+      console.log(`Loading page ${pageNum} with zoom ${zoom}`);
       // Call the backend API to get the page image and elements
       const pageData = await apiClient.getPage(pageNum, zoom);
+      console.log('Page data received:', pageData);
       
       if (pageData && pageData.page_image) {
         setPageImage(pageData.page_image);
         setTextElements(pageData.text_elements || []);
+        console.log('Page loaded successfully');
       } else {
-        console.error('Failed to load page data');
+        console.error('Failed to load page data - no page_image in response');
         // Fallback to placeholder
         setPageImage('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
         setTextElements([]);
       }
     } catch (error) {
       console.error('Error loading page:', error);
+      console.error('Error details:', error.message);
       // Fallback to placeholder
       setPageImage('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
       setTextElements([]);
