@@ -800,6 +800,10 @@
   outline-color: #9ca3af;
 }
 
+.w-8\.5in {
+  width: 8.5in;
+}
+
 /* Preview styles */
 .preview {
   max-width: 60%;
