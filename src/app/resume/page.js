@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { FileText, User, Settings } from 'lucide-react';
 import PDFEditorApp from '@/components/PDFEditor/PDFEditorApp';
 import ResumeManager from '@/components/ResumeManager/ResumeManager';
-import '../../styles/resume-builder.css';
+// CSS styles are now in globals.css
 
 export default function ResumePage() {
   const [activeTab, setActiveTab] = useState('pdf-editor');
