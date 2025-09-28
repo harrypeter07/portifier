@@ -96,18 +96,20 @@ class APIClient {
     return this.request('/api/pdf/save');
   }
   
-  // Code execution
+  // Code execution (placeholder - would need to be implemented in backend)
   executePythonCode(code) {
-    return this.request('/api/python/execute', {
-      method: 'POST',
-      body: { code },
+    // For now, return a mock response
+    return Promise.resolve({
+      output: `Executed: ${code}\nOutput: Hello from Python!`,
+      success: true
     });
   }
   
   executeJupyterCell(code, cellType = 'code') {
-    return this.request('/api/jupyter/execute-cell', {
-      method: 'POST',
-      body: { code, type: cellType },
+    // For now, return a mock response
+    return Promise.resolve({
+      output: `Executed cell: ${code}\nOutput: Hello from Jupyter!`,
+      success: true
     });
   }
   
