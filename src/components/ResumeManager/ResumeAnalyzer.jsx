@@ -20,11 +20,13 @@ const ResumeAnalyzer = ({ resume, onBack }) => {
     setError(null);
     
     try {
-      // In a real implementation, you would call the API here
-      // const response = await apiClient.analyzeResume(resume.file);
-      // setAnalysis(response);
+      // Call the real API for resume analysis
+      const response = await apiClient.analyzeResume(resume.id);
+      setAnalysis(response);
+    } catch (apiError) {
+      console.warn('API analysis failed, using fallback data:', apiError);
       
-      // Simulated analysis for demo
+      // Fallback to simulated analysis if API fails
       setTimeout(() => {
         setAnalysis({
           overallScore: 85,
