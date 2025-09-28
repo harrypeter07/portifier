@@ -17,10 +17,17 @@ pdf_bp = Blueprint('pdf', __name__, url_prefix='/api/pdf')
 file_handler = FileHandler('uploads', 'temp')
 pdf_service = PDFService(file_handler)
 file_service = FileService(file_handler)
-storage_service = PDFStorageService()
+storage_service = None  # Initialize lazily
 
 # Global variable to store current PDF document ID
 current_pdf_document_id = None
+
+def get_storage_service():
+    """Get storage service instance (lazy initialization)"""
+    global storage_service
+    if storage_service is None:
+        storage_service = PDFStorageService()
+    return storage_service
 
 @pdf_bp.route('/upload', methods=['POST'])
 def upload_pdf():

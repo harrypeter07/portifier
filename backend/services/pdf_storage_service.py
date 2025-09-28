@@ -20,27 +20,27 @@ class PDFStorageService:
         self.db_manager = None
         self.fs = None
         self.collection = None
-        self._initialize_database()
-    
-    def _initialize_database(self):
-        """Initialize database connection"""
-        try:
-            self.db_manager = get_database()
-            if self.db_manager and self.db_manager.db:
-                self.fs = gridfs.GridFS(self.db_manager.db)
-                self.collection = self.db_manager.get_collection('pdf_documents')
-                print("✅ PDFStorageService database initialized successfully")
-            else:
-                print("❌ Failed to initialize database in PDFStorageService")
-        except Exception as e:
-            print(f"❌ Error initializing database in PDFStorageService: {e}")
+        self._initialized = False
+        # Don't initialize immediately - wait until first use
     
     def _ensure_database_initialized(self) -> bool:
         """Ensure database is initialized"""
-        if not self.db_manager or not self.fs or not self.collection:
-            print("🔄 Re-initializing database...")
-            self._initialize_database()
-            return self.db_manager is not None and self.fs is not None and self.collection is not None
+        if not self._initialized:
+            print("🔄 Initializing PDFStorageService database...")
+            try:
+                self.db_manager = get_database()
+                if self.db_manager and self.db_manager.db:
+                    self.fs = gridfs.GridFS(self.db_manager.db)
+                    self.collection = self.db_manager.get_collection('pdf_documents')
+                    self._initialized = True
+                    print("✅ PDFStorageService database initialized successfully")
+                    return True
+                else:
+                    print("❌ Failed to initialize database in PDFStorageService - db_manager or db is None")
+                    return False
+            except Exception as e:
+                print(f"❌ Error initializing database in PDFStorageService: {e}")
+                return False
         return True
     
     def store_pdf(self, file_data: bytes, filename: str, user_id: str = None) -> Dict[str, Any]:
