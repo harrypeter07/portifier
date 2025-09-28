@@ -33,6 +33,7 @@
     "postprocessing": "^6.37.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-dropzone": "^14.3.8",
     "recharts": "^3.1.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
