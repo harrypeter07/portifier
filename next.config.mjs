@@ -2,7 +2,7 @@
 const nextConfig = {
   transpilePackages: ['framer-motion'],
   experimental: {
-    esmExternals: 'loose'
+    serverComponentsExternalPackages: ['framer-motion']
   }
 };
 
