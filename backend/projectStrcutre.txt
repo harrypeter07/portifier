@@ -1,0 +1,312 @@
+# Complete PDF Editor Project Structure
+
+## Project Directory Structure
+
+```
+pdf-editor-app/
+├── backend/                          # Flask API
+│   ├── app.py                       # Main Flask application
+│   ├── requirements.txt             # Python dependencies
+│   ├── Dockerfile                   # Docker configuration
+│   ├── uploads/                     # Uploaded files directory
+│   ├── temp/                        # Temporary files directory
+│   └── utils/                       # Utility functions
+│       ├── __init__.py
+│       ├── pdf_processor.py         # PDF processing logic
+│       ├── image_processor.py       # Image processing utilities
+│       └── security.py             # Security utilities
+│
+├── frontend/                        # Next.js Application
+│   ├── pages/                       # Next.js pages
+│   │   ├── _app.js                 # App wrapper
+│   │   ├── _document.js            # Document structure
+│   │   ├── index.js                # Home page
+│   │   └── api/                    # API routes (proxy)
+│   │       └── [...path].js        # Dynamic API proxy
+│   ├── components/                  # React components
+│   │   ├── PDFViewer.js            # PDF viewing component
+│   │   ├── TextEditor.js           # Text editing component
+│   │   ├── ImageEditor.js          # Image editing component
+│   │   ├── PythonViewer.js         # Python file viewer
+│   │   ├── JupyterViewer.js        # Jupyter notebook viewer
+│   │   ├── FileUploader.js         # File upload component
+│   │   └── common/                 # Common components
+│   │       ├── Button.js
+│   │       ├── Modal.js
+│   │       └── LoadingSpinner.js
+│   ├── styles/                      # Styling files
+│   │   ├── globals.css             # Global styles
+│   │   └── components/             # Component styles
+│   ├── utils/                       # Utility functions
+│   │   ├── api.js                  # API client
+│   │   ├── file-utils.js           # File utilities
+│   │   └── constants.js            # Constants
+│   ├── public/                      # Static assets
+│   │   ├── icons/
+│   │   └── images/
+│   ├── package.json                 # Node.js dependencies
+│   ├── next.config.js              # Next.js configuration
+│   ├── tailwind.config.js          # Tailwind CSS configuration
+│   └── postcss.config.js           # PostCSS configuration
+│
+├── docker-compose.yml               # Docker Compose for development
+├── render.yaml                      # Render deployment configuration
+├── README.md                        # Project documentation
+└── .gitignore                      # Git ignore rules
+```
+
+## Key Features Implementation
+
+### 🚀 **Backend Features (Flask API)**
+
+#### 1. **Advanced PDF Operations**
+- ✅ Text extraction with formatting preservation
+- ✅ Real-time text editing with click-to-select
+- ✅ Image extraction and OCR text recognition
+- ✅ Watermark addition
+- ✅ PDF merging and splitting
+- ✅ Metadata editing
+- ✅ Annotation support
+- ✅ PDF compression
+
+#### 2. **Format Conversion**
+- ✅ PDF ↔ Word conversion
+- ✅ PDF → Images conversion
+- ✅ Images → PDF conversion
+- ✅ Multiple format support
+
+#### 3. **Python & Jupyter Integration**
+- ✅ Python file viewing with syntax highlighting
+- ✅ Code execution (sandboxed)
+- ✅ Jupyter notebook rendering
+- ✅ Cell-by-cell execution
+
+#### 4. **Advanced Image Processing**
+- ✅ OCR for text extraction from images
+- ✅ Image enhancement and filtering
+- ✅ Automatic image optimization
+- ✅ Multiple format support
+
+### 🎨 **Frontend Features (Next.js)**
+
+#### 1. **Modern UI/UX**
+- ✅ Responsive design with Tailwind CSS
+- ✅ Drag-and-drop file upload
+- ✅ Real-time preview
+- ✅ Interactive editing tools
+- ✅ Professional color scheme
+
+#### 2. **PDF Editing Interface**
+- ✅ Click-to-select text elements
+- ✅ Visual editing dialog
+- ✅ Zoom and pan controls
+- ✅ Page navigation
+- ✅ Search and replace functionality
+
+#### 3. **Multi-Format Support**
+- ✅ Tabbed interface for different file types
+- ✅ Syntax highlighting for Python
+- ✅ Jupyter notebook rendering
+- ✅ Live code execution
+
+## 🛠 **Installation & Setup**
+
+### **Prerequisites**
+- Python 3.8+
+- Node.js 16+
+- Tesseract OCR
+- Poppler Utils
+
+### **Backend Setup**
+```bash
+# Navigate to backend directory
+cd backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install system dependencies (Ubuntu/Debian)
+sudo apt-get update
+sudo apt-get install tesseract-ocr poppler-utils
+
+# Run the Flask API
+python app.py
+```
+
+### **Frontend Setup**
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+npm start
+```
+
+### **Docker Setup**
+```bash
+# Build and run with Docker Compose
+docker-compose up --build
+
+# Or build individual containers
+docker build -t pdf-editor-api ./backend
+docker build -t pdf-editor-frontend ./frontend
+```
+
+## 🚀 **Deployment on Render**
+
+### **1. Repository Setup**
+1. Create a GitHub repository
+2. Push your code to the repository
+3. Connect to Render
+
+### **2. Service Configuration**
+
+#### **Backend Service (Flask API)**
+- **Build Command**: `pip install -r requirements.txt && apt-get update && apt-get install -y tesseract-ocr poppler-utils`
+- **Start Command**: `python app.py`
+- **Environment**: `python`
+- **Port**: `5000`
+
+#### **Frontend Service (Next.js)**
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
+- **Environment**: `node`
+- **Port**: `3000`
+
+### **3. Environment Variables**
+```env
+# Backend
+FLASK_ENV=production
+PORT=5000
+
+# Frontend
+NEXT_PUBLIC_API_URL=https://your-api-service.onrender.com
+NODE_ENV=production
+```
+
+## 📚 **API Documentation**
+
+### **Core Endpoints**
+
+#### **File Operations**
+- `POST /api/upload` - Upload PDF/Python/Jupyter files
+- `GET /api/pdf/info` - Get PDF information
+- `GET /api/pdf/page/{page_num}` - Get specific page data
+- `GET /api/pdf/save` - Download edited PDF
+
+#### **Text Operations**
+- `POST /api/pdf/update-text` - Update text element
+- `POST /api/pdf/add-text` - Add new text
+- `POST /api/search-replace` - Find and replace text
+- `GET /api/pdf/extract-text` - Extract all text
+
+#### **Image Operations**
+- `POST /api/pdf/add-image` - Add image to PDF
+- `GET /api/pdf/ocr` - Extract text from images
+- `POST /api/convert/images-to-pdf` - Convert images to PDF
+
+#### **Advanced Features**
+- `POST /api/pdf/watermark` - Add watermark
+- `POST /api/pdf/merge` - Merge multiple PDFs
+- `POST /api/pdf/split` - Split PDF pages
+- `POST /api/pdf/compress` - Compress PDF
+
+#### **Code Execution**
+- `POST /api/python/execute` - Execute Python code
+- `POST /api/jupyter/execute-cell` - Execute Jupyter cell
+
+## 🔧 **Configuration Options**
+
+### **Backend Configuration (app.py)**
+```python
+# File upload limits
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
+
+# CORS settings
+CORS(app, origins=["http://localhost:3000", "https://your-frontend.onrender.com"])
+
+# OCR settings
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+```
+
+### **Frontend Configuration (next.config.js)**
+```javascript
+const nextConfig = {
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+      },
+    ];
+  },
+}
+```
+
+## 🛡 **Security Features**
+
+### **Backend Security**
+- File type validation
+- File size limits
+- Sandboxed code execution
+- Input sanitization
+- CORS configuration
+
+### **Frontend Security**
+- XSS protection
+- CSRF tokens
+- Secure file uploads
+- Input validation
+
+## 📊 **Performance Optimizations**
+
+### **Backend**
+- Efficient PDF processing with PyMuPDF
+- Image optimization
+- Temporary file cleanup
+- Memory management
+
+### **Frontend**
+- Code splitting
+- Image optimization
+- Lazy loading
+- Caching strategies
+
+## 🎯 **Usage Examples**
+
+### **1. PDF Text Editing**
+```javascript
+// Click on text in PDF viewer
+// Edit in modal dialog
+// Changes applied in real-time
+```
+
+### **2. Python File Viewing**
+```javascript
+// Upload .py file
+// Syntax highlighted display
+// Execute code safely
+```
+
+### **3. Jupyter Integration**
+```javascript
+// Upload .ipynb file
+// Rendered notebook view
+// Execute cells individually
+```
+
+This comprehensive system provides professional-grade PDF editing capabilities with modern web technologies, making it perfect for deployment on cloud platforms like Render.
