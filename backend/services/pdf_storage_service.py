@@ -99,6 +99,10 @@ class PDFStorageService:
         """Retrieve PDF file from MongoDB GridFS"""
         try:
             print(f"📥 Retrieving PDF from MongoDB: {document_id}")
+            # Ensure DB initialized (in case service constructed before DB ready)
+            if not self._ensure_database_initialized():
+                print("❌ Database not initialized in retrieve_pdf")
+                return None
             
             # Get document metadata
             doc_metadata = self.collection.find_one({'document_id': document_id})

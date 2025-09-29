@@ -200,9 +200,17 @@ class PDFService:
                     img_data = pix.tobytes("png")
                     img_b64 = base64.b64encode(img_data).decode()
                     
-                    # Get image rectangle
-                    rects = page.get_image_rects(xref)
-                    bbox = rects[0] if rects else (0, 0, 100, 100)
+                # Get image rectangle and normalize to tuple[float, float, float, float]
+                rects = page.get_image_rects(xref)
+                if rects:
+                    r = rects[0]
+                    try:
+                        bbox = (float(r.x0), float(r.y0), float(r.x1), float(r.y1))
+                    except Exception:
+                        # Fallback if attributes unavailable
+                        bbox = tuple(map(float, list(r))) if hasattr(r, '__iter__') else (0.0, 0.0, 100.0, 100.0)
+                else:
+                    bbox = (0.0, 0.0, 100.0, 100.0)
                     
                     image_element = ImageElement(
                         image_id=f"img_{page_num}_{img_index}",
