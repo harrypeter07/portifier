@@ -291,6 +291,7 @@ class PDFService:
             return False
         
         try:
+            print(f"[PDFService] update_text_element start element_id={element_id}")
             # Find the element
             element = None
             for el in self.current_document.text_elements:
@@ -299,13 +300,14 @@ class PDFService:
                     break
             
             if not element:
+                print(f"[PDFService] element not found: {element_id}")
                 return False
             
             # Get PDF data from MongoDB
             storage_service = self._get_storage_service()
             pdf_data = storage_service.retrieve_pdf(self.current_document.document_id)
             if not pdf_data:
-                print("Failed to retrieve PDF data from MongoDB")
+                print("[PDFService] Failed to retrieve PDF data from MongoDB")
                 return False
             
             # Open PDF from bytes
@@ -321,13 +323,25 @@ class PDFService:
             color = new_color if new_color else element.color
             color_fitz = (color[0]/255, color[1]/255, color[2]/255)
             
-            page.insert_text(
-                (element.bbox[0], element.bbox[1] + font_size),
-                new_text,
-                fontsize=font_size,
-                color=color_fitz,
-                fontname=element.font_name
-            )
+            # Use a built-in font to avoid "need font file or buffer" errors for custom fonts
+            # Common built-ins: "helv" (Helvetica), "tiro", "cour"
+            safe_font = "helv"
+            try:
+                page.insert_text(
+                    (element.bbox[0], element.bbox[1] + font_size),
+                    new_text,
+                    fontsize=font_size,
+                    color=color_fitz,
+                    fontname=safe_font
+                )
+            except Exception:
+                # Fallback: try without specifying fontname (use document default)
+                page.insert_text(
+                    (element.bbox[0], element.bbox[1] + font_size),
+                    new_text,
+                    fontsize=font_size,
+                    color=color_fitz
+                )
             
             # Update element data in memory
             element.text = new_text
@@ -346,12 +360,11 @@ class PDFService:
             with open(temp_file.name, 'rb') as f:
                 updated_pdf_data = f.read()
             
-            # Update in MongoDB GridFS
-            # For now, just update the document metadata
-            storage_service.update_pdf_document(
-                self.current_document.document_id,
-                {'updated_at': datetime.now()}
-            )
+            # Update in MongoDB GridFS (replace file and update metadata)
+            if not storage_service.replace_pdf_file(self.current_document.document_id, updated_pdf_data):
+                print("[PDFService] Failed to replace PDF in GridFS")
+                return False
+            storage_service.update_pdf_document(self.current_document.document_id, {'updated_at': datetime.now()})
             
             # Clean up temp file
             os.unlink(temp_file.name)
