@@ -350,24 +350,31 @@ class PDFService:
             if new_color:
                 element.color = new_color
             
-            # Save to temporary file
+            # Save to temporary file (Windows-safe): use mkstemp, close handle before writing
             import tempfile
-            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
-            pdf_doc.save(temp_file.name)
-            pdf_doc.close()
-            
-            # Read updated PDF data
-            with open(temp_file.name, 'rb') as f:
-                updated_pdf_data = f.read()
+            fd, temp_path = tempfile.mkstemp(suffix='.pdf')
+            try:
+                # Close the low-level FD immediately so PyMuPDF can write the file
+                os.close(fd)
+                pdf_doc.save(temp_path)
+                pdf_doc.close()
+
+                # Read updated PDF data
+                with open(temp_path, 'rb') as f:
+                    updated_pdf_data = f.read()
+            finally:
+                # Clean up temp file if it exists
+                try:
+                    if os.path.exists(temp_path):
+                        os.unlink(temp_path)
+                except Exception:
+                    pass
             
             # Update in MongoDB GridFS (replace file and update metadata)
             if not storage_service.replace_pdf_file(self.current_document.document_id, updated_pdf_data):
                 print("[PDFService] Failed to replace PDF in GridFS")
                 return False
             storage_service.update_pdf_document(self.current_document.document_id, {'updated_at': datetime.now()})
-            
-            # Clean up temp file
-            os.unlink(temp_file.name)
             
             print(f"✅ Text element updated successfully: {element_id}")
             return True
