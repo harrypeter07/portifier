@@ -435,34 +435,46 @@ class PDFService:
         }
     
     def get_page_image(self, page_num: int, zoom: float = 1.0) -> Optional[str]:
-        """Get a page rendered as a base64 image"""
+        """Get a page rendered as a base64 image using data from MongoDB.
+        Expects 0-based page indexes.
+        """
         if not self.current_document:
             return None
-        
+
+        # Normalize and validate inputs
         try:
-            # Open the PDF file
-            pdf_doc = fitz.open(self.current_document.file_path)
-            
-            if page_num >= pdf_doc.page_count:
+            if page_num is None or page_num < 0:
                 return None
-            
-            # Get the page
+            # Sanitize zoom to a reasonable range
+            if zoom is None or zoom <= 0:
+                zoom = 1.0
+            if zoom > 4.0:
+                zoom = 4.0
+        except Exception:
+            return None
+
+        try:
+            # Always retrieve fresh PDF bytes from MongoDB GridFS
+            storage_service = self._get_storage_service()
+            pdf_data = storage_service.retrieve_pdf(self.current_document.document_id)
+            if not pdf_data:
+                return None
+
+            pdf_doc = fitz.open(stream=pdf_data, filetype="pdf")
+
+            # Validate page bounds
+            if page_num >= pdf_doc.page_count:
+                pdf_doc.close()
+                return None
+
             page = pdf_doc[page_num]
-            
-            # Create transformation matrix for zoom
             mat = fitz.Matrix(zoom, zoom)
-            
-            # Render page to pixmap
             pix = page.get_pixmap(matrix=mat)
-            
-            # Convert to base64
             img_data = pix.tobytes("png")
-            img_base64 = base64.b64encode(img_data).decode()
-            
             pdf_doc.close()
-            
-            return f"data:image/png;base64,{img_base64}"
-            
+
+            return f"data:image/png;base64,{base64.b64encode(img_data).decode()}"
+
         except Exception as e:
             print(f"Error rendering page {page_num}: {e}")
             return None

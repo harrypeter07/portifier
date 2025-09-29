@@ -136,10 +136,43 @@ def get_page(page_num):
             if not pdf_service.load_pdf_from_mongodb(current_pdf_document_id):
                 return jsonify({'error': 'Failed to reload PDF from MongoDB'}), 500
         
-        # Get page image
-        page_image = pdf_service.get_page_image(page_num)
+        # Parse zoom from query param; default 1.0
+        try:
+            zoom_param = request.args.get('zoom', default='1')
+            zoom = float(zoom_param)
+            if zoom <= 0:
+                zoom = 1.0
+        except Exception:
+            zoom = 1.0
+
+        # Validate page index bounds (0-based)
+        doc_info = pdf_service.get_document_info()
+        if not doc_info:
+            return jsonify({'error': 'No document info available'}), 500
+        total_pages = int(doc_info.get('page_count', 0))
+        if page_num < 0 or page_num >= total_pages:
+            return jsonify({'error': f'Invalid page index. Must be 0 to {max(total_pages-1, 0)}'}), 400
+
+        # Get page image with zoom
+        page_image = pdf_service.get_page_image(page_num, zoom=zoom)
         if not page_image:
-            return jsonify({'error': f'Failed to get page image for page {page_num}'}), 500
+            # Extra diagnostics to help identify root cause
+            try:
+                raw_len = 0
+                try:
+                    raw = pdf_service._get_storage_service().retrieve_pdf(current_pdf_document_id)
+                    raw_len = len(raw) if raw else 0
+                except Exception:
+                    raw_len = -1
+                return jsonify({
+                    'error': f'Failed to get page image for page {page_num}',
+                    'page_num': page_num,
+                    'page_count': total_pages,
+                    'zoom': zoom,
+                    'pdf_bytes': raw_len
+                }), 500
+            except Exception:
+                return jsonify({'error': f'Failed to get page image for page {page_num}'}), 500
         
         # Get page elements
         page_elements = pdf_service.get_page_elements(page_num)
@@ -148,7 +181,9 @@ def get_page(page_num):
             'page_image': page_image,
             'text_elements': page_elements.get('text_elements', []),
             'images': page_elements.get('images', []),
-            'page_num': page_num
+            'page_num': page_num,
+            'page_count': total_pages,
+            'zoom': zoom
         })
     except Exception as e:
         print(f"Error in get_page: {e}")
