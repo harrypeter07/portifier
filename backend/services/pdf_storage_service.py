@@ -118,7 +118,9 @@ class PDFStorageService:
             return None
     
     def store_pdf_document(self, pdf_document: PDFDocument, user_id: str = None) -> Dict[str, Any]:
-        """Store complete PDF document with all elements"""
+        """Store or update complete PDF document with all elements.
+        Use upsert to avoid creating a second document without file_id.
+        """
         try:
             print(f"📄 Storing PDF document in MongoDB: {pdf_document.document_id}")
             
@@ -127,14 +129,17 @@ class PDFStorageService:
             doc_dict['user_id'] = user_id
             doc_dict['stored_at'] = datetime.now()
             
-            # Store in database
-            result = self.collection.insert_one(doc_dict)
-            print(f"✅ PDF document stored with ID: {result.inserted_id}")
+            # Update existing metadata document (created in store_pdf) without removing file_id
+            result = self.collection.update_one(
+                {'document_id': pdf_document.document_id},
+                {'$set': doc_dict},
+                upsert=True
+            )
+            print(f"✅ PDF document metadata upserted. matched={result.matched_count} upserted_id={result.upserted_id}")
             
             return {
                 'success': True,
                 'document_id': pdf_document.document_id,
-                'database_id': str(result.inserted_id)
             }
             
         except Exception as e:
@@ -149,7 +154,11 @@ class PDFStorageService:
         try:
             print(f"📖 Retrieving PDF document from MongoDB: {document_id}")
             
-            doc_data = self.collection.find_one({'document_id': document_id})
+            # Prefer the record that contains file_id
+            doc_data = self.collection.find_one({'document_id': document_id, 'file_id': {'$exists': True}})
+            if not doc_data:
+                # Fallback to any record if older duplicates exist
+                doc_data = self.collection.find_one({'document_id': document_id})
             if not doc_data:
                 print(f"❌ PDF document not found: {document_id}")
                 return None
