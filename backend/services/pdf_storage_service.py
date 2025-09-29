@@ -201,6 +201,51 @@ class PDFStorageService:
         except Exception as e:
             print(f"❌ Error updating PDF document: {e}")
             return False
+
+    def replace_pdf_file(self, document_id: str, new_file_bytes: bytes) -> bool:
+        """Replace the PDF file in GridFS and update metadata with new file size and file_id."""
+        try:
+            if not self._ensure_database_initialized():
+                print("❌ Database not initialized in replace_pdf_file")
+                return False
+
+            doc = self.collection.find_one({'document_id': document_id})
+            if not doc:
+                print(f"❌ Document metadata not found for replace: {document_id}")
+                return False
+
+            # Delete old file if exists
+            if 'file_id' in doc and doc['file_id']:
+                try:
+                    self.fs.delete(doc['file_id'])
+                except Exception as del_err:
+                    print(f"⚠️ Could not delete old GridFS file: {del_err}")
+
+            # Store new file
+            new_file_id = self.fs.put(
+                new_file_bytes,
+                filename=doc.get('filename', f"{document_id}.pdf"),
+                document_id=document_id,
+                user_id=doc.get('user_id'),
+                upload_date=datetime.now()
+            )
+
+            # Update metadata
+            self.collection.update_one(
+                {'document_id': document_id},
+                {'$set': {
+                    'file_id': new_file_id,
+                    'file_size': len(new_file_bytes),
+                    'updated_at': datetime.now(),
+                    'status': 'updated'
+                }}
+            )
+
+            print(f"✅ Replaced PDF file in GridFS for {document_id}")
+            return True
+        except Exception as e:
+            print(f"❌ Error replacing PDF file: {e}")
+            return False
     
     def delete_pdf_document(self, document_id: str) -> bool:
         """Delete PDF document from MongoDB"""

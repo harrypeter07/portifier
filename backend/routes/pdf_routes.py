@@ -196,6 +196,7 @@ def update_text():
     """Update text element"""
     try:
         data = request.json
+        print(f"📝 update-text payload: {data}")
         element_id = data.get('element_id')
         new_text = data.get('new_text')
         new_font_size = data.get('new_font_size')
@@ -203,12 +204,15 @@ def update_text():
         
         if not element_id or new_text is None:
             return jsonify({'error': 'Missing required parameters'}), 400
-        
+        print(f"🔧 update-text apply: id={element_id} size={new_font_size} color={new_color}")
+
         success = pdf_service.update_text_element(element_id, new_text, new_font_size, new_color)
-        
+
         if success:
+            print("✅ update-text success")
             return jsonify({'success': True, 'message': 'Text updated successfully'})
         else:
+            print("❌ update-text failed in service")
             return jsonify({'error': 'Failed to update text'}), 500
         
     except Exception as e:
@@ -219,6 +223,7 @@ def search_replace():
     """Search and replace text across the document"""
     try:
         data = request.json
+        print(f"📝 search-replace payload: {data}")
         search_term = data.get('search_term', '')
         replace_with = data.get('replace_with', '')
         
@@ -226,7 +231,8 @@ def search_replace():
             return jsonify({'error': 'Search term required'}), 400
         
         replacements = pdf_service.search_and_replace(search_term, replace_with)
-        
+        print(f"🔁 search-replace result: {replacements} replacements")
+
         return jsonify({
             'success': True,
             'replacements': replacements,
