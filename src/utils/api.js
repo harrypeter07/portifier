@@ -39,9 +39,29 @@ class APIClient {
       throw error;
     }
   }
+
+  // PDF document ID persistence
+  storeDocumentId(documentId) {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('pdf_document_id', documentId);
+    }
+  }
+
+  getStoredDocumentId() {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('pdf_document_id');
+    }
+    return null;
+  }
+
+  clearDocumentId() {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('pdf_document_id');
+    }
+  }
   
   // File operations
-  uploadFile(file, fileType = 'pdf') {
+  async uploadFile(file, fileType = 'pdf') {
     const formData = new FormData();
     formData.append('file', file);
     
@@ -51,22 +71,34 @@ class APIClient {
     else if (fileType === 'word') endpoint = '/api/file/convert/word-to-pdf';
     else if (fileType === 'image') endpoint = '/api/file/upload';
     
-    return this.request(endpoint, {
+    const result = await this.request(endpoint, {
       method: 'POST',
       body: formData,
     });
+    
+    // Store document_id for PDF uploads
+    if (fileType === 'pdf' && result.document_id) {
+      this.storeDocumentId(result.document_id);
+    }
+    
+    return result;
   }
   
   // PDF operations
   getPdfInfo() {
-    return this.request('/api/pdf/info');
+    const documentId = this.getStoredDocumentId();
+    const url = documentId ? `/api/pdf/info?document_id=${documentId}` : '/api/pdf/info';
+    return this.request(url);
   }
   
   getPage(pageNum, zoom = 1.0) {
-    return this.request(`/api/pdf/page/${pageNum}?zoom=${zoom}`);
+    const documentId = this.getStoredDocumentId();
+    const url = documentId ? `/api/pdf/page/${pageNum}?zoom=${zoom}&document_id=${documentId}` : `/api/pdf/page/${pageNum}?zoom=${zoom}`;
+    return this.request(url);
   }
   
   updateText(elementId, newText, fontSize, color) {
+    const documentId = this.getStoredDocumentId();
     return this.request('/api/pdf/update-text', {
       method: 'POST',
       body: {
@@ -74,6 +106,7 @@ class APIClient {
         new_text: newText,
         new_font_size: fontSize,
         new_color: color,
+        document_id: documentId,
       },
     });
   }

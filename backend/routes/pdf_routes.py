@@ -99,15 +99,18 @@ def upload_pdf():
 def get_pdf_info():
     """Get PDF information"""
     try:
-        global current_pdf_document_id
+        # Get document_id from query parameter or use global
+        document_id = request.args.get('document_id')
+        if not document_id:
+            global current_pdf_document_id
+            document_id = current_pdf_document_id
         
-        # Check if we have a current PDF document ID
-        if not current_pdf_document_id:
+        if not document_id:
             return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
         
         # Reload PDF from MongoDB if needed
-        if not pdf_service.current_document or pdf_service.current_document.document_id != current_pdf_document_id:
-            if not pdf_service.load_pdf_from_mongodb(current_pdf_document_id):
+        if not pdf_service.current_document or pdf_service.current_document.document_id != document_id:
+            if not pdf_service.load_pdf_from_mongodb(document_id):
                 return jsonify({'error': 'Failed to reload PDF from MongoDB'}), 500
         
         document_info = pdf_service.get_document_info()
@@ -125,15 +128,18 @@ def get_pdf_info():
 def get_page(page_num):
     """Get specific page with all elements"""
     try:
-        global current_pdf_document_id
+        # Get document_id from query parameter or use global
+        document_id = request.args.get('document_id')
+        if not document_id:
+            global current_pdf_document_id
+            document_id = current_pdf_document_id
         
-        # Check if we have a current PDF document ID
-        if not current_pdf_document_id:
+        if not document_id:
             return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
         
         # Reload PDF from MongoDB if needed
-        if not pdf_service.current_document or pdf_service.current_document.document_id != current_pdf_document_id:
-            if not pdf_service.load_pdf_from_mongodb(current_pdf_document_id):
+        if not pdf_service.current_document or pdf_service.current_document.document_id != document_id:
+            if not pdf_service.load_pdf_from_mongodb(document_id):
                 return jsonify({'error': 'Failed to reload PDF from MongoDB'}), 500
         
         # Parse zoom from query param; default 1.0
@@ -201,9 +207,24 @@ def update_text():
         new_text = data.get('new_text')
         new_font_size = data.get('new_font_size')
         new_color = data.get('new_color')
+        document_id = data.get('document_id')
         
         if not element_id or new_text is None:
             return jsonify({'error': 'Missing required parameters'}), 400
+        
+        # Get document_id from request or use global
+        if not document_id:
+            global current_pdf_document_id
+            document_id = current_pdf_document_id
+        
+        if not document_id:
+            return jsonify({'error': 'No PDF loaded. Please upload a PDF first.'}), 400
+        
+        # Reload PDF from MongoDB if needed
+        if not pdf_service.current_document or pdf_service.current_document.document_id != document_id:
+            if not pdf_service.load_pdf_from_mongodb(document_id):
+                return jsonify({'error': 'Failed to reload PDF from MongoDB'}), 500
+        
         print(f"🔧 update-text apply: id={element_id} size={new_font_size} color={new_color}")
 
         success = pdf_service.update_text_element(element_id, new_text, new_font_size, new_color)
