@@ -26,6 +26,7 @@
     "jose": "^6.0.12",
     "jsonwebtoken": "^9.0.2",
     "lodash.debounce": "^4.0.8",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.544.0",
     "mongoose": "^8.16.1",
     "next": "^15.3.4",
