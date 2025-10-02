@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw } from 'lucide-react';
 import apiClient from '../../utils/api';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -149,7 +150,12 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
       <div className="flex-1 overflow-auto bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
         {loading ? (
           <div className="flex items-center justify-center h-full">
-            <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+            <LoadingSpinner 
+              message="Loading page..." 
+              size="small"
+              showMessage={false}
+              inline={true}
+            />
           </div>
         ) : (
           <div className="relative inline-block">

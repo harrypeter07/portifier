@@ -2,13 +2,18 @@
 
 import React from 'react';
 import { FileText, Edit, Trash2, Download, Eye, Search, Calendar, User, Plus } from 'lucide-react';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, onCreateNew }) => {
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="w-8 h-8 rounded-full border-2 border-indigo-600 animate-spin border-t-transparent" />
-      </div>
+      <LoadingSpinner 
+        message="Loading resumes..." 
+        size="medium"
+        showMessage={true}
+        inline={false}
+        className="h-64"
+      />
     );
   }
 

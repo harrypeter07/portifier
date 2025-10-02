@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import SuspenseFallback from "@/components/common/SuspenseFallback";
 
 function TemplatesDemoContent() {
 	const { layout, content, portfolioData, currentTemplate, applyTemplate } = useLayoutStore();
@@ -438,7 +439,7 @@ function TemplatesDemoContent() {
 
 export default function TemplatesDemoPage() {
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<SuspenseFallback message="Loading templates..." />}>
 			<TemplatesDemoContent />
 		</Suspense>
 	);

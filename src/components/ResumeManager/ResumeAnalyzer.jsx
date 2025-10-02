@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, FileText, TrendingUp, Target, AlertCircle, CheckCircle, Star } from 'lucide-react';
 import apiClient from '../../utils/api';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const ResumeAnalyzer = ({ resume, onBack }) => {
   const [analysis, setAnalysis] = useState(null);
@@ -89,11 +90,13 @@ const ResumeAnalyzer = ({ resume, onBack }) => {
         </div>
         
         <div className="py-12 text-center">
-          <div className="mx-auto mb-4 w-16 h-16 rounded-full border-4 border-indigo-600 animate-spin border-t-transparent" />
-          <h3 className="mb-2 text-xl font-semibold text-gray-600 dark:text-gray-300">
-            Analyzing Resume...
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
+          <LoadingSpinner 
+            message="Analyzing Resume..." 
+            size="large"
+            showMessage={true}
+            inline={false}
+          />
+          <p className="text-gray-500 dark:text-gray-400 mt-4">
             Our AI is examining your resume for optimization opportunities
           </p>
         </div>

@@ -15,6 +15,7 @@ import AchievementsA from "@/components/Achievements/AchievementsA";
 import ContactFormA from "@/components/Contact/ContactFormA";
 import PortfolioLoading from "@/components/PortfolioLoading";
 import CustomPortfolioLoading from "@/components/CustomPortfolioLoading";
+import LottieLoading from "@/components/LottieLoading";
 
 // Full-page templates
 import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
@@ -54,6 +55,7 @@ export const componentMap = {
 	// Loading components
 	PortfolioLoading,
 	CustomPortfolioLoading,
+	LottieLoading,
 	
 	// Full-page templates
 	CleanfolioFull,
@@ -112,7 +114,7 @@ export const componentCategories = {
 	},
 	loading: {
 		label: "Loading Screen",
-		components: ["PortfolioLoading", "CustomPortfolioLoading"],
+		components: ["PortfolioLoading", "CustomPortfolioLoading", "LottieLoading"],
 		description: "Loading spinner or animation while portfolio loads",
 		required: false
 	},

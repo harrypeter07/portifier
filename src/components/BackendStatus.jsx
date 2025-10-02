@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Loader2, RefreshCw, Server, Database } from 'lucide-react';
+import LoadingSpinner from './common/LoadingSpinner';
 
 const BackendStatus = () => {
   const [status, setStatus] = useState({
@@ -104,10 +105,12 @@ const BackendStatus = () => {
         <div className="flex items-center space-x-2">
           {status.loading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-              <span className="text-sm text-blue-600 dark:text-blue-400">
-                Checking connection...
-              </span>
+              <LoadingSpinner 
+                message="Checking connection..." 
+                size="small"
+                showMessage={true}
+                inline={true}
+              />
             </>
           ) : status.connected ? (
             <>
