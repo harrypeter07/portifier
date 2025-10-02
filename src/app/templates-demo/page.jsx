@@ -206,7 +206,7 @@ function TemplatesDemoContent() {
 	};
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-black">
+		<div className="min-h-screen grainy-bg">
 			<div className="px-4 py-8 mx-auto max-w-7xl">
 				{/* Header */}
 				<div className="mb-8 text-center">

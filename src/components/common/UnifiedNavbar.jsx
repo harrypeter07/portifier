@@ -204,7 +204,7 @@ export default function UnifiedNavbar() {
 
 	if (loading) {
 		return (
-			<nav className="bg-white/95 dark:bg-black/95 backdrop-blur-lg border-b border-white dark:border-white sticky top-0 z-50 shadow-sm">
+			<nav className="bg-white/10 dark:bg-white/10 backdrop-blur-xl border-b border-white/20 dark:border-white/20 sticky top-0 z-50 shadow-sm">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						<div className="flex items-center space-x-2">
@@ -225,7 +225,7 @@ export default function UnifiedNavbar() {
 	return (
 		<>
 			{/* Main Navigation Bar */}
-			<nav className="bg-white/95 dark:bg-black/95 backdrop-blur-lg border-b border-white dark:border-white sticky top-0 z-50 shadow-sm">
+			<nav className="bg-white/10 dark:bg-white/10 backdrop-blur-xl border-b border-white/20 dark:border-white/20 sticky top-0 z-50 shadow-sm">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						{/* Logo/Brand */}
@@ -369,7 +369,7 @@ export default function UnifiedNavbar() {
 
 					{/* Mobile Navigation */}
 					{mobileMenuOpen && (
-						<div className="md:hidden border-t border-white dark:border-white bg-white dark:bg-black animate-slide-in">
+						<div className="md:hidden border-t border-white/20 dark:border-white/20 bg-white/10 dark:bg-white/10 backdrop-blur-xl animate-slide-in">
 							{/* Current Template Indicator for Mobile */}
 							{currentTemplate && (
 								<div className="px-4 py-3 border-b border-white dark:border-white">
