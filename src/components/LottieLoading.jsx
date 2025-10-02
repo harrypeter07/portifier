@@ -1,8 +1,8 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const DotLottiePlayer = dynamic(
-  () => import('@dotlottie/react-player').then(m => m.DotLottiePlayer),
+const Player = dynamic(
+  () => import('@lottiefiles/react-lottie-player').then(m => m.Player),
   { ssr: false }
 );
 
@@ -32,10 +32,10 @@ export default function LottieLoading({ message = 'Loading...', size = 'large', 
 
   return (
     <Container>
-      <DotLottiePlayer
-        src={'/Morphing%20Animation.lottie'}
+      <Player
         autoplay
         loop
+        src={'/loading.json'}
         style={{ width: spinnerSize, height: spinnerSize }}
       />
       {showMessage && message ? (

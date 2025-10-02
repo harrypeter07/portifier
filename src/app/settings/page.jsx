@@ -100,7 +100,19 @@ export default function SettingsPage() {
 			<div className="min-h-screen bg-white dark:bg-black">
 				<div className="flex items-center justify-center min-h-screen">
 					<div className="text-center">
-						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                        <div className="mx-auto mb-4">
+                            <div className="flex items-center justify-center">
+                                <div className="w-24 h-24">
+                                    {/* Lottie Loading */}
+                                    <div className="flex items-center justify-center">
+                                        <div className="w-full h-full">
+                                            {/* Use shared LottieLoading */}
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 						<p className="text-black/70 dark:text-white/70">Loading settings...</p>
 					</div>
 				</div>
