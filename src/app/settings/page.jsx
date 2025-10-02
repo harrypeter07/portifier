@@ -98,22 +98,12 @@ export default function SettingsPage() {
 
 	if (!user) {
 		return (
-			<div className="min-h-screen bg-white dark:bg-black">
+			<div className="min-h-screen">
 				<div className="flex justify-center items-center min-h-screen">
 					<div className="text-center">
-                        <div className="mx-auto mb-4">
-                            <div className="flex justify-center items-center">
-                                <div className="w-24 h-24">
-                                    {/* Lottie Loading */}
-                                    <div className="flex justify-center items-center">
-                                        <div className="w-full h-full">
-                                            {/* Use shared LottieLoading */}
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+						<div className="mx-auto mb-4 flex justify-center items-center">
+							<LottieLoading size="medium" message="" inline={false} />
+						</div>
 						<p className="text-black/70 dark:text-white/70">Loading settings...</p>
 					</div>
 				</div>
@@ -122,7 +112,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-black grainy-bg">
+		<div className="min-h-screen">
 			{/* Header */}
 			<div className="border-b border-gray-200 shadow-sm bg-card dark:border-gray-700">
 				<div className="px-4 py-6 mx-auto max-w-4xl">
