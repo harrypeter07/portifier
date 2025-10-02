@@ -109,7 +109,7 @@ export default function SettingsPage() {
 	return (
 		<div className="min-h-screen">
 			{/* Header */}
-			<div className="border-b border-gray-200 shadow-sm bg-card dark:border-gray-700">
+			<div className="border-b shadow-sm backdrop-blur-xl border-white/20 bg-white/10 dark:bg-white/10">
 				<div className="px-4 py-6 mx-auto max-w-4xl">
 					<h1 className="text-3xl font-bold text-black dark:text-white">Settings</h1>
 					<p className="mt-2 text-black/70 dark:text-white/70">Manage your account and preferences</p>
@@ -270,7 +270,7 @@ export default function SettingsPage() {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ delay: 0.2 }}
-					className="p-6 mt-8 bg-white rounded-xl shadow-lg dark:bg-black"
+					className="p-6 mt-8 rounded-xl shadow-lg glass"
 				>
 					<h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
 						Quick Actions

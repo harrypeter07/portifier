@@ -113,8 +113,7 @@ export default function Dashboard() {
 					transition={{ delay: 0.1 }}
 					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
 				>
-					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
- rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="rounded-2xl p-6 shadow-lg glass">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Total Portfolios</p>
@@ -128,8 +127,7 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
- rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="rounded-2xl p-6 shadow-lg glass">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Uploaded Resumes</p>
@@ -143,8 +141,7 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
- rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="rounded-2xl p-6 shadow-lg glass">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Published</p>
@@ -158,8 +155,7 @@ export default function Dashboard() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
- rounded-2xl p-6 shadow-lg border border-white dark:border-white">
+					<div className="rounded-2xl p-6 shadow-lg glass">
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text-sm font-medium text-black/70 dark:text-white/70">Complete</p>
@@ -291,7 +287,7 @@ export default function Dashboard() {
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 													transition={{ delay: index * 0.1 }}
-													className="flex items-center justify-between p-4 border border-white dark:border-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300"
+									className="flex items-center justify-between p-4 rounded-xl transition-all duration-300 glass hover:bg-white/15"
 												>
 													<div className="flex items-center">
 														<div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
@@ -336,7 +332,7 @@ export default function Dashboard() {
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 													transition={{ delay: (index + 3) * 0.1 }}
-													className="flex items-center justify-between p-4 border border-white dark:border-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300 cursor-pointer"
+									className="flex items-center justify-between p-4 rounded-xl transition-all duration-300 cursor-pointer glass hover:bg-white/15"
 													onClick={() => handleResumeClick(resume)}
 												>
 													<div className="flex items-center">

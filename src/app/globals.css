@@ -688,3 +688,8 @@
 .bg-white {
   background-color: white;
 }
+
+/* Glassmorphism utility */
+.glass {
+  @apply bg-white/10 backdrop-blur-xl border border-white/20;
+}

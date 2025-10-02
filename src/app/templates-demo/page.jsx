@@ -279,7 +279,7 @@ function TemplatesDemoContent() {
 
 				{/* Current Template Info */}
 				{currentTemplate && (
-					<div className="p-6 mb-8 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+					<div className="p-6 mb-8 rounded-lg shadow-lg glass">
 						<div className="flex justify-between items-center mb-4">
 							<div>
 								<h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -361,7 +361,7 @@ function TemplatesDemoContent() {
 
 				{/* Preview */}
 				{currentTemplate && (
-					<div className="overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
+					<div className="overflow-hidden rounded-lg shadow-lg glass">
 						<div className="p-4 border-b border-gray-200 dark:border-gray-700">
 							<h3 className="text-lg font-semibold text-gray-900 dark:text-white">
 								Live Preview
@@ -380,7 +380,7 @@ function TemplatesDemoContent() {
 
 				{/* Template Statistics */}
 				<div className="grid gap-6 mt-8 md:grid-cols-2">
-					<div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+					<div className="p-6 rounded-lg shadow-lg glass">
 						<h3 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
 							Component-Based Templates
 						</h3>
@@ -406,7 +406,7 @@ function TemplatesDemoContent() {
 						</div>
 					</div>
 
-					<div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+					<div className="p-6 rounded-lg shadow-lg glass">
 						<h3 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
 							Full Page Templates
 						</h3>
