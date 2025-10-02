@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, FileText, TrendingUp, Target, AlertCircle, CheckCircle, Star } from 'lucide-react';
 import apiClient from '../../utils/api';
-import LoadingSpinner from '../common/LoadingSpinner';
+import LottieLoading from '../LottieLoading';
 
 const ResumeAnalyzer = ({ resume, onBack }) => {
   const [analysis, setAnalysis] = useState(null);
@@ -90,11 +90,11 @@ const ResumeAnalyzer = ({ resume, onBack }) => {
         </div>
         
         <div className="py-12 text-center">
-          <LoadingSpinner 
+          <LottieLoading 
             message="Analyzing Resume..." 
-            size="large"
+            size="xlarge"
             showMessage={true}
-            inline={false}
+            fullScreen={false}
           />
           <p className="text-gray-500 dark:text-gray-400 mt-4">
             Our AI is examining your resume for optimization opportunities

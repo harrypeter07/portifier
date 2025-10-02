@@ -1,12 +1,13 @@
 import React from "react";
-import LoadingSpinner from "./LoadingSpinner";
+import LottieLoading from "../LottieLoading";
 
 export default function SuspenseFallback({ message = "Loading..." }) {
   return (
-    <LoadingSpinner 
+    <LottieLoading 
       message={message}
-      size="large"
+      size="xlarge"
       fullScreen={true}
+      showMessage={true}
     />
   );
 }

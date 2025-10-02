@@ -2,18 +2,19 @@
 
 import React from 'react';
 import { FileText, Edit, Trash2, Download, Eye, Search, Calendar, User, Plus } from 'lucide-react';
-import LoadingSpinner from '../common/LoadingSpinner';
+import LottieLoading from '../LottieLoading';
 
 const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, onCreateNew }) => {
   if (loading) {
     return (
-      <LoadingSpinner 
-        message="Loading resumes..." 
-        size="medium"
-        showMessage={true}
-        inline={false}
-        className="h-64"
-      />
+      <div className="py-12 text-center">
+        <LottieLoading 
+          message="Loading resumes..." 
+          size="large"
+          showMessage={true}
+          fullScreen={false}
+        />
+      </div>
     );
   }
 
