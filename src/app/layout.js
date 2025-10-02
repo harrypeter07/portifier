@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang="en" className="dark" suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen grainy-bg`}
 			>
 				<ErrorBoundary>
 					<UnifiedNavbar />

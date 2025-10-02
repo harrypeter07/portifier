@@ -65,9 +65,19 @@
   }
   
   body {
-    @apply bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
- text-black dark:text-white;
+    @apply text-black bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black dark:text-white;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Reusable grainy background using public/gggrain.svg */
+  .grainy-bg {
+    background-image: url('/12.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    /* Ensure it fills the viewport when used on containers */
+    min-height: 100vh;
   }
 }
 
@@ -81,7 +91,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  @apply bg-gray-300 rounded-full dark:bg-gray-600;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -95,12 +105,12 @@
 
 /* Focus styles */
 *:focus-visible {
-  @apply outline-none ring-2 ring-white ring-offset-2 ring-offset-gray-900;
+  @apply ring-2 ring-white ring-offset-2 ring-offset-gray-900 outline-none;
 }
 
 /* Selection styles */
 ::selection {
-  @apply bg-white text-gray-900;
+  @apply text-gray-900 bg-white;
 }
 
 /* Custom animations */

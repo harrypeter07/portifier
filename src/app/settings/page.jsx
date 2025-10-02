@@ -122,7 +122,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-black">
+		<div className="min-h-screen bg-white dark:bg-black grainy-bg">
 			{/* Header */}
 			<div className="border-b border-gray-200 shadow-sm bg-card dark:border-gray-700">
 				<div className="px-4 py-6 mx-auto max-w-4xl">
