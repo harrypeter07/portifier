@@ -99,13 +99,13 @@ export default function SettingsPage() {
 	if (!user) {
 		return (
 			<div className="min-h-screen bg-white dark:bg-black">
-				<div className="flex items-center justify-center min-h-screen">
+				<div className="flex justify-center items-center min-h-screen">
 					<div className="text-center">
                         <div className="mx-auto mb-4">
-                            <div className="flex items-center justify-center">
+                            <div className="flex justify-center items-center">
                                 <div className="w-24 h-24">
                                     {/* Lottie Loading */}
-                                    <div className="flex items-center justify-center">
+                                    <div className="flex justify-center items-center">
                                         <div className="w-full h-full">
                                             {/* Use shared LottieLoading */}
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -124,15 +124,15 @@ export default function SettingsPage() {
 	return (
 		<div className="min-h-screen bg-white dark:bg-black">
 			{/* Header */}
-			<div className="bg-card shadow-sm border-b border-gray-200 dark:border-gray-700">
-				<div className="max-w-4xl mx-auto px-4 py-6">
+			<div className="border-b border-gray-200 shadow-sm bg-card dark:border-gray-700">
+				<div className="px-4 py-6 mx-auto max-w-4xl">
 					<h1 className="text-3xl font-bold text-black dark:text-white">Settings</h1>
-					<p className="text-black/70 dark:text-white/70 mt-2">Manage your account and preferences</p>
+					<p className="mt-2 text-black/70 dark:text-white/70">Manage your account and preferences</p>
 				</div>
 			</div>
 
 			{/* Main Content */}
-			<div className="max-w-4xl mx-auto px-4 py-8">
+			<div className="px-4 py-8 mx-auto max-w-4xl">
 				{/* Message */}
 				{message.text && (
 					<motion.div
@@ -154,7 +154,7 @@ export default function SettingsPage() {
 					</motion.div>
 				)}
 
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+				<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 					{/* Account Information */}
 					<Card>
 						<CardHeader>
@@ -163,28 +163,28 @@ export default function SettingsPage() {
 						<CardContent>
 							<div className="space-y-4">
 								<div>
-									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
+									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
 										Username
 									</Label>
-									<p className="text-black dark:text-white font-medium">@{user.username}</p>
+									<p className="font-medium text-black dark:text-white">@{user.username}</p>
 								</div>
 								<div>
-									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
+									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
 										Email
 									</Label>
-									<p className="text-black dark:text-white font-medium">{user.email}</p>
+									<p className="font-medium text-black dark:text-white">{user.email}</p>
 								</div>
 								<div>
-									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
+									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
 										Name
 									</Label>
-									<p className="text-black dark:text-white font-medium">{user.name}</p>
+									<p className="font-medium text-black dark:text-white">{user.name}</p>
 								</div>
 								<div>
-									<Label className="text-sm font-medium text-black/70 dark:text-white/70 mb-1">
+									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
 										Member Since
 									</Label>
-									<p className="text-black dark:text-white font-medium">
+									<p className="font-medium text-black dark:text-white">
 										{new Date(user.createdAt).toLocaleDateString()}
 									</p>
 								</div>
@@ -201,7 +201,7 @@ export default function SettingsPage() {
 						
 							{/* Gemini API Key Status */}
 							<div className="mb-6">
-								<div className="flex items-center justify-between mb-4">
+								<div className="flex justify-between items-center mb-4">
 									<div>
 										<h3 className="text-lg font-medium text-black dark:text-white">
 											Gemini API Key
@@ -215,14 +215,14 @@ export default function SettingsPage() {
                                             <LottieLoading size="small" message="" inline={true} />
                                         ) : apiKeyStatus.hasKey ? (
 											<Badge variant="default" className="flex items-center">
-												<svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
 												</svg>
 												Configured
 											</Badge>
 										) : (
 											<Badge variant="secondary" className="flex items-center">
-												<svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
 												</svg>
 												Not Configured
@@ -233,7 +233,7 @@ export default function SettingsPage() {
 
 								{apiKeyStatus.hasKey ? (
 									<div className="space-y-3">
-										<div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+										<div className="p-3 bg-green-50 rounded-lg border border-green-200">
 											<p className="text-sm text-green-600">
 												✅ Your Gemini API key is configured and working
 											</p>
@@ -249,7 +249,7 @@ export default function SettingsPage() {
 									</div>
 								) : (
 									<div className="space-y-3">
-										<div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+										<div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
 											<p className="text-sm text-yellow-600">
 												⚠️ Add your Gemini API key to enable AI features
 											</p>
@@ -265,11 +265,11 @@ export default function SettingsPage() {
 							</div>
 
 							{/* AI Features Info */}
-							<div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-								<h4 className="text-sm font-medium text-black dark:text-white mb-2">
+							<div className="p-4 bg-gray-100 rounded-lg dark:bg-gray-800">
+								<h4 className="mb-2 text-sm font-medium text-black dark:text-white">
 									AI Features
 								</h4>
-								<ul className="text-sm text-black/70 dark:text-white/70 space-y-1">
+								<ul className="space-y-1 text-sm text-black/70 dark:text-white/70">
 									<li>• Resume parsing and data extraction</li>
 									<li>• AI-powered content suggestions</li>
 									<li>• Smart field completion</li>
@@ -285,18 +285,18 @@ export default function SettingsPage() {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ delay: 0.2 }}
-					className="mt-8 bg-white dark:bg-black p-6 rounded-xl shadow-lg"
+					className="p-6 mt-8 bg-white rounded-xl shadow-lg dark:bg-black"
 				>
-					<h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+					<h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
 						Quick Actions
 					</h2>
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+					<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 						<button
 							onClick={() => window.location.href = "/dashboard"}
-							className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+							className="p-4 text-left rounded-lg border border-gray-200 transition-colors dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
 						>
 							<div className="flex items-center">
-								<svg className="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg className="mr-3 w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
 								</svg>
 								<div>
@@ -307,10 +307,10 @@ export default function SettingsPage() {
 						</button>
 						<button
 							onClick={() => window.location.href = "/editor"}
-							className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+							className="p-4 text-left rounded-lg border border-gray-200 transition-colors dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
 						>
 							<div className="flex items-center">
-								<svg className="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg className="mr-3 w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
 								</svg>
 								<div>
@@ -321,10 +321,10 @@ export default function SettingsPage() {
 						</button>
 						<button
 							onClick={() => window.location.href = "/auth/logout"}
-							className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+							className="p-4 text-left rounded-lg border border-gray-200 transition-colors dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
 						>
 							<div className="flex items-center">
-								<svg className="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg className="mr-3 w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
 								</svg>
 								<div>
