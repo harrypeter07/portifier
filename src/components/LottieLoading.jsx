@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import dynamic from 'next/dynamic';
 
@@ -25,7 +26,7 @@ export default function LottieLoading({ message = 'Loading...', size = 'large', 
   const gapClass = sizeToGap[size] || sizeToGap.large;
 
   const Container = ({ children }) => (
-    <div className={`flex items-center ${inline ? '' : 'justify-center'} ${gapClass} ${fullScreen ? 'min-h-[50vh]' : ''}`}>
+    <div className={`flex items-center ${inline ? '':'justify-center'} ${gapClass} ${fullScreen ? 'min-h-[50vh]' : ''}`}>
       {children}
     </div>
   );

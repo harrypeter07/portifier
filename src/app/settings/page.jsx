@@ -211,7 +211,10 @@ export default function SettingsPage() {
 									</div>
 									<div className="flex items-center">
 										{apiKeyStatus.loading ? (
-											<div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                            {/* Replace spinner with Lottie */}
+                                            <div className="w-6 h-6">
+                                                <img src="/loading-fallback.svg" alt="loading" className="hidden" />
+                                            </div>
 										) : apiKeyStatus.hasKey ? (
 											<Badge variant="default" className="flex items-center">
 												<svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
