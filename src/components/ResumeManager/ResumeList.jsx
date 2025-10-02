@@ -8,12 +8,7 @@ const ResumeList = ({ resumes, loading, onEdit, onDelete, onAnalyze, onRefresh, 
   if (loading) {
     return (
       <div className="py-12 text-center">
-        <LottieLoading 
-          message="Loading resumes..." 
-          size="large"
-          showMessage={true}
-          fullScreen={false}
-        />
+        <LottieLoading size="xxlarge" showMessage={false} bright={false} />
       </div>
     );
   }

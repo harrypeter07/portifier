@@ -49,7 +49,7 @@ export default function Dashboard() {
 ">
             <div className="text-center">
                 <div className="mx-auto mb-4">
-                    <LottieLoading message="Loading your dashboard..." size="xlarge" showMessage={true} />
+                    <LottieLoading size="xxlarge" showMessage={false} bright={false} />
                 </div>
             </div>
 			</div>

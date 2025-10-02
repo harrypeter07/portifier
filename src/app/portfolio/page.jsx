@@ -33,7 +33,7 @@ export default function PortfolioRedirectPage() {
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
     	<div className="text-center">
             <div className="mx-auto mb-4">
-                <LottieLoading message="Redirecting to your portfolio..." size="large" showMessage={true} />
+                <LottieLoading size="xxlarge" showMessage={false} bright={false} />
             </div>
         </div>
 		</div>

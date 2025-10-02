@@ -105,12 +105,7 @@ const BackendStatus = () => {
         <div className="flex items-center space-x-2">
           {status.loading ? (
             <>
-              <LottieLoading 
-                message="Checking connection..." 
-                size="small"
-                showMessage={true}
-                inline={true}
-              />
+              <LottieLoading size="large" showMessage={false} bright={false} />
             </>
           ) : status.connected ? (
             <>

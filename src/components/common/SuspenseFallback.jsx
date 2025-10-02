@@ -3,12 +3,7 @@ import LottieLoading from "../LottieLoading";
 
 export default function SuspenseFallback({ message = "Loading..." }) {
   return (
-    <LottieLoading 
-      message={message}
-      size="xlarge"
-      fullScreen={true}
-      showMessage={true}
-    />
+    <LottieLoading size="xxlarge" fullScreen={true} showMessage={false} bright={false} />
   );
 }
 

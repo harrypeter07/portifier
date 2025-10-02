@@ -150,12 +150,7 @@ const PDFViewer = ({ pdfData, onElementClick, onPageChange }) => {
       <div className="flex-1 overflow-auto bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
         {loading ? (
           <div className="flex items-center justify-center h-full">
-            <LottieLoading 
-              message="Loading page..." 
-              size="medium"
-              showMessage={false}
-              inline={true}
-            />
+            <LottieLoading size="xxlarge" showMessage={false} bright={false} />
           </div>
         ) : (
           <div className="relative inline-block">

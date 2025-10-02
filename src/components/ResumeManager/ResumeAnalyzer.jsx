@@ -90,12 +90,7 @@ const ResumeAnalyzer = ({ resume, onBack }) => {
         </div>
         
         <div className="py-12 text-center">
-          <LottieLoading 
-            message="Analyzing Resume..." 
-            size="xlarge"
-            showMessage={true}
-            fullScreen={false}
-          />
+          <LottieLoading size="xxlarge" showMessage={false} bright={false} />
           <p className="text-gray-500 dark:text-gray-400 mt-4">
             Our AI is examining your resume for optimization opportunities
           </p>
