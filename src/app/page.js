@@ -8,8 +8,8 @@ import ShowcaseA from "@/components/Showcase/ShowcaseA";
 import ContactFormA from "@/components/Contact/ContactFormA";
 
 export default function Home() {
-	return (
-		<div className="min-h-screen bg-white dark:bg-black">
+    return (
+        <div className="min-h-screen grainy-bg">
 			<HeroA />
 			<AboutA />
 			<ExperienceA />

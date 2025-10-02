@@ -45,8 +45,7 @@ export default function Dashboard() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
-">
+			<div className="min-h-screen flex items-center justify-center grainy-bg">
             <div className="text-center">
                 <div className="mx-auto mb-4">
                     <LottieLoading size="xxlarge" showMessage={false} bright={false} />
@@ -80,8 +79,7 @@ export default function Dashboard() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
-">
+		<div className="min-h-screen grainy-bg">
 			
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				{/* Header */}

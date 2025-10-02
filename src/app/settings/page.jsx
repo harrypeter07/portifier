@@ -100,12 +100,7 @@ export default function SettingsPage() {
 		return (
 			<div className="min-h-screen">
 				<div className="flex justify-center items-center min-h-screen">
-					<div className="text-center">
-						<div className="mx-auto mb-4 flex justify-center items-center">
-							<LottieLoading size="medium" message="" inline={false} />
-						</div>
-						<p className="text-black/70 dark:text-white/70">Loading settings...</p>
-					</div>
+					<LottieLoading size="xxlarge" showMessage={false} fullScreen={true} inline={false} />
 				</div>
 			</div>
 		);

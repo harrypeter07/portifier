@@ -346,7 +346,7 @@ export default function ResumeUploadPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-white dark:bg-black">
+		<div className="min-h-screen grainy-bg">
 			<div className="flex flex-col-reverse md:flex-row">
 			{/* Left Panel - Upload and Navigation */}
 			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>
