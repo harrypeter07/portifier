@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import LottieLoading from "@/components/LottieLoading";
 import GeminiKeyModal from "@/components/common/GeminiKeyModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -209,13 +210,10 @@ export default function SettingsPage() {
 											Use your own API key for better reliability
 										</p>
 									</div>
-									<div className="flex items-center">
-										{apiKeyStatus.loading ? (
-                                            {/* Replace spinner with Lottie */}
-                                            <div className="w-6 h-6">
-                                                <img src="/loading-fallback.svg" alt="loading" className="hidden" />
-                                            </div>
-										) : apiKeyStatus.hasKey ? (
+                                    <div className="flex items-center">
+                                        {apiKeyStatus.loading ? (
+                                            <LottieLoading size="small" message="" inline={true} />
+                                        ) : apiKeyStatus.hasKey ? (
 											<Badge variant="default" className="flex items-center">
 												<svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

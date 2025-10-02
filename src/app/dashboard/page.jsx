@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import LottieLoading from "@/components/LottieLoading";
 import { useLayoutStore } from "@/store/layoutStore";
 import ExportButton from "@/components/ExportButton";
 
@@ -46,14 +47,11 @@ export default function Dashboard() {
 		return (
 			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black
 ">
-				<div className="text-center">
-					<motion.div
-						animate={{ rotate: 360 }}
-						transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-						className="w-16 h-16 border-4 border-white dark:border-white border-t-primary rounded-full mx-auto mb-4"
-					></motion.div>
-					<p className="text-black/70 dark:text-white/70">Loading your dashboard...</p>
-				</div>
+            <div className="text-center">
+                <div className="mx-auto mb-4">
+                    <LottieLoading message="Loading your dashboard..." size="xlarge" showMessage={true} />
+                </div>
+            </div>
 			</div>
 		);
 	}

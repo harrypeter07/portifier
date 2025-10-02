@@ -11,7 +11,8 @@ const sizeToPixels = {
   small: 20,
   medium: 28,
   large: 36,
-  xlarge: 64,
+  xlarge: 80,
+  xxlarge: 120,
 };
 
 const sizeToGap = {
@@ -21,7 +22,7 @@ const sizeToGap = {
   xlarge: 'gap-5',
 };
 
-export default function LottieLoading({ message = 'Loading...', size = 'large', showMessage = true, fullScreen = false, inline = false }) {
+export default function LottieLoading({ message = '', size = 'xxlarge', showMessage = false, fullScreen = false, inline = false, bright = true }) {
   const spinnerSize = sizeToPixels[size] || sizeToPixels.large;
   const gapClass = sizeToGap[size] || sizeToGap.large;
 
@@ -37,7 +38,11 @@ export default function LottieLoading({ message = 'Loading...', size = 'large', 
         autoplay
         loop
         src={'/loading.json'}
-        style={{ width: spinnerSize, height: spinnerSize }}
+        style={{ 
+          width: spinnerSize, 
+          height: spinnerSize,
+          filter: bright ? 'brightness(1.25) drop-shadow(0 0 8px rgba(59,130,246,0.6))' : 'none'
+        }}
       />
       {showMessage && message ? (
         <span className="text-sm text-gray-600 md:text-base">
