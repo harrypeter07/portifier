@@ -42,7 +42,7 @@ export default function AICompanionField({
 		if (!aiEnabled || !showSuggestions) return null;
 
 		return (
-			<div className="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+			<div className="mt-2 p-3 glass rounded-lg border border-gray-200">
 				{aiLoading ? (
 					<div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
 						<div className="w-4 h-4 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
@@ -150,7 +150,7 @@ export default function AICompanionField({
 						value={value || ""}
 						onChange={(e) => onChange(e.target.value)}
 						rows={rows}
-						className={`flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 ${className}`}
+						className={`flex-1 p-3 border rounded-lg glass ${className}`}
 					/>
 				) : (
 					<input
@@ -158,7 +158,7 @@ export default function AICompanionField({
 						placeholder={placeholder}
 						value={value || ""}
 						onChange={(e) => onChange(e.target.value)}
-						className={`flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 ${className}`}
+						className={`flex-1 p-3 border rounded-lg glass ${className}`}
 					/>
 				)}
 				<AIHelpButton />
