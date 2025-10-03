@@ -126,10 +126,10 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Interactive Experience
+              Showcase Component
             </h2>
             <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              Experience our cutting-edge 3D technology with interactive shockwave effects
+              Discover the amazing interactive 3D components available for your portfolio website
             </p>
           </motion.div>
           
@@ -145,7 +145,7 @@ export default function Home() {
             </div>
             <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
               <p className="text-white text-sm">
-                💡 Double-click to create shockwaves • Drag to rotate
+                ✨ Interactive 3D Component • Double-click to create shockwaves
               </p>
             </div>
           </motion.div>

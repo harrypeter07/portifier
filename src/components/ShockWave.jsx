@@ -271,20 +271,20 @@ const ShockwaveScene = () => {
     <div className="flex overflow-hidden relative justify-center items-center w-full h-full bg-transparent select-none">
       <canvas ref={canvasRef} className="block" />
       
-      <h3 className="absolute top-5 left-8 font-sans text-sm text-white">
-        three.js + ShockWave shaderPass
-      </h3>
+      <div className="absolute top-4 left-4 px-4 py-2 rounded-lg backdrop-blur-sm bg-black/20">
+        <h3 className="text-sm font-medium text-white">
+          Interactive 3D Experience
+        </h3>
+        <p className="text-xs text-white/80">
+          Built with Three.js • Double-click to interact
+        </p>
+      </div>
       
-      <h3 className="absolute bottom-5 left-8 font-sans text-sm text-white">
-        double click
-      </h3>
-      
-      <h3 
-        className="absolute bottom-5 right-8 font-sans text-sm text-white transition-opacity cursor-pointer hover:opacity-80"
-        onClick={toggleFullscreen}
-      >
-        fullscreen {isFullscreen ? 'off' : 'on'}
-      </h3>
+      <div className="absolute right-4 bottom-4 px-4 py-2 rounded-lg backdrop-blur-sm bg-black/20">
+        <p className="text-xs text-white/80">
+          Available for your portfolio
+        </p>
+      </div>
     </div>
   );
 };
