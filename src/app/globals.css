@@ -693,3 +693,20 @@
 .glass {
   @apply bg-white/10 backdrop-blur-xl border border-white/20;
 }
+
+/* Card background utilities */
+.cardbg-1 {
+  background-image: url('/CARDBG/1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cardbg-2 {
+  background-image: url('/CARDBG/2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

@@ -345,8 +345,8 @@ export default function ResumeUploadPage() {
 		router.push("/templates-demo");
 	}
 
-	return (
-		<div className="min-h-screen grainy-bg">
+    return (
+        <div className="min-h-screen grainy-bg">
 			<div className="flex flex-col-reverse md:flex-row">
 			{/* Left Panel - Upload and Navigation */}
 			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>
@@ -354,7 +354,7 @@ export default function ResumeUploadPage() {
 				<div className="mb-6 text-black/70 dark:text-white/70 text-base">
 					Upload your resume (PDF) to auto-fill your portfolio, or use the navigation below to explore different editing options.
 				</div>
-				<Card className="mb-6">
+                <Card className="mb-6 glass">
 					<CardContent className="p-4">
 						{/* API Status Indicator */}
 						<Badge variant={apiStatus.available ? "default" : "destructive"} className="mb-3">
@@ -386,10 +386,10 @@ export default function ResumeUploadPage() {
 				</Card>
 
 				{/* Navigation Buttons */}
-				<div className="mt-8">
+                <div className="mt-8">
 					<div className="font-semibold text-black dark:text-white mb-4">Portfolio Editor Options:</div>
 					<div className="grid gap-4 md:grid-cols-3">
-						<Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
+                        <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 glass">
 							<CardContent 
 								className="p-6 flex flex-col items-center justify-center min-h-[120px]"
 								onClick={handleNavigateToCustomize}
@@ -402,7 +402,7 @@ export default function ResumeUploadPage() {
 							</CardContent>
 						</Card>
 
-						<Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
+                        <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 glass">
 							<CardContent 
 								className="p-6 flex flex-col items-center justify-center min-h-[120px]"
 								onClick={handleNavigateToEditResume}
@@ -415,7 +415,7 @@ export default function ResumeUploadPage() {
 							</CardContent>
 						</Card>
 
-						<Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
+                        <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 glass">
 							<CardContent 
 								className="p-6 flex flex-col items-center justify-center min-h-[120px]"
 								onClick={handleNavigateToTemplatesDemo}
@@ -432,8 +432,8 @@ export default function ResumeUploadPage() {
 			</div>
 			{/* Right Panel - Live Preview (hidden until parsed) */}
 			{parsed && (
-				<div ref={previewRef} className="w-full md:w-1/2 h-[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-black fixed md:static top-0 right-0 z-30 transition-all duration-500 order-1 md:order-2">
-					<div className="sticky top-0 bg-white dark:bg-black p-4 border-b border-gray-200 dark:border-gray-700 z-10">
+                <div ref={previewRef} className="w-full md:w-1/2 h[60vh] md:h-screen overflow-y-auto custom-thin-slider border-t md:border-t-0 md:border-l border-white/20 glass fixed md:static top-0 right-0 z-30 transition-all duration-500 order-1 md:order-2">
+                    <div className="sticky top-0 p-4 z-10 bg-white/10 dark:bg-white/10 backdrop-blur-xl border-b border-white/20">
 						<h2 className="text-xl font-semibold text-black dark:text-white">Live Preview</h2>
 					</div>
 					<div className="p-4">
