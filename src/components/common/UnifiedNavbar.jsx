@@ -13,12 +13,14 @@ import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, Chevro
 const publicNavLinks = [
 	{ href: "/auth/signin", label: "Sign In", icon: User },
 	{ href: "/auth/signup", label: "Sign Up", icon: User },
+	{ href: "/shockwave", label: "ShockWave", icon: Palette },
 ];
 
 const authenticatedNavLinks = [
 	{ href: "/", label: "Home", icon: Home },
 	{ href: "/dashboard", label: "Dashboard", icon: BarChart3 },
 	{ href: "/templates-demo", label: "Templates", icon: Palette },
+	{ href: "/shockwave", label: "ShockWave", icon: Palette },
 	{ href: "/editor", label: "Create Portfolio", icon: Edit },
 	{ href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -66,6 +68,7 @@ export default function UnifiedNavbar() {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
+	const [hoverTimeout, setHoverTimeout] = useState(null);
 	
 	// Editor navbar states
 	const [isEditorNavVisible, setIsEditorNavVisible] = useState(true);
@@ -97,7 +100,14 @@ export default function UnifiedNavbar() {
 		};
 
 		checkAuth();
-	}, [pathname]);
+
+		// Cleanup timeout on unmount
+		return () => {
+			if (hoverTimeout) {
+				clearTimeout(hoverTimeout);
+			}
+		};
+	}, [pathname, hoverTimeout]);
 
 	// Editor navbar auto-hide functionality
 	useEffect(() => {
@@ -207,6 +217,21 @@ export default function UnifiedNavbar() {
 		}, 3000);
 	};
 
+	const handleMouseEnter = () => {
+		if (hoverTimeout) {
+			clearTimeout(hoverTimeout);
+			setHoverTimeout(null);
+		}
+		setIsHovered(true);
+	};
+
+	const handleMouseLeave = () => {
+		const timeout = setTimeout(() => {
+			setIsHovered(false);
+		}, 3000); // 3 seconds delay
+		setHoverTimeout(timeout);
+	};
+
 	const navLinks = user ? (isHovered ? authenticatedNavLinks : reducedNavLinks) : publicNavLinks;
 	const currentEditorStepIndex = editorSteps.findIndex(step => pathname === step.href);
 
@@ -233,11 +258,11 @@ export default function UnifiedNavbar() {
 	return (
 		<>
 			{/* Main Navigation Bar */}
-			<nav 
-				className={`fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg z-50 transition-all duration-300 ${isHovered ? 'w-[85%]' : 'w-[75%]'}`}
-				onMouseEnter={() => setIsHovered(true)}
-				onMouseLeave={() => setIsHovered(false)}
-			>
+		<nav
+			className={`fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg z-50 transition-all duration-500 ease-in-out ${isHovered ? 'w-[85%]' : 'w-[75%]'}`}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
+		>
 				<div className="px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						{/* Logo/Brand */}
@@ -258,10 +283,10 @@ export default function UnifiedNavbar() {
 									<Link
 										key={link.href}
 										href={link.href}
-										className={`group flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 backdrop-blur-sm ${
+										className={`group flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
 											pathname === link.href
-												? "bg-white/10 text-white shadow-lg shadow-white/20 border border-white/20"
-												: "text-white/80 hover:text-white hover:bg-white/10 hover:shadow-lg hover:shadow-white/20 hover:border hover:border-white/20"
+												? "text-white"
+												: "text-white/80 hover:text-white"
 										}`}
 									>
 										<IconComponent className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
@@ -286,7 +311,7 @@ export default function UnifiedNavbar() {
 									<Button
 										variant="ghost"
 										onClick={() => setDropdownOpen(!dropdownOpen)}
-										className="flex items-center p-2 space-x-2 h-auto bg-transparent backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:shadow-lg hover:shadow-white/20 hover:border hover:border-white/20"
+										className="flex items-center p-2 space-x-2 h-auto bg-transparent transition-all duration-300"
 									>
 										{user.avatar ? (
 											<img
@@ -372,7 +397,7 @@ export default function UnifiedNavbar() {
 								variant="ghost"
 								size="icon"
 								onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-								className="bg-transparent backdrop-blur-sm transition-all duration-300 md:hidden hover:bg-white/10 hover:shadow-lg hover:shadow-white/20 hover:border hover:border-white/20"
+								className="bg-transparent transition-all duration-300 md:hidden"
 							>
 								{mobileMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
 							</Button>
@@ -403,10 +428,10 @@ export default function UnifiedNavbar() {
 											key={link.href}
 											href={link.href}
 											onClick={() => setMobileMenuOpen(false)}
-											className={`flex items-center space-x-3 px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 backdrop-blur-sm ${
+											className={`flex items-center space-x-3 px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
 												pathname === link.href
-													? "bg-white/10 text-white shadow-lg shadow-white/20 border border-white/20"
-													: "text-white/80 hover:text-white hover:bg-white/10 hover:shadow-lg hover:shadow-white/20 hover:border hover:border-white/20"
+													? "text-white"
+													: "text-white/80 hover:text-white"
 											}`}
 										>
 											<IconComponent className="w-5 h-5" />
