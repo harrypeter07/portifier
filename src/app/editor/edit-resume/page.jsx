@@ -572,7 +572,7 @@ function EditResumeContent() {
 
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen grainy-bg">
 			<div className="flex flex-col-reverse md:flex-row">
 				{/* Left Panel - Form */}
 				<div className="overflow-y-auto p-4 w-full h-auto md:w-1/2 md:p-6 md:h-screen">
@@ -603,7 +603,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Personal Information */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Personal Information</h2>
 						<div className="grid grid-cols-1 gap-4">
 							<AICompanionField
@@ -654,7 +654,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Contact Information */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Contact Information</h2>
 						<div className="grid grid-cols-1 gap-4">
 							<AICompanionField
@@ -705,7 +705,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Professional Summary & About */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Professional Summary & About</h2>
 						<div className="space-y-4">
 							<AICompanionField
@@ -793,7 +793,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Experience */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Work Experience</h2>
 						{(formData.experience?.jobs || []).map((job, index) => (
 							<div
@@ -886,7 +886,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Education */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Education</h2>
 						{(formData.education?.degrees || []).map((degree, index) => (
 							<div
@@ -962,7 +962,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Skills */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Skills</h2>
 						<div className="space-y-4">
 							<div>
@@ -1019,7 +1019,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Projects */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Projects</h2>
 						{(formData.projects?.items || []).map((project, index) => (
 							<div
@@ -1100,7 +1100,7 @@ function EditResumeContent() {
 					</div>
 
 					{/* Languages */}
-					<div className="p-6 mb-8 bg-white rounded-lg shadow dark:bg-gray-900">
+					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Languages</h2>
 						<AICompanionField
 							type="textarea"
@@ -1157,8 +1157,8 @@ function EditResumeContent() {
 				</div>
 
 				{/* Right Panel - Live Preview */}
-				<div className="overflow-x-auto overflow-y-auto w-full h-auto bg-white border-t border-gray-200 md:w-1/2 md:h-screen custom-thin-slider md:border-t-0 md:border-l dark:border-gray-700 dark:bg-gray-900">
-					<div className="sticky top-0 z-10 p-4 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+				<div className="overflow-x-auto overflow-y-auto w-full h-auto glass border-t border-gray-200 md:w-1/2 md:h-screen custom-thin-slider md:border-t-0 md:border-l">
+					<div className="sticky top-0 z-10 p-4 glass border-b border-gray-200">
 						<h2 className="text-lg font-semibold md:text-xl">Live Preview</h2>
 					</div>
 					<div className="p-2 md:p-4">

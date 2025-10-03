@@ -130,9 +130,9 @@ export default function LivePreviewPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen grainy-bg">
 			{/* Header */}
-			<div className="bg-white dark:bg-gray-900 shadow-sm border-b">
+			<div className="glass shadow-sm border-b">
 				<div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
 					<h1 className="text-2xl font-bold text-gray-900 dark:text-white">Live Preview</h1>
 					<div className="flex gap-2 md:gap-4 w-full md:w-auto">
