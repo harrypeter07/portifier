@@ -585,7 +585,7 @@ function EditResumeContent() {
 						<div className="flex items-center space-x-2">
 							<motion.button
 								onClick={() => router.push("/editor")}
-								className="px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg transition-colors duration-200 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+								className="px-3 py-2 text-sm text-gray-700 glass rounded-lg transition-colors duration-200 hover:bg-white/20"
 								whileHover={{ scale: 1.02 }}
 								whileTap={{ scale: 0.98 }}
 							>

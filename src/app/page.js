@@ -27,9 +27,9 @@ export default function Home() {
   return (
     <div className="min-h-screen grainy-bg">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="flex overflow-hidden relative justify-center items-center min-h-screen">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 px-4 mx-auto max-w-7xl text-center sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -40,33 +40,33 @@ export default function Home() {
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white/90 text-sm font-medium"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full border backdrop-blur-xl bg-white/10 border-white/20 text-white/90"
             >
-              <Sparkles className="w-4 h-4 mr-2" />
+              <Sparkles className="mr-2 w-4 h-4" />
               AI-Powered Portfolio Builder
             </motion.div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
+            <h1 className="text-5xl font-bold leading-tight text-white md:text-7xl">
               Create Stunning
-              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
                 Portfolios
               </span>
               in Minutes
             </h1>
             
-            <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+            <p className="mx-auto max-w-3xl text-xl leading-relaxed md:text-2xl text-white/80">
               Transform your resume into a beautiful, professional portfolio with our AI-powered builder. 
               No design skills required.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button asChild size="lg" className="bg-white text-black hover:bg-white/90 px-8 py-4 text-lg font-semibold">
+            <div className="flex flex-col gap-4 justify-center items-center sm:flex-row">
+              <Button asChild size="lg" className="px-8 py-4 text-lg font-semibold text-black bg-white hover:bg-white/90">
                 <Link href="/auth/signup">
                   Get Started Free
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg">
+              <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg text-white border-white/30 hover:bg-white/10">
                 <Link href="/templates-demo">
                   <Eye className="mr-2 w-5 h-5" />
                   View Templates
@@ -87,7 +87,7 @@ export default function Home() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-20 left-10 w-16 h-16 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"
+          className="absolute left-10 top-20 w-16 h-16 bg-gradient-to-br rounded-full blur-xl from-blue-400/20 to-purple-400/20"
         />
         <motion.div
           animate={{ 
@@ -99,7 +99,7 @@ export default function Home() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-pink-400/20 to-orange-400/20 rounded-full blur-xl"
+          className="absolute right-20 top-40 w-24 h-24 bg-gradient-to-br rounded-full blur-xl from-pink-400/20 to-orange-400/20"
         />
         <motion.div
           animate={{ 
@@ -111,24 +111,24 @@ export default function Home() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute bottom-40 left-20 w-20 h-20 bg-gradient-to-br from-green-400/20 to-blue-400/20 rounded-full blur-xl"
+          className="absolute left-20 bottom-40 w-20 h-20 bg-gradient-to-br rounded-full blur-xl from-green-400/20 to-blue-400/20"
         />
       </section>
 
       {/* Interactive 3D Section */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-20">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">
               Showcase Component
             </h2>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-xl text-white/70">
               Discover the amazing interactive 3D components available for your portfolio website
             </p>
           </motion.div>
@@ -138,13 +138,13 @@ export default function Home() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="relative rounded-2xl overflow-hidden shadow-2xl glass"
+            className="overflow-hidden relative rounded-2xl shadow-2xl glass"
           >
             <div className="h-[600px] w-full flex items-center justify-center">
               <ShockwaveScene />
             </div>
-            <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
-              <p className="text-white text-sm">
+            <div className="absolute top-4 left-4 px-3 py-2 rounded-lg backdrop-blur-sm bg-black/50">
+              <p className="text-sm text-white">
                 ✨ Interactive 3D Component • Double-click to create shockwaves
               </p>
             </div>
@@ -153,24 +153,24 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-20">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">
               Why Choose Our Platform?
             </h2>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-xl text-white/70">
               Everything you need to create a professional portfolio that stands out
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 icon: <Zap className="w-8 h-8" />,
@@ -218,13 +218,13 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 className="group"
               >
-                <Card className="glass hover:bg-white/15 transition-all duration-300 h-full">
-                  <CardContent className="p-8 text-center">
-                    <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.color} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                <Card className="h-full transition-all duration-300 glass hover:bg-white/15">
+                  <CardContent className="p-8 text-center glass">
+                    <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r glass ${feature.color} mb-6 group-hover:scale-110 transition-transform duration-300`}>
                       {feature.icon}
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-                    <p className="text-white/70 leading-relaxed">{feature.description}</p>
+                    <h3 className="mb-4 text-2xl font-bold text-white">{feature.title}</h3>
+                    <p className="leading-relaxed text-white/70">{feature.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -234,24 +234,24 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-20">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">
               How It Works
             </h2>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-xl text-white/70">
               Create your professional portfolio in just 3 simple steps
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
               {
                 step: "01",
@@ -280,23 +280,23 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <Card className="glass hover:bg-white/15 transition-all duration-300 h-full">
+                <Card className="h-full transition-all duration-300 glass hover:bg-white/15">
                   <CardContent className="p-8 text-center">
                     <div className="relative mb-6">
-                      <div className="inline-flex p-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
+                      <div className="inline-flex p-6 mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full">
                         {step.icon}
                       </div>
-                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-white text-black rounded-full flex items-center justify-center font-bold text-sm">
+                      <div className="flex absolute -top-2 -right-2 justify-center items-center w-8 h-8 text-sm font-bold text-black bg-white rounded-full">
                         {step.step}
                       </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">{step.title}</h3>
-                    <p className="text-white/70 leading-relaxed">{step.description}</p>
+                    <h3 className="mb-4 text-2xl font-bold text-white">{step.title}</h3>
+                    <p className="leading-relaxed text-white/70">{step.description}</p>
                   </CardContent>
                 </Card>
                 
                 {index < 2 && (
-                  <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+                  <div className="hidden absolute -right-4 top-1/2 transform -translate-y-1/2 md:block">
                     <ArrowRight className="w-8 h-8 text-white/30" />
                   </div>
                 )}
@@ -307,9 +307,9 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="relative py-20">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
               { number: "10K+", label: "Portfolios Created" },
               { number: "50+", label: "Templates Available" },
@@ -324,10 +324,10 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                <div className="mb-2 text-4xl font-bold text-white md:text-5xl">
                   {stat.number}
                 </div>
-                <div className="text-white/70 text-lg">
+                <div className="text-lg text-white/70">
                   {stat.label}
                 </div>
               </motion.div>
@@ -337,8 +337,8 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative py-20">
+        <div className="px-4 mx-auto max-w-4xl text-center sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -346,20 +346,20 @@ export default function Home() {
             viewport={{ once: true }}
             className="space-y-8"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white">
+            <h2 className="text-4xl font-bold text-white md:text-5xl">
               Ready to Create Your Portfolio?
             </h2>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-xl text-white/70">
               Join thousands of professionals who have already created stunning portfolios with our platform
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button asChild size="lg" className="bg-white text-black hover:bg-white/90 px-8 py-4 text-lg font-semibold">
+            <div className="flex flex-col gap-4 justify-center items-center sm:flex-row">
+              <Button asChild size="lg" className="px-8 py-4 text-lg font-semibold text-black bg-white hover:bg-white/90">
                 <Link href="/auth/signup">
                   Start Building Now
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg">
+              <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg text-white border-white/30 hover:bg-white/10">
                 <Link href="/templates-demo">
                   <Eye className="mr-2 w-5 h-5" />
                   Browse Templates
@@ -372,30 +372,30 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-12 border-t border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
-                <span className="text-black font-bold text-sm">P</span>
+            <div className="flex justify-center items-center mb-4">
+              <div className="flex justify-center items-center mr-3 w-8 h-8 bg-white rounded-lg">
+                <span className="text-sm font-bold text-black">P</span>
               </div>
               <span className="text-2xl font-bold text-white">Portfolio Maker</span>
             </div>
-            <p className="text-white/60 mb-6">
+            <p className="mb-6 text-white/60">
               Create stunning portfolios with AI-powered tools
             </p>
             <div className="flex justify-center space-x-6">
-              <Link href="/dashboard" className="text-white/60 hover:text-white transition-colors">
+              <Link href="/dashboard" className="transition-colors text-white/60 hover:text-white">
                 Dashboard
               </Link>
-              <Link href="/templates-demo" className="text-white/60 hover:text-white transition-colors">
+              <Link href="/templates-demo" className="transition-colors text-white/60 hover:text-white">
                 Templates
               </Link>
-              <Link href="/settings" className="text-white/60 hover:text-white transition-colors">
+              <Link href="/settings" className="transition-colors text-white/60 hover:text-white">
                 Settings
               </Link>
             </div>
-            <div className="mt-8 pt-8 border-t border-white/20">
-              <p className="text-white/40 text-sm">
+            <div className="pt-8 mt-8 border-t border-white/20">
+              <p className="text-sm text-white/40">
                 © 2024 Portfolio Maker. All rights reserved.
               </p>
             </div>
