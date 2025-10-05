@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function AICompanionField({
 	type = "input", // "input" or "textarea"
@@ -25,15 +26,16 @@ export default function AICompanionField({
 		if (!aiEnabled) return null;
 
 		return (
-			<button
+			<Button
 				type="button"
 				onClick={handleAIClick}
 				title={`Get AI suggestion for ${aiLabel || aiField}`}
-				className="inline-flex items-center px-3 py-1 text-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+				className="glass h-[48px] px-4 text-sm font-medium bg-white/30 border border-white/40 text-gray-900 hover:bg-white/50 hover:text-gray-900 dark:text-white dark:hover:text-white"
+				variant="ghost"
 			>
-				<span className="mr-1">🤖</span>
+				<span className="mr-2">🤖</span>
 				AI Help
-			</button>
+			</Button>
 		);
 	}
 

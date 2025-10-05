@@ -218,8 +218,8 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 className="group"
               >
-                <Card className="h-full transition-all duration-300 glass hover:bg-white/15">
-                  <CardContent className="p-8 text-center glass">
+                <Card className="h-full transition-all duration-300 glass-glow hover:bg-white/15">
+                  <CardContent className="p-8 text-center glass-glow">
                     <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r glass ${feature.color} mb-6 group-hover:scale-110 transition-transform duration-300`}>
                       {feature.icon}
                     </div>
@@ -280,7 +280,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <Card className="h-full transition-all duration-300 glass hover:bg-white/15">
+                <Card className="h-full transition-all duration-300 glass-glow hover:bg-white/15">
                   <CardContent className="p-8 text-center">
                     <div className="relative mb-6">
                       <div className="inline-flex p-6 mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full">
