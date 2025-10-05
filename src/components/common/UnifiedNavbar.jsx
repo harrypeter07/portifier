@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, ChevronDown } from "lucide-react";
+import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, ChevronDown, Sun, Moon } from "lucide-react";
 
 const publicNavLinks = [
 	{ href: "/auth/signin", label: "Sign In", icon: User },
@@ -69,6 +69,7 @@ export default function UnifiedNavbar() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
 	const [hoverTimeout, setHoverTimeout] = useState(null);
+	const [isDark, setIsDark] = useState(false);
 	
 	// Editor navbar states
 	const [isEditorNavVisible, setIsEditorNavVisible] = useState(true);
@@ -108,6 +109,33 @@ export default function UnifiedNavbar() {
 			}
 		};
 	}, [pathname, hoverTimeout]);
+
+	// Theme: initialize and persist dark mode
+	useEffect(() => {
+		try {
+			const stored = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
+			const prefersDark = typeof window !== 'undefined' ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches : false;
+			const enableDark = stored ? stored === 'dark' : prefersDark;
+			setIsDark(enableDark);
+			if (enableDark) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		} catch {}
+	}, []);
+
+	const toggleTheme = () => {
+		const next = !isDark;
+		setIsDark(next);
+		if (next) {
+			document.documentElement.classList.add('dark');
+			localStorage.setItem('theme', 'dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+			localStorage.setItem('theme', 'light');
+		}
+	};
 
 	// Editor navbar auto-hide functionality
 	useEffect(() => {
@@ -306,6 +334,16 @@ export default function UnifiedNavbar() {
 
 						{/* Right Side - User Section */}
 						<div className="flex items-center space-x-4">
+						{/* Theme toggle */}
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={toggleTheme}
+							title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+							className="bg-transparent"
+						>
+							{isDark ? <Sun className="w-5 h-5 text-white" /> : <Moon className="w-5 h-5 text-white" />}
+						</Button>
 							{user ? (
 								<div className="relative">
 									<Button

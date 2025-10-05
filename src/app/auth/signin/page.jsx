@@ -68,10 +68,10 @@ export default function Signin() {
 		<div className="min-h-screen grainy-bg flex items-center justify-center p-4">
 			<Card className="w-full max-w-md bg-white/85 backdrop-blur-xl border border-gray-200 shadow-xl">
 				<CardHeader className="text-center">
-					<CardTitle className="text-3xl font-bold">
+					<CardTitle className="text-3xl font-bold text-gray-900">
 						Welcome Back
 					</CardTitle>
-					<CardDescription>
+					<CardDescription className="text-gray-600">
 						Sign in to access your portfolio
 					</CardDescription>
 				</CardHeader>
@@ -93,10 +93,10 @@ export default function Signin() {
 					<form onSubmit={handleSubmit} className="space-y-6">
 						{/* Email Field */}
 						<div>
-							<label htmlFor="email" className="block text-sm font-medium text-black dark:text-white mb-2">
+						<label htmlFor="email" className="block text-sm font-medium text-gray-800 mb-2">
 								Email Address
 							</label>
-							<Input
+						<Input
 								id="email"
 								required
 								type="email"
@@ -104,12 +104,13 @@ export default function Signin() {
 								value={form.email}
 								onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
 								disabled={loading}
+							className="bg-white text-black border-gray-300 placeholder:text-gray-500"
 							/>
 						</div>
 
 						{/* Password Field */}
 						<div>
-							<label htmlFor="password" className="block text-sm font-medium text-black dark:text-white mb-2">
+						<label htmlFor="password" className="block text-sm font-medium text-gray-800 mb-2">
 								Password
 							</label>
 							<div className="relative">
@@ -121,7 +122,7 @@ export default function Signin() {
 									value={form.password}
 									onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
 									disabled={loading}
-									className="pr-10"
+								className="pr-10 bg-white text-black border-gray-300 placeholder:text-gray-500"
 								/>
 								<button
 									type="button"

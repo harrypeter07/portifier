@@ -69,35 +69,35 @@ export default function Signup() {
 	};
 
 	return (
-		<div className="min-h-screen grainy-bg flex items-center justify-center p-4">
-			<Card className="w-full max-w-md bg-white/85 backdrop-blur-xl border border-gray-200 shadow-xl">
+		<div className="flex justify-center items-center p-4 min-h-screen grainy-bg">
+			<Card className="w-full max-w-md border border-gray-200 shadow-xl backdrop-blur-xl bg-white/85">
 				<CardHeader className="text-center">
-					<CardTitle className="text-3xl font-bold">
+					<CardTitle className="text-3xl font-bold text-gray-900">
 						Create Account
 					</CardTitle>
-					<CardDescription>
+					<CardDescription className="text-gray-600">
 						Join us to build your amazing portfolio
 					</CardDescription>
 				</CardHeader>
 
 				<CardContent>
 					{success && (
-						<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-							<p className="text-green-700 text-sm">{success}</p>
+						<div className="p-4 mb-6 bg-green-50 rounded-lg border border-green-200">
+							<p className="text-sm text-green-700">{success}</p>
 						</div>
 					)}
 
 					{error && (
-						<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-							<p className="text-red-700 text-sm">{error}</p>
+						<div className="p-4 mb-6 bg-red-50 rounded-lg border border-red-200">
+							<p className="text-sm text-red-700">{error}</p>
 						</div>
 					)}
 
 					<Form onSubmit={handleSubmit} className="space-y-6">
-						<FormField>
-							<FormLabel htmlFor="name">Full Name</FormLabel>
+					<FormField>
+						<FormLabel htmlFor="name" className="text-gray-800">Full Name</FormLabel>
 							<FormControl>
-								<Input
+							<Input
 									id="name"
 									type="text"
 									required
@@ -105,14 +105,15 @@ export default function Signup() {
 									value={form.name}
 									onChange={(e) => setForm({ ...form, name: e.target.value })}
 									disabled={loading}
+								className="text-black bg-white border-gray-300 placeholder:text-gray-500"
 								/>
 							</FormControl>
 						</FormField>
 
-						<FormField>
-							<FormLabel htmlFor="username">Username</FormLabel>
+					<FormField>
+						<FormLabel htmlFor="username" className="text-gray-800">Username</FormLabel>
 							<FormControl>
-								<Input
+							<Input
 									id="username"
 									type="text"
 									required
@@ -120,17 +121,18 @@ export default function Signup() {
 									value={form.username}
 									onChange={(e) => setForm({ ...form, username: e.target.value })}
 									disabled={loading}
+								className="text-black bg-white border-gray-300 placeholder:text-gray-500"
 								/>
 							</FormControl>
-							<p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+						<p className="mt-1 text-xs text-gray-600">
 								This will be your portfolio URL (e.g., yoursite.com/username)
 							</p>
 						</FormField>
 
-						<FormField>
-							<FormLabel htmlFor="email">Email Address</FormLabel>
+					<FormField>
+						<FormLabel htmlFor="email" className="text-gray-800">Email Address</FormLabel>
 							<FormControl>
-								<Input
+							<Input
 									id="email"
 									type="email"
 									required
@@ -138,14 +140,15 @@ export default function Signup() {
 									value={form.email}
 									onChange={(e) => setForm({ ...form, email: e.target.value })}
 									disabled={loading}
+								className="text-black bg-white border-gray-300 placeholder:text-gray-500"
 								/>
 							</FormControl>
 						</FormField>
 
-						<FormField>
-							<FormLabel htmlFor="password">Password</FormLabel>
+					<FormField>
+						<FormLabel htmlFor="password" className="text-gray-800">Password</FormLabel>
 							<FormControl>
-								<Input
+							<Input
 									id="password"
 									type="password"
 									required
@@ -153,6 +156,7 @@ export default function Signup() {
 									value={form.password}
 									onChange={(e) => setForm({ ...form, password: e.target.value })}
 									disabled={loading}
+								className="text-black bg-white border-gray-300 placeholder:text-gray-500"
 								/>
 							</FormControl>
 						</FormField>
@@ -167,11 +171,11 @@ export default function Signup() {
 					</Form>
 
 					<div className="mt-6 text-center">
-						<p className="text-gray-600 dark:text-gray-400">
+						<p className="text-gray-700">
 							Already have an account?{" "}
 							<Link
 								href="/auth/signin"
-								className="text-black dark:text-white hover:text-black dark:text-white/80 font-medium"
+								className="font-medium text-black hover:text-black/80"
 							>
 								Sign in
 							</Link>
