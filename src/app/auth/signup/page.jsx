@@ -20,6 +20,19 @@ export default function Signup() {
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 
+	// Typewriter heading
+	const fullHeading = "Manage your resumes and portfolios";
+	const [typed, setTyped] = useState("");
+	useEffect(() => {
+		let i = 0;
+		const id = setInterval(() => {
+			setTyped(fullHeading.slice(0, i + 1));
+			i++;
+			if (i >= fullHeading.length) clearInterval(id);
+		}, 35);
+		return () => clearInterval(id);
+	}, []);
+
 	// Check if user is already logged in
 	useEffect(() => {
 		async function checkAuth() {
@@ -69,7 +82,13 @@ export default function Signup() {
 	};
 
 	return (
-		<div className="flex justify-center items-center p-4 min-h-screen grainy-bg">
+		<div className="flex justify-center items-center p-4 pt-28 min-h-screen grainy-bg">
+			<div className="absolute top-20 left-1/2 px-4 text-center -translate-x-1/2">
+				<h1 className="text-3xl font-extrabold tracking-tight text-gray-900 md:text-5xl">
+					{typed}
+					<span className="inline-block w-[1ch] ml-1 align-baseline animate-pulse">|</span>
+				</h1>
+			</div>
 			<Card className="w-full max-w-md border border-gray-200 shadow-xl backdrop-blur-xl bg-white/85">
 				<CardHeader className="text-center">
 					<CardTitle className="text-3xl font-bold text-gray-900">
