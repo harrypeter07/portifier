@@ -30,7 +30,7 @@ export default function AICompanionField({
 				type="button"
 				onClick={handleAIClick}
 				title={`Get AI suggestion for ${aiLabel || aiField}`}
-				className="glass h-[48px] px-4 text-sm font-medium bg-white/30 border border-white/40 text-gray-900 hover:bg-white/50 hover:text-gray-900 dark:text-white dark:hover:text-white"
+				className="glass border-beam h-[48px] px-4 text-sm font-medium bg-white/30 border border-white/40 text-gray-900 hover:bg-white/50 hover:text-gray-900 dark:text-white dark:hover:text-white rounded-lg"
 				variant="ghost"
 			>
 				<span className="mr-2">🤖</span>

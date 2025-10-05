@@ -724,6 +724,40 @@ textarea::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 0 18px 2px rgba(255,255,255,0.35);
 }
 
+/* Animated multicolor beam border */
+.border-beam {
+  position: relative;
+  isolation: isolate; /* keep pseudo under content */
+}
+.border-beam::before {
+  content: "";
+  position: absolute;
+  inset: -2px; /* thin border */
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    #ff4d4d,
+    #ff9a1f,
+    #ffd31f,
+    #4dff4d,
+    #1fd3ff,
+    #7a5bff,
+    #ff4dff,
+    #ff4d4d
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 2px; /* thickness */
+  filter: blur(0.3px);
+  z-index: -1;
+  animation: spin-beam 4s linear infinite;
+}
+
+@keyframes spin-beam {
+  to { transform: rotate(360deg); }
+}
+
 /* Card background utilities */
 .cardbg-1 {
   background-image: url('/CARDBG/1.jpg');
