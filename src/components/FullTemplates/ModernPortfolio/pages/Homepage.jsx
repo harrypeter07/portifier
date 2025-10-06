@@ -91,20 +91,20 @@ const Hero = ({ portfolioData, fullName }) => {
 						</a>
 					</div>
 				</div>
-				{/* Right side image balanced size */}
+				{/* Right side image adaptive size */}
 				<div
-					className="flex-1 w-full max-w-xl h-[300px] md:h-[360px] min-h-[220px] flex items-start justify-end relative z-30"
+					className="flex relative z-30 flex-1 justify-end items-center w-full max-w-2xl"
 				>
                     <div
-                        className="flex relative justify-center items-center w-full h-full rounded-2xl transition-transform duration-300 cursor-pointer group"
+						className="flex relative justify-center items-center w-full rounded-2xl border transition-transform duration-300 cursor-pointer border-white/90 group"
                         style={{ perspective: "1200px" }}
                     >
                         <Image
                             src={personal.avatar || fallbackPortrait}
                             alt={`${fullName} - Professional Photo`}
-                            width={560}
-                            height={400}
-                            className="w-auto h-auto max-w-full max-h-[360px] rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
+							width={560}
+							height={400}
+							className="w-auto h-auto max-w-[96%] md:max-w-full max-h-[60vh] md:max-h-[70vh] rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
                             style={{ objectFit: "contain", objectPosition: "center center", willChange: "transform" }}
                             priority
                         />
