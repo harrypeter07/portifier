@@ -49,7 +49,7 @@ const Hero = () => {
 					</div>
 
 					{/* Interactive Image Container (replaces 3D) */}
-                    <div className="flex-1 w-full max-w-lg md:max-w-xl h-[260px] md:h-[300px] min-h-[200px] max-h-[350px] flex items-center justify-center relative z-30 overflow-hidden rounded-2xl">
+                    <div className="flex-1 w-full max-w-xl flex items-center justify-center relative z-30">
 						<div
 							className="flex justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
 							style={{ perspective: "1200px" }}
@@ -57,10 +57,10 @@ const Hero = () => {
                             <Image
                                 src={defaultImg}
                                 alt="Showcase"
-                                fill
-                                sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 560px"
-                                className="object-cover shadow-2xl transition-transform duration-500 group-hover:scale-105 bg-white/10"
-                                style={{ willChange: "transform", objectPosition: "center center" }}
+                                width={(defaultImg as unknown as { width: number }).width || 560}
+                                height={(defaultImg as unknown as { height: number }).height || 400}
+                                className="w-auto h-auto max-w-full max-h-[360px] rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 bg-white/10"
+                                style={{ objectFit: "contain", objectPosition: "center center", willChange: "transform" }}
                                 priority
                             />
 						</div>
