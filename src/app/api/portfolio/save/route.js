@@ -187,82 +187,38 @@ export async function POST(req) {
 			console.log("⚠️ [SAVE] Username already used by another portfolio:", existingByUsername.username, existingByUsername._id);
 		}
 
-		// Handle portfolio creation/update based on isNewPortfolio flag
+		// Handle portfolio creation/update with strict update preference to avoid duplicates on slug change
 		let portfolio;
 		if (isNewPortfolio) {
-			// Create a new portfolio with the specified username
-				console.log("🆕 [SAVE] Creating new portfolio with username:", updateData.username);
+			console.log("🆕 [SAVE] Creating new portfolio explicitly (isNewPortfolio=true):", updateData.username);
 			portfolio = new Portfolio(updateData);
 			await portfolio.save();
 		} else {
-			// Update existing portfolio - prioritize portfolioId if provided
+			// Determine target portfolio to update
+			let targetPortfolio = null;
 			if (portfolioId) {
-				console.log("🔄 [SAVE] Updating specific portfolio by ID:", portfolioId);
-				portfolio = await Portfolio.findOneAndUpdate(
-					{ _id: portfolioId, userId: user._id },
-					updateData,
-					{ new: true }
-				);
-				if (!portfolio) {
-					return NextResponse.json({ error: "Portfolio not found or unauthorized" }, { status: 404 });
-				}
-			} else if (username) {
-				console.log("🔄 [SAVE] Updating specific portfolio with username:", username);
-				
-				// First, try to find the exact portfolio by username
-				let existingPortfolio = await Portfolio.findOne({ 
-					userId: user._id, 
-					username: username 
-				});
-				
-				if (existingPortfolio) {
-					// Update existing portfolio
-					console.log("✅ [SAVE] Found existing portfolio, updating:", existingPortfolio._id, "→ username:", updateData.username);
-					portfolio = await Portfolio.findByIdAndUpdate(
-						existingPortfolio._id,
-						updateData,
-						{ new: true }
-					);
-				} else {
-					// Check if this is a numbered username (e.g., iitz_hassan-3)
-					const isNumberedUsername = username.includes('-') && /-\d+$/.test(username);
-					
-					if (isNumberedUsername) {
-						// For numbered usernames, create new portfolio
-						console.log("🆕 [SAVE] Creating new numbered portfolio:", username);
-						portfolio = new Portfolio(updateData);
-						await portfolio.save();
-					} else {
-						// For base usernames, check if there's already a portfolio and update it
-						const basePortfolio = await Portfolio.findOne({ 
-							userId: user._id,
-							username: { $regex: new RegExp(`^${username}$|^${username}-\\d+$`) }
-						}).sort({ updatedAt: -1 });
-						
-						if (basePortfolio) {
-							// Update the most recent portfolio for this user
-							console.log("✅ [SAVE] Found base portfolio, updating:", basePortfolio._id);
-							portfolio = await Portfolio.findByIdAndUpdate(
-								basePortfolio._id,
-								updateData,
-								{ new: true }
-							);
-						} else {
-							// Create new portfolio
-							console.log("🆕 [SAVE] Creating new base portfolio:", username);
-							portfolio = new Portfolio(updateData);
-							await portfolio.save();
-						}
-					}
-				}
+				console.log("🔄 [SAVE] Updating by provided portfolioId:", portfolioId);
+				targetPortfolio = await Portfolio.findOne({ _id: portfolioId, userId: user._id });
 			} else {
-				// Fallback: update the latest portfolio for the user
-				console.log("🔄 [SAVE] Updating latest portfolio for user:", user._id);
-				portfolio = await Portfolio.findOneAndUpdate(
-					{ userId: user._id },
-					updateData,
-					{ new: true, upsert: true, setDefaultsOnInsert: true }
-				);
+				// Use the latest portfolio for this user as the canonical doc to update
+				targetPortfolio = await Portfolio.findOne({ userId: user._id }).sort({ updatedAt: -1 });
+			}
+
+			// If another portfolio already uses this username (slug), block update
+			if (updateData.username) {
+				const conflict = await Portfolio.findOne({ username: updateData.username, userId: { $ne: user._id } }).select("_id username userId");
+				if (conflict) {
+					return NextResponse.json({ error: "Username is already in use by another user" }, { status: 409 });
+				}
+			}
+
+			if (targetPortfolio) {
+				console.log("🔄 [SAVE] Updating existing portfolio:", targetPortfolio._id, "→ username:", updateData.username);
+				portfolio = await Portfolio.findByIdAndUpdate(targetPortfolio._id, updateData, { new: true });
+			} else {
+				console.log("🆕 [SAVE] No existing portfolio found for user; creating first portfolio:", updateData.username);
+				portfolio = new Portfolio(updateData);
+				await portfolio.save();
 			}
 		}
 
