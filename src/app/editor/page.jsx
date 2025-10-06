@@ -25,11 +25,20 @@ const FULL_LAYOUT = {
   contact: "ContactFormA",
 };
 
+// Import ModernPortfolio template
+import ModernPortfolio from "@/components/FullTemplates/ModernPortfolio";
+
 const PREBUILT_TEMPLATES = [
   {
     name: "Professional Portfolio",
     layout: FULL_LAYOUT,
     content: sampleDataCleanfolio,
+  },
+  {
+    name: "Modern Portfolio",
+    layout: FULL_LAYOUT,
+    content: sampleDataCleanfolio,
+    component: ModernPortfolio,
   },
   {
     name: "Modern Developer (All A)",

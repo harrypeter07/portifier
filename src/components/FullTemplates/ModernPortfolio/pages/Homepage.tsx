@@ -110,7 +110,8 @@ const Hero = ({ portfolioData }) => {
 			</div>
 		</div>
 	</section>
-);
+	);
+};
 
 
 const ProductGrid = ({ projectData }) => {
