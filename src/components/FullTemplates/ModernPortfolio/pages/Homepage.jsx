@@ -28,8 +28,8 @@ const Hero = ({ portfolioData, fullName }) => {
 	
 	return (
 	<section className="overflow-hidden relative m-0 border-none hero h-dvh text-zinc-800">
-		<div className="grid absolute inset-0 mx-auto mt-16 max-w-6xl grid-rows-[1fr,auto] place-items-end px-6 ~py-10/16 w-full h-full">
-			<div className="flex flex-col-reverse gap-8 justify-between items-center w-full h-full lg:flex-row">
+		<div className="grid absolute inset-0 mx-auto mt-16 max-w-7xl grid-rows-[1fr,auto] place-items-end px-4 md:px-6 ~py-8/12 w-full h-full">
+			<div className="flex flex-col-reverse gap-4 justify-between items-center w-full h-full md:gap-6 lg:flex-row">
 				<div className="flex flex-col flex-1 justify-center">
 					<div className="relative place-self-start max-w-2xl">
 						<span className="block mb-2 font-sans text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
@@ -42,8 +42,8 @@ const Hero = ({ portfolioData, fullName }) => {
 								className="text-white"
 							/>
 						</span>
-						<span
-							className="block pl-2 font-sans text-2xl font-extrabold tracking-tight uppercase drop-shadow-lg md:text-5xl lg:text-6xl"
+					<span
+						className="block pl-2 font-sans text-2xl font-extrabold tracking-tight uppercase drop-shadow-lg md:text-4xl lg:text-5xl"
 							style={{ left: "-10px", position: "relative" }}
 						>
 							<TextType
@@ -57,16 +57,16 @@ const Hero = ({ portfolioData, fullName }) => {
 							/>
 						</span>
 					</div>
-					<TextType
-						as="span"
-						text={[title]}
-						className="block mt-6 text-3xl font-bold text-brand-purple"
-						typingSpeed={60}
-						pauseDuration={2000}
-						showCursor={false}
-					/>
-					<div className="relative flex flex-col w-full items-center justify-between ~gap-2/4 lg:flex-row mt-6">
-						<div className="w-[35ch]  font-semibold ~text-lg/xl ">
+				<TextType
+					as="span"
+					text={[title]}
+					className="block mt-3 text-lg font-semibold md:text-xl text-brand-purple"
+					typingSpeed={60}
+					pauseDuration={2000}
+					showCursor={false}
+				/>
+				<div className="flex relative flex-col gap-3 justify-between items-center mt-4 w-full lg:flex-row">
+					<div className="max-w-[65ch] font-normal text-sm md:text-base ">
 							<p>
 								{description}
 							</p>
@@ -91,21 +91,20 @@ const Hero = ({ portfolioData, fullName }) => {
 						</a>
 					</div>
 				</div>
-				{/* Right side image with hover interaction - moved up and right */}
+				{/* Right side image gets more width */}
 				<div
-					className="flex-1 w-full max-w-xl h-[300px] min-h-[200px] max-h-[350px] flex items-start justify-end relative z-30"
-					style={{ marginTop: "-40px", marginRight: "-40px" }}
+					className="flex-[1.3] w-full max-w-2xl h-[340px] md:h-[420px] min-h-[220px] flex items-start justify-end relative z-30"
 				>
 					<div
-						className="group w-[90%] h-[90%] flex items-center justify-center cursor-pointer transition-transform duration-300"
+						className="flex justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
 						style={{ perspective: "1200px" }}
 					>
 						<Image
 							src={personal.avatar || fallbackPortrait}
 							alt={`${fullName} - Professional Photo`}
-							width={350}
-							height={350}
-							className="rounded-2xl shadow-2xl object-cover w-full h-full max-h-[350px] max-w-xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
+							width={800}
+							height={600}
+							className="object-cover w-full h-full rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
 							style={{ willChange: "transform" }}
 							priority
 						/>
