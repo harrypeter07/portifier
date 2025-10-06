@@ -30,7 +30,7 @@ export async function getGeminiInstance(userId = null) {
 }
 
 // Function to get model instance
-export async function getGeminiModel(userId = null, modelName = "gemini-1.5-flash") {
+export async function getGeminiModel(userId = null, modelName = "gemini-2.0-flash-exp") {
 	const genAI = await getGeminiInstance(userId);
 	return genAI.getGenerativeModel({ model: modelName });
 }

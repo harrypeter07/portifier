@@ -242,18 +242,31 @@ export async function GET(req) {
 			console.error("❌ [HEALTH-CHECK] MongoDB connection failed:", dbError.message);
 		}
 
-		// Try a simple test call
-		const model = await getGeminiModel(null, "gemini-1.5-flash");
-		const result = await model.generateContent("Hello");
-		const response = await result.response;
-		const text = response.text();
+		// Try a simple test call with available models
+		let geminiStatus = "failed";
+		const testModels = ["gemini-2.0-flash-exp", "gemini-2.0-flash-thinking-exp", "gemini-exp-1206"];
+		
+		for (const modelName of testModels) {
+			try {
+				const model = await getGeminiModel(null, modelName);
+				const result = await model.generateContent("Hello");
+				const response = await result.response;
+				const text = response.text();
+				geminiStatus = "connected";
+				console.log(`✅ [HEALTH-CHECK] Gemini model ${modelName} working`);
+				break;
+			} catch (modelError) {
+				console.log(`❌ [HEALTH-CHECK] Model ${modelName} failed:`, modelError.message);
+				continue;
+			}
+		}
 
 		return NextResponse.json({
 			status: "healthy",
 			available: true,
 			envCheck,
 			database: dbStatus,
-			gemini: "connected"
+			gemini: geminiStatus
 		});
 	} catch (error) {
 		console.error("❌ Gemini API health check failed:", error);
