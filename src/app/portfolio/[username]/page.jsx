@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { FlickeringGrid } from "@/components/FlickeringGrid";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
@@ -72,8 +73,23 @@ export default function PortfolioDashboardPage({ params }) {
 	}, [username, timeRange]);
 
 	if (loading) {
-		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+return (
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+        {/* Background grid */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+            <div className="absolute inset-0">
+                <FlickeringGrid
+                    className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+                    squareSize={4}
+                    gridGap={6}
+                    color="#60A5FA"
+                    maxOpacity={0.4}
+                    flickerChance={0.12}
+                    height={1200}
+                    width={1200}
+                />
+            </div>
+        </div>
 				<div className="flex items-center justify-center min-h-screen">
 					<div className="text-center">
 						<motion.div
