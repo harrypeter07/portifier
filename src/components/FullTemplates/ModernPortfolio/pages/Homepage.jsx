@@ -99,8 +99,8 @@ const Hero = ({ portfolioData }) => {
 						style={{ perspective: "1200px" }}
 					>
 						<Image
-							src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"
-							alt="Showcase"
+							src={personal.avatar || "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"}
+							alt={`${fullName} - Professional Photo`}
 							width={350}
 							height={350}
 							className="rounded-2xl shadow-2xl object-cover w-full h-full max-h-[350px] max-w-xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
@@ -249,22 +249,43 @@ const ProductGrid = ({ projectData }) => {
 };
 
 const Homepage = ({ portfolioData, projectData, navigationData }) => {
+	// Extract dynamic data from portfolio
+	const personal = portfolioData?.personal || {};
+	const about = portfolioData?.about || {};
+	const experience = portfolioData?.experience || {};
+	const education = portfolioData?.education || {};
+	const skills = portfolioData?.skills || {};
+	const contact = portfolioData?.contact || {};
+	
+	// Build dynamic about text
+	const aboutText = about.summary || about.bio || "A passionate professional with expertise in technology and design.";
+	const contactInfo = personal.email || contact.email || "";
+	const phoneInfo = personal.phone || contact.phone || "";
+	const locationInfo = personal.location?.city && personal.location?.state 
+		? `${personal.location.city}, ${personal.location.state}`
+		: contact.location || "";
+	
+	// Build experience summary
+	const experienceYears = experience.jobs?.length > 0 ? `${experience.jobs.length}+ years` : "Experienced";
+	const educationInfo = education.degrees?.[0]?.degree || "Professional";
+	const interests = about.interests?.join(", ") || "Technology, Design, Innovation";
+	
+	const fullAboutText = `${aboutText}\n\nContact: ${contactInfo} | ${phoneInfo}\nLocation: ${locationInfo}\nExperience: ${experienceYears} in professional work\nEducation: ${educationInfo}\nInterests: ${interests}`;
+
 	return (
 		<div className="bg-texture bg-brand-pink">
 			<Hero portfolioData={portfolioData} />
 			<ProductGrid projectData={projectData} />
 			<ParallaxSection>
-				{/* About Section - Expanded */}
+				{/* About Section - Dynamic */}
 				<TextAndImage
 					variation="right"
 					theme="orange"
 					heading="About Me"
-					text={
-						"I'm Hassan Mansuri, a passionate developer and designer based in India. I specialize in building interactive, visually stunning web applications that deliver real value. With a background in both design and engineering, I love turning ideas into delightful digital experiences.\n\nContact: aryan.sharma@email.com | +91-9876543210\nLocation: New Delhi, India\nExperience: 4+ years in web development\nEducation: B.Tech in Computer Science\nInterests: UI/UX, Animation, 3D, Open Source, Music, Travel."
-					}
+					text={fullAboutText}
 					buttonText="Download Resume"
 					buttonLink="/resume.pdf"
-					imageForeground="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"
+					imageForeground={personal.avatar || "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"}
 					imageBackground="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80"
 				/>
 
@@ -284,64 +305,83 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 								A quick overview of my technical skills and tools I use daily.
 							</div>
 							<div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-								{[
-									{
-										group: "Frontend",
-										skills: [
-											"React",
-											"Next.js",
-											"TypeScript",
-											"JavaScript",
-											"Tailwind CSS",
-											"Framer Motion",
-											"CSS3",
-											"HTML5",
-										],
-									},
-									{
-										group: "Backend",
-										skills: [
-											"Node.js",
-											"Express",
-											"MongoDB",
-											"Firebase",
-											"REST APIs",
-										],
-									},
-									{
-										group: "Design",
-										skills: ["Figma", "Adobe XD", "UI/UX", "Animation"],
-									},
-									{
-										group: "Tools",
-										skills: ["Git", "VS Code", "Jira", "Vercel", "Netlify"],
-									},
-								].map(({ group, skills }) => (
-									<div
-										key={group}
-										className="p-4 rounded-xl border shadow-lg bg-white/10 border-white/10 animate-fade-in-up"
-									>
-										<div className="mb-2 font-bold text-brand-lime">
-											{group}
+								{(() => {
+									// Transform portfolio skills to template format
+									const skillGroups = [];
+									
+									// Technical skills
+									if (skills.technical && skills.technical.length > 0) {
+										skills.technical.forEach(category => {
+											if (category.skills && category.skills.length > 0) {
+												skillGroups.push({
+													group: category.category || "Technical",
+													skills: category.skills.map(skill => skill.name || skill)
+												});
+											}
+										});
+									}
+									
+									// Soft skills
+									if (skills.soft && skills.soft.length > 0) {
+										skillGroups.push({
+											group: "Soft Skills",
+											skills: skills.soft.map(skill => skill.name || skill)
+										});
+									}
+									
+									// Languages
+									if (skills.languages && skills.languages.length > 0) {
+										skillGroups.push({
+											group: "Languages",
+											skills: skills.languages.map(lang => lang.name || lang)
+										});
+									}
+									
+									// Fallback to default skills if no data
+									if (skillGroups.length === 0) {
+										skillGroups.push(
+											{
+												group: "Frontend",
+												skills: ["React", "Next.js", "JavaScript", "CSS3", "HTML5"]
+											},
+											{
+												group: "Backend", 
+												skills: ["Node.js", "Express", "MongoDB", "REST APIs"]
+											},
+											{
+												group: "Tools",
+												skills: ["Git", "VS Code", "Figma", "Vercel"]
+											}
+										);
+									}
+									
+									return skillGroups.map(({ group, skills }) => (
+										<div
+											key={group}
+											className="p-4 rounded-xl border shadow-lg bg-white/10 border-white/10 animate-fade-in-up"
+										>
+											<div className="mb-2 font-bold text-brand-lime">
+												{group}
+											</div>
+											<ul className="space-y-1">
+												{skills.map((skill) => (
+													<li key={skill} className="flex gap-2 items-center">
+														<span className="inline-block w-2 h-2 rounded-full animate-pulse bg-brand-lime" />
+														<span className="font-medium text-white/90">
+															{skill}
+														</span>
+													</li>
+												))}
+											</ul>
 										</div>
-										<ul className="space-y-1">
-											{skills.map((skill) => (
-												<li key={skill} className="flex gap-2 items-center">
-													<span className="inline-block w-2 h-2 rounded-full animate-pulse bg-brand-lime" />
-													<span className="font-medium text-white/90">
-														{skill}
-													</span>
-												</li>
-											))}
-										</ul>
-									</div>
-								))}
+									));
+								})()}
 							</div>
 						</div>
 						<div className="flex justify-center items-center animate-fade-in-up">
 							<Image
-								src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
-								alt="Skills"
+								src={personal.avatar || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"}
+								alt={`${fullName} - Professional Skills`}
 								width={300}
 								height={400}
 								className="w-full max-w-xs rounded-2xl shadow-2xl"
@@ -350,7 +390,7 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 						</div>
 					</div>
 				</section>
-				{/* New Contact Section */}
+				{/* Dynamic Contact Section */}
 				<section className="bg-brand-lime bg-texture py-16 px-4 min-h-[90vh]">
 					<div className="grid grid-cols-1 gap-12 items-center mx-auto max-w-6xl md:grid-cols-2 md:gap-24">
 						<div className="flex flex-col gap-8 items-center text-center md:items-start md:text-left animate-fade-in-up">
@@ -363,9 +403,15 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 								showCursor={false}
 							/>
 							<div className="max-w-md text-lg text-white">
-								Interested in working together, collaborating, or just want to
-								say hi? I&apos;m always open to new opportunities and creative
-								projects. Let&apos;s connect!
+								{contact.availability || "Interested in working together, collaborating, or just want to say hi? I'm always open to new opportunities and creative projects. Let's connect!"}
+							</div>
+							{/* Dynamic contact info */}
+							<div className="space-y-2 text-white/90">
+								{contactInfo && <p>Email: {contactInfo}</p>}
+								{phoneInfo && <p>Phone: {phoneInfo}</p>}
+								{locationInfo && <p>Location: {locationInfo}</p>}
+								{contact.timezone && <p>Timezone: {contact.timezone}</p>}
+								{contact.workingHours && <p>Hours: {contact.workingHours}</p>}
 							</div>
 						</div>
 						<div className="flex justify-center items-center animate-fade-in-up">
