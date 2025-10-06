@@ -181,11 +181,17 @@ export async function POST(req) {
 			hasPortfolioData: !!finalPortfolioData
 		});
 
+		// Extra logging for slug/username conflicts
+		const existingByUsername = await Portfolio.findOne({ username: updateData.username }).select("_id username userId");
+		if (existingByUsername && (!portfolioId || String(existingByUsername.userId) !== String(user._id))) {
+			console.log("⚠️ [SAVE] Username already used by another portfolio:", existingByUsername.username, existingByUsername._id);
+		}
+
 		// Handle portfolio creation/update based on isNewPortfolio flag
 		let portfolio;
 		if (isNewPortfolio) {
 			// Create a new portfolio with the specified username
-			console.log("🆕 [SAVE] Creating new portfolio with username:", updateData.username);
+				console.log("🆕 [SAVE] Creating new portfolio with username:", updateData.username);
 			portfolio = new Portfolio(updateData);
 			await portfolio.save();
 		} else {
@@ -211,7 +217,7 @@ export async function POST(req) {
 				
 				if (existingPortfolio) {
 					// Update existing portfolio
-					console.log("✅ [SAVE] Found existing portfolio, updating:", existingPortfolio._id);
+					console.log("✅ [SAVE] Found existing portfolio, updating:", existingPortfolio._id, "→ username:", updateData.username);
 					portfolio = await Portfolio.findByIdAndUpdate(
 						existingPortfolio._id,
 						updateData,
