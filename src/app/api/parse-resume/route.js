@@ -276,10 +276,16 @@ export async function GET(req) {
 
 		// Try a simple test call with available models
 		let geminiStatus = "failed";
-		const testModels = ["gemini-2.0-flash-exp", "gemini-2.0-flash-thinking-exp", "gemini-exp-1206"];
+		const testModels = [
+			"gemini-2.0-flash-exp", 
+			"gemini-2.0-flash-thinking-exp", 
+			"gemini-exp-1206",
+			"gemini-exp-1120"
+		];
 		
 		for (const modelName of testModels) {
 			try {
+				console.log(`🔍 [HEALTH-CHECK] Testing model: ${modelName}`);
 				const model = await getGeminiModel(null, modelName);
 				const result = await model.generateContent("Hello");
 				const response = await result.response;
