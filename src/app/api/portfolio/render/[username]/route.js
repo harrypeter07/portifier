@@ -18,7 +18,7 @@ export async function GET(request, { params }) {
 	if (!process.env.REMOTE_TEMPLATES_ENABLED || process.env.REMOTE_TEMPLATES_ENABLED === "false") {
 		return new NextResponse(null, { status: 204 });
 	}
-	const { username } = params;
+	const { username } = await params;
 	const { origin } = new URL(request.url);
 	const portfolio = await fetchPortfolioByUsername(username, origin);
 	if (!portfolio) return NextResponse.json({ error: "Not found" }, { status: 404 });

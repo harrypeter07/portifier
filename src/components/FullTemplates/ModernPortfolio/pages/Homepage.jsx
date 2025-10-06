@@ -13,7 +13,7 @@ import TextType from "../app/components/TextType";
 import ContactForm from "../app/components/ContactForm";
 import Footer from "../app/components/Footer";
 import bgScroll from "../public/background-9509852_1280.webp";
-import fallbackPortrait from "../public/image-texture.png";
+import fallbackPortrait from "../public/default.png";
 import imgForeground from "../public/image-texture.png";
 import imgBackground from "../public/bg-texture.webp";
 import skillsFallback from "../public/concrete-normal.avif";
@@ -95,20 +95,20 @@ const Hero = ({ portfolioData, fullName }) => {
 				<div
 					className="flex-1 w-full max-w-xl h-[300px] md:h-[360px] min-h-[220px] flex items-start justify-end relative z-30"
 				>
-					<div
-						className="flex justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
-						style={{ perspective: "1200px" }}
-					>
-						<Image
-							src={personal.avatar || fallbackPortrait}
-							alt={`${fullName} - Professional Photo`}
-							width={560}
-							height={400}
-							className="object-cover w-full h-full rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
-							style={{ willChange: "transform" }}
-							priority
-						/>
-					</div>
+                    <div
+                        className="flex relative justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
+                        style={{ perspective: "1200px" }}
+                    >
+                        <Image
+                            src={personal.avatar || fallbackPortrait}
+                            alt={`${fullName} - Professional Photo`}
+                            fill
+                            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 560px"
+                            className="object-contain rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
+                            style={{ willChange: "transform", objectPosition: "center center", width: "auto", height: "auto" }}
+                            priority
+                        />
+                    </div>
 				</div>
 			</div>
 		</div>
