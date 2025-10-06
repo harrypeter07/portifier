@@ -14,16 +14,16 @@ const LoadingScreen = () => {
 
 	return (
 		<div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-zinc-900 text-white transition-opacity duration-700">
-			<div className="text-4xl font-bold mb-4 animate-pulse">
+			<div className="mb-4 text-4xl font-bold animate-pulse">
 				Loading Portfolio...
 			</div>
-			<div className="relative w-64 h-6 bg-zinc-800 rounded-full overflow-hidden mb-2">
+			<div className="overflow-hidden relative mb-2 w-64 h-6 rounded-full bg-zinc-800">
 				<div
-					className="absolute left-0 top-0 h-full bg-gradient-to-r from-brand-purple to-brand-lime rounded-full transition-all duration-200"
+					className="absolute top-0 left-0 h-full bg-gradient-to-r rounded-full transition-all duration-200 from-brand-purple to-brand-lime"
 					style={{ width: `${progress}%` }}
 				/>
 			</div>
-			<div className="text-2xl font-mono tracking-widest animate-fade-in-up">
+			<div className="font-mono text-2xl tracking-widest animate-fade-in-up">
 				{progress}%
 			</div>
 		</div>
