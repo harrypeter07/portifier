@@ -43,7 +43,7 @@ const Hero = ({ portfolioData, fullName }) => {
 							/>
 						</span>
 					<span
-						className="block pl-2 font-sans text-2xl font-extrabold tracking-tight uppercase drop-shadow-lg md:text-4xl lg:text-5xl"
+						className="block pl-2 font-sans text-2xl font-extrabold tracking-tight uppercase drop-shadow-lg md:text-5xl lg:text-6xl"
 							style={{ left: "-10px", position: "relative" }}
 						>
 							<TextType
@@ -66,7 +66,7 @@ const Hero = ({ portfolioData, fullName }) => {
 					showCursor={false}
 				/>
 				<div className="flex relative flex-col gap-3 justify-between items-center mt-4 w-full lg:flex-row">
-					<div className="max-w-[65ch] font-normal text-sm md:text-base ">
+					<div className="max-w-[85ch] md:max-w-[95ch] font-normal text-sm md:text-base ">
 							<p>
 								{description}
 							</p>
@@ -91,9 +91,9 @@ const Hero = ({ portfolioData, fullName }) => {
 						</a>
 					</div>
 				</div>
-				{/* Right side image gets more width */}
+				{/* Right side image balanced size */}
 				<div
-					className="flex-[1.3] w-full max-w-2xl h-[340px] md:h-[420px] min-h-[220px] flex items-start justify-end relative z-30"
+					className="flex-1 w-full max-w-xl h-[300px] md:h-[360px] min-h-[220px] flex items-start justify-end relative z-30"
 				>
 					<div
 						className="flex justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
@@ -102,8 +102,8 @@ const Hero = ({ portfolioData, fullName }) => {
 						<Image
 							src={personal.avatar || fallbackPortrait}
 							alt={`${fullName} - Professional Photo`}
-							width={800}
-							height={600}
+							width={560}
+							height={400}
 							className="object-cover w-full h-full rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
 							style={{ willChange: "transform" }}
 							priority
