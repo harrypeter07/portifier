@@ -16,7 +16,7 @@ import bgScroll from "../public/background-9509852_1280.webp";
 import fallbackPortrait from "../public/default.png";
 import imgForeground from "../public/image-texture.png";
 import imgBackground from "../public/bg-texture.webp";
-import skillsFallback from "../public/concrete-normal.avif";
+import skillsFallback from "../public/default.png";
 
 // Heading replaced by TextType for typing animation
 
