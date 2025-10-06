@@ -44,7 +44,7 @@ const Hero = ({ portfolioData }) => {
 						>
 							<TextType
 								as="span"
-								text={["HASSAN MANSURI"]}
+								text={[fullName.toUpperCase()]}
 								typingSpeed={80}
 								pauseDuration={3000}
 								showCursor={true}
@@ -55,7 +55,7 @@ const Hero = ({ portfolioData }) => {
 					</div>
 					<TextType
 						as="span"
-						text={["Full Stack Engineer & UI Specialist"]}
+						text={[title]}
 						className="mt-6 block text-3xl font-bold text-brand-purple"
 						typingSpeed={60}
 						pauseDuration={2000}
@@ -64,8 +64,7 @@ const Hero = ({ portfolioData }) => {
 					<div className="relative flex flex-col w-full items-center justify-between ~gap-2/4 lg:flex-row mt-6">
 						<div className="max-w-[45ch] font-semibold ~text-lg/xl">
 							<p>
-								I build robust, scalable web applications and beautiful user
-								interfaces. Let&apos;s create something amazing together!
+								{description}
 							</p>
 						</div>
 						<a
