@@ -1,7 +1,7 @@
 "use client";
 import "./globals.css";
 import { Bowlby_One_SC, DM_Mono } from "next/font/google";
-import { navigationData } from "@/data/navagationData";
+import { navigationData } from "../data/navagationData";
 import LoadingScreen from "@/app/components/LoadingScreen";
 import React, { useEffect, useState } from "react";
 
@@ -37,7 +37,7 @@ function Logo() {
 					<path fill="currentColor" d="M3 12h18M12 3v18" />
 				</svg>
 			</span>
-			<div className="w-px self-stretch bg-black/25 mr-2" />
+			<div className="self-stretch mr-2 w-px bg-black/25" />
 			PORTFOLIO
 		</Link>
 	);
@@ -54,7 +54,7 @@ function Header() {
 					aria-label="Main"
 					className="col-span-full row-start-2 md:col-span-1 md:col-start-2 md:row-start-1"
 				>
-					<ul className="flex flex-wrap items-center justify-center gap-8">
+					<ul className="flex flex-wrap gap-8 justify-center items-center">
 						{navigationData.navigation.map((item) => (
 							<li key={item.text}>
 								<Link href={item.link} className="~text-lg/xl">
@@ -74,7 +74,7 @@ function Header() {
 
 function SVGFilters() {
 	return (
-		<svg className="h-0 w-0">
+		<svg className="w-0 h-0">
 			<defs>
 				{Array.from({ length: 5 }).map((_, index) => (
 					<filter id={`squiggle-${index}`} key={index}>
