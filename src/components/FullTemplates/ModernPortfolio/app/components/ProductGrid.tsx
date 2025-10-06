@@ -5,6 +5,7 @@ import projectData from "@/data/skateboardData";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextType from "./TextType";
+import bgScroll from "../../public/background-9509852_1280.webp";
 
 const ProductGrid = () => {
 	const sectionRef = useRef<HTMLElement>(null);
@@ -71,7 +72,7 @@ const ProductGrid = () => {
 			<div
 				className="absolute inset-0 animate-scroll-left"
 				style={{
-					backgroundImage: "url('/background-9509852_1280.webp')",
+					backgroundImage: `url('${bgScroll.src}')`,
 					backgroundSize: "200% 100%",
 					backgroundPosition: "0% center",
 					backgroundRepeat: "repeat-x",

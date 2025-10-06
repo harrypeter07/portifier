@@ -6,7 +6,7 @@
   background-size: 720px 460px;
   background-repeat: repeat;
   background-position: center;
-  background-image: url("/bg-texture.webp");
+  background-image: url("/src/components/FullTemplates/ModernPortfolio/public/bg-texture.webp");
 }
 
 .button-cutout {
