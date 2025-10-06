@@ -10,7 +10,7 @@ export default function ModernPortfolio({ data = EMPTY_PORTFOLIO }) {
 	const navigationData = getNavigationData(data);
 	
 	// Import and render the main template component
-	const Homepage = require("./pages/Homepage").default;
+	const Homepage = require("./pages/Homepage.jsx").default;
 	
 	return <Homepage 
 		portfolioData={data}

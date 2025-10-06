@@ -10,6 +10,8 @@ import { getProjectData } from "../data/skateboardData";
 import TextAndImage from "../app/components/TextAndImage";
 import ParallaxSection from "../app/components/ParallaxSection";
 import TextType from "../app/components/TextType";
+import ContactForm from "../app/components/ContactForm";
+import Footer from "../app/components/Footer";
 
 // Heading replaced by TextType for typing animation
 
@@ -115,8 +117,8 @@ const Hero = ({ portfolioData }) => {
 
 
 const ProductGrid = ({ projectData }) => {
-	const sectionRef = useRef<HTMLElement>(null);
-	const cardsContainerRef = useRef<HTMLDivElement>(null);
+	const sectionRef = useRef(null);
+	const cardsContainerRef = useRef(null);
 
 	useEffect(() => {
 		// Register ScrollTrigger plugin
@@ -245,8 +247,6 @@ const ProductGrid = ({ projectData }) => {
 		</section>
 	);
 };
-import ContactForm from "../app/components/ContactForm";
-import Footer from "../app/components/Footer";
 
 const Homepage = ({ portfolioData, projectData, navigationData }) => {
 	return (
