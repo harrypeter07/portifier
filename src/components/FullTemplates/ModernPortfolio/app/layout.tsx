@@ -3,6 +3,7 @@ import "./globals.css";
 import { Bowlby_One_SC, DM_Mono } from "next/font/google";
 import { navigationData } from "../data/navagationData";
 import LoadingScreen from "./components/LoadingScreen";
+
 import React, { useEffect, useState } from "react";
 
 const bowlby = Bowlby_One_SC({
