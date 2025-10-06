@@ -26,10 +26,10 @@ const Hero = ({ portfolioData, fullName }) => {
 	const description = portfolioData?.about?.summary || 
 		"I build robust, scalable web applications and beautiful user interfaces. Let's create something amazing together!";
 	
-	return (
-	<section className="overflow-hidden relative m-0 border-none hero h-dvh text-zinc-800">
-		<div className="grid absolute inset-0 mx-auto mt-16 max-w-7xl grid-rows-[1fr,auto] place-items-end px-4 md:px-6 ~py-8/12 w-full h-full">
-			<div className="flex flex-col-reverse gap-4 justify-between items-center w-full h-full md:gap-6 lg:flex-row">
+    return (
+        <section className="overflow-hidden relative pt-24 m-0 mb-16 border-none hero h-dvh text-zinc-800 md:pt-28 md:mb-24">
+        <div className="grid absolute inset-0 mx-auto mt-12 md:mt-16 max-w-7xl grid-rows-[1fr,auto] place-items-end px-4 md:px-6 ~py-8/12 w-full h-full">
+                <div className="flex flex-col-reverse gap-6 justify-between items-center w-full h-full md:gap-8 lg:flex-row">
 				<div className="flex flex-col flex-1 justify-center">
 					<div className="relative place-self-start max-w-2xl">
 						<span className="block mb-2 font-sans text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
@@ -66,7 +66,7 @@ const Hero = ({ portfolioData, fullName }) => {
 					showCursor={false}
 				/>
 				<div className="flex relative flex-col gap-3 justify-between items-center mt-4 w-full lg:flex-row">
-					<div className="max-w-[85ch] md:max-w-[95ch] font-normal text-sm md:text-base ">
+                    <div className="max-w-[68ch] md:max-w-[85ch] font-normal text-sm md:text-base ">
 							<p>
 								{description}
 							</p>
@@ -193,7 +193,7 @@ const ProductGrid = ({ projectData }) => {
 			<div className="absolute inset-0 rounded-2xl bg-black/20" />
 
 			{/* Content */}
-			<div className="flex relative z-10 flex-col justify-center items-center">
+            <div className="flex relative z-10 flex-col justify-center items-center">
 				<TextType
 					as="h2"
 					text={["PROJECTS"]}
@@ -212,23 +212,23 @@ const ProductGrid = ({ projectData }) => {
 				/>
 				
 				{/* Horizontal scroll container */}
-				<div className="overflow-hidden py-8 w-full">
-					<div 
-						ref={cardsContainerRef}
-						className="flex gap-8"
-					>
-						{projectData.map((project, index) => (
-							<div key={index} className="flex-shrink-0 w-full max-w-md">
-								<ProjectCard
-									title={project.title}
-									image={project.image}
-									description={project.description}
-									link={project.link}
-								/>
-							</div>
-						))}
-					</div>
-				</div>
+                <div className="overflow-hidden py-8 w-full">
+                    <div 
+                        ref={cardsContainerRef}
+                        className="flex gap-6 md:gap-8"
+                    >
+                        {projectData.map((project, index) => (
+                            <div key={index} className={`flex-shrink-0 w-full max-w-xs sm:max-w-sm md:max-w-md rounded-xl p-3 md:p-4 ${index % 3 === 0 ? 'bg-brand-purple/20' : index % 3 === 1 ? 'bg-brand-lime/20' : 'bg-brand-orange/20'} border border-white/10` }>
+                                <ProjectCard
+                                    title={project.title}
+                                    image={project.image}
+                                    description={project.description}
+                                    link={project.link}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
 			</div>
 
 			<style jsx>{`
