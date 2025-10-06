@@ -2,6 +2,7 @@
 import { useRef, useEffect, ReactNode, FC, Children, isValidElement, cloneElement } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import Lenis from '@studio-freight/lenis';
+import React from 'react';
 
 interface ParallaxItemProps {
   children: ReactNode;
@@ -32,6 +33,7 @@ const ParallaxItem: FC<ParallaxItemProps> = ({ children, i = 0, progress, range,
       }) 
     : children;
 
+  const MotionDiv: any = motion.div;
   return (
     <div ref={container} className="parallax-item-container" style={{ 
       height: '100vh',
@@ -42,19 +44,19 @@ const ParallaxItem: FC<ParallaxItemProps> = ({ children, i = 0, progress, range,
       top: '0px',
       width: '100%'
     }}>
-      <motion.div 
-        style={{ 
-          scale, 
+      <MotionDiv
+        className="parallax-item"
+        style={{
+          scale,
           position: 'relative',
           top: `calc(-5vh + ${i * 25}px)`,
           width: '100%',
-          transformOrigin: 'top'
+          transformOrigin: 'top',
         }}
-        className="parallax-item"
-        data-progress={itemProgress.get()}
+        data-progress={String(itemProgress.get())}
       >
         {enhancedChild}
-      </motion.div>
+      </MotionDiv>
     </div>
   );
 };
@@ -89,7 +91,7 @@ const ParallaxSection: FC<ParallaxSectionProps> = ({ children }) => {
   const childrenArray = Children.toArray(children);
 
   return (
-    <div ref={container} className="parallax-container mt-24 bg-gray-700 ">
+    <div ref={container} className="mt-24 bg-gray-700 parallax-container">
       {childrenArray.map((child, i) => {
         // Calculate target scale (decreasing for each section)
         const targetScale = 1 - ((childrenArray.length - i) * 0.05);

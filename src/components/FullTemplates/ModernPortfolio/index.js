@@ -1,5 +1,7 @@
 // Main entry point for ModernPortfolio template
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
+// Ensure template-specific styles (texture, button-cutout, animations) are loaded
+import "./app/globals.css";
 import { getProjectData } from "./data/skateboardData";
 import { getNavigationData } from "./data/navagationData";
 
