@@ -794,26 +794,35 @@ function CustomizeContent() {
 					>
 						👁️ Preview Portfolio
 					</motion.button>
-					<motion.button
-						className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium disabled:opacity-60 hover:bg-blue-700 transition-colors duration-200"
-						onClick={handleSave}
-						disabled={saving}
-						whileHover={{ scale: 1.02 }}
-						whileTap={{ scale: 0.98 }}
-					>
-						{saving ? (
-							<div className="flex items-center justify-center space-x-2">
-								<motion.div
-									animate={{ rotate: 360 }}
-									transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-									className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-								/>
-								<span>Saving...</span>
-							</div>
-						) : (
-							"🚀 Publish Portfolio"
-						)}
-					</motion.button>
+                    <motion.button
+                        className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium disabled:opacity-60 hover:bg-blue-700 transition-colors duration-200"
+                        onClick={async () => {
+                            try {
+                                const desired = window.prompt("Choose your public URL (slug)", username || "");
+                                if (!desired) return;
+                                const r = await fetch("/api/portfolio/check-slug", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slug: desired.trim() }) });
+                                const j = await r.json();
+                                if (!j?.available) { alert("This URL is taken. Try another."); return; }
+                                await handleSave();
+                            } catch (_) { alert("Network error. Try again."); }
+                        }}
+                        disabled={saving}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        {saving ? (
+                            <div className="flex items-center justify-center space-x-2">
+                                <motion.div
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                                />
+                                <span>Saving...</span>
+                            </div>
+                        ) : (
+                            "🚀 Publish Portfolio"
+                        )}
+                    </motion.button>
 				</motion.div>
 			</div>
 
