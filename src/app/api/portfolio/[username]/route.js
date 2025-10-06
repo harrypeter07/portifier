@@ -69,7 +69,12 @@ export async function GET(req, { params }) {
 			if (!portfolio) {
 				console.log("❌ [API] Portfolio not found for user:", user._id);
 				return NextResponse.json(
-					{ error: "Portfolio not found" },
+					{ 
+						error: "Portfolio not found",
+						message: "No public portfolio found for this user. The user may not have created a portfolio yet.",
+						userExists: true,
+						hasPortfolio: false
+					},
 					{ status: 404 }
 				);
 			}
