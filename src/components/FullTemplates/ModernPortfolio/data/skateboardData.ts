@@ -4,9 +4,9 @@ export const transformProjectsData = (portfolioData) => {
 	
 	return projects.map((project, index) => ({
 		title: project.title || `Project ${index + 1}`,
-		image: project.images?.[0] || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80",
+		image: project.images?.[0] || project.images?.[0]?.src || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80",
 		description: project.description || project.longDescription || "A creative project showcasing my skills and expertise.",
-		link: project.links?.live || project.links?.github || project.links?.demo || "#",
+		link: project.links?.live || project.links?.github || project.links?.demo || project.links?.documentation || "#",
 	}));
 };
 

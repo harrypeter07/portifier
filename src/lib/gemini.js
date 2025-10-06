@@ -80,11 +80,12 @@ const RETRY_CONFIG = {
 	timeout: 30000, // 30 seconds timeout
 };
 
-// Available Gemini models to try as fallbacks
+// Available Gemini models to try as fallbacks (only 2.0+ models)
 const GEMINI_MODELS = [
 	"gemini-2.0-flash-exp",
-	"gemini-1.5-flash",
-	"gemini-1.5-pro",
+	"gemini-2.0-flash-thinking-exp",
+	"gemini-exp-1206",
+	"gemini-exp-1120",
 ];
 
 // Default portfolio schema - you can modify this or pass it as a parameter

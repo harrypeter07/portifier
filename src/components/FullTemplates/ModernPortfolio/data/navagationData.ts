@@ -7,11 +7,11 @@ export const transformNavigationData = (portfolioData) => {
 	
 	return {
 		title: fullName,
-		description: portfolioData?.about?.summary || 
+		description: portfolioData?.about?.summary || portfolioData?.about?.bio || 
 			"Welcome to my personal portfolio website. Explore my projects, learn about me, and get in touch!",
 		image: {
 			src: personal.avatar || "/prismic/thank-you-complete.png",
-			alt: "portfolio",
+			alt: `${fullName} - Portfolio`,
 			width: 500,
 			height: 500,
 		},
