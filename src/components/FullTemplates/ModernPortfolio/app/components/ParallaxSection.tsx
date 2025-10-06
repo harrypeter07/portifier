@@ -91,7 +91,7 @@ const ParallaxSection: FC<ParallaxSectionProps> = ({ children }) => {
   const childrenArray = Children.toArray(children);
 
   return (
-    <div ref={container} className="mt-24 bg-gray-700 parallax-container">
+    <div ref={container} className="mt-24 bg-gray-700 parallax-container relative">
       {childrenArray.map((child, i) => {
         // Calculate target scale (decreasing for each section)
         const targetScale = 1 - ((childrenArray.length - i) * 0.05);

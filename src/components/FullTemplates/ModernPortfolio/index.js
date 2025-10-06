@@ -2,6 +2,7 @@
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 // Ensure template-specific styles (texture, button-cutout, animations) are loaded
 import "./app/globals.css";
+import Header from "./app/components/Header";
 import { getProjectData } from "./data/skateboardData";
 import { getNavigationData } from "./data/navagationData";
 
@@ -11,12 +12,19 @@ export default function ModernPortfolio({ data = EMPTY_PORTFOLIO }) {
 	const projectData = getProjectData(data);
 	const navigationData = getNavigationData(data);
 	
-	// Import and render the main template component
-	const Homepage = require("./pages/Homepage.jsx").default;
-	
-	return <Homepage 
-		portfolioData={data}
-		projectData={projectData}
-		navigationData={navigationData}
-	/>;
+    // Import and render the main template component
+    const Homepage = require("./pages/Homepage.jsx").default;
+
+    return (
+        <div className="relative">
+            {/* Template header (navbar) */}
+            <Header />
+            {/* Main page */}
+            <Homepage 
+                portfolioData={data}
+                projectData={projectData}
+                navigationData={navigationData}
+            />
+        </div>
+    );
 }
