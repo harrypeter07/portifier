@@ -96,7 +96,7 @@ const Hero = ({ portfolioData, fullName }) => {
 					className="flex relative z-30 flex-1 justify-end items-center w-full max-w-2xl"
 				>
                     <div
-						className="flex relative justify-center items-center w-full rounded-2xl border transition-transform duration-300 cursor-pointer border-white/90 group"
+						className="flex relative justify-center items-center w-full rounded-2xl transition-transform duration-300 cursor-pointer group"
                         style={{ perspective: "1200px" }}
                     >
                         <Image
@@ -104,7 +104,7 @@ const Hero = ({ portfolioData, fullName }) => {
                             alt={`${fullName} - Professional Photo`}
 							width={560}
 							height={400}
-							className="w-auto h-auto max-w-[96%] md:max-w-full max-h-[60vh] md:max-h-[70vh] rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3"
+							className="w-auto h-auto max-w-[96%] md:max-w-full max-h-[60vh] md:max-h-[70vh] rounded-2xl shadow-2xl transition-transform duration-500 border border-white/90 group-hover:scale-105 group-hover:rotate-3"
                             style={{ objectFit: "contain", objectPosition: "center center", willChange: "transform" }}
                             priority
                         />
