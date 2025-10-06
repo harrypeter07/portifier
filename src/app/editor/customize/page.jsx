@@ -251,11 +251,13 @@ function CustomizeContent() {
 
 	// Fetch username on mount
 	useEffect(() => {
+		let isMounted = true;
+		
 		(async () => {
 			try {
 				const res = await fetch("/api/auth/me");
 				const data = await res.json();
-				if (res.ok && data.user?.username) {
+				if (res.ok && data.user?.username && isMounted) {
 					console.log("👤 [CUSTOMIZE] Username fetched:", data.user.username);
 					setUsername(data.user.username);
 					
@@ -272,27 +274,40 @@ function CustomizeContent() {
 						
 						// Fetch the specific portfolio data
 						const portfolioRes = await fetch(`/api/portfolio/${portfolioUsername}`);
-						if (portfolioRes.ok) {
+						if (portfolioRes.ok && isMounted) {
 							const portfolioData = await portfolioRes.json();
 							setExistingPortfolio(portfolioData.portfolio);
 							console.log("📁 [CUSTOMIZE] Found specific portfolio:", portfolioData.portfolio._id);
+						} else if (portfolioRes.status === 404) {
+							console.log("📁 [CUSTOMIZE] No specific portfolio found (404) - user will create new one");
 						}
 					} else {
 						// Check if user has an existing portfolio (general case)
+						console.log("🔍 [CUSTOMIZE] Checking for existing portfolio for user:", data.user.username);
 						const portfolioRes = await fetch(`/api/portfolio/${data.user.username}`);
-						if (portfolioRes.ok) {
+						if (portfolioRes.ok && isMounted) {
 							const portfolioData = await portfolioRes.json();
 							setExistingPortfolio(portfolioData.portfolio);
 							console.log("📁 [CUSTOMIZE] Found existing portfolio:", portfolioData.portfolio._id);
+						} else if (portfolioRes.status === 404) {
+							console.log("📁 [CUSTOMIZE] No existing portfolio found (404) - user will create new one");
 						}
 					}
+				} else if (!isMounted) {
+					console.log("👤 [CUSTOMIZE] Component unmounted, skipping portfolio fetch");
 				} else {
 					console.error("❌ [CUSTOMIZE] No username found in response:", data);
 				}
 			} catch (error) {
-				console.error("❌ [CUSTOMIZE] Failed to fetch username:", error);
+				if (isMounted) {
+					console.error("❌ [CUSTOMIZE] Failed to fetch username:", error);
+				}
 			}
 		})();
+		
+		return () => {
+			isMounted = false;
+		};
 	}, [searchParams]);
 
 	// No slug flow; publish to /{username}

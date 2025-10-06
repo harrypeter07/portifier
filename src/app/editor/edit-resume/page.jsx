@@ -73,11 +73,14 @@ function EditResumeContent() {
 						}
 					} else {
 						// Check if user has an existing portfolio (general case)
+						console.log("🔍 [EDIT-RESUME] Checking for existing portfolio for user:", data.user.username);
 						const portfolioRes = await fetch(`/api/portfolio/${data.user.username}`);
 						if (portfolioRes.ok) {
 							const portfolioData = await portfolioRes.json();
 							setExistingPortfolio(portfolioData.portfolio);
 							console.log("📁 [EDIT-RESUME] Found existing portfolio:", portfolioData.portfolio._id);
+						} else if (portfolioRes.status === 404) {
+							console.log("📁 [EDIT-RESUME] No existing portfolio found (404) - user will create new one");
 						}
 					}
 				} else {
