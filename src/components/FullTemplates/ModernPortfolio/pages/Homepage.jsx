@@ -66,7 +66,7 @@ const Hero = ({ portfolioData, fullName }) => {
 						showCursor={false}
 					/>
 					<div className="relative flex flex-col w-full items-center justify-between ~gap-2/4 lg:flex-row mt-6">
-						<div className="max-w-[95ch] md:max-w-[110ch] font-semibold ~text-lg/xl ">
+						<div className="w-[35ch]  font-semibold ~text-lg/xl ">
 							<p>
 								{description}
 							</p>
