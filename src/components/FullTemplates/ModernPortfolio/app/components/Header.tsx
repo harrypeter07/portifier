@@ -21,7 +21,7 @@ export function Header() {
 					aria-label="Main"
                     className="col-span-full row-start-2 md:col-span-1 md:col-start-2 md:row-start-1"
 				>
-                    <ul className="flex flex-wrap gap-6 justify-center items-center md:gap-8">
+                    <ul className="flex flex-wrap gap-4 justify-center items-center sm:gap-6 md:gap-8">
                         {navigationData.navigation.map((item) => (
 							<li key={item.text}>
                                 <Link href={resolveHref(item.link)} className="text-sm font-semibold tracking-wide md:text-base">
@@ -32,10 +32,10 @@ export function Header() {
 					</ul>
 				</nav>
 
-				<div className="justify-self-end">
-                    <ButtonLink href="/" icon="cart" color="purple" aria-label="Cart (1)" className="font-semibold">
-                        <span className="text-sm md:hidden">1</span>
-                        <span className="hidden text-sm md:inline">Cart (1)</span>
+                <div className="justify-self-end">
+                    <ButtonLink href="/" icon="cart" color="purple" aria-label="Portfolio" className="font-semibold">
+                        <span className="text-sm md:hidden">Go</span>
+                        <span className="hidden text-sm md:inline">Portfolio</span>
 					</ButtonLink>
 				</div>
 			</div>
