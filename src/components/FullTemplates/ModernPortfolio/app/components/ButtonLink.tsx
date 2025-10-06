@@ -1,6 +1,7 @@
 import { FaCartShopping, FaPlus } from "react-icons/fa6";
 import Link, { LinkProps } from "next/link";
 import clsx from "clsx";
+import React from "react";
 
 export type ButtonProps = LinkProps & {
   color?: "orange" | "purple" | "lime";
@@ -48,7 +49,7 @@ export function ButtonLink({
             {icon === "skateboard" && <SkateboardIcon />}
             {icon === "plus" && <FaPlus />}
           </div>
-          <div className="w-px self-stretch bg-black/25" />
+          <div className="self-stretch w-px bg-black/25" />
         </>
       ) : null}
       {children}

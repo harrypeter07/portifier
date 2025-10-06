@@ -12,6 +12,11 @@ import ParallaxSection from "../app/components/ParallaxSection";
 import TextType from "../app/components/TextType";
 import ContactForm from "../app/components/ContactForm";
 import Footer from "../app/components/Footer";
+import bgScroll from "../public/background-9509852_1280.webp";
+import fallbackPortrait from "../public/image-texture.png";
+import imgForeground from "../public/image-texture.png";
+import imgBackground from "../public/bg-texture.webp";
+import skillsFallback from "../public/concrete-normal.avif";
 
 // Heading replaced by TextType for typing animation
 
@@ -96,7 +101,7 @@ const Hero = ({ portfolioData, fullName }) => {
 						style={{ perspective: "1200px" }}
 					>
 						<Image
-							src={personal.avatar || "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"}
+							src={personal.avatar || fallbackPortrait}
 							alt={`${fullName} - Professional Photo`}
 							width={350}
 							height={350}
@@ -178,7 +183,7 @@ const ProductGrid = ({ projectData }) => {
 			<div
 				className="absolute inset-0 animate-scroll-left"
 				style={{
-					backgroundImage: "url('/background-9509852_1280.webp')",
+					backgroundImage: `url('${bgScroll.src}')`,
 					backgroundSize: "200% 100%",
 					backgroundPosition: "0% center",
 					backgroundRepeat: "repeat-x",
@@ -287,8 +292,8 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 					text={fullAboutText}
 					buttonText="Download Resume"
 					buttonLink="/resume.pdf"
-					imageForeground={personal.avatar || "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"}
-					imageBackground="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80"
+					imageForeground={personal.avatar || imgForeground}
+					imageBackground={imgBackground}
 				/>
 
 				{/* Skills Section - Structured & Animated */}
@@ -381,8 +386,8 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 							</div>
 						</div>
 						<div className="flex justify-center items-center animate-fade-in-up">
-							<Image
-								src={personal.avatar || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"}
+						<Image
+							src={personal.avatar || skillsFallback}
 								alt={`${fullName} - Professional Skills`}
 								width={300}
 								height={400}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { ButtonLink } from "./ButtonLink";
-import { navigationData } from "@/data/navagationData";
+import { navigationData } from "../../data/navagationData";
 
 export async function Header() {
 	return (

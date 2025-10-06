@@ -9,6 +9,7 @@ import {
 	validatePortfolioData,
 } from "@/utils/dataTransformers";
 import { auth } from "@/lib/auth";
+import crypto from "node:crypto";
 
 // Utility function to generate unique slug
 async function generateUniqueSlug(portfolioData, existingId = null) {
@@ -99,6 +100,43 @@ export async function POST(req) {
 		} else {
 			// No data provided - use empty portfolio
 			finalPortfolioData = JSON.parse(JSON.stringify(EMPTY_PORTFOLIO));
+		}
+
+		// Normalize data to satisfy schema requirements (ensure IDs on nested arrays, sane defaults)
+		const ensureId = (obj) => {
+			if (!obj) return obj;
+			if (!obj.id) obj.id = crypto.randomUUID();
+			return obj;
+		};
+
+		try {
+			// Experience jobs
+			if (finalPortfolioData?.experience?.jobs?.length) {
+				finalPortfolioData.experience.jobs = finalPortfolioData.experience.jobs.map((job) => ensureId(job));
+			}
+			// Projects
+			if (finalPortfolioData?.projects?.items?.length) {
+				finalPortfolioData.projects.items = finalPortfolioData.projects.items.map((proj) => ensureId(proj));
+			}
+			// Education
+			if (finalPortfolioData?.education?.degrees?.length) {
+				finalPortfolioData.education.degrees = finalPortfolioData.education.degrees.map((deg) => ensureId(deg));
+			}
+			// Skills groups (technical categories and soft skills)
+			if (finalPortfolioData?.skills?.technical?.length) {
+				finalPortfolioData.skills.technical = finalPortfolioData.skills.technical.map((cat) => {
+					const withId = ensureId(cat);
+					if (withId?.skills?.length) {
+						withId.skills = withId.skills.map((skill) => ensureId(typeof skill === 'object' ? skill : { name: skill }));
+					}
+					return withId;
+				});
+			}
+			if (finalPortfolioData?.skills?.soft?.length) {
+				finalPortfolioData.skills.soft = finalPortfolioData.skills.soft.map((skill) => ensureId(typeof skill === 'object' ? skill : { name: skill }));
+			}
+		} catch (_) {
+			// If normalization fails, proceed; validation will catch issues
 		}
 
 		// Validate portfolio data
