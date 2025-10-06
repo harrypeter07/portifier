@@ -27,6 +27,9 @@ export default function PortfolioDashboardPage({ params }) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [timeRange, setTimeRange] = useState('7d'); // 7d, 30d, 90d
+	// URL/slug management
+	const [slug, setSlug] = useState('');
+	const [slugStatus, setSlugStatus] = useState("");
 
 	useEffect(() => {
 		async function fetchPortfolioAndStats() {
@@ -46,6 +49,7 @@ export default function PortfolioDashboardPage({ params }) {
 				}
 
 				setPortfolio(portfolioData.portfolio);
+				setSlug(portfolioData.portfolio?.username || username);
 
 				// Fetch detailed stats
 				const statsRes = await fetch(`/api/portfolio/${username}/views?range=${timeRange}`);
@@ -118,7 +122,7 @@ export default function PortfolioDashboardPage({ params }) {
 								{portfolio?.portfolioData?.personal?.firstName} {portfolio?.portfolioData?.personal?.lastName}'s Portfolio Performance
 							</p>
 						</div>
-						<div className="flex items-center gap-4">
+					<div className="flex items-center gap-4">
 							{/* Time Range Selector */}
 							<select
 								value={timeRange}
@@ -130,18 +134,18 @@ export default function PortfolioDashboardPage({ params }) {
 								<option value="90d">Last 90 days</option>
 							</select>
 							
-							{/* Portfolio URL */}
-							<div className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-								<span className="text-sm text-gray-600 dark:text-gray-400">🔗</span>
-								<a 
-									href={`/${username}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
-								>
-									View Portfolio
-								</a>
-							</div>
+						{/* Portfolio URL */}
+						<div className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+							<span className="text-sm text-gray-600 dark:text-gray-400">🔗</span>
+							<a 
+								href={`/${portfolio?.username || username}`}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+							>
+								View Portfolio
+							</a>
+						</div>
 						</div>
 					</div>
 				</div>
@@ -184,6 +188,70 @@ export default function PortfolioDashboardPage({ params }) {
 								</button>
 							</div>
 						</div>
+					</div>
+				</div>
+			)}
+
+			{/* URL / Slug Management */}
+			{portfolio && (
+				<div className="max-w-7xl mx-auto px-4 py-6">
+					<div className="rounded-xl border bg-white dark:bg-gray-900 p-4 shadow-sm">
+						<h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Public URL</h3>
+						<div className="flex flex-col md:flex-row gap-3 items-start md:items-end">
+							<div className="flex-1 w-full">
+								<label className="block text-sm mb-1 text-gray-700 dark:text-gray-300">Slug</label>
+								<input
+									value={slug}
+									onChange={(e) => setSlug(e.target.value.trim())}
+									className="w-full rounded-md border px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+									placeholder="your-portfolio-url"
+								/>
+								<p className="text-xs mt-1 text-gray-600 dark:text-gray-400">Preview: {typeof window !== 'undefined' ? `${window.location.origin}/${slug || username}` : `/${slug || username}`}</p>
+							</div>
+							<button
+								onClick={async () => {
+									setSlugStatus("Checking...");
+									try {
+										const r = await fetch("/api/portfolio/check-slug", {
+											method: "POST",
+											headers: { "Content-Type": "application/json" },
+											body: JSON.stringify({ slug }),
+										});
+										const j = await r.json();
+										if (!j?.available) {
+											setSlugStatus("This URL is taken. Try another.");
+											return;
+										}
+
+										setSlugStatus("Saving...");
+										const save = await fetch("/api/portfolio/save", {
+											method: "POST",
+											headers: { "Content-Type": "application/json" },
+											body: JSON.stringify({
+												username: slug,
+												layout: portfolio.layout,
+												portfolioData: portfolio.portfolioData,
+												currentTemplate: portfolio.currentTemplate,
+												templateId: portfolio.templateId,
+												templateType: portfolio.templateType,
+												isNewPortfolio: false,
+											}),
+										});
+										if (save.ok) {
+											setSlugStatus("Saved! Your portfolio is now at /" + slug);
+										} else {
+											setSlugStatus("Failed to save. Try again.");
+										}
+									} catch (e) {
+										setSlugStatus("Network error. Try again.");
+									}
+								}}
+								className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+							>
+								Check & Save
+							</button>
+						</div>
+						{slugStatus && <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">{slugStatus}</p>}
 					</div>
 				</div>
 			)}

@@ -311,7 +311,7 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 							<div className="mb-4 max-w-md text-lg text-white/90">
 								A quick overview of my technical skills and tools I use daily.
 							</div>
-						<div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						<div className="grid grid-cols-1 gap-4 w-full sm:grid-cols-2 lg:grid-cols-3">
 								{(() => {
 									// Transform portfolio skills to template format
 									const skillGroups = [];
