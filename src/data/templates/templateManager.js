@@ -208,6 +208,28 @@ export const PORTFOLIO_TEMPLATES = {
 		},
 		sampleData: sampleDataCreative,
 	},
+
+	modernPortfolio: {
+		id: "modernPortfolio",
+		name: "Modern Portfolio",
+		description: "Dynamic portfolio with animations and modern design",
+		category: "developer",
+		type: "full", // full-page template
+		component: "ModernPortfolio", // reference to full template component
+		preview: "/templates/modern-portfolio-preview.jpg",
+		theme: {
+			primaryColor: "#8B5CF6",
+			secondaryColor: "#7C3AED",
+			accentColor: "#F59E0B",
+			backgroundColor: "#FFFFFF",
+			textColor: "#1F2937",
+			font: "Inter",
+			darkMode: false,
+			animations: true,
+			layout: "modern",
+		},
+		sampleData: sampleDataCleanfolio,
+	},
 };
 
 // Template utility functions
