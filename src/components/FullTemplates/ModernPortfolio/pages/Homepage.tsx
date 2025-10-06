@@ -5,11 +5,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Image from "next/image";
 
-import ProjectCard from "@/app/components/SkateBoard";
+import ProjectCard from "../app/components/SkateBoard";
 import { getProjectData } from "../data/skateboardData";
-import TextAndImage from "@/app/components/TextAndImage";
-import ParallaxSection from "@/app/components/ParallaxSection";
-import TextType from "@/app/components/TextType";
+import TextAndImage from "../app/components/TextAndImage";
+import ParallaxSection from "../app/components/ParallaxSection";
+import TextType from "../app/components/TextType";
 
 // Heading replaced by TextType for typing animation
 
@@ -23,12 +23,12 @@ const Hero = ({ portfolioData }) => {
 		"I build robust, scalable web applications and beautiful user interfaces. Let's create something amazing together!";
 	
 	return (
-	<section className="hero relative h-dvh overflow-hidden text-zinc-800 m-0 border-none">
+	<section className="overflow-hidden relative m-0 border-none hero h-dvh text-zinc-800">
 		<div className="grid absolute inset-0 mx-auto mt-16 max-w-6xl grid-rows-[1fr,auto] place-items-end px-6 ~py-10/16 w-full h-full">
-			<div className="flex flex-col-reverse lg:flex-row w-full h-full items-center justify-between gap-8">
-				<div className="flex-1 flex flex-col justify-center">
-					<div className="relative max-w-2xl place-self-start">
-						<span className="block font-sans text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 tracking-tight">
+			<div className="flex flex-col-reverse gap-8 justify-between items-center w-full h-full lg:flex-row">
+				<div className="flex flex-col flex-1 justify-center">
+					<div className="relative place-self-start max-w-2xl">
+						<span className="block mb-2 font-sans text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
 							<TextType
 								as="span"
 								text={["Hi, my name is"]}
@@ -39,7 +39,7 @@ const Hero = ({ portfolioData }) => {
 							/>
 						</span>
 						<span
-							className="block font-sans uppercase text-2xl md:text-5xl lg:text-6xl font-extrabold  drop-shadow-lg tracking-tight pl-2"
+							className="block pl-2 font-sans text-2xl font-extrabold tracking-tight uppercase drop-shadow-lg md:text-5xl lg:text-6xl"
 							style={{ left: "-10px", position: "relative" }}
 						>
 							<TextType
@@ -56,7 +56,7 @@ const Hero = ({ portfolioData }) => {
 					<TextType
 						as="span"
 						text={[title]}
-						className="mt-6 block text-3xl font-bold text-brand-purple"
+						className="block mt-6 text-3xl font-bold text-brand-purple"
 						typingSpeed={60}
 						pauseDuration={2000}
 						showCursor={false}
@@ -69,9 +69,9 @@ const Hero = ({ portfolioData }) => {
 						</div>
 						<a
 							href="#projects"
-							className="z-20 mt-2 block button-cutout group mx-4 inline-flex items-center bg-gradient-to-b from-25% to-75% bg-[length:100%_400%] font-bold transition-[filter,background-position] duration-300 hover:bg-bottom from-brand-purple to-brand-lime text-white hover:text-black ~text-lg/2xl ~gap-3/4 ~px-1/2 ~py-3/4"
+							className="z-20 mt-2 button-cutout group mx-4 inline-flex items-center bg-gradient-to-b from-25% to-75% bg-[length:100%_400%] font-bold transition-[filter,background-position] duration-300 hover:bg-bottom from-brand-purple to-brand-lime text-white hover:text-black ~text-lg/2xl ~gap-3/4 ~px-1/2 ~py-3/4"
 						>
-							<span className="flex size-6 items-center justify-center transition-transform group-hover:-rotate-[25deg] size-6">
+							<span className="flex size-6 items-center justify-center transition-transform group-hover:-rotate-[25deg]">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
@@ -82,7 +82,7 @@ const Hero = ({ portfolioData }) => {
 									<path fill="currentColor" d="M12 5v14m7-7H5" />
 								</svg>
 							</span>
-							<div className="w-px self-stretch bg-black/25" />
+							<div className="self-stretch w-px bg-black/25" />
 							View Projects
 						</a>
 					</div>
@@ -167,7 +167,7 @@ const ProductGrid = ({ projectData }) => {
 	return (
 		<section
 			ref={sectionRef}
-			className="relative text-zinc-800 max-sm:mb-32 max-md:mb-32 py-16 px-4 overflow-hidden transition-all duration-500"
+			className="overflow-hidden relative px-4 py-16 transition-all duration-500 text-zinc-800 max-sm:mb-32 max-md:mb-32"
 			id="projects"
 			style={{
 				borderRadius: "2rem",
@@ -187,14 +187,14 @@ const ProductGrid = ({ projectData }) => {
 			/>
 
 			{/* Overlay for better text readability */}
-			<div className="absolute inset-0 bg-black/20 rounded-2xl" />
+			<div className="absolute inset-0 rounded-2xl bg-black/20" />
 
 			{/* Content */}
-			<div className="relative z-10 flex flex-col items-center justify-center">
+			<div className="flex relative z-10 flex-col justify-center items-center">
 				<TextType
 					as="h2"
 					text={["PROJECTS"]}
-					className="mb-3 text-center font-sans uppercase text-white drop-shadow-lg text-4xl md:text-5xl lg:text-6xl tracking-tight"
+					className="mb-3 font-sans text-4xl tracking-tight text-center text-white uppercase drop-shadow-lg md:text-5xl lg:text-6xl"
 					typingSpeed={60}
 					pauseDuration={2000}
 					showCursor={false}
@@ -202,14 +202,14 @@ const ProductGrid = ({ projectData }) => {
 				<TextType
 					as="div"
 					text={["Explore some of my recent work and creative projects."]}
-					className="text-center mb-8 text-2xl md:text-3xl font-semibold text-white/90 drop-shadow"
+					className="mb-8 text-2xl font-semibold text-center drop-shadow md:text-3xl text-white/90"
 					typingSpeed={40}
 					pauseDuration={2000}
 					showCursor={false}
 				/>
 				
 				{/* Horizontal scroll container */}
-				<div className="w-full overflow-hidden py-8">
+				<div className="overflow-hidden py-8 w-full">
 					<div 
 						ref={cardsContainerRef}
 						className="flex gap-8"
@@ -245,8 +245,8 @@ const ProductGrid = ({ projectData }) => {
 		</section>
 	);
 };
-import ContactForm from "@/app/components/ContactForm";
-import Footer from "@/app/components/Footer";
+import ContactForm from "../app/components/ContactForm";
+import Footer from "../app/components/Footer";
 
 const Homepage = ({ portfolioData, projectData, navigationData }) => {
 	return (
@@ -269,21 +269,21 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 				/>
 
 				{/* Skills Section - Structured & Animated */}
-				<section className="bg-brand-blue bg-texture py-16 px-4">
-					<div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center md:gap-24">
+				<section className="px-4 py-16 bg-brand-blue bg-texture">
+					<div className="grid grid-cols-1 gap-12 items-center mx-auto max-w-6xl md:grid-cols-2 md:gap-24">
 						<div className="flex flex-col gap-8 animate-fade-in-up">
 							<TextType
 								as="h2"
 								text={["Skills"]}
-								className="text-4xl font-bold text-white mb-2"
+								className="mb-2 text-4xl font-bold text-white"
 								typingSpeed={60}
 								pauseDuration={2000}
 								showCursor={false}
 							/>
-							<div className="text-lg text-white/90 max-w-md mb-4">
+							<div className="mb-4 max-w-md text-lg text-white/90">
 								A quick overview of my technical skills and tools I use daily.
 							</div>
-							<div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+							<div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
 								{[
 									{
 										group: "Frontend",
@@ -319,16 +319,16 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 								].map(({ group, skills }) => (
 									<div
 										key={group}
-										className="rounded-xl bg-white/10 p-4 shadow-lg border border-white/10 animate-fade-in-up"
+										className="p-4 rounded-xl border shadow-lg bg-white/10 border-white/10 animate-fade-in-up"
 									>
-										<div className="font-bold text-brand-lime mb-2">
+										<div className="mb-2 font-bold text-brand-lime">
 											{group}
 										</div>
 										<ul className="space-y-1">
 											{skills.map((skill) => (
-												<li key={skill} className="flex items-center gap-2">
-													<span className="inline-block w-2 h-2 rounded-full bg-brand-lime animate-pulse" />
-													<span className="text-white/90 font-medium">
+												<li key={skill} className="flex gap-2 items-center">
+													<span className="inline-block w-2 h-2 rounded-full animate-pulse bg-brand-lime" />
+													<span className="font-medium text-white/90">
 														{skill}
 													</span>
 												</li>
@@ -344,7 +344,7 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 								alt="Skills"
 								width={300}
 								height={400}
-								className="rounded-2xl shadow-2xl w-full max-w-xs"
+								className="w-full max-w-xs rounded-2xl shadow-2xl"
 								priority
 							/>
 						</div>
@@ -352,8 +352,8 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 				</section>
 				{/* New Contact Section */}
 				<section className="bg-brand-lime bg-texture py-16 px-4 min-h-[90vh]">
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center md:gap-24 max-w-6xl mx-auto">
-						<div className="flex flex-col items-center md:items-start text-center md:text-left gap-8 animate-fade-in-up">
+					<div className="grid grid-cols-1 gap-12 items-center mx-auto max-w-6xl md:grid-cols-2 md:gap-24">
+						<div className="flex flex-col gap-8 items-center text-center md:items-start md:text-left animate-fade-in-up">
 							<TextType
 								as="h2"
 								text={["Contact"]}
@@ -362,7 +362,7 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 								pauseDuration={2000}
 								showCursor={false}
 							/>
-							<div className="text-lg text-white max-w-md">
+							<div className="max-w-md text-lg text-white">
 								Interested in working together, collaborating, or just want to
 								say hi? I&apos;m always open to new opportunities and creative
 								projects. Let&apos;s connect!
