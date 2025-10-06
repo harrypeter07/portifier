@@ -8,20 +8,20 @@ import heroLocal from "../../public/image-texture.png";
 
 const Hero = () => {
     return (
-        <section className="hero relative h-dvh overflow-hidden text-zinc-800 m-0">
+        <section className="overflow-hidden relative m-0 hero h-dvh text-zinc-800">
 			{/* Removed WideLogo and TallLogo background */}
             <div className="grid absolute inset-0 mx-auto mt-24 max-w-7xl grid-rows-[1fr,auto] place-items-end px-4 md:px-6 ~py-10/16 w-full h-full">
-                <div className="flex flex-col-reverse lg:flex-row w-full h-full items-center justify-between gap-6 md:gap-8">
-					<div className="flex-1 flex flex-col justify-center">
-                        <Heading size="lg" className="relative max-w-3xl place-self-start leading-tight">
+                <div className="flex flex-col-reverse gap-6 justify-between items-center w-full h-full lg:flex-row md:gap-8">
+					<div className="flex flex-col flex-1 justify-center">
+                        <Heading size="lg" className="relative place-self-start max-w-3xl leading-tight">
 							Hi, I&apos;m{" "}
-                            <span className="text-brand-purple font-semibold">Aryan Sharma</span>
+                            <span className="font-semibold text-brand-purple">Aryan Sharma</span>
 							<br />
-                            <span className="mt-4 block text-xl md:text-2xl font-semibold">
+                            <span className="block mt-4 text-xl font-semibold md:text-2xl">
 								Creative Developer & Designer
 							</span>
 						</Heading>
-                        <div className="relative flex flex-col w-full items-center justify-between gap-3 md:gap-4 lg:flex-row mt-6">
+                        <div className="flex relative flex-col gap-3 justify-between items-center mt-6 w-full md:gap-4 lg:flex-row">
                             <div className="max-w-[55ch] font-medium text-base md:text-lg">
 								<p>
 									I craft interactive, visually engaging web experiences that
@@ -32,7 +32,7 @@ const Hero = () => {
 								href="#projects"
 								icon="plus"
                                 size="lg"
-                                className="z-20 mt-2 block text-sm md:text-base font-semibold"
+                                className="block z-20 mt-2 text-sm font-semibold md:text-base"
 							>
 								View Projects
 							</ButtonLink>
@@ -42,7 +42,7 @@ const Hero = () => {
 					{/* Interactive Image Container (replaces 3D) */}
                     <div className="flex-1 w-full max-w-lg md:max-w-xl h-[260px] md:h-[300px] min-h-[200px] max-h-[350px] flex items-center justify-center relative z-30">
 						<div
-							className="group w-full h-full flex items-center justify-center cursor-pointer transition-transform duration-300"
+							className="flex justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
 							style={{ perspective: "1200px" }}
 						>
 							<Image
