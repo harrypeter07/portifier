@@ -159,13 +159,24 @@ export default function ResumeUploadPage() {
 	useEffect(() => {
 		async function checkApiStatus() {
 			try {
+				console.log("🔍 Checking API status...");
 				const healthCheck = await fetch("/api/parse-resume", { method: "GET" });
 				const healthData = await healthCheck.json();
+				
+				console.log("📊 API Health Response:", healthData);
+				
+				// Check if API is healthy and Gemini is working
+				const isAvailable = healthData.status === "healthy" && healthData.gemini === "connected";
+				
+				console.log(`✅ API Status: ${isAvailable ? 'Available' : 'Unavailable'}`);
+				console.log(`📡 Gemini Status: ${healthData.gemini}`);
+				
 				setApiStatus({
-					available: healthData.available,
-					message: healthData.message
+					available: isAvailable,
+					message: isAvailable ? "AI service ready" : `AI service issue: ${healthData.gemini || healthData.error || "Unknown error"}`
 				});
 			} catch (error) {
+				console.error("❌ API check failed:", error);
 				setApiStatus({
 					available: false,
 					message: "Unable to connect to AI service"
@@ -366,10 +377,29 @@ export default function ResumeUploadPage() {
                 <Card className="mb-6 glass">
 					<CardContent className="p-4">
 						{/* API Status Indicator */}
-						<Badge variant={apiStatus.available ? "default" : "destructive"} className="mb-3">
-							<div className={`w-2 h-2 rounded-full mr-2 ${apiStatus.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
-							{apiStatus.message}
-						</Badge>
+						<div className="flex items-center justify-between mb-3">
+							<Badge variant={apiStatus.available ? "default" : "destructive"}>
+								<div className={`w-2 h-2 rounded-full mr-2 ${apiStatus.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+								{apiStatus.message}
+							</Badge>
+							{!apiStatus.available && (
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={async () => {
+										const healthCheck = await fetch("/api/parse-resume", { method: "GET" });
+										const healthData = await healthCheck.json();
+										const isAvailable = healthData.status === "healthy" && healthData.gemini === "connected";
+										setApiStatus({
+											available: isAvailable,
+											message: isAvailable ? "AI service ready" : `AI service issue: ${healthData.gemini || healthData.error || "Unknown error"}`
+										});
+									}}
+								>
+									Retry
+								</Button>
+							)}
+						</div>
 						
 						<input
 							type="file"
@@ -380,11 +410,17 @@ export default function ResumeUploadPage() {
 						/>
 						<Button
 							onClick={handleUpload}
-							disabled={!file || loading || !apiStatus.available}
+							disabled={!file || loading}
 							className="w-full"
+							variant={!apiStatus.available ? "outline" : "default"}
 						>
 							{loading ? "Parsing..." : "Upload & Parse Resume"}
 						</Button>
+						{!apiStatus.available && (
+							<div className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded p-2 mt-2">
+								⚠️ AI service may be unavailable. You can still try to upload, but parsing might fail.
+							</div>
+						)}
 						{error && <div className="text-destructive mb-2">{error}</div>}
 						{!file && !parsedData && (
 							<div className="text-xs text-black/70 dark:text-white/70 bg-gray-100 dark:bg-gray-800 border rounded p-2 mt-1">
