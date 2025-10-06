@@ -96,7 +96,7 @@ const Hero = ({ portfolioData, fullName }) => {
 					className="flex-1 w-full max-w-xl h-[300px] md:h-[360px] min-h-[220px] flex items-start justify-end relative z-30"
 				>
                     <div
-                        className="flex relative justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group overflow-hidden rounded-2xl"
+                        className="flex overflow-hidden relative justify-center items-center w-full h-full rounded-2xl transition-transform duration-300 cursor-pointer group"
                         style={{ perspective: "1200px" }}
                     >
                         <Image
