@@ -13,7 +13,16 @@ import TextType from "@/app/components/TextType";
 
 // Heading replaced by TextType for typing animation
 
-const Hero = () => (
+const Hero = ({ portfolioData }) => {
+	const personal = portfolioData?.personal || {};
+	const fullName = personal.firstName && personal.lastName
+		? `${personal.firstName} ${personal.lastName}`
+		: "HASSAN MANSURI";
+	const title = personal.subtitle || "Full Stack Engineer & UI Specialist";
+	const description = portfolioData?.about?.summary || 
+		"I build robust, scalable web applications and beautiful user interfaces. Let's create something amazing together!";
+	
+	return (
 	<section className="hero relative h-dvh overflow-hidden text-zinc-800 m-0 border-none">
 		<div className="grid absolute inset-0 mx-auto mt-16 max-w-6xl grid-rows-[1fr,auto] place-items-end px-6 ~py-10/16 w-full h-full">
 			<div className="flex flex-col-reverse lg:flex-row w-full h-full items-center justify-between gap-8">
@@ -105,7 +114,7 @@ const Hero = () => (
 );
 
 
-const ProductGrid = () => {
+const ProductGrid = ({ projectData }) => {
 	const sectionRef = useRef<HTMLElement>(null);
 	const cardsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -239,11 +248,11 @@ const ProductGrid = () => {
 import ContactForm from "@/app/components/ContactForm";
 import Footer from "@/app/components/Footer";
 
-const Homepage = () => {
+const Homepage = ({ portfolioData, projectData, navigationData }) => {
 	return (
 		<div className="bg-texture bg-brand-pink">
-			<Hero />
-			<ProductGrid />
+			<Hero portfolioData={portfolioData} />
+			<ProductGrid projectData={projectData} />
 			<ParallaxSection>
 				{/* About Section - Expanded */}
 				<TextAndImage
