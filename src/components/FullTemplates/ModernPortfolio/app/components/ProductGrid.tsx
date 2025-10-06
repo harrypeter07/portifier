@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import ProjectCard from "./SkateBoard";
-import projectData from "@/data/skateboardData";
+import projectData from "../../data/skateboardData";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextType from "./TextType";
@@ -60,7 +60,7 @@ const ProductGrid = () => {
 	return (
 		<section
 			ref={sectionRef}
-			className="relative text-zinc-800 max-sm:mb-32 max-md:mb-32 py-16 px-4 overflow-hidden transition-all duration-500"
+			className="overflow-hidden relative px-4 py-16 transition-all duration-500 text-zinc-800 max-sm:mb-32 max-md:mb-32"
 			id="projects"
 			style={{
 				borderRadius: "2rem",
@@ -72,7 +72,7 @@ const ProductGrid = () => {
 			<div
 				className="absolute inset-0 animate-scroll-left"
 				style={{
-					backgroundImage: `url('${bgScroll.src}')`,
+					backgroundImage: `url('${(bgScroll as unknown as string)}')`,
 					backgroundSize: "200% 100%",
 					backgroundPosition: "0% center",
 					backgroundRepeat: "repeat-x",
@@ -80,14 +80,14 @@ const ProductGrid = () => {
 			/>
 
 			{/* Overlay for better text readability */}
-			<div className="absolute inset-0 bg-black/20 rounded-2xl" />
+			<div className="absolute inset-0 rounded-2xl bg-black/20" />
 
 			{/* Content */}
-			<div className="relative z-10 flex flex-col items-center justify-center">
+			<div className="flex relative z-10 flex-col justify-center items-center">
 				<TextType
 					as="h2"
 					text={["PROJECTS"]}
-					className="mb-3 text-center font-sans uppercase text-white drop-shadow-lg text-4xl md:text-5xl lg:text-6xl tracking-tight"
+					className="mb-3 font-sans text-4xl tracking-tight text-center text-white uppercase drop-shadow-lg md:text-5xl lg:text-6xl"
 					typingSpeed={60}
 					pauseDuration={2000}
 					showCursor={false}
@@ -95,14 +95,14 @@ const ProductGrid = () => {
 				<TextType
 					as="div"
 					text={["Explore some of my recent work and creative projects."]}
-					className="text-center mb-8 text-2xl md:text-3xl font-semibold text-white/90 drop-shadow"
+					className="mb-8 text-2xl font-semibold text-center drop-shadow md:text-3xl text-white/90"
 					typingSpeed={40}
 					pauseDuration={2000}
 					showCursor={false}
 				/>
 				
 				{/* Horizontal scroll container */}
-				<div className="w-full overflow-hidden py-8">
+				<div className="overflow-hidden py-8 w-full">
 					<div 
 						ref={cardsContainerRef}
 						className="flex gap-8"
