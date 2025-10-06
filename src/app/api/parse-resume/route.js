@@ -120,19 +120,48 @@ export async function POST(req) {
 		Extract as much information as possible from the resume. If a field is not found, leave it as an empty string or empty array.
 		`;
 
-		// Use user's API key if available, otherwise fall back to environment variable
-		const model = await getGeminiModel(user._id, "gemini-1.5-flash");
-
-		// Generate content with image
-		const result = await model.generateContent([
-			prompt,
-			{
-				inlineData: {
-					mimeType: file.type,
-					data: base64,
-				},
-			},
-		]);
+		// Test available models and use the first working one
+		const testModels = [
+			"gemini-2.0-flash-exp",
+			"gemini-2.0-flash-thinking-exp", 
+			"gemini-exp-1206",
+			"gemini-exp-1120"
+		];
+		
+		let result = null;
+		let workingModel = null;
+		let lastError = null;
+		
+		for (const modelName of testModels) {
+			try {
+				console.log(`🤖 Testing model: ${modelName}`);
+				const model = await getGeminiModel(user._id, modelName);
+				
+				// Generate content with image
+				result = await model.generateContent([
+					prompt,
+					{
+						inlineData: {
+							mimeType: file.type,
+							data: base64,
+						},
+					},
+				]);
+				
+				workingModel = modelName;
+				console.log(`✅ Model ${modelName} working!`);
+				break;
+				
+			} catch (error) {
+				console.log(`❌ Model ${modelName} failed:`, error.message);
+				lastError = error;
+				continue;
+			}
+		}
+		
+		if (!result) {
+			throw new Error(`All Gemini models failed. Last error: ${lastError?.message || 'Unknown error'}`);
+		}
 
 		const response = await result.response;
 		const text = response.text();
