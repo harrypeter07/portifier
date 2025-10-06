@@ -166,6 +166,9 @@ export async function POST(req) {
 		const response = await result.response;
 		const text = response.text();
 
+		// Log successful model usage
+		console.log(`🎉 Successfully used model: ${workingModel}`);
+
 		// Try to parse the JSON response
 		let parsedData;
 		try {
