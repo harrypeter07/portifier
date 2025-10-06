@@ -4,6 +4,7 @@ import { Heading } from "./Heading";
 import { ButtonLink } from "./ButtonLink";
 
 import Image from "next/image";
+import heroLocal from "../../public/image-texture.png";
 
 const Hero = () => {
 	return (
@@ -45,7 +46,7 @@ const Hero = () => {
 							style={{ perspective: "1200px" }}
 						>
 							<Image
-								src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+								src={heroLocal}
 								alt="Showcase"
 								width={600}
 								height={350}

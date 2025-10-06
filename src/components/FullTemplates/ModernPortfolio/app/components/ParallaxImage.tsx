@@ -3,6 +3,8 @@ import clsx from "clsx";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { useRef } from "react";
+import fgLocal from "../../public/image-texture.png";
+import bgLocal from "../../public/bg-texture.webp";
 
 type Props = {
 	foregroundImage?: string;
@@ -11,8 +13,8 @@ type Props = {
 };
 
 export function ParallaxImage({
-	foregroundImage = "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80",
-	backgroundImage = "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+	foregroundImage = fgLocal,
+	backgroundImage = bgLocal,
 	className,
 }: Props) {
 	const backgroundImageRef = useRef<HTMLDivElement>(null);
@@ -62,13 +64,13 @@ export function ParallaxImage({
 		<div className={clsx("grid grid-cols-1 place-items-center", className)}>
 			<div
 				ref={backgroundImageRef}
-				className="backgroundImage  col-start-1 row-start-1 transition-transform"
+				className="col-start-1 row-start-1 transition-transform backgroundImage"
 			>
 				<Image src={backgroundImage} height={500} width={500} alt="bg-image" />
 			</div>
 			<div
 				ref={foregroundImageRef}
-				className="foreGroundImage col-start-1 row-start-1 transition-transform h-full w-full place-items-center"
+				className="col-start-1 row-start-1 place-items-center w-full h-full transition-transform foreGroundImage"
 			>
 				<Image src={foregroundImage} height={450} width={450} alt="bg-image" />
 			</div>
