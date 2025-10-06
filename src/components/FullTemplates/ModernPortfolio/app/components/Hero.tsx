@@ -12,7 +12,7 @@ const Hero = () => {
         <section
             className="overflow-hidden relative m-0 hero h-dvh text-zinc-800"
             style={{
-                backgroundImage: `url(${texture.src})`,
+                backgroundImage: `url(${texture})`,
                 backgroundSize: "720px 460px",
                 backgroundRepeat: "repeat",
                 backgroundPosition: "center",
@@ -54,8 +54,8 @@ const Hero = () => {
 							className="flex justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
 							style={{ perspective: "1200px" }}
 						>
-							<Image
-                                src={defaultImg}
+                            <Image
+                                src={"/components/FullTemplates/ModernPortfolio/public/default.png"}
 								alt="Showcase"
                                 width={560}
                                 height={320}
