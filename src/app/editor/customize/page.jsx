@@ -798,13 +798,40 @@ function CustomizeContent() {
                         className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium disabled:opacity-60 hover:bg-blue-700 transition-colors duration-200"
                         onClick={async () => {
                             try {
-                                const desired = window.prompt("Choose your public URL (slug)", username || "");
+                                const desiredRaw = window.prompt("Choose your public URL (slug)", username || "");
+                                const desired = desiredRaw?.trim();
                                 if (!desired) return;
-                                const r = await fetch("/api/portfolio/check-slug", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slug: desired.trim() }) });
+                                // uniqueness check
+                                const r = await fetch("/api/portfolio/check-slug", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slug: desired }) });
                                 const j = await r.json();
                                 if (!j?.available) { alert("This URL is taken. Try another."); return; }
-                                await handleSave();
+                                // publish directly with chosen slug
+                                setSaving(true);
+                                const res = await fetch("/api/portfolio/save", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                        layout: localLayout,
+                                        content: localContent,
+                                        portfolioData,
+                                        resumeId,
+                                        username: desired,
+                                        portfolioId: existingPortfolio?._id,
+                                        templateName: currentTemplate?.id || currentTemplate?.name || "cleanfolio",
+                                        templateId: currentTemplate?.id || "cleanfolio",
+                                        templateType: currentTemplate?.type || "component",
+                                        portfolioType: useLayoutStore.getState().portfolioType || "developer",
+                                        currentTemplate: currentTemplate,
+                                    })
+                                });
+                                const data = await res.json();
+                                if (res.ok && data.success) {
+                                    router.push(`/portfolio/${desired}`);
+                                } else {
+                                    alert(data?.error || "Failed to publish portfolio");
+                                }
                             } catch (_) { alert("Network error. Try again."); }
+                            finally { setSaving(false); }
                         }}
                         disabled={saving}
                         whileHover={{ scale: 1.02 }}
