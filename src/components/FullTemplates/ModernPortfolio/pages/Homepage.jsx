@@ -171,7 +171,7 @@ const ProductGrid = ({ projectData }) => {
 	return (
 		<section
 			ref={sectionRef}
-			className="overflow-hidden relative px-4 py-16 transition-all duration-500 text-zinc-800 max-sm:mb-32 max-md:mb-32"
+			className="overflow-hidden relative px-4 py-16 transition-all duration-500 text-zinc-800 max-sm:mb-32 max-md:mb-32 bg-texture bg-brand-blue"
 			id="projects"
 			style={{
 				borderRadius: "2rem",
