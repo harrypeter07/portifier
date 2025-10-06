@@ -257,6 +257,11 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 	const skills = portfolioData?.skills || {};
 	const contact = portfolioData?.contact || {};
 	
+	// Calculate fullName for use throughout the component
+	const fullName = personal.firstName && personal.lastName
+		? `${personal.firstName} ${personal.lastName}`
+		: "HASSAN MANSURI";
+	
 	// Build dynamic about text
 	const aboutText = about.summary || about.bio || "A passionate professional with expertise in technology and design.";
 	const contactInfo = personal.email || contact.email || "";
