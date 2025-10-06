@@ -60,7 +60,7 @@ const Hero = () => {
                                 fill
                                 sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 560px"
                                 className="object-contain rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 bg-white/10"
-                                style={{ willChange: "transform", objectPosition: "center center", width: "auto", height: "auto" }}
+                                style={{ willChange: "transform", objectPosition: "center center" }}
                                 priority
                             />
 						</div>
