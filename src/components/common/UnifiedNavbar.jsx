@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, ChevronDown, Sun, Moon } from "lucide-react";
+import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, ChevronDown, Sun, Moon, Heart } from "lucide-react";
 
 const publicNavLinks = [
 	{ href: "/auth/signin", label: "Sign In", icon: User },
@@ -334,6 +334,13 @@ export default function UnifiedNavbar() {
 
 						{/* Right Side - User Section */}
 						<div className="flex items-center space-x-4">
+							{/* Star on GitHub */}
+							<Button asChild className="hidden md:inline-flex bg-white/20 hover:bg-white/30 text-white border border-white/30">
+								<a href="https://github.com/harrypeter07/portifier" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+									<Heart className="w-4 h-4 fill-white/80 text-white" />
+									<span>Star on GitHub</span>
+								</a>
+							</Button>
 						{/* Theme toggle */}
 						<Button
 							variant="ghost"
@@ -445,6 +452,10 @@ export default function UnifiedNavbar() {
 					{/* Mobile Navigation */}
 					{mobileMenuOpen && (
 						<div className="border-t backdrop-blur-xl md:hidden border-white/20 bg-white/10 animate-slide-in">
+								<a href="https://github.com/harrypeter07/portifier" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-4 py-3 text-white">
+									<Heart className="w-4 h-4 fill-white/80 text-white" />
+									<span>Star on GitHub</span>
+								</a>
 							{/* Current Template Indicator for Mobile */}
 							{currentTemplate && (
 								<div className="px-4 py-3 border-b border-white dark:border-white">
