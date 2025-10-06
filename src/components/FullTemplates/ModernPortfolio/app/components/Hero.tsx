@@ -8,7 +8,7 @@ import heroLocal from "../../public/image-texture.png";
 
 const Hero = () => {
     return (
-        <section className="overflow-hidden relative m-0 hero h-dvh text-zinc-800">
+        <section className="overflow-hidden relative m-0 hero h-dvh text-zinc-800 bg-texture">
 			{/* Removed WideLogo and TallLogo background */}
             <div className="grid absolute inset-0 mx-auto mt-24 max-w-7xl grid-rows-[1fr,auto] place-items-end px-4 md:px-6 ~py-10/16 w-full h-full">
                 <div className="flex flex-col-reverse gap-6 justify-between items-center w-full h-full lg:flex-row md:gap-8">

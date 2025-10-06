@@ -110,10 +110,10 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${bowlby.variable} ${dmMono.variable} antialiased font-sans font-medium text-zinc-800`}
+				className={`${bowlby.variable} ${dmMono.variable} antialiased font-sans font-medium text-zinc-800 bg-texture`}
 			>
 				{loading && <LoadingScreen />}
-				<main style={{ opacity: loading ? 0 : 1, transition: "opacity 0.5s" }}>
+				<main className="min-h-screen" style={{ opacity: loading ? 0 : 1, transition: "opacity 0.5s" }}>
 					<Header />
 					{children}
 				</main>
