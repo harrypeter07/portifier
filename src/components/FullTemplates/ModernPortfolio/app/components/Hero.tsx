@@ -53,16 +53,16 @@ const Hero = () => {
 						<div
 							className="flex justify-center items-center w-full h-full transition-transform duration-300 cursor-pointer group"
 							style={{ perspective: "1200px" }}
-						>
+                        >
                             <Image
-                                src={"/components/FullTemplates/ModernPortfolio/public/default.png"}
-								alt="Showcase"
-                                width={560}
-                                height={320}
-                                className="rounded-2xl shadow-2xl object-contain w-full h-full max-h-[350px] max-w-lg md:max-w-xl transition-transform duration-500 group-hover:scale-105 bg-white/10"
-                                style={{ willChange: "transform", objectPosition: "center center" }}
-								priority
-							/>
+                                src={defaultImg}
+                                alt="Showcase"
+                                fill
+                                sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 560px"
+                                className="object-contain rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-105 bg-white/10"
+                                style={{ willChange: "transform", objectPosition: "center center", width: "auto", height: "auto" }}
+                                priority
+                            />
 						</div>
 					</div>
 				</div>
