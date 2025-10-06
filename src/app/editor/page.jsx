@@ -27,7 +27,7 @@ const FULL_LAYOUT = {
 
 const PREBUILT_TEMPLATES = [
   {
-    name: "Professional Portfolio (A/B Mix)",
+    name: "Professional Portfolio",
     layout: FULL_LAYOUT,
     content: sampleDataCleanfolio,
   },
