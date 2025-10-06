@@ -15,11 +15,8 @@ import Footer from "../app/components/Footer";
 
 // Heading replaced by TextType for typing animation
 
-const Hero = ({ portfolioData }) => {
+const Hero = ({ portfolioData, fullName }) => {
 	const personal = portfolioData?.personal || {};
-	const fullName = personal.firstName && personal.lastName
-		? `${personal.firstName} ${personal.lastName}`
-		: "HASSAN MANSURI";
 	const title = personal.subtitle || "Full Stack Engineer & UI Specialist";
 	const description = portfolioData?.about?.summary || 
 		"I build robust, scalable web applications and beautiful user interfaces. Let's create something amazing together!";
@@ -260,7 +257,7 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 	// Calculate fullName for use throughout the component
 	const fullName = personal.firstName && personal.lastName
 		? `${personal.firstName} ${personal.lastName}`
-		: "HASSAN MANSURI";
+		: personal.title || "Professional";
 	
 	// Build dynamic about text
 	const aboutText = about.summary || about.bio || "A passionate professional with expertise in technology and design.";
@@ -279,7 +276,7 @@ const Homepage = ({ portfolioData, projectData, navigationData }) => {
 
 	return (
 		<div className="bg-texture bg-brand-pink">
-			<Hero portfolioData={portfolioData} />
+			<Hero portfolioData={portfolioData} fullName={fullName} />
 			<ProductGrid projectData={projectData} />
 			<ParallaxSection>
 				{/* About Section - Dynamic */}
