@@ -104,7 +104,7 @@ const Hero = ({ portfolioData, fullName }) => {
                             alt={`${fullName} - Professional Photo`}
 							width={560}
 							height={400}
-							className="w-auto h-auto max-w-[96%] md:max-w-full max-h-[60vh] md:max-h-[70vh] rounded-2xl shadow-2xl transition-transform duration-500 border border-white/90 group-hover:scale-105 group-hover:rotate-3"
+                            className="w-auto h-auto max-w-[96%] md:max-w-full max-h-[60vh] md:max-h-[70vh] rounded-2xl shadow-2xl border border-white/90 transition-[transform,box-shadow,border-color]  duration-300 group-hover:scale-105 group-hover:rotate-3 group-hover:border-white group-hover:shadow-[0_0_24px_3px_rgba(255,255,255,0.9)]"
                             style={{ objectFit: "contain", objectPosition: "center center", willChange: "transform" }}
                             priority
                         />
