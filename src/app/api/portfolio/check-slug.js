@@ -7,17 +7,17 @@ export async function POST(req) {
   await dbConnect();
   try {
     // We no longer support per-portfolio slugs. URL is username only.
-    const { username } = await req.json();
-    if (!username) {
-      return NextResponse.json({ error: "Username is required" }, { status: 400 });
+    const { slug } = await req.json();
+    if (!slug) {
+      return NextResponse.json({ error: "Slug is required" }, { status: 400 });
     }
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username: slug });
     if (!user) {
-      // username available → suggest username1 fallback
-      return NextResponse.json({ available: true, suggestions: [`${username}1`, `${username}123`] });
+      // available → suggest small variants
+      return NextResponse.json({ available: true, suggestions: [`${slug}1`, `${slug}123`] });
     }
     // Username taken → suggest a few alternatives
-    const base = username.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const base = slug.toLowerCase().replace(/[^a-z0-9]/g, "");
     const suggestions = [1, 2, 3].map(n => `${base}${n}`);
     return NextResponse.json({ available: false, suggestions });
   } catch (err) {

@@ -29,6 +29,13 @@ function Heading({
 	);
 }
 
+function shortTwoSentences(text = "") {
+  try {
+    const parts = text.split(".").filter(Boolean);
+    return parts.slice(0, 2).join(". ") + (parts.length > 2 ? "..." : ".");
+  } catch { return text; }
+}
+
 const ProjectCard = ({ title, image, description, link }) => {
 	return (
 		<div className="group relative mx-auto w-full max-w-md px-6 py-6 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-300 hover:bg-white/95">
@@ -63,9 +70,9 @@ const ProjectCard = ({ title, image, description, link }) => {
 						{title}
 					</a>
 				</Heading>
-				<p className="text-center text-xs text-zinc-700 font-medium mb-3 px-1 leading-relaxed line-clamp-3">
-					{description}
-				</p>
+        <p className="text-center text-xs text-zinc-700 font-medium mb-3 px-1 leading-relaxed line-clamp-3" title={description}>
+          {shortTwoSentences(description)}
+        </p>
 				<a
 					href={link}
 					target="_blank"
