@@ -36,7 +36,7 @@ export async function getGeminiModel(userId = null, modelName = "gemini-2.0-flas
 }
 
 // Function to generate content with user's API key
-export async function generateContent(prompt, userId = null, modelName = "gemini-1.5-flash") {
+export async function generateContent(prompt, userId = null, modelName = "gemini-2.0-flash-exp") {
 	try {
 		const model = await getGeminiModel(userId, modelName);
 		const result = await model.generateContent(prompt);

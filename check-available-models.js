@@ -27,21 +27,16 @@ async function checkAvailableModels() {
             console.log('Model listing failed:', listError.message);
         }
         
-        // Test common model names
+        // Test Gemini 2.0+ model names only
         const modelsToTest = [
-            'gemini-1.5-pro',
-            'gemini-1.5-flash',
-            'gemini-1.5-flash-8b',
-            'gemini-1.5-flash-001',
-            'gemini-1.5-pro-001',
-            'gemini-1.0-pro',
-            'gemini-1.0-pro-001',
-            'gemini-pro',
-            'gemini-pro-vision',
             'gemini-2.0-flash-exp',
             'gemini-2.0-flash-thinking-exp',
             'gemini-exp-1206',
-            'gemini-exp-1120'
+            'gemini-exp-1120',
+            'gemini-2.0-flash',
+            'gemini-2.0-pro',
+            'gemini-2.0-flash-001',
+            'gemini-2.0-pro-001'
         ];
         
         console.log('\n🧪 Testing individual models...');
