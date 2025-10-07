@@ -46,7 +46,7 @@ export default function LivePreviewPage() {
 		router.push("/editor/customize");
 	}
 
-	async function handlePublish() {
+    async function handlePublish() {
 		try {
 			console.log("🚀 [PREVIEW] Publishing portfolio...");
 			
@@ -67,7 +67,28 @@ export default function LivePreviewPage() {
 				return;
 			}
 
-			// Get current template from store
+            // Slug confirmation & availability check
+            let desired = window.prompt("Confirm your public URL (username)", username || "");
+            desired = (desired || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+            if (!desired) { return; }
+            try {
+                const r = await fetch("/api/portfolio/check-slug", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slug: desired }) });
+                const j = await r.json();
+                if (!j?.available && desired !== username) {
+                    setModal({
+                        open: true,
+                        title: 'URL Taken',
+                        message: `This URL is taken. Try another. Suggestions: ${(j?.suggestions || []).join(', ')}`,
+                        confirmText: 'OK',
+                        showCancel: false,
+                        error: true,
+                        onConfirm: () => setModal(m => ({ ...m, open: false })),
+                    });
+                    return;
+                }
+            } catch (_) {}
+
+            // Get current template from store
 			const { currentTemplate, portfolioType } = useLayoutStore.getState();
 			
 			console.log("💾 [PREVIEW] Publishing portfolio with template:", {
@@ -77,14 +98,14 @@ export default function LivePreviewPage() {
 				portfolioType
 			});
 
-			const res = await fetch("/api/portfolio/save", {
+            const res = await fetch("/api/portfolio/save", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					layout,
 					content,
 					portfolioData,
-					username,
+                    username: desired || username,
 					// Include template information
 					templateName: currentTemplate?.id || currentTemplate?.name || "cleanfolio",
 					templateId: currentTemplate?.id || "cleanfolio",

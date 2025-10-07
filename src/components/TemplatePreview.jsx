@@ -91,6 +91,20 @@ const TemplatePreview = ({
 		try {
 			setLoading(true);
 			setError(null);
+			// Confirm desired username (public URL)
+			const raw = (portfolioData?.personal?.email || '').split('@')[0] || 'user';
+			let desired = window.prompt('Confirm your public URL (username)', raw);
+			desired = (desired || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+			if (!desired) { setLoading(false); return; }
+			try {
+				const r = await fetch('/api/portfolio/check-slug', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: desired }) });
+				const j = await r.json();
+				if (!j?.available && desired !== raw) {
+					setError(`This URL is taken. Try another. Suggestions: ${(j?.suggestions || []).join(', ')}`);
+					setLoading(false);
+					return;
+				}
+			} catch (_) {}
 
 			const response = await fetch('/api/templates/publish', {
 				method: 'POST',
@@ -98,7 +112,7 @@ const TemplatePreview = ({
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					username: portfolioData.personal?.email?.split('@')[0] || 'user',
+					username: desired || (portfolioData.personal?.email?.split('@')[0] || 'user'),
 					templateId,
 					templateName: templateId,
 					templateType: 'component',
