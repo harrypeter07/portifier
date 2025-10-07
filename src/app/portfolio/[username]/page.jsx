@@ -21,7 +21,7 @@ import {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 export default function PortfolioDashboardPage({ params }) {
-	const { username } = React.use(params);
+	const { username } = params;
 	const router = useRouter();
 	const [portfolio, setPortfolio] = useState(null);
 	const [stats, setStats] = useState(null);
