@@ -220,6 +220,13 @@ export async function POST(req) {
 				portfolio = new Portfolio(updateData);
 				await portfolio.save();
 			}
+
+			// If username changed and belongs to this user, update User.username to match
+			try {
+				if (updateData.username && user.username !== updateData.username) {
+					await User.findByIdAndUpdate(user._id, { username: updateData.username });
+				}
+			} catch (_) {}
 		}
 
 		// Associate resume with portfolio if resumeId is provided

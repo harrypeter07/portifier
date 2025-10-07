@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { FlickeringGrid } from "@/components/FlickeringGrid";
 import { componentMap } from "@/data/componentMap";
 import PortfolioLoading from "@/components/PortfolioLoading";
 import { getTemplate, PORTFOLIO_TEMPLATES } from "@/data/templates/templateManager";
@@ -77,28 +78,64 @@ export default function PortfolioPage({ params }) {
 		if (username) fetchPortfolio();
 	}, [username]);
 
-	// Dynamically render the selected loading component if present
-	if (loading) {
-		console.log("🔍 [PORTFOLIO] Rendering loading state");
-		let LoadingComponent = PortfolioLoading;
-		if (portfolio && portfolio.layout && portfolio.layout.loading) {
-			const loadingCompName = portfolio.layout.loading;
-			console.log("🔍 [PORTFOLIO] Using custom loading component:", loadingCompName);
-			LoadingComponent = componentMap[loadingCompName] || PortfolioLoading;
-		}
-		return <LoadingComponent />;
-	}
-	if (error) {
-		console.log("🔍 [PORTFOLIO] Rendering error state:", error);
-		return (
-			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-				<div className="text-center">
-					<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
-					<p className="text-gray-600 dark:text-gray-300">{error}</p>
-				</div>
-			</div>
-		);
-	}
+    // Dynamically render the selected loading component if present
+    if (loading) {
+        console.log("🔍 [PORTFOLIO] Rendering loading state");
+        console.log("🎯 [PORTFOLIO] Applying FlickeringGrid background (loading)");
+        let LoadingComponent = PortfolioLoading;
+        if (portfolio && portfolio.layout && portfolio.layout.loading) {
+            const loadingCompName = portfolio.layout.loading;
+            console.log("🔍 [PORTFOLIO] Using custom loading component:", loadingCompName);
+            LoadingComponent = componentMap[loadingCompName] || PortfolioLoading;
+        }
+        return (
+            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+                <div className="pointer-events-none absolute inset-0 -z-10">
+                    <div className="absolute inset-0">
+                        <FlickeringGrid
+                            className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+                            squareSize={4}
+                            gridGap={6}
+                            color="#60A5FA"
+                            maxOpacity={0.4}
+                            flickerChance={0.12}
+                            height={1200}
+                            width={1200}
+                        />
+                    </div>
+                </div>
+                <LoadingComponent />
+            </div>
+        );
+    }
+    if (error) {
+        console.log("🔍 [PORTFOLIO] Rendering error state:", error);
+        console.log("🎯 [PORTFOLIO] Applying FlickeringGrid background (error)");
+        return (
+            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+                <div className="pointer-events-none absolute inset-0 -z-10">
+                    <div className="absolute inset-0">
+                        <FlickeringGrid
+                            className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+                            squareSize={4}
+                            gridGap={6}
+                            color="#60A5FA"
+                            maxOpacity={0.4}
+                            flickerChance={0.12}
+                            height={1200}
+                            width={1200}
+                        />
+                    </div>
+                </div>
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
+                        <p className="text-gray-600 dark:text-gray-300">{error}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 	if (!portfolio || !portfolio.layout) {
 		console.log("🔍 [PORTFOLIO] Portfolio or layout missing:", {
 			hasPortfolio: !!portfolio,
@@ -228,8 +265,23 @@ export default function PortfolioPage({ params }) {
 		usingStoredLayout: !template?.layout && !!layout
 	});
 	
-	return (
-		<div className="min-h-screen bg-white dark:bg-gray-900">
+    console.log("🎯 [PORTFOLIO] Applying FlickeringGrid background (main)");
+    return (
+        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+            <div className="pointer-events-none absolute inset-0 -z-10">
+                <div className="absolute inset-0">
+                    <FlickeringGrid
+                        className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+                        squareSize={4}
+                        gridGap={6}
+                        color="#60A5FA"
+                        maxOpacity={0.4}
+                        flickerChance={0.12}
+                        height={1200}
+                        width={1200}
+                    />
+                </div>
+            </div>
 			{/* Export Button - Floating Action Button */}
 			<div className="fixed bottom-6 right-6 z-50">
 				<ExportButton 

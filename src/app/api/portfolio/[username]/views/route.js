@@ -15,29 +15,20 @@ export async function POST(req, { params }) {
   }
 
   try {
-    // Check if this is a numbered username (e.g., iitz_hassan-2)
-    const isNumberedUsername = username.includes('-') && /-\d+$/.test(username);
-    
-    let portfolio;
-    let user;
-    
-    if (isNumberedUsername) {
-      // For numbered usernames, find portfolio directly by username
-      portfolio = await Portfolio.findOne({ username, isPublic: true });
-      if (!portfolio) {
-        return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
-      }
+    // Resolve portfolio by current portfolio username first (handles recent renames),
+    // then fallback to user lookup.
+    let portfolio = await Portfolio.findOne({ username, isPublic: true });
+    let user = null;
+    if (portfolio) {
       user = await User.findById(portfolio.userId);
       if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
     } else {
-      // For regular usernames, find user first then portfolio
       user = await User.findOne({ username });
       if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
-
       portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true });
       if (!portfolio) {
         return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
@@ -74,6 +65,16 @@ export async function POST(req, { params }) {
       }
     }
     
+    // If the referer is the analytics page itself, do not increment views
+    try {
+      if (referer) {
+        const url = new URL(referer);
+        if (/^\/portfolio\//.test(url.pathname)) {
+          return NextResponse.json({ success: true, message: "Analytics page load ignored for views" });
+        }
+      }
+    } catch (_) {}
+
     // Generate session ID (simple hash of IP + User Agent + timestamp)
     const sessionId = Buffer.from(`${ipAddress}-${userAgent}-${Date.now()}`).toString('base64').slice(0, 16);
     
@@ -140,14 +141,20 @@ export async function GET(req, { params }) {
   }
 
   try {
-    const user = await User.findOne({ username });
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true });
-    if (!portfolio) {
-      return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+    // Resolve portfolio by current portfolio username first, then user fallback
+    let portfolio = await Portfolio.findOne({ username, isPublic: true });
+    let user = null;
+    if (portfolio) {
+      user = await User.findById(portfolio.userId);
+    } else {
+      user = await User.findOne({ username });
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+      portfolio = await Portfolio.findOne({ userId: user._id, isPublic: true });
+      if (!portfolio) {
+        return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+      }
     }
 
     // Calculate date range

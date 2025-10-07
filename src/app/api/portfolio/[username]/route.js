@@ -21,7 +21,7 @@ export async function GET(req, { params }) {
 		let portfolio;
 		let user;
 
-		// Try direct portfolio slug match first
+		// Try direct portfolio username match first (handles recently updated usernames)
 		portfolio = await Portfolio.findOne({ username, isPublic: true });
 		if (portfolio) {
 			user = await User.findById(portfolio.userId);
