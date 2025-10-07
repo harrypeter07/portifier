@@ -21,7 +21,7 @@ import {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 export default function PortfolioDashboardPage({ params }) {
-	const { username } = params;
+	const { username } = React.use(params);
 	const router = useRouter();
 	const [portfolio, setPortfolio] = useState(null);
 	const [stats, setStats] = useState(null);
@@ -106,7 +106,22 @@ return (
 
 	if (error) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+			<div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+				{/* Background grid */}
+				<div className="pointer-events-none absolute inset-0 -z-10">
+					<div className="absolute inset-0">
+						<FlickeringGrid
+							className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+							squareSize={4}
+							gridGap={6}
+							color="#60A5FA"
+							maxOpacity={0.4}
+							flickerChance={0.12}
+							height={1200}
+							width={1200}
+						/>
+					</div>
+				</div>
 				<div className="flex items-center justify-center min-h-screen">
 					<div className="text-center">
 						<div className="text-red-600 text-6xl mb-4">⚠️</div>
@@ -125,7 +140,22 @@ return (
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+		<div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+			{/* Background grid */}
+			<div className="pointer-events-none absolute inset-0 -z-10">
+				<div className="absolute inset-0">
+					<FlickeringGrid
+						className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+						squareSize={4}
+						gridGap={6}
+						color="#60A5FA"
+						maxOpacity={0.4}
+						flickerChance={0.12}
+						height={1200}
+						width={1200}
+					/>
+				</div>
+			</div>
 			{/* Header */}
 			<div className="bg-white dark:bg-gray-900 shadow-sm border-b">
 				<div className="max-w-7xl mx-auto px-4 py-6">
