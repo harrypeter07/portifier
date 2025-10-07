@@ -164,12 +164,12 @@ export async function POST(req) {
 		};
 
 		// Add optional fields if provided
-		if (username) updateData.username = username;
+		if (username) updateData.username = username.toLowerCase().replace(/[^a-z0-9]/g, '');
 		if (uniqueSlug) updateData.slug = uniqueSlug;
 
 		// Ensure username is always set for uniqueness
 		if (!updateData.username) {
-			updateData.username = user.username || (user.email && user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, ''));
+			updateData.username = (user.username || (user.email && user.email.split('@')[0]) || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 		}
 		
 		console.log("💾 [SAVE] Portfolio save details:", {
@@ -208,7 +208,7 @@ export async function POST(req) {
 			if (updateData.username) {
 				const conflict = await Portfolio.findOne({ username: updateData.username, userId: { $ne: user._id } }).select("_id username userId");
 				if (conflict) {
-					return NextResponse.json({ error: "Username is already in use by another user" }, { status: 409 });
+					return NextResponse.json({ error: "This URL is taken. Please choose another." }, { status: 409 });
 				}
 			}
 
