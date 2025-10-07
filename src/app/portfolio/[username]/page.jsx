@@ -74,7 +74,7 @@ export default function PortfolioDashboardPage({ params }) {
 
 	if (loading) {
 return (
-    <div className="overflow-hidden relative min-h-screen">
+    <div className="overflow-hidden relative min-h-screen bg-transparent">
         {/* Background grid (custom) */}
         <AnalyticsGrid className="pointer-events-none" color="#60A5FA" />
 				<div className="flex justify-center items-center min-h-screen">
@@ -93,7 +93,7 @@ return (
 
 	if (error) {
 		return (
-			<div className="overflow-hidden relative min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+            <div className="overflow-hidden relative min-h-screen bg-transparent">
 				{/* Background grid */}
             <AnalyticsGrid className="pointer-events-none" color="#60A5FA" />
 				<div className="flex justify-center items-center min-h-screen">
@@ -114,11 +114,11 @@ return (
 	}
 
 	return (
-		<div className="overflow-hidden relative min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="overflow-hidden relative min-h-screen bg-transparent">
 			{/* Background grid */}
-            <AnalyticsGrid className="pointer-events-none" color="#60A5FA" />
+            <AnalyticsGrid className="pointer-events-none z-[10]" color="#60A5FA" />
 			{/* Header */}
-			<div className="bg-white border-b shadow-sm dark:bg-gray-900">
+			<div className="bg-white border-b shadow-sm dark:bg-gray-900 z-[20]">
 				<div className="px-4 py-6 mx-auto max-w-7xl">
 					<div className="flex flex-col gap-4 justify-between items-start md:flex-row md:items-center">
 						<div>
