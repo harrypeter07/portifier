@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FlickeringGrid } from "@/components/backgrounds/FlickeringGrid";
+import { FlickeringGrid } from "@/components/FlickeringGrid";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
