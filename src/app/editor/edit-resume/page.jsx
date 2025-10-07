@@ -404,8 +404,8 @@ function EditResumeContent() {
 		setModal({
 			open: true,
 			title: 'Publish Portfolio?',
-			message: 'Do you want to publish your portfolio now? Click OK to publish, Cancel to continue editing.',
-			confirmText: 'Publish',
+			message: 'Before publishing, confirm your public URL. You can change it if needed.',
+			confirmText: 'Choose URL & Publish',
 			cancelText: 'Continue Editing',
 			showCancel: true,
 			error: false,
@@ -413,6 +413,19 @@ function EditResumeContent() {
 				setModal(m => ({ ...m, open: false }));
 				console.log("🚀 [EDIT-RESUME] Publishing portfolio with username:", username);
 				try {
+					// Slug confirmation & availability check
+					let desired = window.prompt("Confirm your public URL (username)", username || "");
+					desired = (desired || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+					if (!desired) { return; }
+					try {
+						const r = await fetch("/api/portfolio/check-slug", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slug: desired }) });
+						const j = await r.json();
+						if (!j?.available && desired !== username) {
+							alert(`This URL is taken. Try another. Suggestions: ${(j?.suggestions || []).join(', ')}`);
+							return;
+						}
+					} catch (_) {}
+
 					// Get current template from store
 					const { currentTemplate, portfolioType } = useLayoutStore.getState();
 					
@@ -431,7 +444,7 @@ function EditResumeContent() {
 							content: formData,
 							portfolioData: newPortfolioData,
 							resumeId: resumeId,
-							username,
+							username: desired || username,
 							portfolioId: existingPortfolio?._id, // Add portfolio ID if editing existing portfolio
 							// Include template information
 							templateName: currentTemplate?.id || currentTemplate?.name || "cleanfolio",
