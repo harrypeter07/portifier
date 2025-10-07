@@ -110,6 +110,11 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   )
 
   useEffect(() => {
+    // Debug logs for mounting
+    try {
+      // eslint-disable-next-line no-console
+      console.log("🎯 [FlickeringGrid] Mounting component", { width, height, squareSize, gridGap, maxOpacity })
+    } catch {}
     const canvas = canvasRef.current
     const container = containerRef.current
     if (!canvas || !container) return
@@ -125,6 +130,10 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       const newHeight = height || container.clientHeight
       setCanvasSize({ width: newWidth, height: newHeight })
       gridParams = setupCanvas(canvas, newWidth, newHeight)
+      try {
+        // eslint-disable-next-line no-console
+        console.log("🎯 [FlickeringGrid] Updated canvas size", { newWidth, newHeight })
+      } catch {}
     }
 
     updateCanvasSize()
@@ -158,6 +167,10 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
         setIsInView(entry.isIntersecting)
+        try {
+          // eslint-disable-next-line no-console
+          console.log("🎯 [FlickeringGrid] InView changed", { inView: entry.isIntersecting })
+        } catch {}
       },
       { threshold: 0 }
     )

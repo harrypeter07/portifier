@@ -589,6 +589,8 @@ function EditResumeContent() {
 
 	return (
 		<div className="min-h-screen grainy-bg">
+			{/* Debug: Background application */}
+			{console.log('🎯 [EDIT-RESUME] Page mounted with background class grainy-bg')}
 			<div className="flex flex-col-reverse md:flex-row">
 				{/* Left Panel - Form */}
 				<div className="overflow-y-auto p-4 w-full h-auto md:w-1/2 md:p-6 md:h-screen">
@@ -622,6 +624,36 @@ function EditResumeContent() {
 					<div className="p-6 mb-8 glass rounded-lg shadow">
 						<h2 className="mb-4 text-xl font-semibold">Personal Information</h2>
 						<div className="grid grid-cols-1 gap-4">
+				{/* Hero Avatar Upload */}
+				<div>
+					<label className="block text-sm font-medium mb-2">Profile Image</label>
+					<div className="flex items-center gap-3">
+						<input
+							type="file"
+							accept="image/*"
+							onChange={async (e) => {
+								const file = e.target.files?.[0];
+								if (!file) return;
+								const form = new FormData();
+								form.append("file", file);
+								form.append("purpose", "avatars");
+								try {
+									const res = await fetch("/api/media/upload", { method: "POST", body: form });
+									const j = await res.json();
+									if (j?.url) {
+										setPortfolioData({
+											...portfolioData,
+											personal: { ...portfolioData.personal, avatar: j.url }
+										});
+									}
+								} catch (_) {}
+							}}
+						/>
+						{portfolioData?.personal?.avatar ? (
+							<img src={portfolioData.personal.avatar} alt="avatar" className="h-12 w-12 rounded-full object-cover border" />
+						) : null}
+					</div>
+				</div>
 							<AICompanionField
 								type="input"
 								placeholder="Full Name"
@@ -1070,6 +1102,69 @@ function EditResumeContent() {
 										aiLabel={getAILabel("projects", "description")}
 										resumeData={formData}
 									/>
+						{/* Media uploads */}
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+							<div>
+								<label className="block text-sm font-medium mb-1">Project Images</label>
+								<input
+									type="file"
+									accept="image/*"
+									multiple
+									onChange={async (e) => {
+										const files = Array.from(e.target.files || []);
+										const uploaded = [];
+										for (const f of files) {
+											const form = new FormData();
+											form.append("file", f);
+											form.append("purpose", "project-images");
+											try {
+												const res = await fetch("/api/media/upload", { method: "POST", body: form });
+												const j = await res.json();
+												if (j?.url) uploaded.push(j.url);
+											} catch {}
+										}
+										handleProjectChange(index, "images", [ ...(project?.images || []), ...uploaded ]);
+									}}
+								/>
+								{(project?.images || []).length ? (
+									<div className="flex flex-wrap gap-2 mt-2">
+										{(project.images || []).map((img, i) => (
+											<img key={i} src={img} alt="proj" className="h-12 w-12 object-cover rounded border" />
+										))}
+									</div>
+								) : null}
+							</div>
+							<div>
+								<label className="block text-sm font-medium mb-1">Project Videos</label>
+								<input
+									type="file"
+									accept="video/*"
+									multiple
+									onChange={async (e) => {
+										const files = Array.from(e.target.files || []);
+										const uploaded = [];
+										for (const f of files) {
+											const form = new FormData();
+											form.append("file", f);
+											form.append("purpose", "project-videos");
+											try {
+												const res = await fetch("/api/media/upload", { method: "POST", body: form });
+												const j = await res.json();
+												if (j?.url) uploaded.push(j.url);
+											} catch {}
+										}
+										handleProjectChange(index, "videos", [ ...(project?.videos || []), ...uploaded ]);
+									}}
+								/>
+								{(project?.videos || []).length ? (
+									<div className="flex flex-wrap gap-2 mt-2">
+										{(project.videos || []).map((v, i) => (
+											<video key={i} src={v} className="h-16 rounded border" controls />
+										))}
+									</div>
+								) : null}
+							</div>
+						</div>
 									<AICompanionField
 										type="url"
 										placeholder="GitHub Link"

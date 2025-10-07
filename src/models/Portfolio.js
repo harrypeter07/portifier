@@ -22,6 +22,7 @@ const PortfolioSchema = new mongoose.Schema({
 			lastName: { type: String, default: '' },
 			title: { type: String, default: '' },
 			subtitle: { type: String, default: '' },
+			avatar: { type: String, default: '' },
 			email: { type: String, default: '' },
 			phone: { type: String, default: '' },
 			location: {
@@ -40,7 +41,6 @@ const PortfolioSchema = new mongoose.Schema({
 				medium: { type: String, default: '' },
 				youtube: { type: String, default: '' }
 			},
-			avatar: { type: String, default: '' },
 			tagline: { type: String, default: '' },
 			availability: { type: String, default: '' }
 		},

@@ -186,9 +186,23 @@ export default function PortfolioPage({ params }) {
 	});
 	
 	// If remote render available, inject directly and skip local rendering
-	if (remoteRender?.html) {
+    if (remoteRender?.html) {
 		return (
-			<div className="min-h-screen bg-white dark:bg-gray-900">
+            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+                <div className="pointer-events-none absolute inset-0 -z-10">
+                    <div className="absolute inset-0">
+                        <FlickeringGrid
+                            className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+                            squareSize={4}
+                            gridGap={6}
+                            color="#60A5FA"
+                            maxOpacity={0.4}
+                            flickerChance={0.12}
+                            height={1200}
+                            width={1200}
+                        />
+                    </div>
+                </div>
 				{remoteRender?.css ? (
 					<style dangerouslySetInnerHTML={{ __html: remoteRender.css }} />
 				) : null}
@@ -210,8 +224,22 @@ export default function PortfolioPage({ params }) {
 		const FullPageComponent = componentMap[template.component];
 		if (FullPageComponent) {
 			console.log("🎨 [PORTFOLIO] Rendering full-page template:", template.component);
-			return (
-				<div className="min-h-screen bg-white dark:bg-gray-900">
+            return (
+                <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+                    <div className="pointer-events-none absolute inset-0 -z-10">
+                        <div className="absolute inset-0">
+                            <FlickeringGrid
+                                className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+                                squareSize={4}
+                                gridGap={6}
+                                color="#60A5FA"
+                                maxOpacity={0.4}
+                                flickerChance={0.12}
+                                height={1200}
+                                width={1200}
+                            />
+                        </div>
+                    </div>
 					<FullPageComponent 
 						portfolioData={portfolioData}
 						content={content}
@@ -238,8 +266,22 @@ export default function PortfolioPage({ params }) {
 		const FullPageComponent = componentMap[currentTemplate.component];
 		if (FullPageComponent) {
 			console.log("🎨 [PORTFOLIO] Rendering full-page template from currentTemplate:", currentTemplate.component);
-			return (
-				<div className="min-h-screen bg-white dark:bg-gray-900">
+            return (
+                <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+                    <div className="pointer-events-none absolute inset-0 -z-10">
+                        <div className="absolute inset-0">
+                            <FlickeringGrid
+                                className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+                                squareSize={4}
+                                gridGap={6}
+                                color="#60A5FA"
+                                maxOpacity={0.4}
+                                flickerChance={0.12}
+                                height={1200}
+                                width={1200}
+                            />
+                        </div>
+                    </div>
 					<FullPageComponent 
 						portfolioData={portfolioData}
 						content={content}
