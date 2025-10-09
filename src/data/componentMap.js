@@ -21,6 +21,7 @@ import LottieLoading from "@/components/LottieLoading";
 import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
 import CreativeFull from "@/components/FullTemplates/CreativeFull";
 import ModernPortfolio from "@/components/FullTemplates/ModernPortfolio";
+import SpacefolioFull from "@/components/FullTemplates/spacefolio/app/page";
 
 export const componentMap = {
 	// Hero components
@@ -62,6 +63,7 @@ export const componentMap = {
 	CleanfolioFull,
 	CreativeFull,
 	ModernPortfolio,
+	SpacefolioFull,
 };
 
 // Component categories for organized selection
@@ -122,7 +124,7 @@ export const componentCategories = {
 	},
 	fullTemplates: {
 		label: "Full Page Templates",
-		components: ["CleanfolioFull", "CreativeFull", "ModernPortfolio"],
+		components: ["CleanfolioFull", "CreativeFull", "ModernPortfolio", "SpacefolioFull"],
 		description: "Complete portfolio page templates",
 		required: false
 	}
