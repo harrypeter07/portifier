@@ -1,7 +1,7 @@
-import { ProjectCard } from "@/components/sub/project-card";
-import { PROJECTS } from "@/constants";
+import { ProjectCard } from "../../sub/project-card";
 
-export const Projects = () => {
+export const Projects = ({ data }: { data: any }) => {
+  const items = data?.projects?.items || [];
   return (
     <section
       id="projects"
@@ -11,13 +11,13 @@ export const Projects = () => {
         My Projects
       </h1>
       <div className="h-full w-full flex flex-col md:flex-row gap-10 px-10">
-        {PROJECTS.map((project) => (
+        {items.map((project: any) => (
           <ProjectCard
-            key={project.title}
-            src={project.image}
+            key={project.id || project.title}
+            src={(project.images && project.images[0]) || "/spacefolio/public/projects/project-1.png"}
             title={project.title}
             description={project.description}
-            link={project.link}
+            link={project.links?.live || project.links?.github || "#"}
           />
         ))}
       </div>

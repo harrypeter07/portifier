@@ -1,6 +1,6 @@
-import { HeroContent } from "@/components/sub/hero-content";
+import { HeroContent } from "../../sub/hero-content";
 
-export const Hero = () => {
+export const Hero = ({ data }: { data: any }) => {
   return (
     <div className="relative flex flex-col h-full w-full">
       <video
@@ -12,7 +12,7 @@ export const Hero = () => {
         <source src="/videos/blackhole.webm" type="video/webm" />
       </video>
 
-      <HeroContent />
+      <HeroContent data={data} />
     </div>
   );
 };

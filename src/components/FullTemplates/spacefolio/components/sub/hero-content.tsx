@@ -9,9 +9,16 @@ import {
   slideInFromRight,
   slideInFromTop,
 } from "@/lib/motion";
-import { personalInfo } from "@/constants/personal";
+// Replace hardcoded personal info with portfolio data
 
-export const HeroContent = () => {
+export const HeroContent = ({ data }: { data: any }) => {
+  const personal = data?.personal || {};
+  const about = data?.about || {};
+  const fullName = personal.firstName && personal.lastName ? `${personal.firstName} ${personal.lastName}` : (personal.title || "");
+  const portfolioTagline = personal.tagline || about.summary || "";
+  const headlinePrefix = "I am a";
+  const headlineHighlight = personal.subtitle || personal.title || "Professional";
+  const headlineSuffix = "focused on quality & impact.";
   return (
     <motion.div
       initial="hidden"
@@ -24,7 +31,7 @@ export const HeroContent = () => {
           className="Welcome-box py-[8px] px-[7px] border border-[#7042f88b] opacity-[0.9]]"
         >
           <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
-          <h1 className="Welcome-text text-[13px]">{personalInfo.portfolioTagline}</h1>
+          <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
         </motion.div>
 
         <motion.div
@@ -33,27 +40,29 @@ export const HeroContent = () => {
         >
           {/* Big Name Heading above the headline */}
           <span className="text-7xl md:text-8xl leading-tight">
-            {(() => {
-              const parts = personalInfo.name.toUpperCase().split(" ");
-              const first = parts[0] ?? personalInfo.name;
-              const rest = parts.slice(1).join(" ");
-              return (
-                <>
-                  <span className="text-white">{first}{rest ? " " : ""}</span>
-                  {rest && (
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500">{rest}</span>
-                  )}
-                </>
-              );
-            })()}
+            {fullName ? (
+              (() => {
+                const parts = fullName.toUpperCase().split(" ");
+                const first = parts[0] || fullName;
+                const rest = parts.slice(1).join(" ");
+                return (
+                  <>
+                    <span className="text-white">{first}{rest ? " " : ""}</span>
+                    {rest && (
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500">{rest}</span>
+                    )}
+                  </>
+                );
+              })()
+            ) : null}
           </span>
 
           <span>
-            {personalInfo.headlinePrefix}{" "}
+            {headlinePrefix}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500">
-              {personalInfo.headlineHighlight}
+              {headlineHighlight}
             </span>{" "}
-            {personalInfo.headlineSuffix}
+            {headlineSuffix}
           </span>
         </motion.div>
 
@@ -61,14 +70,14 @@ export const HeroContent = () => {
           variants={slideInFromLeft(0.8)}
           className="text-lg text-gray-400 my-5 max-w-[600px]"
         >
-          {personalInfo.bio}
+          {about.summary}
         </motion.p>
 
         <motion.a
           variants={slideInFromLeft(1)}
           className="py-2 button-primary text-center text-white cursor-pointer rounded-lg max-w-[200px]"
         >
-          {personalInfo.ctaLabel}
+          {personal.ctaLabel || "Get in touch"}
         </motion.a>
       </div>
 

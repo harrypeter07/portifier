@@ -1,16 +1,16 @@
-import { Encryption } from "@/components/main/encryption";
-import { Hero } from "@/components/main/hero";
-import { Projects } from "@/components/main/projects";
-import { Skills } from "@/components/main/skills";
+import { Encryption } from "../components/main/encryption";
+import { Hero } from "../components/main/hero";
+import { Projects } from "../components/main/projects";
+import { Skills } from "../components/main/skills";
 
-export default function Home() {
+export default function SpacefolioFull({ data }: { data: any }) {
   return (
     <main className="h-full w-full">
       <div className="flex flex-col gap-20">
-        <Hero />
-        <Skills />
+        <Hero data={data} />
+        <Skills data={data} />
         <Encryption />
-        <Projects />
+        <Projects data={data} />
       </div>
     </main>
   );
