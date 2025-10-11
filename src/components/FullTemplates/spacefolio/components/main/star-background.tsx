@@ -154,6 +154,13 @@ export const StarsCanvas = () => {
           console.warn("Canvas error:", error);
           setHasError(true);
         }}
+        onCreated={({ gl }) => {
+          // Additional error handling for WebGL context
+          gl.domElement.addEventListener('webglcontextlost', () => {
+            console.warn("WebGL context lost, switching to fallback");
+            setHasError(true);
+          });
+        }}
       >
         <Suspense fallback={<FallbackBackground />}>
           <StarBackground />
