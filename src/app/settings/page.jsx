@@ -107,7 +107,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen">
+		<div className="min-h-screen pt-20">
 			{/* Header */}
 			<div className="border-b shadow-sm backdrop-blur-xl border-white/20 bg-white/10 dark:bg-white/10">
 				<div className="px-4 py-6 mx-auto max-w-4xl">
@@ -123,10 +123,10 @@ export default function SettingsPage() {
 					<motion.div
 						initial={{ opacity: 0, y: -10 }}
 						animate={{ opacity: 1, y: 0 }}
-						className={`mb-6 p-4 rounded-lg ${
+						className={`mb-6 p-4 rounded-lg backdrop-blur-xl border ${
 							message.type === "success"
-								? "bg-green-50 border border-green-200"
-								: "bg-red-50 border border-red-200"
+								? "bg-green-500/20 border-green-500/30"
+								: "bg-red-500/20 border-red-500/30"
 						}`}
 					>
 						<p className={`text-sm ${
@@ -141,7 +141,7 @@ export default function SettingsPage() {
 
 				<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 					{/* Account Information */}
-					<Card>
+					<Card className="backdrop-blur-xl bg-white/10 border-white/20">
 						<CardHeader>
 							<CardTitle>Account Information</CardTitle>
 						</CardHeader>
@@ -178,7 +178,7 @@ export default function SettingsPage() {
 					</Card>
 
 					{/* AI Settings */}
-					<Card>
+					<Card className="backdrop-blur-xl bg-white/10 border-white/20">
 						<CardHeader>
 							<CardTitle>AI Settings</CardTitle>
 						</CardHeader>

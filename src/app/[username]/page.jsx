@@ -92,7 +92,7 @@ export default function PortfolioPage({ params }) {
             LoadingComponent = componentMap[loadingCompName] || PortfolioLoading;
         }
         return (
-            <div className="min-h-screen flex items-center justify-center bg-transparent">
+            <div className="min-h-screen flex items-center justify-center bg-gray-900">
                 <LoadingComponent />
             </div>
         );
@@ -100,10 +100,10 @@ export default function PortfolioPage({ params }) {
     if (error) {
         console.log("🔍 [PORTFOLIO] Rendering error state:", error);
         return (
-            <div className="min-h-screen flex items-center justify-center bg-transparent">
+            <div className="min-h-screen flex items-center justify-center bg-gray-900">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
-                    <p className="text-gray-600 dark:text-gray-300">{error}</p>
+                    <h1 className="text-2xl font-bold text-white mb-4">Portfolio Not Found</h1>
+                    <p className="text-gray-300">{error}</p>
                 </div>
             </div>
         );
@@ -115,10 +115,10 @@ export default function PortfolioPage({ params }) {
 			portfolio: portfolio
 		});
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-transparent">
+			<div className="min-h-screen flex items-center justify-center bg-gray-900">
 				<div className="text-center">
-					<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
-					<p className="text-gray-600 dark:text-gray-300">This portfolio doesn't exist or hasn't been published yet.</p>
+					<h1 className="text-2xl font-bold text-white mb-4">Portfolio Not Found</h1>
+					<p className="text-gray-300">This portfolio doesn't exist or hasn't been published yet.</p>
 				</div>
 			</div>
 		);
@@ -236,7 +236,7 @@ export default function PortfolioPage({ params }) {
 	});
 	
     return (
-        <div className="relative min-h-screen">
+        <div className="relative min-h-screen bg-gray-900">
 			{/* Export Button - Floating Action Button */}
 			<div className="fixed bottom-6 right-6 z-50">
 				<ExportButton 

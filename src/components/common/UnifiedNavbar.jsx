@@ -403,7 +403,7 @@ export default function UnifiedNavbar() {
 							{/* Star on GitHub */}
 							<Button asChild className="hidden md:inline-flex bg-white/20 hover:bg-white/30 text-white border border-white/30">
 								<a href="https://github.com/harrypeter07/portifier" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-									<Heart className="w-4 h-4 fill-white/80 text-white" />
+									<Heart className="w-4 h-4 fill-red-500 text-red-500" />
 									<span>Star on GitHub</span>
 								</a>
 							</Button>

@@ -82,19 +82,19 @@ export default function Signup() {
 	};
 
 	return (
-		<div className="flex justify-center items-center p-4 pt-28 min-h-screen grainy-bg">
-			<div className="absolute top-20 left-1/2 px-4 text-center -translate-x-1/2">
-				<h1 className="text-3xl font-extrabold tracking-tight text-gray-900 md:text-5xl">
+		<div className="flex justify-center items-center p-4 pt-32 min-h-screen grainy-bg">
+			<div className="absolute top-24 left-1/2 px-4 text-center -translate-x-1/2">
+				<h1 className="text-3xl font-extrabold tracking-tight text-white md:text-5xl">
 					{typed}
 					<span className="inline-block w-[1ch] ml-1 align-baseline animate-pulse">|</span>
 				</h1>
 			</div>
-			<Card className="w-full max-w-md border border-gray-200 shadow-xl backdrop-blur-xl bg-white/85">
+			<Card className="w-full max-w-md border border-white/20 shadow-xl backdrop-blur-xl bg-white/10">
 				<CardHeader className="text-center">
-					<CardTitle className="text-3xl font-bold text-gray-900">
+					<CardTitle className="text-3xl font-bold text-white">
 						Create Account
 					</CardTitle>
-					<CardDescription className="text-gray-600">
+					<CardDescription className="text-gray-300">
 						Join us to build your amazing portfolio
 					</CardDescription>
 				</CardHeader>

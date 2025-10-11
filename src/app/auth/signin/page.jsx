@@ -65,27 +65,27 @@ export default function Signin() {
 	}
 
 	return (
-		<div className="min-h-screen grainy-bg flex items-center justify-center p-4">
-			<Card className="w-full max-w-md bg-white/85 backdrop-blur-xl border border-gray-200 shadow-xl">
+		<div className="min-h-screen grainy-bg flex items-center justify-center p-4 pt-24">
+			<Card className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl">
 				<CardHeader className="text-center">
-					<CardTitle className="text-3xl font-bold text-gray-900">
+					<CardTitle className="text-3xl font-bold text-white">
 						Welcome Back
 					</CardTitle>
-					<CardDescription className="text-gray-600">
+					<CardDescription className="text-gray-300">
 						Sign in to access your portfolio
 					</CardDescription>
 				</CardHeader>
 
 				<CardContent>
 					{verifiedMsg && (
-						<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-							<p className="text-green-700 text-sm">{verifiedMsg}</p>
+						<div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-lg backdrop-blur-xl">
+							<p className="text-green-300 text-sm">{verifiedMsg}</p>
 						</div>
 					)}
 
 					{error && (
-						<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-							<p className="text-red-700 text-sm">{error}</p>
+						<div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg backdrop-blur-xl">
+							<p className="text-red-300 text-sm">{error}</p>
 						</div>
 					)}
 
@@ -93,7 +93,7 @@ export default function Signin() {
 					<form onSubmit={handleSubmit} className="space-y-6">
 						{/* Email Field */}
 						<div>
-						<label htmlFor="email" className="block text-sm font-medium text-gray-800 mb-2">
+						<label htmlFor="email" className="block text-sm font-medium text-white mb-2">
 								Email Address
 							</label>
 						<Input
@@ -110,7 +110,7 @@ export default function Signin() {
 
 						{/* Password Field */}
 						<div>
-						<label htmlFor="password" className="block text-sm font-medium text-gray-800 mb-2">
+						<label htmlFor="password" className="block text-sm font-medium text-white mb-2">
 								Password
 							</label>
 							<div className="relative">
