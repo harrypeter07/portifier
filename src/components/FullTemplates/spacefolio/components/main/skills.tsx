@@ -1,3 +1,4 @@
+import React from "react";
 import { SkillDataProvider } from "../../sub/skill-data-provider";
 import { SkillText } from "../../sub/skill-text";
 
@@ -16,11 +17,11 @@ export const Skills = ({ data }: { data: any }) => {
     <section
       id="skills"
       style={{ transform: "scale(0.9)" }}
-      className="flex flex-col items-center justify-center gap-3 h-full relative overflow-hidden py-20"
+      className="flex overflow-hidden relative flex-col gap-3 justify-center items-center py-20 h-full"
     >
       <SkillText data={data} />
 
-      <div className="flex flex-row justify-around flex-wrap mt-4 gap-5 items-center">
+      <div className="flex flex-row flex-wrap gap-5 justify-around items-center mt-4">
         {tech.slice(0, 12).map((skill: any, i: number) => (
           <SkillDataProvider
             key={skill.skill_name}
@@ -33,7 +34,7 @@ export const Skills = ({ data }: { data: any }) => {
         ))}
       </div>
 
-      <div className="w-full h-full absolute">
+      <div className="absolute w-full h-full">
         <div className="w-full h-full z-[-10] opacity-30 absolute flex items-center justify-center bg-cover">
           <video
             className="w-full h-auto"
