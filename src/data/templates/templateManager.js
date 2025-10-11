@@ -230,6 +230,28 @@ export const PORTFOLIO_TEMPLATES = {
 		},
 		sampleData: sampleDataCleanfolio,
 	},
+
+	spacefolioFull: {
+		id: "spacefolioFull",
+		name: "Spacefolio (Full Page)",
+		description: "Space-themed portfolio with 3D animations and modern design",
+		category: "developer",
+		type: "full", // full-page template
+		component: "SpacefolioFull", // reference to full template component
+		preview: "/templates/spacefolio-full-preview.jpg",
+		theme: {
+			primaryColor: "#7042F8",
+			secondaryColor: "#B49BFF",
+			accentColor: "#60A5FA",
+			backgroundColor: "#030014",
+			textColor: "#FFFFFF",
+			font: "Inter",
+			darkMode: true,
+			animations: true,
+			layout: "space",
+		},
+		sampleData: sampleDataCleanfolio,
+	},
 };
 
 // Template utility functions
