@@ -1,4 +1,4 @@
-import { ProjectCard } from "../../sub/project-card";
+import { ProjectCard } from "../sub/project-card";
 
 export const Projects = ({ data }: { data: any }) => {
   const items = data?.projects?.items || [];

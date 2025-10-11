@@ -1,4 +1,4 @@
-import { HeroContent } from "../../sub/hero-content";
+import { HeroContent } from "../sub/hero-content";
 
 export const Hero = ({ data }: { data: any }) => {
   return (
