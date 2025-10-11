@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "@/lib/devtools-fix"; // Fix React DevTools semver errors
 import UnifiedNavbar from "@/components/common/UnifiedNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 const geistSans = Geist({

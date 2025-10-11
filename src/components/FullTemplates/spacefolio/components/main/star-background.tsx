@@ -9,41 +9,47 @@ import type { Points as PointsType } from "three";
 export const StarBackground = (props: PointsProps) => {
   const ref = useRef<PointsType | null>(null);
   const [sphere] = useState(() => {
-    // Create a robust sphere with guaranteed valid values
+    // Create a completely static and safe sphere with predefined values
     const positions = new Float32Array(5000);
-    for (let i = 0; i < positions.length; i += 3) {
-      // Use a more stable approach to generate sphere points
-      const u = Math.random();
-      const v = Math.random();
-      
-      // Generate points on a unit sphere using uniform distribution
-      const theta = 2 * Math.PI * u;
-      const phi = Math.acos(Math.max(-1, Math.min(1, 2 * v - 1))); // Clamp to prevent NaN
-      
-      // Ensure radius is always positive and reasonable
-      const radius = Math.max(0.5, 1.0 + Math.random() * 0.5); // Between 0.5 and 1.5
-      
-      // Calculate coordinates with validation
-      const sinPhi = Math.sin(phi);
-      const cosTheta = Math.cos(theta);
-      const sinTheta = Math.sin(theta);
-      const cosPhi = Math.cos(phi);
-      
-      const x = radius * sinPhi * cosTheta;
-      const y = radius * sinPhi * sinTheta;
-      const z = radius * cosPhi;
-      
-      // Final validation - ensure no NaN or infinite values
-      positions[i] = Number.isFinite(x) ? x : 0;
-      positions[i + 1] = Number.isFinite(y) ? y : 0;
-      positions[i + 2] = Number.isFinite(z) ? z : 0;
+    
+    // Use a completely deterministic grid-based approach
+    const pointsPerSide = Math.floor(Math.sqrt(positions.length / 3));
+    let pointIndex = 0;
+    
+    for (let i = 0; i < pointsPerSide && pointIndex < positions.length / 3; i++) {
+      for (let j = 0; j < pointsPerSide && pointIndex < positions.length / 3; j++) {
+        // Create a regular grid pattern
+        const u = i / pointsPerSide;
+        const v = j / pointsPerSide;
+        
+        // Convert to spherical coordinates safely
+        const theta = u * Math.PI * 2;
+        const phi = v * Math.PI;
+        
+        // Safe radius - always positive
+        const radius = 1.2;
+        
+        // Calculate coordinates with explicit bounds checking
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.sin(phi) * Math.sin(theta);
+        const z = radius * Math.cos(phi);
+        
+        // Ensure all values are finite and within bounds
+        const safeX = Number.isFinite(x) ? Math.max(-2, Math.min(2, x)) : 0;
+        const safeY = Number.isFinite(y) ? Math.max(-2, Math.min(2, y)) : 0;
+        const safeZ = Number.isFinite(z) ? Math.max(-2, Math.min(2, z)) : 0;
+        
+        positions[pointIndex * 3] = safeX;
+        positions[pointIndex * 3 + 1] = safeY;
+        positions[pointIndex * 3 + 2] = safeZ;
+        
+        pointIndex++;
+      }
     }
     
-    // Additional validation - ensure the entire array is valid
-    for (let i = 0; i < positions.length; i++) {
-      if (!Number.isFinite(positions[i])) {
-        positions[i] = 0;
-      }
+    // Fill any remaining positions with zeros
+    for (let i = pointIndex * 3; i < positions.length; i++) {
+      positions[i] = 0;
     }
     
     return positions;
@@ -141,8 +147,25 @@ const FallbackBackground = () => {
 
 export const StarsCanvas = () => {
   const [hasError, setHasError] = useState(false);
+  const [webglSupported, setWebglSupported] = useState(true);
 
-  if (hasError) {
+  // Check WebGL support on mount
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) {
+        console.warn("WebGL not supported, using fallback background");
+        setWebglSupported(false);
+      }
+    } catch (error) {
+      console.warn("WebGL check failed, using fallback background:", error);
+      setWebglSupported(false);
+    }
+  }, []);
+
+  // Use fallback if WebGL not supported or if there's an error
+  if (!webglSupported || hasError) {
     return <FallbackBackground />;
   }
 
@@ -160,6 +183,13 @@ export const StarsCanvas = () => {
             console.warn("WebGL context lost, switching to fallback");
             setHasError(true);
           });
+          
+          // Check for any immediate errors
+          const error = gl.getError();
+          if (error !== gl.NO_ERROR) {
+            console.warn("WebGL error detected:", error);
+            setHasError(true);
+          }
         }}
       >
         <Suspense fallback={<FallbackBackground />}>
