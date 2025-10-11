@@ -4,19 +4,19 @@ import React from "react";
 
 export const Hero = ({ data }: { data: any }) => {
   return (
-    <div className="relative flex flex-col w-full h-screen overflow-hidden">
+    <div className="flex overflow-hidden relative flex-col w-full h-screen">
       {/* Blackhole Video Background */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover rotate-180"
+        className="object-cover absolute w-full h-full rotate-180"
         style={{ 
-          top: '-20%', 
+          top: '-62%', 
           left: '0', 
           width: '100%', 
-          height: '120%',
+          height: '140%',
           zIndex: 1
         }}
         onError={(e) => {
@@ -34,17 +34,38 @@ export const Hero = ({ data }: { data: any }) => {
         Your browser does not support the video tag.
       </video>
 
-      {/* Fallback background gradient */}
+      {/* Enhanced fallback background gradient */}
       <div 
         className="absolute inset-0 w-full h-full"
         style={{
-          background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)',
+          background: `
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+            linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)
+          `,
           zIndex: 0
         }}
       />
 
+      {/* CSS-only floating particles */}
+      <div className="overflow-hidden absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full opacity-30 animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+
       {/* Hero Content - Above the video */}
-      <div className="relative z-20 flex-1 flex items-center justify-center">
+      <div className="flex relative z-20 flex-1 justify-center items-center">
         <HeroContent data={data} />
       </div>
     </div>
