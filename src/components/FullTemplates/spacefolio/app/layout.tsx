@@ -6,6 +6,7 @@ import { Navbar } from "../components/main/navbar";
 import { StarsCanvas } from "../components/main/star-background";
 
 import "./globals.css";
+import React from "react";
 
 export const viewport: Viewport = {
   themeColor: "#030014",
@@ -23,9 +24,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
         className="bg-[#030014] overflow-y-scroll overflow-x-hidden"
       >
         <StarsCanvas />
-        <Navbar />
+        <Navbar data={{}} />
         {children}
-        <Footer />
+        <Footer data={{}} />
       </body>
     </html>
   );

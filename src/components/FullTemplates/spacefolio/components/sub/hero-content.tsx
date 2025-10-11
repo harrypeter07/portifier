@@ -32,9 +32,10 @@ export const HeroContent = ({ data }: { data: any }) => {
           style={{ padding: "8px 7px", border: "1px solid #7042f88b", opacity: 0.9 }}
           className="Welcome-box"
         >
-          <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
-          <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
-        </motion.div>
+          <div className="Welcome-box">
+            <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
+            <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
+          </div>
 
         <motion.div
           variants={slideInFromLeft(0.5)}
