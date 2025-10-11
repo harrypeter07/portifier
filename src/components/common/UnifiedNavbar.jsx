@@ -287,9 +287,7 @@ export default function UnifiedNavbar() {
 		<>
 			{/* Main Navigation Bar */}
 		<nav
-			className={`fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg z-50 transition-all duration-500 ease-in-out ${isHovered ? 'w-[85%]' : 'w-[75%]'}`}
-			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}
+			className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg z-50 w-auto px-6"
 		>
 				<div className="px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
@@ -323,24 +321,10 @@ export default function UnifiedNavbar() {
 								);
 							})}
 							
-							{/* Current Template Indicator */}
-							{currentTemplate && (
-								<Badge variant="secondary" className="ml-4">
-									<Palette className="mr-1 w-3 h-3" />
-									{currentTemplate.name}
-								</Badge>
-							)}
 						</div>
 
 						{/* Right Side - User Section */}
 						<div className="flex items-center space-x-4">
-							{/* Star on GitHub */}
-							<Button asChild className="hidden md:inline-flex bg-white/20 hover:bg-white/30 text-white border border-white/30">
-								<a href="https://github.com/harrypeter07/portifier" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-									<Heart className="w-4 h-4 fill-white/80 text-white" />
-									<span>Star on GitHub</span>
-								</a>
-							</Button>
 						{/* Theme toggle */}
 						<Button
 							variant="ghost"

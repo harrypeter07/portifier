@@ -329,8 +329,9 @@ export default function Dashboard() {
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 													transition={{ delay: index * 0.1 }}
-													className="flex items-center justify-between p-4 rounded-xl transition-all duration-300 glass hover:bg-white/15 cursor-pointer"
+													className="flex items-center justify-between p-4 rounded-xl transition-all duration-300 glass hover:bg-white/15 cursor-pointer group"
 													onClick={() => handlePortfolioAnalytics(portfolio)}
+													title="Click to view analytics"
 												>
 													<div className="flex items-center">
 														<div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
@@ -545,8 +546,9 @@ export default function Dashboard() {
 											initial={{ opacity: 0, y: 20 }}
 											animate={{ opacity: 1, y: 0 }}
 											transition={{ delay: index * 0.1 }}
-											className="border border-white dark:border-white rounded-xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
+											className="border border-white dark:border-white rounded-xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer group"
 											onClick={() => handlePortfolioAnalytics(portfolio)}
+											title="Click to view analytics"
 										>
 											<div className="flex items-center mb-4">
 												<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
