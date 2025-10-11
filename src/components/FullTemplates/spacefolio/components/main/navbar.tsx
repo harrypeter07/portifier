@@ -43,8 +43,9 @@ export const Navbar = ({ data }: { data: any }) => {
             alt="Logo"
             width={70}
             height={70}
+            style={{ width: "auto", height: "auto" }}
             draggable={false}
-            className="cursor-pointer"
+            className="cursor-pointer w-16 h-16 object-contain"
           />
           <div className="hidden md:flex md:selffont-bold ml-[10px] text-gray-300">{fullName}</div>
         </Link>

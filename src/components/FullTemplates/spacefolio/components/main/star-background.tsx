@@ -18,27 +18,39 @@ export const StarBackground = (props: PointsProps) => {
       
       // Generate points on a unit sphere using uniform distribution
       const theta = 2 * Math.PI * u;
-      const phi = Math.acos(2 * v - 1);
+      const phi = Math.acos(Math.max(-1, Math.min(1, 2 * v - 1))); // Clamp to prevent NaN
       
       // Ensure radius is always positive and reasonable
-      const radius = 1.0 + Math.random() * 0.5; // Between 1.0 and 1.5
+      const radius = Math.max(0.5, 1.0 + Math.random() * 0.5); // Between 0.5 and 1.5
       
       // Calculate coordinates with validation
       const sinPhi = Math.sin(phi);
-      const x = radius * sinPhi * Math.cos(theta);
-      const y = radius * sinPhi * Math.sin(theta);
-      const z = radius * Math.cos(phi);
+      const cosTheta = Math.cos(theta);
+      const sinTheta = Math.sin(theta);
+      const cosPhi = Math.cos(phi);
+      
+      const x = radius * sinPhi * cosTheta;
+      const y = radius * sinPhi * sinTheta;
+      const z = radius * cosPhi;
       
       // Final validation - ensure no NaN or infinite values
       positions[i] = Number.isFinite(x) ? x : 0;
       positions[i + 1] = Number.isFinite(y) ? y : 0;
       positions[i + 2] = Number.isFinite(z) ? z : 0;
     }
+    
+    // Additional validation - ensure the entire array is valid
+    for (let i = 0; i < positions.length; i++) {
+      if (!Number.isFinite(positions[i])) {
+        positions[i] = 0;
+      }
+    }
+    
     return positions;
   });
 
   useFrame((_state, delta) => {
-    if (ref.current && !isNaN(delta)) {
+    if (ref.current && Number.isFinite(delta) && delta > 0) {
       ref.current.rotation.x -= delta / 10;
       ref.current.rotation.y -= delta / 15;
     }
