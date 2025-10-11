@@ -9,21 +9,30 @@ import type { Points as PointsType } from "three";
 export const StarBackground = (props: PointsProps) => {
   const ref = useRef<PointsType | null>(null);
   const [sphere] = useState(() => {
-    // Create a simple sphere manually with NaN validation
+    // Create a robust sphere with guaranteed valid values
     const positions = new Float32Array(5000);
     for (let i = 0; i < positions.length; i += 3) {
-      const angle = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.max(-1, Math.min(1, 2 * Math.random() - 1))); // Clamp to prevent NaN
-      const radius = Math.max(0.5, 1.2 + Math.random() * 0.5); // Ensure positive radius
+      // Use a more stable approach to generate sphere points
+      const u = Math.random();
+      const v = Math.random();
       
-      const x = radius * Math.sin(phi) * Math.cos(angle);
-      const y = radius * Math.sin(phi) * Math.sin(angle);
+      // Generate points on a unit sphere using uniform distribution
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      
+      // Ensure radius is always positive and reasonable
+      const radius = 1.0 + Math.random() * 0.5; // Between 1.0 and 1.5
+      
+      // Calculate coordinates with validation
+      const sinPhi = Math.sin(phi);
+      const x = radius * sinPhi * Math.cos(theta);
+      const y = radius * sinPhi * Math.sin(theta);
       const z = radius * Math.cos(phi);
       
-      // Validate each coordinate and set to 0 if NaN
-      positions[i] = isNaN(x) ? 0 : x;
-      positions[i + 1] = isNaN(y) ? 0 : y;
-      positions[i + 2] = isNaN(z) ? 0 : z;
+      // Final validation - ensure no NaN or infinite values
+      positions[i] = Number.isFinite(x) ? x : 0;
+      positions[i + 1] = Number.isFinite(y) ? y : 0;
+      positions[i + 2] = Number.isFinite(z) ? z : 0;
     }
     return positions;
   });

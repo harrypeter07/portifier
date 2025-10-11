@@ -46,14 +46,16 @@ export const Encryption = () => {
             alt="Lock top"
             width={50}
             height={50}
-            className="transition-all duration-200 translate-y-5 group-hover:translate-y-11"
+            style={{ width: "auto", height: "auto" }}
+            className="transition-all duration-200 translate-y-5 group-hover:translate-y-11 w-12 h-12 object-contain"
           />
           <Image
             src={SPACEFOLIO_ASSETS.ui[2]}
             alt="Lock main"
             width={70}
             height={70}
-            className="z-10"
+            style={{ width: "auto", height: "auto" }}
+            className="z-10 w-16 h-16 object-contain"
           />
         </div>
 

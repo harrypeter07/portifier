@@ -112,8 +112,9 @@ export const HeroContent = ({ data }: { data: any }) => {
           alt="work icons"
           height={650}
           width={650}
+          style={{ width: "auto", height: "auto" }}
           draggable={false}
-          className="select-none"
+          className="select-none w-full h-auto object-contain"
         />
       </motion.div>
     </motion.div>
