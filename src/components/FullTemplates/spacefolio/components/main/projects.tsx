@@ -15,7 +15,7 @@ export const Projects = ({ data }: { data: any }) => {
         {items.map((project: any) => (
           <ProjectCard
             key={project.id || project.title}
-            src={(project.images && project.images[0]) || "/spacefolio/public/projects/project-1.png"}
+            src={(project.images && project.images[0]) || "/projects/project-1.png"}
             title={project.title}
             description={project.description}
             link={project.links?.live || project.links?.github || "#"}

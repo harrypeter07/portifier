@@ -7,7 +7,7 @@ export const Skills = ({ data }: { data: any }) => {
   const tech = Array.isArray(skills.technical)
     ? skills.technical.flatMap((cat: any) => (cat.skills || []).map((s: any) => ({
         skill_name: s.name,
-        image: "/spacefolio/public/skills/ts.png",
+        image: "/skills/ts.png",
         width: 80,
         height: 80,
       })))
