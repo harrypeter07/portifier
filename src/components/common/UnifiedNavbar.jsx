@@ -67,8 +67,6 @@ export default function UnifiedNavbar() {
 	const [loading, setLoading] = useState(true);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	const [isHovered, setIsHovered] = useState(false);
-	const [hoverTimeout, setHoverTimeout] = useState(null);
 	const [isDark, setIsDark] = useState(false);
 	
 	// Editor navbar states
@@ -102,13 +100,9 @@ export default function UnifiedNavbar() {
 
 		checkAuth();
 
-		// Cleanup timeout on unmount
-		return () => {
-			if (hoverTimeout) {
-				clearTimeout(hoverTimeout);
-			}
-		};
-	}, [pathname, hoverTimeout]);
+		// Cleanup on unmount
+		return () => {};
+	}, [pathname]);
 
 	// Theme: initialize and persist dark mode
 	useEffect(() => {
@@ -421,6 +415,14 @@ export default function UnifiedNavbar() {
 								</div>
 							)}
 
+							{/* Star on GitHub */}
+							<Button asChild className="hidden md:inline-flex bg-white/20 hover:bg-white/30 text-white border border-white/30">
+								<a href="https://github.com/harrypeter07/portifier" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+									<Heart className="w-4 h-4 fill-white/80 text-white" />
+									<span>Star on GitHub</span>
+								</a>
+							</Button>
+
 							{/* Mobile menu button */}
 							<Button
 								variant="ghost"
@@ -440,18 +442,6 @@ export default function UnifiedNavbar() {
 									<Heart className="w-4 h-4 fill-white/80 text-white" />
 									<span>Star on GitHub</span>
 								</a>
-							{/* Current Template Indicator for Mobile */}
-							{currentTemplate && (
-								<div className="px-4 py-3 border-b border-white dark:border-white">
-									<div className="flex items-center space-x-2">
-										<span className="text-sm font-medium text-white">Current Template:</span>
-										<Badge variant="secondary">
-											<Palette className="mr-1 w-3 h-3" />
-											{currentTemplate.name}
-										</Badge>
-									</div>
-								</div>
-							)}
 							
 							<div className="px-4 py-4 space-y-2">
 								{navLinks.map((link) => {
