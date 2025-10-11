@@ -101,20 +101,20 @@ export default function Signup() {
 
 				<CardContent>
 					{success && (
-						<div className="p-4 mb-6 bg-green-50 rounded-lg border border-green-200">
-							<p className="text-sm text-green-700">{success}</p>
+						<div className="p-4 mb-6 bg-green-500/20 rounded-lg border border-green-500/30 backdrop-blur-xl">
+							<p className="text-sm text-green-300">{success}</p>
 						</div>
 					)}
 
 					{error && (
-						<div className="p-4 mb-6 bg-red-50 rounded-lg border border-red-200">
-							<p className="text-sm text-red-700">{error}</p>
+						<div className="p-4 mb-6 bg-red-500/20 rounded-lg border border-red-500/30 backdrop-blur-xl">
+							<p className="text-sm text-red-300">{error}</p>
 						</div>
 					)}
 
 					<Form onSubmit={handleSubmit} className="space-y-6">
 					<FormField>
-						<FormLabel htmlFor="name" className="text-gray-800">Full Name</FormLabel>
+						<FormLabel htmlFor="name" className="text-white">Full Name</FormLabel>
 							<FormControl>
 							<Input
 									id="name"
