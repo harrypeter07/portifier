@@ -45,7 +45,7 @@ export const Skills = ({ data }: { data: any }) => {
             muted
             autoPlay
           >
-            <source src="/videos/skills-bg.webm" type="video/webm" />
+            <source src={SPACEFOLIO_ASSETS.videos[2]} type="video/webm" />
           </video>
         </div>
       </div>

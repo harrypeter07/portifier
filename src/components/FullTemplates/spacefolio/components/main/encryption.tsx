@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 import { slideInFromTop } from "../../lib/motion";
+import { SPACEFOLIO_ASSETS } from "../../assets";
 import React from "react";
 
 export const Encryption = () => {
@@ -41,14 +42,14 @@ export const Encryption = () => {
       <div className="flex flex-col items-center justify-center translate-y-[-50px] absolute z-[20] w-auto h-auto">
         <div className="flex flex-col items-center w-auto h-auto cursor-pointer group">
           <Image
-            src="/lock-top.png"
+            src={SPACEFOLIO_ASSETS.ui[3]}
             alt="Lock top"
             width={50}
             height={50}
             className="transition-all duration-200 translate-y-5 group-hover:translate-y-11"
           />
           <Image
-            src="/lock-main.png"
+            src={SPACEFOLIO_ASSETS.ui[2]}
             alt="Lock main"
             width={70}
             height={70}
@@ -86,7 +87,7 @@ export const Encryption = () => {
           preload="false"
           className="w-full h-auto"
         >
-          <source src="/videos/encryption-bg.webm" type="video/webm" />
+          <source src={SPACEFOLIO_ASSETS.videos[1]} type="video/webm" />
         </video>
       </div>
     </div>
