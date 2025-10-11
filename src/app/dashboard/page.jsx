@@ -6,12 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import LottieLoading from "@/components/LottieLoading";
 import { useLayoutStore } from "@/store/layoutStore";
 import ExportButton from "@/components/ExportButton";
+import DeletePortfolioModal from "@/components/DeletePortfolioModal";
 
 export default function Dashboard() {
 	const [user, setUser] = useState(null);
 	const [dashboardData, setDashboardData] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState("overview");
+	const [deleteModal, setDeleteModal] = useState({ isOpen: false, portfolio: null });
 	const router = useRouter();
 	const { setAllContent, setParsedData, setResumeId } = useLayoutStore();
 

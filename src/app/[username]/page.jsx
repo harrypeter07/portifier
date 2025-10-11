@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { FlickeringGrid } from "@/components/FlickeringGrid";
+import React, { useEffect, useState, useMemo } from "react";
 import { componentMap } from "@/data/componentMap";
 import PortfolioLoading from "@/components/PortfolioLoading";
 import { getTemplate, PORTFOLIO_TEMPLATES } from "@/data/templates/templateManager";
@@ -21,7 +20,12 @@ export default function PortfolioPage({ params }) {
 		async function fetchPortfolio() {
 			console.log("🔍 [PORTFOLIO] Starting portfolio fetch for username:", username);
 			try {
-				const res = await fetch(`/api/portfolio/${username}`);
+				const res = await fetch(`/api/portfolio/${username}`, {
+					cache: 'no-store', // Ensure fresh data
+					headers: {
+						'Accept': 'application/json',
+					}
+				});
 				console.log("🔍 [PORTFOLIO] API response status:", res.status);
 				
 				const data = await res.json();
@@ -81,7 +85,6 @@ export default function PortfolioPage({ params }) {
     // Dynamically render the selected loading component if present
     if (loading) {
         console.log("🔍 [PORTFOLIO] Rendering loading state");
-        console.log("🎯 [PORTFOLIO] Applying FlickeringGrid background (loading)");
         let LoadingComponent = PortfolioLoading;
         if (portfolio && portfolio.layout && portfolio.layout.loading) {
             const loadingCompName = portfolio.layout.loading;
@@ -89,49 +92,18 @@ export default function PortfolioPage({ params }) {
             LoadingComponent = componentMap[loadingCompName] || PortfolioLoading;
         }
         return (
-            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-                <div className="pointer-events-none absolute inset-0 -z-10">
-                    <div className="absolute inset-0">
-                        <FlickeringGrid
-                            className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
-                            squareSize={4}
-                            gridGap={6}
-                            color="#60A5FA"
-                            maxOpacity={0.4}
-                            flickerChance={0.12}
-                            height={1200}
-                            width={1200}
-                        />
-                    </div>
-                </div>
+            <div className="min-h-screen flex items-center justify-center bg-transparent">
                 <LoadingComponent />
             </div>
         );
     }
     if (error) {
         console.log("🔍 [PORTFOLIO] Rendering error state:", error);
-        console.log("🎯 [PORTFOLIO] Applying FlickeringGrid background (error)");
         return (
-            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-                <div className="pointer-events-none absolute inset-0 -z-10">
-                    <div className="absolute inset-0">
-                        <FlickeringGrid
-                            className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
-                            squareSize={4}
-                            gridGap={6}
-                            color="#60A5FA"
-                            maxOpacity={0.4}
-                            flickerChance={0.12}
-                            height={1200}
-                            width={1200}
-                        />
-                    </div>
-                </div>
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
-                        <p className="text-gray-600 dark:text-gray-300">{error}</p>
-                    </div>
+            <div className="min-h-screen flex items-center justify-center bg-transparent">
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
+                    <p className="text-gray-600 dark:text-gray-300">{error}</p>
                 </div>
             </div>
         );
@@ -143,7 +115,7 @@ export default function PortfolioPage({ params }) {
 			portfolio: portfolio
 		});
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+			<div className="min-h-screen flex items-center justify-center bg-transparent">
 				<div className="text-center">
 					<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Not Found</h1>
 					<p className="text-gray-600 dark:text-gray-300">This portfolio doesn't exist or hasn't been published yet.</p>
@@ -152,6 +124,11 @@ export default function PortfolioPage({ params }) {
 		);
 	}
 	const { layout, content, portfolioData, templateId, templateName, templateType, currentTemplate } = portfolio;
+	
+	// Memoize template resolution for better performance
+	const template = useMemo(() => {
+		return getTemplate(templateId) || currentTemplate || getTemplate(templateName);
+	}, [templateId, currentTemplate, templateName]);
 	
 	console.log("🔍 [PORTFOLIO] Extracted portfolio properties:", {
 		templateId,
@@ -165,9 +142,6 @@ export default function PortfolioPage({ params }) {
 		portfolioDataKeys: portfolioData ? Object.keys(portfolioData) : [],
 		hasCurrentTemplate: !!currentTemplate
 	});
-	
-		// Get the template definition to ensure we're using the correct layout
-	const template = getTemplate(templateId) || currentTemplate || getTemplate(templateName);
 	
 	console.log("🎨 [PORTFOLIO] Template resolution:", {
 		templateId,
@@ -188,21 +162,7 @@ export default function PortfolioPage({ params }) {
 	// If remote render available, inject directly and skip local rendering
     if (remoteRender?.html) {
 		return (
-            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-                <div className="pointer-events-none absolute inset-0 -z-10">
-                    <div className="absolute inset-0">
-                        <FlickeringGrid
-                            className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
-                            squareSize={4}
-                            gridGap={6}
-                            color="#60A5FA"
-                            maxOpacity={0.4}
-                            flickerChance={0.12}
-                            height={1200}
-                            width={1200}
-                        />
-                    </div>
-                </div>
+            <div className="relative min-h-screen">
 				{remoteRender?.css ? (
 					<style dangerouslySetInnerHTML={{ __html: remoteRender.css }} />
 				) : null}
@@ -225,30 +185,14 @@ export default function PortfolioPage({ params }) {
 		if (FullPageComponent) {
 			console.log("🎨 [PORTFOLIO] Rendering full-page template:", template.component);
             return (
-                <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-                    <div className="pointer-events-none absolute inset-0 -z-10">
-                        <div className="absolute inset-0">
-                            <FlickeringGrid
-                                className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
-                                squareSize={4}
-                                gridGap={6}
-                                color="#60A5FA"
-                                maxOpacity={0.4}
-                                flickerChance={0.12}
-                                height={1200}
-                                width={1200}
-                            />
-                        </div>
-                    </div>
-					<FullPageComponent 
-						portfolioData={portfolioData}
-						content={content}
-						template={template}
-						data={portfolioData}
-						portfolioId={portfolio._id}
-						username={username}
-					/>
-				</div>
+				<FullPageComponent 
+					portfolioData={portfolioData}
+					content={content}
+					template={template}
+					data={portfolioData}
+					portfolioId={portfolio._id}
+					username={username}
+				/>
 			);
 		} else {
 			console.error("❌ [PORTFOLIO] Full-page component not found:", template.component);
@@ -267,30 +211,14 @@ export default function PortfolioPage({ params }) {
 		if (FullPageComponent) {
 			console.log("🎨 [PORTFOLIO] Rendering full-page template from currentTemplate:", currentTemplate.component);
             return (
-                <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-                    <div className="pointer-events-none absolute inset-0 -z-10">
-                        <div className="absolute inset-0">
-                            <FlickeringGrid
-                                className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
-                                squareSize={4}
-                                gridGap={6}
-                                color="#60A5FA"
-                                maxOpacity={0.4}
-                                flickerChance={0.12}
-                                height={1200}
-                                width={1200}
-                            />
-                        </div>
-                    </div>
-					<FullPageComponent 
-						portfolioData={portfolioData}
-						content={content}
-						template={currentTemplate}
-						data={portfolioData}
-						portfolioId={portfolio._id}
-						username={username}
-					/>
-				</div>
+				<FullPageComponent 
+					portfolioData={portfolioData}
+					content={content}
+					template={currentTemplate}
+					data={portfolioData}
+					portfolioId={portfolio._id}
+					username={username}
+				/>
 			);
 		} else {
 			console.error("❌ [PORTFOLIO] Full-page component not found in currentTemplate:", currentTemplate.component);
@@ -307,23 +235,8 @@ export default function PortfolioPage({ params }) {
 		usingStoredLayout: !template?.layout && !!layout
 	});
 	
-    console.log("🎯 [PORTFOLIO] Applying FlickeringGrid background (main)");
     return (
-        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
-            <div className="pointer-events-none absolute inset-0 -z-10">
-                <div className="absolute inset-0">
-                    <FlickeringGrid
-                        className="absolute inset-0 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
-                        squareSize={4}
-                        gridGap={6}
-                        color="#60A5FA"
-                        maxOpacity={0.4}
-                        flickerChance={0.12}
-                        height={1200}
-                        width={1200}
-                    />
-                </div>
-            </div>
+        <div className="relative min-h-screen">
 			{/* Export Button - Floating Action Button */}
 			<div className="fixed bottom-6 right-6 z-50">
 				<ExportButton 

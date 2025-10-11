@@ -79,6 +79,11 @@
     /* Ensure it fills the viewport when used on containers */
     min-height: 100vh;
   }
+
+  /* Hide grainy background for portfolio pages */
+  .portfolio-page .grainy-bg {
+    background-image: none !important;
+  }
 }
 
 /* Custom scrollbar */

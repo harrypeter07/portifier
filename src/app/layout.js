@@ -36,14 +36,11 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang="en" className="dark" suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen grainy-bg`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen`}
 			>
 				<ErrorBoundary>
 					<UnifiedNavbar />
-					
- 
-
-				<main className="min-h-screen grainy-bg">{children}</main>
+					<main className="min-h-screen app-main grainy-bg">{children}</main>
 				</ErrorBoundary>
 			</body>
 		</html>
