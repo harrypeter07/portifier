@@ -65,8 +65,9 @@ export default function Signin() {
 	}
 
 	return (
-		<div className="min-h-screen grainy-bg flex items-center justify-center p-4 pt-24">
-			<Card className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl">
+		<div className="min-h-screen grainy-bg flex items-center justify-center p-4 pt-32">
+			<div className="w-full max-w-md">
+				<Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl">
 				<CardHeader className="text-center">
 					<CardTitle className="text-3xl font-bold text-white">
 						Welcome Back
@@ -171,7 +172,8 @@ export default function Signin() {
 						</p>
 					</div>
 				</CardContent>
-			</Card>
+				</Card>
+			</div>
 		</div>
 	);
 }

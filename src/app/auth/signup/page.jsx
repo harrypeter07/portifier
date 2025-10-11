@@ -82,14 +82,15 @@ export default function Signup() {
 	};
 
 	return (
-		<div className="flex justify-center items-center p-4 pt-32 min-h-screen grainy-bg">
-			<div className="absolute top-24 left-1/2 px-4 text-center -translate-x-1/2">
+		<div className="flex justify-center items-center p-4 pt-40 min-h-screen grainy-bg">
+			<div className="absolute top-32 left-1/2 px-4 text-center -translate-x-1/2">
 				<h1 className="text-3xl font-extrabold tracking-tight text-white md:text-5xl">
 					{typed}
 					<span className="inline-block w-[1ch] ml-1 align-baseline animate-pulse">|</span>
 				</h1>
 			</div>
-			<Card className="w-full max-w-md border border-white/20 shadow-xl backdrop-blur-xl bg-white/10">
+			<div className="w-full max-w-md">
+				<Card className="border border-white/20 shadow-xl backdrop-blur-xl bg-white/10">
 				<CardHeader className="text-center">
 					<CardTitle className="text-3xl font-bold text-white">
 						Create Account
@@ -201,7 +202,8 @@ export default function Signup() {
 						</p>
 					</div>
 				</CardContent>
-			</Card>
+				</Card>
+			</div>
 		</div>
 	);
 }

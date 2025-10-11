@@ -9,15 +9,21 @@ import type { Points as PointsType } from "three";
 export const StarBackground = (props: PointsProps) => {
   const ref = useRef<PointsType | null>(null);
   const [sphere] = useState(() => {
-    // Create a simple sphere manually without relying on maath
+    // Create a simple sphere manually with NaN validation
     const positions = new Float32Array(5000);
     for (let i = 0; i < positions.length; i += 3) {
       const angle = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const radius = 1.2;
-      positions[i] = radius * Math.sin(phi) * Math.cos(angle);
-      positions[i + 1] = radius * Math.sin(phi) * Math.sin(angle);
-      positions[i + 2] = radius * Math.cos(phi);
+      const phi = Math.acos(Math.max(-1, Math.min(1, 2 * Math.random() - 1))); // Clamp to prevent NaN
+      const radius = Math.max(0.5, 1.2 + Math.random() * 0.5); // Ensure positive radius
+      
+      const x = radius * Math.sin(phi) * Math.cos(angle);
+      const y = radius * Math.sin(phi) * Math.sin(angle);
+      const z = radius * Math.cos(phi);
+      
+      // Validate each coordinate and set to 0 if NaN
+      positions[i] = isNaN(x) ? 0 : x;
+      positions[i + 1] = isNaN(y) ? 0 : y;
+      positions[i + 2] = isNaN(z) ? 0 : z;
     }
     return positions;
   });

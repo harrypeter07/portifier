@@ -115,6 +115,115 @@ export default function Home() {
         />
       </section>
 
+      {/* About Our App Section */}
+      <section className="relative py-20">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
+            {/* Left Side - Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="space-y-8"
+            >
+              <div className="space-y-6">
+                <h2 className="text-4xl font-bold text-white md:text-5xl">
+                  We Create Amazing
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+                    Portfolios
+                  </span>
+                </h2>
+                <p className="text-xl leading-relaxed text-white/80">
+                  Our AI-powered platform transforms your resume into stunning, professional portfolios 
+                  that showcase your skills and achievements. No design experience required - just upload, 
+                  customize, and publish.
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <span className="text-white/90">AI-powered resume parsing</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <span className="text-white/90">50+ professional templates</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <span className="text-white/90">Mobile-responsive design</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <span className="text-white/90">One-click publishing</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Button asChild size="lg" className="px-8 py-4 text-lg font-semibold text-black bg-white hover:bg-white/90">
+                  <Link href="/auth/signup">
+                    Start Creating
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg text-white border-white/30 hover:bg-white/10">
+                  <Link href="/templates-demo">
+                    <Eye className="mr-2 w-5 h-5" />
+                    See Examples
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+            
+            {/* Right Side - Hero Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl glass">
+                <img
+                  src="/hero.jpg"
+                  alt="Portfolio Creation Process"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+              
+              {/* Floating Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true }}
+                className="absolute -bottom-6 -left-6 p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20"
+              >
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">10K+</div>
+                  <div className="text-sm text-white/70">Portfolios Created</div>
+                </div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                viewport={{ once: true }}
+                className="absolute -top-6 -right-6 p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20"
+              >
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">50+</div>
+                  <div className="text-sm text-white/70">Templates</div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Interactive 3D Section */}
       <section className="relative py-20">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">

@@ -11,7 +11,7 @@ export const Hero = ({ data }: { data: any }) => {
         loop
         className="rotate-180 absolute top-[-340px] left-0 w-full h-full object-cover -z-20"
       >
-        <source src="public/videos/blackhole.webm" type="video/webm" />
+        <source src={SPACEFOLIO_ASSETS.videos[0]} type="video/webm" />
       </video>
 
       <HeroContent data={data} />
