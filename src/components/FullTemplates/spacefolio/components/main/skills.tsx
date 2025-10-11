@@ -18,7 +18,7 @@ export const Skills = ({ data }: { data: any }) => {
       style={{ transform: "scale(0.9)" }}
       className="flex flex-col items-center justify-center gap-3 h-full relative overflow-hidden py-20"
     >
-      <SkillText />
+      <SkillText data={data} />
 
       <div className="flex flex-row justify-around flex-wrap mt-4 gap-5 items-center">
         {tech.slice(0, 12).map((skill: any, i: number) => (

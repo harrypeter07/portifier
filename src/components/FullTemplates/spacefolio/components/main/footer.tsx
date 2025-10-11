@@ -1,20 +1,42 @@
 import Link from "next/link";
 
-import { FOOTER_DATA } from "@/constants";
-import { personalInfo } from "@/constants/personal";
-
-export const Footer = () => {
+export const Footer = ({ data }: { data: any }) => {
+  const personal = data?.personal || {};
+  const contact = data?.contact || {};
+  const social = data?.social || {};
+  
+  const fullName = personal.firstName && personal.lastName ? `${personal.firstName} ${personal.lastName}` : (personal.title || "Portfolio");
+  
+  // Create footer data from portfolio data
+  const footerData = [
+    {
+      title: "Contact",
+      data: [
+        { name: "Email", link: `mailto:${contact.email || "#"}`, icon: "📧" },
+        { name: "Phone", link: `tel:${contact.phone || "#"}`, icon: "📞" },
+        { name: "Location", link: "#", icon: "📍" }
+      ]
+    },
+    {
+      title: "Social",
+      data: [
+        { name: "GitHub", link: social.github || "#", icon: "🐙" },
+        { name: "LinkedIn", link: social.linkedin || "#", icon: "💼" },
+        { name: "Twitter", link: social.twitter || "#", icon: "🐦" }
+      ]
+    }
+  ];
   return (
     <div className="w-full h-full bg-transparent text-gray-200 shadow-lg p-[15px]">
       <div className="w-full flex flex-col items-center justify-center m-auto">
         <div className="w-full h-full flex flex-row items-center justify-around flex-wrap">
-          {FOOTER_DATA.map((column) => (
+          {footerData.map((column) => (
             <div
               key={column.title}
               className="min-w-[200px] h-auto flex flex-col items-center justify-start"
             >
               <h3 className="font-bold text-[16px]">{column.title}</h3>
-              {column.data.map(({ icon: Icon, name, link }) => (
+              {column.data.map(({ icon, name, link }) => (
                 <Link
                   key={`${column.title}-${name}`}
                   href={link}
@@ -22,8 +44,8 @@ export const Footer = () => {
                   rel="noreferrer noopener"
                   className="flex flex-row items-center my-[15px]"
                 >
-                  {Icon && <Icon />}
-                  <span className="text-[15px] ml-[6px]">{name}</span>
+                  <span className="text-[20px] mr-[6px]">{icon}</span>
+                  <span className="text-[15px]">{name}</span>
                 </Link>
               ))}
             </div>
@@ -31,7 +53,7 @@ export const Footer = () => {
         </div>
 
         <div className="mb-[20px] text-[15px] text-center">
-          &copy; {personalInfo.name} {new Date().getFullYear()} Inc. All rights reserved.
+          &copy; {fullName} {new Date().getFullYear()}. All rights reserved.
         </div>
       </div>
     </div>

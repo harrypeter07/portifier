@@ -38,20 +38,20 @@ function shortTwoSentences(text = "") {
 
 const ProjectCard = ({ title, image, description, link }) => {
 	return (
-		<div className="group relative mx-auto w-full max-w-md px-6 py-6 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-300 hover:bg-white/95">
-			<div className="flex flex-col items-center gap-3">
+		<div className="max-h-[20vh] lative px-6 py-6 mx-auto w-full max-w-md rounded-2xl shadow-lg backdrop-blur-sm transition-all duration-300 h-group bg-white/90 hover:shadow-2xl hover:bg-white/95">
+			<div className="flex flex-col gap-3 items-center">
 				<CardContainer
 					containerClassName="w-full flex justify-center"
 					className=""
 				>
-					<CardBody className="w-full flex justify-center">
+					<CardBody className="flex justify-center w-full">
 						<CardItem translateZ={60}>
 							<img
 								src={image}
 								alt={title}
 								width={280}
 								height={160}
-								className="rounded-xl object-cover shadow group-hover:shadow-lg transition-shadow duration-300 w-full h-40"
+								className="object-cover w-full h-40 rounded-xl shadow transition-shadow duration-300 group-hover:shadow-lg"
 							/>
 						</CardItem>
 					</CardBody>
@@ -59,18 +59,18 @@ const ProjectCard = ({ title, image, description, link }) => {
 				<Heading
 					as="h3"
 					size="xs"
-					className="text-center text-brand-purple font-bold mt-2 mb-1"
+					className="mt-2 mb-1 font-bold text-center text-brand-purple"
 				>
 					<a
 						href={link}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="cursor-pointer underline underline-offset-4 hover:text-brand-purple transition-colors duration-200"
+						className="underline transition-colors duration-200 cursor-pointer underline-offset-4 hover:text-brand-purple"
 					>
 						{title}
 					</a>
 				</Heading>
-        <p className="text-center text-xs text-zinc-700 font-medium mb-3 px-1 leading-relaxed line-clamp-3" title={description}>
+        <p className="px-1 mb-3 text-xs font-medium leading-relaxed text-center text-zinc-700 line-clamp-3" title={description}>
           {shortTwoSentences(description)}
         </p>
 				<a
