@@ -29,7 +29,8 @@ export const HeroContent = ({ data }: { data: any }) => {
       <div className="flex flex-col gap-5 justify-center m-auto w-full h-full text-start">
         <motion.div
           variants={slideInFromTop}
-          className="Welcome-box py-[8px] px-[7px] border border-[#7042f88b] opacity-[0.9]"
+          style={{ padding: "8px 7px", border: "1px solid #7042f88b", opacity: 0.9 }}
+          className="Welcome-box"
         >
           <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
           <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
@@ -37,7 +38,7 @@ export const HeroContent = ({ data }: { data: any }) => {
 
         <motion.div
           variants={slideInFromLeft(0.5)}
-          className="flex flex-col gap-6 mt-6 text-6xl text-bold text-white max-w-[600px] w-auto h-auto"
+          style={{ display: "flex", flexDirection: "column", gap: "24px", marginTop: "24px", fontSize: "3.75rem", fontWeight: "bold", color: "white", maxWidth: "600px", width: "auto", height: "auto" }}
         >
           {/* Big Name Heading above the headline */}
           <span className="text-7xl leading-tight md:text-8xl">
@@ -69,14 +70,15 @@ export const HeroContent = ({ data }: { data: any }) => {
 
         <motion.p
           variants={slideInFromLeft(0.8)}
-          className="text-lg text-gray-400 my-5 max-w-[600px]"
+          style={{ fontSize: "1.125rem", color: "#9ca3af", margin: "20px 0", maxWidth: "600px" }}
         >
           {about.summary}
         </motion.p>
 
         <motion.a
           variants={slideInFromLeft(1)}
-          className="py-2 button-primary text-center text-white cursor-pointer rounded-lg max-w-[200px]"
+          style={{ padding: "8px 0", textAlign: "center", color: "white", cursor: "pointer", borderRadius: "8px", maxWidth: "200px" }}
+          className="button-primary"
         >
           {personal.ctaLabel || "Get in touch"}
         </motion.a>

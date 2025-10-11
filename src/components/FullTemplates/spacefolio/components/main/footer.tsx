@@ -1,4 +1,5 @@
 import Link from "next/link";
+import React from "react";
 
 export const Footer = ({ data }: { data: any }) => {
   const personal = data?.personal || {};
@@ -28,8 +29,8 @@ export const Footer = ({ data }: { data: any }) => {
   ];
   return (
     <div className="w-full h-full bg-transparent text-gray-200 shadow-lg p-[15px]">
-      <div className="w-full flex flex-col items-center justify-center m-auto">
-        <div className="w-full h-full flex flex-row items-center justify-around flex-wrap">
+      <div className="flex flex-col justify-center items-center m-auto w-full">
+        <div className="flex flex-row flex-wrap justify-around items-center w-full h-full">
           {footerData.map((column) => (
             <div
               key={column.title}

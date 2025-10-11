@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
 export const Navbar = ({ data }: { data: any }) => {
   const personal = data?.personal || {};
@@ -63,7 +64,7 @@ export const Navbar = ({ data }: { data: any }) => {
         </div>
 
         {/* Social Icons (Web) */}
-        <div className="hidden md:flex flex-row gap-5">
+        <div className="hidden flex-row gap-5 md:flex">
           {socials.map(({ link, name, icon }) => (
             <Link
               href={link}
@@ -79,7 +80,7 @@ export const Navbar = ({ data }: { data: any }) => {
 
         {/* Hamburger Menu */}
         <button
-          className="md:hidden text-white focus:outline-none text-4xl"
+          className="text-4xl text-white md:hidden focus:outline-none"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           ☰
@@ -90,7 +91,7 @@ export const Navbar = ({ data }: { data: any }) => {
       {isMobileMenuOpen && (
         <div className="absolute top-[65px] left-0 w-full bg-[#030014] p-5 flex flex-col items-center text-gray-300 md:hidden">
           {/* Links */}
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col gap-4 items-center">
             {navLinks.map((link) => (
               <Link
                 key={link.title}
@@ -104,7 +105,7 @@ export const Navbar = ({ data }: { data: any }) => {
           </div>
 
           {/* Social Icons */}
-          <div className="flex justify-center gap-6 mt-6">
+          <div className="flex gap-6 justify-center mt-6">
             {socials.map(({ link, name, icon }) => (
               <Link
                 href={link}
