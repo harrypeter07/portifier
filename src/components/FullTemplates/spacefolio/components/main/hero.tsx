@@ -1,4 +1,5 @@
 import { HeroContent } from "../sub/hero-content";
+import { SPACEFOLIO_ASSETS } from "../../assets";
 
 export const Hero = ({ data }: { data: any }) => {
   return (

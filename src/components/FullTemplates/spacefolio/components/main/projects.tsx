@@ -13,10 +13,10 @@ export const Projects = ({ data }: { data: any }) => {
         My Projects
       </h1>
       <div className="grid grid-cols-1 gap-6 w-full max-w-7xl md:grid-cols-2 lg:grid-cols-3">
-        {items.map((project: any) => (
+        {items.map((project: any, index: number) => (
           <ProjectCard
             key={project.id || project.title}
-            src={(project.images && project.images[0]) || "/projects/project-1.png"}
+            src={(project.images && project.images[0]) || getRandomProjectImage(index % SPACEFOLIO_ASSETS.projects.length)}
             title={project.title}
             description={project.description}
             link={project.links?.live || project.links?.github || "#"}
