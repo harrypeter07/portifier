@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { SPACEFOLIO_ASSETS } from "../../assets";
 import React from "react";
 
 export const Navbar = ({ data }: { data: any }) => {
@@ -38,7 +39,7 @@ export const Navbar = ({ data }: { data: any }) => {
           className="flex items-center"
         >
           <Image
-            src="/logo.png"
+            src={SPACEFOLIO_ASSETS.ui[1]}
             alt="Logo"
             width={70}
             height={70}

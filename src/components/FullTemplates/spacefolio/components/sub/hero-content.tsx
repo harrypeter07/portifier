@@ -9,6 +9,7 @@ import {
   slideInFromRight,
   slideInFromTop,
 } from "../../lib/motion";
+import { SPACEFOLIO_ASSETS } from "../../assets";
 import React from "react";
 // Replace hardcoded personal info with portfolio data
 
@@ -107,7 +108,7 @@ export const HeroContent = ({ data }: { data: any }) => {
         animate="visible"
       >
         <Image
-          src="/hero-bg.svg"
+          src={SPACEFOLIO_ASSETS.ui[0]}
           alt="work icons"
           height={650}
           width={650}
