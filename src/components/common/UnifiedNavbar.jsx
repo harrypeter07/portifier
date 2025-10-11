@@ -239,22 +239,7 @@ export default function UnifiedNavbar() {
 		}, 3000);
 	};
 
-	const handleMouseEnter = () => {
-		if (hoverTimeout) {
-			clearTimeout(hoverTimeout);
-			setHoverTimeout(null);
-		}
-		setIsHovered(true);
-	};
-
-	const handleMouseLeave = () => {
-		const timeout = setTimeout(() => {
-			setIsHovered(false);
-		}, 3000); // 3 seconds delay
-		setHoverTimeout(timeout);
-	};
-
-	const navLinks = user ? (isHovered ? authenticatedNavLinks : reducedNavLinks) : publicNavLinks;
+	const navLinks = user ? authenticatedNavLinks : publicNavLinks;
 	const currentEditorStepIndex = editorSteps.findIndex(step => pathname === step.href);
 
 	if (loading) {

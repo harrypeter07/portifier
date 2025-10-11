@@ -307,7 +307,7 @@ export default function Dashboard() {
 												</svg>
 											</div>
 											<div>
-												<h3 className="font-semibold text-gray-900 dark:text-white">Browse Templates</h3>
+												<h3 className="font-semibold text-black dark:text-white">Browse Templates</h3>
 												<p className="text-sm text-black/70 dark:text-white/70">Explore beautiful designs</p>
 											</div>
 										</Link>
