@@ -130,7 +130,7 @@ export default function Signup() {
 						</FormField>
 
 					<FormField>
-						<FormLabel htmlFor="username" className="text-gray-800">Username</FormLabel>
+						<FormLabel htmlFor="username" className="text-white">Username</FormLabel>
 							<FormControl>
 							<Input
 									id="username"
@@ -149,7 +149,7 @@ export default function Signup() {
 						</FormField>
 
 					<FormField>
-						<FormLabel htmlFor="email" className="text-gray-800">Email Address</FormLabel>
+						<FormLabel htmlFor="email" className="text-white">Email Address</FormLabel>
 							<FormControl>
 							<Input
 									id="email"
@@ -165,7 +165,7 @@ export default function Signup() {
 						</FormField>
 
 					<FormField>
-						<FormLabel htmlFor="password" className="text-gray-800">Password</FormLabel>
+						<FormLabel htmlFor="password" className="text-white">Password</FormLabel>
 							<FormControl>
 							<Input
 									id="password"
