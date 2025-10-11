@@ -80,6 +80,46 @@ export default function Dashboard() {
 		}
 	}
 
+	// Handle portfolio analytics redirect
+	function handlePortfolioAnalytics(portfolio) {
+		// Redirect to analytics page: /portfolio/username
+		window.open(`/portfolio/${portfolio.username}`, '_blank');
+	}
+
+	// Handle portfolio deletion
+	async function handleDeletePortfolio(portfolioId, username, confirmationText) {
+		try {
+			const res = await fetch('/api/portfolio/delete', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					portfolioId,
+					username,
+					confirmationText
+				})
+			});
+
+			const data = await res.json();
+
+			if (!res.ok) {
+				throw new Error(data.error || 'Failed to delete portfolio');
+			}
+
+			// Refresh dashboard data
+			const dashboardRes = await fetch("/api/user/dashboard");
+			if (dashboardRes.ok) {
+				const dashboardData = await dashboardRes.json();
+				setDashboardData(dashboardData.data);
+			}
+
+			alert('Portfolio deleted successfully!');
+		} catch (error) {
+			throw new Error(error.message || 'Failed to delete portfolio');
+		}
+	}
+
 	return (
 		<div className="min-h-screen grainy-bg">
 			
@@ -289,7 +329,8 @@ export default function Dashboard() {
 													initial={{ opacity: 0, y: 20 }}
 													animate={{ opacity: 1, y: 0 }}
 													transition={{ delay: index * 0.1 }}
-									className="flex items-center justify-between p-4 rounded-xl transition-all duration-300 glass hover:bg-white/15"
+													className="flex items-center justify-between p-4 rounded-xl transition-all duration-300 glass hover:bg-white/15 cursor-pointer"
+													onClick={() => handlePortfolioAnalytics(portfolio)}
 												>
 													<div className="flex items-center">
 														<div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
@@ -306,7 +347,7 @@ export default function Dashboard() {
 															</p>
 														</div>
 													</div>
-													<div className="flex items-center space-x-2">
+													<div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
 														<span className={`px-2 py-1 text-xs font-medium rounded-lg ${
 															portfolio.isPublic 
 																? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
@@ -504,7 +545,8 @@ export default function Dashboard() {
 											initial={{ opacity: 0, y: 20 }}
 											animate={{ opacity: 1, y: 0 }}
 											transition={{ delay: index * 0.1 }}
-											className="border border-white dark:border-white rounded-xl p-4 hover:shadow-lg transition-all duration-300"
+											className="border border-white dark:border-white rounded-xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
+											onClick={() => handlePortfolioAnalytics(portfolio)}
 										>
 											<div className="flex items-center mb-4">
 												<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
@@ -551,7 +593,7 @@ export default function Dashboard() {
 												<div className="text-xs text-gray-500 dark:text-gray-400">
 													Updated {new Date(portfolio.updatedAt).toLocaleDateString()}
 												</div>
-												<div className="flex items-center space-x-2">
+												<div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
 													<ExportButton
 														portfolioId={portfolio._id}
 														username={portfolio.username}
@@ -585,6 +627,15 @@ export default function Dashboard() {
 															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17v.01" />
 														</svg>
 													</Link>
+													<button
+														onClick={() => setDeleteModal({ isOpen: true, portfolio })}
+														className="p-2 text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors"
+														title="Delete Portfolio"
+													>
+														<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+														</svg>
+													</button>
 												</div>
 											</div>
 										</motion.div>
@@ -608,6 +659,14 @@ export default function Dashboard() {
 					)}
 				</AnimatePresence>
 			</div>
+
+			{/* Delete Portfolio Modal */}
+			<DeletePortfolioModal
+				isOpen={deleteModal.isOpen}
+				onClose={() => setDeleteModal({ isOpen: false, portfolio: null })}
+				portfolio={deleteModal.portfolio}
+				onDelete={handleDeletePortfolio}
+			/>
 		</div>
 	);
 }
