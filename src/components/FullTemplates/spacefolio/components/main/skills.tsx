@@ -1,13 +1,14 @@
 import React from "react";
 import { SkillDataProvider } from "../sub/skill-data-provider";
 import { SkillText } from "../sub/skill-text";
+import { getRandomSkillIcon, SPACEFOLIO_ASSETS } from "../../assets";
 
 export const Skills = ({ data }: { data: any }) => {
   const skills = data?.skills || {};
   const tech = Array.isArray(skills.technical)
-    ? skills.technical.flatMap((cat: any) => (cat.skills || []).map((s: any) => ({
+    ? skills.technical.flatMap((cat: any, catIndex: number) => (cat.skills || []).map((s: any, skillIndex: number) => ({
         skill_name: s.name,
-        image: "/skills/ts.png",
+        image: getRandomSkillIcon((catIndex * 10 + skillIndex) % SPACEFOLIO_ASSETS.skills.length),
         width: 80,
         height: 80,
       })))

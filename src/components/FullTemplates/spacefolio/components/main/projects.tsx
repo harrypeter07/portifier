@@ -1,5 +1,6 @@
 import React from "react";
 import { ProjectCard } from "../sub/project-card";
+import { getRandomProjectImage, SPACEFOLIO_ASSETS } from "../../assets";
 
 export const Projects = ({ data }: { data: any }) => {
   const items = data?.projects?.items || [];
