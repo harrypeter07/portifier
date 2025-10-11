@@ -14,6 +14,13 @@ export default function PortfolioPage({ params }) {
 	const [error, setError] = useState(null);
 	const [userData, setUserData] = useState(null);
 
+	// Memoize template resolution for better performance - MUST be called before any early returns
+	const template = useMemo(() => {
+		if (!portfolio) return null;
+		const { templateId, templateName, currentTemplate } = portfolio;
+		return getTemplate(templateId) || currentTemplate || getTemplate(templateName);
+	}, [portfolio]);
+
 	console.log("🔍 [PORTFOLIO] Component initialized with username:", username);
 
 	useEffect(() => {
@@ -124,11 +131,6 @@ export default function PortfolioPage({ params }) {
 		);
 	}
 	const { layout, content, portfolioData, templateId, templateName, templateType, currentTemplate } = portfolio;
-	
-	// Memoize template resolution for better performance
-	const template = useMemo(() => {
-		return getTemplate(templateId) || currentTemplate || getTemplate(templateName);
-	}, [templateId, currentTemplate, templateName]);
 	
 	console.log("🔍 [PORTFOLIO] Extracted portfolio properties:", {
 		templateId,
