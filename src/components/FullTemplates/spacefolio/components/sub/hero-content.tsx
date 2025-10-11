@@ -29,7 +29,7 @@ export const HeroContent = ({ data }: { data: any }) => {
       <div className="flex flex-col gap-5 justify-center m-auto w-full h-full text-start">
         <motion.div
           variants={slideInFromTop}
-          className="Welcome-box py-[8px] px-[7px] border border-[#7042f88b] opacity-[0.9]]"
+          className="Welcome-box py-[8px] px-[7px] border border-[#7042f88b] opacity-[0.9]"
         >
           <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
           <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
@@ -84,7 +84,9 @@ export const HeroContent = ({ data }: { data: any }) => {
 
       <motion.div
         variants={slideInFromRight(0.8)}
-        className="flex justify-center items-center w-full h-full"
+        {...{style: {display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%"}}}
+        initial="hidden"
+        animate="visible"
       >
         <Image
           src="/hero-bg.svg"
