@@ -32,14 +32,15 @@ export const HeroContent = ({ data }: { data: any }) => {
           style={{ padding: "8px 7px", border: "1px solid #7042f88b", opacity: 0.9 }}
           className="Welcome-box"
         >
-          <div className="Welcome-box">
-            <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
-            <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
-          </div>
+          <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
+          <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
+        </motion.div>
 
         <motion.div
           variants={slideInFromLeft(0.5)}
           style={{ display: "flex", flexDirection: "column", gap: "24px", marginTop: "24px", fontSize: "3.75rem", fontWeight: "bold", color: "white", maxWidth: "600px", width: "auto", height: "auto" }}
+          initial="hidden"
+          animate="visible"
         >
           {/* Big Name Heading above the headline */}
           <span className="text-7xl leading-tight md:text-8xl">
@@ -72,6 +73,8 @@ export const HeroContent = ({ data }: { data: any }) => {
         <motion.p
           variants={slideInFromLeft(0.8)}
           style={{ fontSize: "1.125rem", color: "#9ca3af", margin: "20px 0", maxWidth: "600px" }}
+          initial="hidden"
+          animate="visible"
         >
           {about.summary}
         </motion.p>
@@ -80,6 +83,8 @@ export const HeroContent = ({ data }: { data: any }) => {
           variants={slideInFromLeft(1)}
           style={{ padding: "8px 0", textAlign: "center", color: "white", cursor: "pointer", borderRadius: "8px", maxWidth: "200px" }}
           className="button-primary"
+          initial="hidden"
+          animate="visible"
         >
           {personal.ctaLabel || "Get in touch"}
         </motion.a>
