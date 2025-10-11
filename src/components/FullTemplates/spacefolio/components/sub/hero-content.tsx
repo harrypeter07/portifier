@@ -24,16 +24,27 @@ export const HeroContent = ({ data }: { data: any }) => {
     <motion.div
       initial="hidden"
       animate="visible"
-      className="flex flex-row items-center justify-center px-20 mt-40 w-full z-[20]"
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingLeft: "5rem",
+        paddingRight: "5rem",
+        marginTop: "10rem",
+        width: "100%",
+        zIndex: 20,
+      }}
     >
       <div className="flex flex-col gap-5 justify-center m-auto w-full h-full text-start">
         <motion.div
           variants={slideInFromTop}
           style={{ padding: "8px 7px", border: "1px solid #7042f88b", opacity: 0.9 }}
-          className="Welcome-box"
         >
-          <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
-          <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
+          <div className="Welcome-box">
+            <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
+            <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
+          </div>
         </motion.div>
 
         <motion.div
@@ -81,8 +92,7 @@ export const HeroContent = ({ data }: { data: any }) => {
 
         <motion.a
           variants={slideInFromLeft(1)}
-          style={{ padding: "8px 0", textAlign: "center", color: "white", cursor: "pointer", borderRadius: "8px", maxWidth: "200px" }}
-          className="button-primary"
+          style={{ padding: "8px 0", textAlign: "center", color: "white", cursor: "pointer", borderRadius: "8px", maxWidth: "200px", display: "block" }}
           initial="hidden"
           animate="visible"
         >
