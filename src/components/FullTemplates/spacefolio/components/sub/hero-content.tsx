@@ -84,7 +84,7 @@ export const HeroContent = ({ data }: { data: any }) => {
 
       <motion.div
         variants={slideInFromRight(0.8)}
-        {...{style: {display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%"}}}
+        style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
         initial="hidden"
         animate="visible"
       >
