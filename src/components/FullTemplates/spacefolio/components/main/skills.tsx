@@ -1,6 +1,6 @@
 import React from "react";
-import { SkillDataProvider } from "../../sub/skill-data-provider";
-import { SkillText } from "../../sub/skill-text";
+import { SkillDataProvider } from "../sub/skill-data-provider";
+import { SkillText } from "../sub/skill-text";
 
 export const Skills = ({ data }: { data: any }) => {
   const skills = data?.skills || {};
