@@ -8,7 +8,8 @@ import {
   slideInFromLeft,
   slideInFromRight,
   slideInFromTop,
-} from "@/lib/motion";
+} from "../../lib/motion";
+import React from "react";
 // Replace hardcoded personal info with portfolio data
 
 export const HeroContent = ({ data }: { data: any }) => {
@@ -25,7 +26,7 @@ export const HeroContent = ({ data }: { data: any }) => {
       animate="visible"
       className="flex flex-row items-center justify-center px-20 mt-40 w-full z-[20]"
     >
-      <div className="h-full w-full flex flex-col gap-5 justify-center m-auto text-start">
+      <div className="flex flex-col gap-5 justify-center m-auto w-full h-full text-start">
         <motion.div
           variants={slideInFromTop}
           className="Welcome-box py-[8px] px-[7px] border border-[#7042f88b] opacity-[0.9]]"
@@ -39,7 +40,7 @@ export const HeroContent = ({ data }: { data: any }) => {
           className="flex flex-col gap-6 mt-6 text-6xl text-bold text-white max-w-[600px] w-auto h-auto"
         >
           {/* Big Name Heading above the headline */}
-          <span className="text-7xl md:text-8xl leading-tight">
+          <span className="text-7xl leading-tight md:text-8xl">
             {fullName ? (
               (() => {
                 const parts = fullName.toUpperCase().split(" ");
@@ -83,7 +84,7 @@ export const HeroContent = ({ data }: { data: any }) => {
 
       <motion.div
         variants={slideInFromRight(0.8)}
-        className="w-full h-full flex justify-center items-center"
+        className="flex justify-center items-center w-full h-full"
       >
         <Image
           src="/hero-bg.svg"

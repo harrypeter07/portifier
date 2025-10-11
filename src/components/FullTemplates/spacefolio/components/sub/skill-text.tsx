@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 
 import { SparklesIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
@@ -18,7 +19,7 @@ export const SkillText = ({ data }: { data: any }) => {
   const skillSubtitle = personal.skillSubtitle || "Never miss a task, deadline or idea";
 
   return (
-    <div className="w-full h-auto flex flex-col items-center justify-center">
+    <div className="flex flex-col justify-center items-center w-full h-auto">
       <motion.div
         variants={slideInFromTop}
         className="Welcome-box py-[8px] px-[7px] border border-[#7042f88b] opacity-[0.9]]"
