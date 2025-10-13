@@ -1,0 +1,80 @@
+[
+  {
+    "uid": "ecommerce-platform",
+    "meta_title": "E-commerce Platform - Hassan Portfolio",
+    "meta_description": "A modern e-commerce platform built with Next.js and Stripe",
+    "slices": [
+      {
+        "slice_type": "text_block",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "heading": "E-commerce Platform",
+          "body": [
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "A full-featured e-commerce platform built with Next.js, featuring product catalog, shopping cart, user authentication, and Stripe payment integration."
+              }
+            }
+          ]
+        },
+        "items": []
+      },
+      {
+        "slice_type": "image_block",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "image": {
+            "url": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d",
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "items": []
+      }
+    ]
+  },
+  {
+    "uid": "task-management-app",
+    "meta_title": "Task Management App - Hassan Portfolio",
+    "meta_description": "A collaborative task management application with real-time updates",
+    "slices": [
+      {
+        "slice_type": "text_block",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "heading": "Task Management App",
+          "body": [
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "A collaborative task management application built with React and Firebase, featuring real-time updates, drag-and-drop functionality, and team collaboration tools."
+              }
+            }
+          ]
+        },
+        "items": []
+      },
+      {
+        "slice_type": "image_block",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "image": {
+            "url": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40",
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "items": []
+      }
+    ]
+  }
+]

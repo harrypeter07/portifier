@@ -1,0 +1,70 @@
+[
+  {
+    "uid": "getting-started-with-nextjs",
+    "meta_title": "Getting Started with Next.js - Hassan's Blog",
+    "meta_description": "A comprehensive guide to getting started with Next.js development",
+    "title": "Getting Started with Next.js",
+    "date": "2024-01-15",
+    "tags": ["Next.js", "React", "Tutorial"],
+    "slices": [
+      {
+        "slice_type": "text_block",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "heading": "Introduction to Next.js",
+          "body": [
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "Next.js is a powerful React framework that makes building full-stack web applications simple and efficient. In this guide, we'll explore the fundamentals of Next.js and how to get started with your first project."
+              }
+            },
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "From server-side rendering to API routes, Next.js provides everything you need to build modern web applications with excellent performance and developer experience."
+              }
+            }
+          ]
+        },
+        "items": []
+      }
+    ]
+  },
+  {
+    "uid": "typescript-best-practices",
+    "meta_title": "TypeScript Best Practices - Hassan's Blog",
+    "meta_description": "Essential TypeScript best practices for better code quality",
+    "title": "TypeScript Best Practices",
+    "date": "2024-01-20",
+    "tags": ["TypeScript", "Best Practices", "Development"],
+    "slices": [
+      {
+        "slice_type": "text_block",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "heading": "TypeScript Best Practices",
+          "body": [
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "TypeScript has become an essential tool in modern web development. In this article, we'll cover the best practices that will help you write more maintainable and robust TypeScript code."
+              }
+            },
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "From proper type definitions to advanced patterns, these practices will improve your development workflow and reduce bugs in production."
+              }
+            }
+          ]
+        },
+        "items": []
+      }
+    ]
+  }
+]

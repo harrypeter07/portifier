@@ -1,0 +1,137 @@
+{
+  "meta_title": "Hassan Portfolio - Full Stack Developer",
+  "meta_description": "Welcome to my portfolio showcasing my work as a full stack developer",
+  "slices": [
+    {
+      "slice_type": "hero",
+      "slice_label": null,
+      "variation": "default",
+      "version": "initial",
+      "primary": {
+        "first_name": "Hassan",
+        "last_name": "Developer",
+        "tag_line": "Full Stack Developer"
+      },
+      "items": []
+    },
+    {
+      "slice_type": "biography",
+      "slice_label": null,
+      "variation": "default",
+      "version": "initial",
+      "primary": {
+        "heading": "About Me",
+        "body": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "I'm a passionate full stack developer with expertise in modern web technologies. I love creating beautiful, functional, and user-friendly applications that solve real-world problems."
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "With experience in React, Next.js, Node.js, and various other technologies, I bring ideas to life through clean code and innovative solutions."
+            }
+          }
+        ],
+        "button_text": "View My Work",
+        "button_link": {
+          "link_type": "Web",
+          "url": "/projects"
+        },
+        "avatar": {
+          "url": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef",
+          "width": 4000,
+          "height": 6000
+        }
+      },
+      "items": []
+    },
+    {
+      "slice_type": "tech_list",
+      "slice_label": null,
+      "variation": "default",
+      "version": "initial",
+      "primary": {
+        "heading": "Technologies I Work With"
+      },
+      "items": [
+        {
+          "tech_name": "React",
+          "tech_category": "Frontend"
+        },
+        {
+          "tech_name": "Next.js",
+          "tech_category": "Frontend"
+        },
+        {
+          "tech_name": "TypeScript",
+          "tech_category": "Language"
+        },
+        {
+          "tech_name": "Node.js",
+          "tech_category": "Backend"
+        },
+        {
+          "tech_name": "PostgreSQL",
+          "tech_category": "Database"
+        },
+        {
+          "tech_name": "Tailwind CSS",
+          "tech_category": "Styling"
+        }
+      ]
+    },
+    {
+      "slice_type": "content_index",
+      "slice_label": null,
+      "variation": "default",
+      "version": "initial",
+      "primary": {
+        "heading": "Featured Projects",
+        "content_type": "Project",
+        "view_more_text": "View Project",
+        "description": "Here are some of my recent projects that showcase my skills and experience."
+      },
+      "items": []
+    },
+    {
+      "slice_type": "content_index",
+      "slice_label": null,
+      "variation": "default",
+      "version": "initial",
+      "primary": {
+        "heading": "Latest Blog Posts",
+        "content_type": "Blog",
+        "view_more_text": "Read More",
+        "description": "Thoughts and insights on web development, technology, and best practices."
+      },
+      "items": []
+    },
+    {
+      "slice_type": "text_block",
+      "slice_label": null,
+      "variation": "default",
+      "version": "initial",
+      "primary": {
+        "heading": "Get In Touch",
+        "body": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "I'm always interested in new opportunities and collaborations. Whether you have a project in mind or just want to connect, feel free to reach out!"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "You can find me on social media or send me an email. I'd love to hear from you!"
+            }
+          }
+        ]
+      },
+      "items": []
+    }
+  ]
+}
