@@ -30,30 +30,47 @@ export const Footer = ({ data }: { data: any }) => {
   return (
     <div className="w-full h-full bg-transparent text-gray-200 shadow-lg p-[15px]">
       <div className="flex flex-col justify-center items-center m-auto w-full">
-        <div className="flex flex-row flex-wrap justify-around items-center w-full h-full">
-          {footerData.map((column) => (
-            <div
-              key={column.title}
-              className="min-w-[200px] h-auto flex flex-col items-center justify-start"
-            >
-              <h3 className="font-bold text-[16px]">{column.title}</h3>
-              {column.data.map(({ icon, name, link }) => (
+        {/* Top row: Contact left, Social right (wrap on md+) */}
+        <div className="flex w-full items-start justify-between gap-4 flex-col md:flex-row">
+          {/* Contact */}
+          <div className="w-full md:w-1/2 flex flex-col items-start md:items-start">
+            <h3 className="font-bold text-[16px] mb-2">Contact</h3>
+            <div className="flex flex-col md:flex-row md:flex-wrap md:gap-6">
+              {footerData[0].data.map(({ icon, name, link }) => (
                 <Link
-                  key={`${column.title}-${name}`}
+                  key={`contact-${name}`}
                   href={link}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="flex flex-row items-center my-[15px]"
+                  className="flex flex-row items-center my-[8px] md:my-0"
                 >
-                  <span className="text-[20px] mr-[6px]">{icon}</span>
-                  <span className="text-[15px]">{name}</span>
+                  <span className="text-[18px] mr-[6px]">{icon}</span>
+                  <span className="text-[14px]">{name}</span>
                 </Link>
               ))}
             </div>
-          ))}
+          </div>
+
+          {/* Social icons one line, RTL on mobile */}
+          <div className="w-full md:w-1/2 flex md:justify-end">
+            <div className="w-full md:w-auto flex flex-row-reverse md:flex-row items-center justify-between md:justify-end gap-4 border-[rgba(112,66,248,0.25)] bg-[rgba(3,0,20,0.25)] px-3 py-2 rounded-full">
+              {footerData[1].data.map(({ icon, name, link }) => (
+                <Link
+                  key={`social-${name}`}
+                  href={link}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-[18px] md:text-[20px]"
+                  aria-label={name}
+                >
+                  {icon}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="mb-[20px] text-[15px] text-center">
+        <div className="mt-4 text-[13px] md:text-[15px] text-center">
           &copy; {fullName} {new Date().getFullYear()}. All rights reserved.
         </div>
       </div>
