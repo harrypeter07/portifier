@@ -9,20 +9,20 @@ export const Skills = ({ data }: { data: any }) => {
     ? skills.technical.flatMap((cat: any, catIndex: number) => (cat.skills || []).map((s: any, skillIndex: number) => ({
         skill_name: s.name,
         image: getRandomSkillIcon((catIndex * 10 + skillIndex) % SPACEFOLIO_ASSETS.skills.length),
-        width: 80,
-        height: 80,
+        width: 64,
+        height: 64,
       })))
     : [];
 
   return (
     <section
       id="skills"
-      style={{ transform: "scale(0.9)" }}
-      className="flex overflow-hidden relative flex-col gap-3 justify-center items-center py-20 h-full"
+      style={{ transform: "scale(0.98)" }}
+      className="flex overflow-hidden relative flex-col gap-3 justify-center items-center py-16 md:py-20 h-full"
     >
       <SkillText data={data} />
 
-      <div className="flex flex-row flex-wrap gap-5 justify-around items-center mt-4">
+      <div className="flex flex-row flex-wrap gap-4 md:gap-5 justify-center md:justify-around items-center mt-2 md:mt-4">
         {tech.slice(0, 12).map((skill: any, i: number) => (
           <SkillDataProvider
             key={skill.skill_name}
@@ -35,10 +35,10 @@ export const Skills = ({ data }: { data: any }) => {
         ))}
       </div>
 
-      <div className="absolute w-full h-full">
+      <div className="absolute w-full h-full pointer-events-none">
         <div className="w-full h-full z-[-10] opacity-30 absolute flex items-center justify-center bg-cover">
           <video
-            className="w-full h-auto"
+            className="w-full h-full object-cover"
             preload="false"
             playsInline
             loop
