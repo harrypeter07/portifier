@@ -19,7 +19,22 @@ export const HeroContent = ({ data }: { data: any }) => {
   const fullName = personal.firstName && personal.lastName ? `${personal.firstName} ${personal.lastName}` : (personal.title || "");
   const portfolioTagline = personal.tagline || "";
   const headlinePrefix = "I am a";
-  const headlineHighlight = personal.subtitle || personal.title || "Professional";
+  const getFirstSkillName = () => {
+    const skills = data?.skills || {};
+    if (Array.isArray(skills?.technical)) {
+      for (const cat of skills.technical) {
+        const list = Array.isArray(cat?.skills) ? cat.skills : [];
+        const first = list.find((s: any) => (typeof s === 'string' && s) || (s && s.name));
+        if (first) return typeof first === 'string' ? first : first.name;
+      }
+    }
+    if (Array.isArray(skills)) {
+      const first = skills.find((s: any) => (typeof s === 'string' && s) || (s && s.name));
+      if (first) return typeof first === 'string' ? first : first.name;
+    }
+    return "";
+  };
+  const headlineHighlight = personal.subtitle || getFirstSkillName() || personal.title || "";
   const headlineSuffix = "focused on quality & impact.";
   return (
     <div className="md:px-20 md:mt-40">

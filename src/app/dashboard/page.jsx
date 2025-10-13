@@ -82,8 +82,8 @@ export default function Dashboard() {
 
 	// Handle portfolio analytics redirect
 	function handlePortfolioAnalytics(portfolio) {
-		// Redirect to analytics page: /portfolio/username
-		window.open(`/portfolio/${portfolio.username}`, '_blank');
+		// Redirect to analytics page
+		window.open(`/app/portfolio/${portfolio.username}`.replace('/app', ''), '_blank');
 	}
 
 	// Handle portfolio deletion
@@ -365,6 +365,13 @@ export default function Dashboard() {
 																<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
 															</svg>
 														</Link>
+														<button
+															onClick={() => handlePortfolioAnalytics(portfolio)}
+															className="px-2 py-1 text-xs font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700"
+															title="View Analytics"
+														>
+															Analytics
+														</button>
 													</div>
 												</motion.div>
 											))}
@@ -611,6 +618,13 @@ export default function Dashboard() {
 															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
 														</svg>
 													</Link>
+													<button
+														onClick={() => handlePortfolioAnalytics(portfolio)}
+														className="px-2 py-1 text-xs font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700"
+														title="View Analytics"
+													>
+														Analytics
+													</button>
 													<Link
 														href={`/editor/customize?portfolioId=${portfolio._id}&username=${portfolio.username}`}
 														className="p-2 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
