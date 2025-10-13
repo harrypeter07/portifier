@@ -17,7 +17,7 @@ export const HeroContent = ({ data }: { data: any }) => {
   const personal = data?.personal || {};
   const about = data?.about || {};
   const fullName = personal.firstName && personal.lastName ? `${personal.firstName} ${personal.lastName}` : (personal.title || "");
-  const portfolioTagline = personal.tagline || about.summary || "";
+  const portfolioTagline = personal.tagline || "";
   const headlinePrefix = "I am a";
   const headlineHighlight = personal.subtitle || personal.title || "Professional";
   const headlineSuffix = "focused on quality & impact.";

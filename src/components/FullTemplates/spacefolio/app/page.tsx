@@ -5,6 +5,8 @@ import { Skills } from "../components/main/skills";
 import { Navbar } from "../components/main/navbar";
 import { Footer } from "../components/main/footer";
 import React from "react";
+import { About } from "../components/main/about";
+import { Contact } from "../components/main/contact";
 
 export default function SpacefolioFull({ data }: { data: any }) {
   return (
@@ -12,10 +14,9 @@ export default function SpacefolioFull({ data }: { data: any }) {
       className="overflow-y-scroll overflow-x-hidden min-h-screen relative"
       style={{
         background: `
-          radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.25) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.25) 0%, transparent 50%),
-          radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.18) 0%, transparent 50%),
-          linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)
+          radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 45%),
+          radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.08) 0%, transparent 45%),
+          linear-gradient(135deg, #070713 0%, #0b0f1a 50%, #0a0c14 100%)
         `
       }}
     >
@@ -23,9 +24,11 @@ export default function SpacefolioFull({ data }: { data: any }) {
       <main className="w-full relative">
         <div className="flex flex-col">
           <Hero data={data} />
+          <About data={data} />
           <Skills data={data} />
           <Encryption />
           <Projects data={data} />
+          <Contact data={data} />
         </div>
       </main>
       <Footer data={data} />

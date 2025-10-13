@@ -5,13 +5,32 @@ import { getRandomSkillIcon, SPACEFOLIO_ASSETS } from "../../assets";
 
 export const Skills = ({ data }: { data: any }) => {
   const skills = data?.skills || {};
+  const normalize = (s: any) => {
+    if (!s) return null;
+    if (typeof s === "string") return { name: s };
+    if (typeof s === "object" && s.name) return { name: s.name };
+    return null;
+  };
   const tech = Array.isArray(skills.technical)
-    ? skills.technical.flatMap((cat: any, catIndex: number) => (cat.skills || []).map((s: any, skillIndex: number) => ({
+    ? skills.technical.flatMap((cat: any, catIndex: number) => {
+        const items = Array.isArray(cat?.skills) ? cat.skills : (Array.isArray(skills.technical) && !cat?.skills ? skills.technical : []);
+        return (items || [])
+          .map(normalize)
+          .filter(Boolean)
+          .map((s: any, skillIndex: number) => ({
+            skill_name: s.name,
+            image: getRandomSkillIcon((catIndex * 10 + skillIndex) % SPACEFOLIO_ASSETS.skills.length),
+            width: 64,
+            height: 64,
+          }));
+      })
+    : Array.isArray(skills)
+    ? (skills as any[]).map(normalize).filter(Boolean).map((s: any, i: number) => ({
         skill_name: s.name,
-        image: getRandomSkillIcon((catIndex * 10 + skillIndex) % SPACEFOLIO_ASSETS.skills.length),
+        image: getRandomSkillIcon(i % SPACEFOLIO_ASSETS.skills.length),
         width: 64,
         height: 64,
-      })))
+      }))
     : [];
 
   return (
