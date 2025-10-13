@@ -8,7 +8,7 @@ import React from "react";
 export const Navbar = ({ data }: { data: any }) => {
   const personal = data?.personal || {};
   const contact = data?.contact || {};
-  const social = data?.social || {};
+  const social = (data?.personal?.social as any) || data?.social || {};
   
   const fullName = personal.firstName && personal.lastName ? `${personal.firstName} ${personal.lastName}` : (personal.title || "Portfolio");
   
@@ -30,7 +30,7 @@ export const Navbar = ({ data }: { data: any }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="w-full h-[65px] fixed top-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001427] backdrop-blur-md z-50 px-10">
+    <div className="w-full h-[65px] fixed top-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001427] backdrop-blur-md z-50 px-4 md:px-10">
       {/* Navbar Container */}
       <div className="w-full h-full flex items-center justify-between m-auto px-[10px]">
         {/* Logo + Name */}
@@ -45,7 +45,7 @@ export const Navbar = ({ data }: { data: any }) => {
             height={70}
             style={{ width: "auto", height: "auto" }}
             draggable={false}
-            className="object-contain w-16 h-16 cursor-pointer"
+            className="object-contain w-12 h-12 md:w-16 md:h-16 cursor-pointer"
           />
           <div className="hidden md:flex md:selffont-bold ml-[10px] text-gray-300">{fullName}</div>
         </Link>
@@ -114,7 +114,7 @@ export const Navbar = ({ data }: { data: any }) => {
                 target="_blank"
                 rel="noreferrer noopener"
                 key={name}
-                className="text-3xl hover:text-[rgb(112,66,248)] transition"
+                className="text-2xl hover:text-[rgb(112,66,248)] transition"
               >
                 {icon}
               </Link>

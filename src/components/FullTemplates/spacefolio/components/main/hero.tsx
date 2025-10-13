@@ -4,19 +4,19 @@ import React from "react";
 
 export const Hero = ({ data }: { data: any }) => {
   return (
-    <div className="flex overflow-hidden relative flex-col w-full h-screen">
+    <div className="flex overflow-hidden relative flex-col w-full h-[100dvh] md:h-screen">
       {/* Blackhole Video Background */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="object-cover absolute w-full h-full rotate-180"
+        className="object-cover absolute w-full h-full md:rotate-180"
         style={{ 
-          top: '-62%', 
+          top: '0', 
           left: '0', 
           width: '100%', 
-          height: '140%',
+          height: '100%',
           zIndex: 1
         }}
         onError={(e) => {

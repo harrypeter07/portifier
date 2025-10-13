@@ -30,12 +30,13 @@ export const HeroContent = ({ data }: { data: any }) => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        paddingLeft: "5rem",
-        paddingRight: "5rem",
-        marginTop: "10rem",
+        paddingLeft: "1rem",
+        paddingRight: "1rem",
+        marginTop: "5rem",
         width: "100%",
         zIndex: 20,
       }}
+      className="md:px-20 md:mt-40"
     >
       <div className="flex flex-col gap-5 justify-center m-auto w-full h-full text-start">
         <motion.div
@@ -44,18 +45,19 @@ export const HeroContent = ({ data }: { data: any }) => {
         >
           <div className="Welcome-box">
             <SparklesIcon className="text-[#b49bff] mr-[10px] h-5 w-5" />
-            <h1 className="Welcome-text text-[13px]">{portfolioTagline}</h1>
+            <h1 className="Welcome-text text-[12px] md:text-[13px]">{portfolioTagline}</h1>
           </div>
         </motion.div>
 
         <motion.div
           variants={slideInFromLeft(0.5)}
-          style={{ display: "flex", flexDirection: "column", gap: "24px", marginTop: "24px", fontSize: "3.75rem", fontWeight: "bold", color: "white", maxWidth: "600px", width: "auto", height: "auto" }}
+          style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "16px", fontWeight: "bold", color: "white", maxWidth: "600px", width: "auto", height: "auto" }}
           initial="hidden"
           animate="visible"
+          className="text-4xl leading-tight md:text-6xl md:leading-tight"
         >
           {/* Big Name Heading above the headline */}
-          <span className="text-7xl leading-tight md:text-8xl">
+          <span className="text-5xl leading-tight md:text-7xl">
             {fullName ? (
               (() => {
                 const parts = fullName.toUpperCase().split(" ");
@@ -73,7 +75,7 @@ export const HeroContent = ({ data }: { data: any }) => {
             ) : null}
           </span>
 
-          <span>
+          <span className="text-2xl md:text-4xl">
             {headlinePrefix}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500">
               {headlineHighlight}
@@ -84,9 +86,10 @@ export const HeroContent = ({ data }: { data: any }) => {
 
         <motion.p
           variants={slideInFromLeft(0.8)}
-          style={{ fontSize: "1.125rem", color: "#9ca3af", margin: "20px 0", maxWidth: "600px" }}
+          style={{ fontSize: "1rem", color: "#9ca3af", margin: "16px 0", maxWidth: "600px" }}
           initial="hidden"
           animate="visible"
+          className="md:text-lg"
         >
           {about.summary}
         </motion.p>
@@ -106,15 +109,16 @@ export const HeroContent = ({ data }: { data: any }) => {
         style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
         initial="hidden"
         animate="visible"
+        className="hidden sm:flex"
       >
         <Image
           src={SPACEFOLIO_ASSETS.ui[0]}
           alt="work icons"
-          height={650}
-          width={650}
+          height={500}
+          width={500}
           style={{ width: "auto", height: "auto" }}
           draggable={false}
-          className="select-none w-full h-auto object-contain"
+          className="select-none w-full max-w-[320px] md:max-w-[500px] h-auto object-contain"
         />
       </motion.div>
     </motion.div>

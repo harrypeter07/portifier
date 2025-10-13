@@ -4,7 +4,7 @@ import React from "react";
 export const Footer = ({ data }: { data: any }) => {
   const personal = data?.personal || {};
   const contact = data?.contact || {};
-  const social = data?.social || {};
+  const social = (data?.personal?.social as any) || data?.social || {};
   
   const fullName = personal.firstName && personal.lastName ? `${personal.firstName} ${personal.lastName}` : (personal.title || "Portfolio");
   
