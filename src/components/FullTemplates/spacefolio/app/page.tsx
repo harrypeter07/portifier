@@ -11,7 +11,7 @@ import { Contact } from "../components/main/contact";
 export default function SpacefolioFull({ data }: { data: any }) {
   return (
     <div
-      className="overflow-y-scroll overflow-x-hidden min-h-screen relative"
+      className="overflow-x-hidden overflow-y-scroll relative min-h-screen"
       style={{
         background: `
           radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 45%),
@@ -21,7 +21,7 @@ export default function SpacefolioFull({ data }: { data: any }) {
       }}
     >
       <Navbar data={data} />
-      <main className="w-full relative">
+      <main className="relative w-full">
         <div className="flex flex-col">
           <Hero data={data} />
           <About data={data} />
