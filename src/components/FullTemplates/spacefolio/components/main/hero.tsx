@@ -11,12 +11,12 @@ export const Hero = ({ data }: { data: any }) => {
         muted
         loop
         playsInline
-        className="object-cover absolute w-full h-full md:rotate-180"
+        className="object-cover object-top absolute w-full h-full -translate-y-1/2 md:rotate-180"
         style={{ 
-          top: '0', 
+          top: '8.5%', 
           left: '0', 
           width: '100%', 
-          height: '100%',
+          height: '160%',
           zIndex: 1
         }}
         onError={(e) => {
