@@ -1,5 +1,4 @@
-import fs from 'fs';
-import path from 'path';
+import { getRuntimeData } from './runtimeStore';
 
 // Types for our data structure
 export interface SliceData {
@@ -63,15 +62,14 @@ export interface SettingsData {
 
 // Data loading functions
 export async function getHomepageData(): Promise<PageData> {
-  const dataPath = path.join(process.cwd(), 'src/data/homepage.json');
-  const jsonData = fs.readFileSync(dataPath, 'utf8');
-  return JSON.parse(jsonData);
+  const rt = getRuntimeData();
+  if (rt.homepage) return rt.homepage as PageData;
+  return { meta_title: '', meta_description: '', slices: [] } as PageData;
 }
 
 export async function getPagesData(): Promise<PageData[]> {
-  const dataPath = path.join(process.cwd(), 'src/data/pages.json');
-  const jsonData = fs.readFileSync(dataPath, 'utf8');
-  return JSON.parse(jsonData);
+  const rt = getRuntimeData();
+  return (rt.pages as PageData[]) || [];
 }
 
 export async function getPageByUID(uid: string): Promise<PageData | null> {
@@ -80,9 +78,8 @@ export async function getPageByUID(uid: string): Promise<PageData | null> {
 }
 
 export async function getProjectsData(): Promise<ProjectData[]> {
-  const dataPath = path.join(process.cwd(), 'src/data/projects.json');
-  const jsonData = fs.readFileSync(dataPath, 'utf8');
-  return JSON.parse(jsonData);
+  const rt = getRuntimeData();
+  return (rt.projects as ProjectData[]) || [];
 }
 
 export async function getProjectByUID(uid: string): Promise<ProjectData | null> {
@@ -91,9 +88,8 @@ export async function getProjectByUID(uid: string): Promise<ProjectData | null> 
 }
 
 export async function getBlogPostsData(): Promise<BlogPostData[]> {
-  const dataPath = path.join(process.cwd(), 'src/data/blog-posts.json');
-  const jsonData = fs.readFileSync(dataPath, 'utf8');
-  return JSON.parse(jsonData);
+  const rt = getRuntimeData();
+  return (rt.blogPosts as BlogPostData[]) || [];
 }
 
 export async function getBlogPostByUID(uid: string): Promise<BlogPostData | null> {
@@ -102,9 +98,17 @@ export async function getBlogPostByUID(uid: string): Promise<BlogPostData | null
 }
 
 export async function getSettingsData(): Promise<SettingsData> {
-  const dataPath = path.join(process.cwd(), 'src/data/settings.json');
-  const jsonData = fs.readFileSync(dataPath, 'utf8');
-  return JSON.parse(jsonData);
+  const rt = getRuntimeData();
+  return (rt.settings as SettingsData) || {
+    name: 'Portfolio',
+    nav_item: [],
+    cta_link: { link_type: 'Web', url: '#' },
+    cta_label: 'Contact',
+    github_link: { link_type: 'Web', url: '#' },
+    twitter_link: { link_type: 'Web', url: '#' },
+    linkdin_link: { link_type: 'Web', url: '#' },
+    intagram_link: { link_type: 'Web', url: '#' },
+  } as SettingsData;
 }
 
 // Helper function to format dates (similar to the original blog post component)

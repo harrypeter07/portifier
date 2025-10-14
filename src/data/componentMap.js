@@ -22,6 +22,8 @@ import CleanfolioFull from "@/components/FullTemplates/CleanfolioFull";
 import CreativeFull from "@/components/FullTemplates/CreativeFull";
 import ModernPortfolio from "@/components/FullTemplates/ModernPortfolio";
 import SpacefolioFull from "@/components/FullTemplates/spacefolio/app/page";
+import NeoBrutalFull from "@/components/FullTemplates/NeoBrutalFull";
+import ColorfullFull from "@/components/FullTemplates/ColorfullFull";
 
 export const componentMap = {
 	// Hero components
@@ -64,6 +66,8 @@ export const componentMap = {
 	CreativeFull,
 	ModernPortfolio,
 	SpacefolioFull,
+	NeoBrutalFull,
+	ColorfullFull,
 };
 
 // Component categories for organized selection
@@ -124,7 +128,7 @@ export const componentCategories = {
 	},
 	fullTemplates: {
 		label: "Full Page Templates",
-		components: ["CleanfolioFull", "CreativeFull", "ModernPortfolio", "SpacefolioFull"],
+		components: ["CleanfolioFull", "CreativeFull", "ModernPortfolio", "SpacefolioFull", "NeoBrutalFull", "ColorfullFull"],
 		description: "Complete portfolio page templates",
 		required: false
 	}
