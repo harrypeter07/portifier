@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function NeoBrutalFull() {
-	return (
+export default function NeoBrutalFull({ data }) {
+    const mapped = mapSchemaToNeoData(data);
+    return (
 		<div id="neo-brutal-root">
 			<style jsx global>{`
 				* { margin: 0; padding: 0; box-sizing: border-box; }
@@ -46,59 +47,49 @@ export default function NeoBrutalFull() {
 					.mobile-text-center { text-align: center !important; }
 				}
 			`}</style>
-			<App />
+            <App initialData={mapped} />
 		</div>
 	);
 }
 
 // ------- React implementation copied from provided HTML (unchanged styles) -------
 
-const portfolioData = {
-	personal_info: {
-		name: "Alex Rivera",
-		title: "Creative Developer & Designer",
-		tagline: "Building bold digital experiences with code and creativity",
-		email: "alex.rivera@email.com",
-		phone: "+1 (555) 123-4567",
-		location: "San Francisco, CA",
-	},
-	skills: [
-		{ name: "React", level: 90 },
-		{ name: "JavaScript", level: 85 },
-		{ name: "Python", level: 80 },
-		{ name: "UI/UX Design", level: 75 },
-		{ name: "Web Development", level: 88 },
-	],
-	projects: [
-		{
-			title: "E-commerce Platform",
-			description: "A bold, modern e-commerce solution with React and Node.js",
-			technologies: ["React", "Node.js", "MongoDB"],
-			image:
-				"https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=600&h=400&fit=crop",
-		},
-		{
-			title: "Mobile App Design",
-			description: "Neo-brutalism inspired mobile app interface design",
-			technologies: ["Figma", "React Native", "Design Systems"],
-			image:
-				"https://images.unsplash.com/photo-1551650975-87deedd944c3?w=600&h=400&fit=crop",
-		},
-		{
-			title: "Data Visualization Tool",
-			description: "Interactive data visualization dashboard with D3.js",
-			technologies: ["D3.js", "Python", "Flask"],
-			image:
-				"https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&h=400&fit=crop",
-		},
-	],
-	social_links: [
-		{ platform: "GitHub", url: "https://github.com/alexrivera" },
-		{ platform: "LinkedIn", url: "https://linkedin.com/in/alexrivera" },
-		{ platform: "Twitter", url: "https://twitter.com/alexrivera" },
-		{ platform: "Dribbble", url: "https://dribbble.com/alexrivera" },
-	],
-};
+function mapSchemaToNeoData(schema) {
+    const personal = schema?.personal || {};
+    const skills = (schema?.skills?.technical || [])
+        .flatMap((cat) => (cat?.skills || []))
+        .slice(0, 8)
+        .map((s) => ({ name: s?.name || "", level: Math.min(100, s?.years ? 60 + Math.min(40, s.years * 8) : 85) }));
+    const projects = (schema?.projects?.items || []).slice(0, 6).map((p) => ({
+        title: p?.title || "",
+        description: p?.description || "",
+        technologies: p?.technologies || [],
+        image: (p?.images && p.images[0]) || "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&h=400&fit=crop",
+    }));
+    const social = personal?.social || {};
+    const social_links = Object.entries(social)
+        .filter(([, url]) => !!url)
+        .map(([platform, url]) => ({ platform, url }));
+    return {
+        personal_info: {
+            name: [personal.firstName, personal.lastName].filter(Boolean).join(" ") || personal.title || "",
+            title: personal.title || personal.subtitle || "",
+            tagline: personal.tagline || personal.subtitle || "",
+            email: personal.email || "",
+            phone: personal.phone || "",
+            location: [personal?.location?.city, personal?.location?.state, personal?.location?.country].filter(Boolean).join(", "),
+        },
+        skills: skills.length ? skills : [
+            { name: "React", level: 90 },
+            { name: "JavaScript", level: 85 },
+            { name: "Web Development", level: 88 },
+        ],
+        projects: projects.length ? projects : [
+            { title: "Project", description: "", technologies: [], image: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=600&h=400&fit=crop" },
+        ],
+        social_links: social_links.length ? social_links : [],
+    };
+}
 
 function StarDecorations({ sectionName }) {
 	const starDecorations = {
@@ -713,8 +704,8 @@ function addScrollStarEffects() {
 	return () => observer.disconnect();
 }
 
-function App() {
-	const [activeSection, setActiveSection] = useState("hero");
+function App({ initialData }) {
+    const [activeSection, setActiveSection] = useState("hero");
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -751,7 +742,9 @@ function App() {
 		};
 	}, []);
 
-	return (
+    // Expose mapped data to section components via module variable
+    portfolioData = initialData;
+    return (
 		<div>
 			<Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
 			<HeroSection />
