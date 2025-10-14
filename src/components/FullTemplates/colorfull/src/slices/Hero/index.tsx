@@ -2,7 +2,7 @@
 import { JSX, useEffect, useRef } from "react";
 import gsap from "gsap";
 import Bounded from "../../components/Bounded";
-import InteractiveShapes from "./InteractiveShapes";
+// Removed Three.js/drei random shapes for safety
 import { SliceData } from "../../lib/data";
 import React from "react";
 
@@ -85,11 +85,10 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
 			id="home"
 		>
 			<div className="grid min-h-[70vh] grid-cols-1 md:grid-cols-2 items-center">
-				{/**Shapes  */}
-        <div className="flex justify-center">
-
-				<InteractiveShapes />
-        </div>
+				{/* Decorative placeholder instead of 3D shapes */}
+				<div className="flex justify-center">
+					<div className="w-64 h-64 rounded-2xl border-4 border-yellow-400 bg-gradient-to-br from-yellow-300 to-yellow-500 shadow-[12px_12px_0_0_#000]" />
+				</div>
 
 				<div className="col-start-1 md:row-start-1">
 					<h1
