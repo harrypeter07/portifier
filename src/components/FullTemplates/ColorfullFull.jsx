@@ -56,8 +56,8 @@ export default function ColorfullFull({ data = EMPTY_PORTFOLIO }) {
     return (
         <div className={`relative min-h-screen bg-slate-900 text-slate-100 ${urbanist.className}`}>
 			{/* Template background */}
-            <div ref={gradRef} className="absolute inset-0 max-h-screen background-gradient" style={{ zIndex: -50, pointerEvents: 'none' }} />
-            <div ref={noiseRef} className="absolute inset-0 h-full opacity-20 mix-blend-soft-light" style={{ zIndex: -40, pointerEvents: 'none', backgroundImage: "url('/noisetexture.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'auto' }} />
+            <div ref={gradRef} className="absolute inset-0 max-h-screen background-gradient z-[100]" style={{ pointerEvents: 'none' }} />
+            <div ref={noiseRef} className="absolute inset-0 h-full opacity-20 mix-blend-soft-light z-[90]" style={{ pointerEvents: 'none', backgroundImage: "url('/noisetexture.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'auto' }} />
 			{/* Template header (client) */}
 			<HeaderClient />
 			{/* Main content */}
