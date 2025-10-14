@@ -1,7 +1,6 @@
 "use client";
 
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
-"use client";
 import CustomSliceZone from "./colorfull/src/components/CustomSliceZone";
 import HeaderClient from "./colorfull/src/components/HeaderClient";
 import FooterClient from "./colorfull/src/components/FooterClient";
