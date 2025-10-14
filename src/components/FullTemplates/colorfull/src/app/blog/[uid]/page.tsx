@@ -1,14 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import CustomSliceZone from "@/components/CustomSliceZone";
-import { getBlogPostByUID, getBlogPostsData, formatDate } from "@/lib/data";
-import Bounded from "@/components/Bounded";
-import Heading from "@/components/Heading";
+import CustomSliceZone from "../../../components/CustomSliceZone";
+import { getBlogPostByUID, getBlogPostsData, formatDate } from "../../../lib/data";
+import Bounded from "../../../components/Bounded";
+import Heading from "../../../components/Heading";
 
 type Params = { uid: string };
 
-export default async function Page({ params }: { params: Promise<Params> }) {
-  const { uid } = await params;
+export default async function Page({ params }: { params: Params }) {
+  const { uid } = params;
   const page = await getBlogPostByUID(uid);
   
   if (!page) {
@@ -46,9 +46,9 @@ export default async function Page({ params }: { params: Promise<Params> }) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<Params>;
+  params: Params;
 }): Promise<Metadata> {
-  const { uid } = await params;
+  const { uid } = params;
   const page = await getBlogPostByUID(uid);
   
   if (!page) {
