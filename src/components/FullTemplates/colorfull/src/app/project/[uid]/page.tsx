@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CustomSliceZone from "../../../components/CustomSliceZone";
 import { getProjectByUID, getProjectsData } from "../../../lib/data";
+import React from "react";
 
 type Params = { uid: string };
 

@@ -275,6 +275,28 @@ export const PORTFOLIO_TEMPLATES = {
 		},
 		sampleData: sampleDataCreative,
 	},
+
+	colorfullFull: {
+		id: "colorfullFull",
+		name: "Colorfull (Full Page)",
+		description: "Slice-driven colorful template mapped to app schema",
+		category: "designer",
+		type: "full",
+		component: "ColorfullFull",
+		preview: "/templates/colorfull-full-preview.jpg",
+		theme: {
+			primaryColor: "#FBBF24",
+			secondaryColor: "#1F2937",
+			accentColor: "#10B981",
+			backgroundColor: "#0F172A",
+			textColor: "#F3F4F6",
+			font: "Inter",
+			darkMode: true,
+			animations: true,
+			layout: "colorfull",
+		},
+		sampleData: sampleDataCreative,
+	},
 };
 
 // Template utility functions
