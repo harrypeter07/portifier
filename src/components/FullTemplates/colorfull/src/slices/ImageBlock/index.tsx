@@ -1,6 +1,7 @@
 import { JSX } from "react";
-import { SliceData } from "@/lib/data";
-import Bounded from "@/components/Bounded";
+import { SliceData } from "../../lib/data";
+import Bounded from "../../components/Bounded";
+import React from "react";
 
 /**
  * Props for `ImageBlock`.

@@ -1,9 +1,10 @@
 "use client";
 import { JSX, useEffect, useRef } from "react";
 import gsap from "gsap";
-import Bounded from "@/components/Bounded";
+import Bounded from "../../components/Bounded";
 import InteractiveShapes from "./InteractiveShapes";
-import { SliceData } from "@/lib/data";
+import { SliceData } from "../../lib/data";
+import React from "react";
 
 /**
  * Props for `Hero`.
@@ -70,7 +71,7 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
 		return name.split("").map((letter, index) => (
 			<span
 				key={index}
-				className={`name-animation name-animation-${key} inline-block`}
+				className={`inline-block name-animation name-animation-${key}`}
 			>
 				{letter}
 			</span>
@@ -85,7 +86,7 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
 		>
 			<div className="grid min-h-[70vh] grid-cols-1 md:grid-cols-2 items-center">
 				{/**Shapes  */}
-        <div className="flex justify-center  ">
+        <div className="flex justify-center">
 
 				<InteractiveShapes />
         </div>

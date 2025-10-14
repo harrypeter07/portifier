@@ -1,9 +1,10 @@
-import Bounded from "@/components/Bounded";
-import Button from "@/components/Button";
-import Heading from "@/components/Heading";
+import Bounded from "../../components/Bounded";
+import Button from "../../components/Button";
+import Heading from "../../components/Heading";
 import Avatar from "./Avatar";
 import { JSX } from "react";
-import { SliceData } from "@/lib/data";
+import { SliceData } from "../../lib/data";
+import React from "react";
 
 /**
  * Props for `Biography`.
@@ -28,7 +29,7 @@ const Biography = ({ slice }: BiographyProps): JSX.Element => {
           <Heading as="h1" size="xl" className="mb-6">
             {slice.primary.heading}
           </Heading>
-          <div className="prose prose-xl prose-slate prose-invert mb-8">
+          <div className="mb-8 prose prose-xl prose-slate prose-invert">
             {slice.primary.body.map((paragraph: any, index: number) => (
               <p key={index}>{paragraph.content.text}</p>
             ))}

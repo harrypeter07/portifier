@@ -5,7 +5,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MdArrowOutward } from "react-icons/md";
-import { BlogPostData, ProjectData } from "@/lib/data";
+import { BlogPostData, ProjectData } from "../../lib/data";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -147,7 +147,7 @@ export default function ContentList({
           >
             <a
               href={`${urlPrefix}/${post.uid}`}
-              className="flex flex-col justify-between border-t border-t-slate-100 py-10  text-slate-200 md:flex-row "
+              className="flex flex-col justify-between py-10 border-t border-t-slate-100 text-slate-200 md:flex-row"
               aria-label={'title' in post ? post.title : "Untitled"}
             >
               <div className="flex flex-col">
@@ -162,7 +162,7 @@ export default function ContentList({
                   )) : null}
                 </div>
               </div>
-              <span className="ml-auto flex items-center gap-2 text-xl font-medium md:ml-0">
+              <span className="flex gap-2 items-center ml-auto text-xl font-medium md:ml-0">
                 {viewMoreText} <MdArrowOutward />
               </span>
             </a>

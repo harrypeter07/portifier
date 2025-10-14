@@ -1,6 +1,7 @@
 "use client"
 import clsx from "clsx";
 import gsap from "gsap";
+import React from "react";
 import { useEffect, useRef } from "react";
 
 type AvatarProps = {
@@ -70,17 +71,17 @@ export default function Avatar({
         return ()=> ctx.revert(); //clean
     } , [])
     return (
-        <div ref={component} className={clsx("relative h-full w-full " , className)}>
-            <div className="avatar  overflow-hidden rounded-3xl border-2 border-slate-700 opacity-1">
+        <div ref={component} className={clsx("relative w-full h-full" , className)}>
+            <div className="overflow-hidden rounded-3xl border-2 avatar border-slate-700 opacity-1">
             <img 
                 src={image.url} 
                 alt={alt || "Avatar"} 
-                className="avatar-image h-full w-full object-fill"
+                className="object-fill w-full h-full avatar-image"
                 width={image.width}
                 height={image.height}
             />
 
-            <div className="highlight absolute inset-0 hidden w-full scale-110 bg-gradient-to-tr from-transparent via-white to-transparent opacity-0 md:block"></div>
+            <div className="hidden absolute inset-0 w-full bg-gradient-to-tr from-transparent via-white to-transparent opacity-0 scale-110 highlight md:block"></div>
 
             </div>
         </div>

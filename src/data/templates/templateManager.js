@@ -252,6 +252,29 @@ export const PORTFOLIO_TEMPLATES = {
 		},
 		sampleData: sampleDataCleanfolio,
 	},
+
+	// Neo Brutalism (Full Page)
+	neoBrutalFull: {
+		id: "neoBrutalFull",
+		name: "Neo Brutal (Full Page)",
+		description: "Neo‑brutalism themed portfolio with bold shapes and animations",
+		category: "designer",
+		type: "full", // full-page template
+		component: "NeoBrutalFull", // reference to full template component
+		preview: "/templates/neo-brutal-full-preview.jpg",
+		theme: {
+			primaryColor: "#4169E1",
+			secondaryColor: "#000000",
+			accentColor: "#FAFAFA",
+			backgroundColor: "#FAFAFA",
+			textColor: "#000000",
+			font: "System",
+			darkMode: false,
+			animations: true,
+			layout: "neo-brutal",
+		},
+		sampleData: sampleDataCreative,
+	},
 };
 
 // Template utility functions

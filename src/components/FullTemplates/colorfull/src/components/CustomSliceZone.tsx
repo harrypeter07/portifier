@@ -1,5 +1,6 @@
-import { components } from "@/slices";
-import { SliceData } from "@/lib/data";
+import { components } from "../slices";
+import { SliceData } from "../lib/data";
+import React from "react";
 
 interface CustomSliceZoneProps {
   slices: SliceData[];

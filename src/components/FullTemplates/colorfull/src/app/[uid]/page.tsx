@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import CustomSliceZone from "@/components/CustomSliceZone";
-import { getPageByUID, getPagesData } from "@/lib/data";
+import CustomSliceZone from "../../components/CustomSliceZone";
+import { getPageByUID, getPagesData } from "../../lib/data";
+import React from "react";
 
 type Params = { uid: string };
 

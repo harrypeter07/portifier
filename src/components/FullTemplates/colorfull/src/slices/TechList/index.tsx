@@ -1,11 +1,11 @@
 "use client"
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Bounded from "@/components/Bounded";
-import Heading from "@/components/Heading";
+import Bounded from "../../components/Bounded";
+import Heading from "../../components/Heading";
 import React, { JSX, useEffect, useRef } from "react";
 import { MdCircle } from "react-icons/md";
-import { SliceData } from "@/lib/data";
+import { SliceData } from "../../lib/data";
 
 gsap.registerPlugin(ScrollTrigger)
 /**
@@ -76,7 +76,7 @@ const TechList = ({ slice }: TechListProps): JSX.Element => {
      
       {slice.items.map(({ tech_color , tech_name} , index) => (
   // Render the item
-  <div key={index} className="tech-row mb-8 flex items-center justify-center gap-4 text-slate-700 whitespace-nowrap will-change-transform"
+  <div key={index} className="flex gap-4 justify-center items-center mb-8 whitespace-nowrap tech-row text-slate-700 will-change-transform"
   aria-label={tech_name || ""}>
 
     {Array.from({length: 15}, (_, index) => (
@@ -85,7 +85,7 @@ const TechList = ({ slice }: TechListProps): JSX.Element => {
           style={{
             color: index === 7 && tech_color ? tech_color : "inherit",
           }}
-          className="tech-item text-8xl font-extrabold uppercase tracking-tighter">
+          className="text-8xl font-extrabold tracking-tighter uppercase tech-item">
               {tech_name}
 
           </span>

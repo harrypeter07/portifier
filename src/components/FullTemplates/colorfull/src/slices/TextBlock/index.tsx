@@ -1,7 +1,8 @@
 import { JSX } from "react";
-import { SliceData } from "@/lib/data";
-import Bounded from "@/components/Bounded";
-import Heading from "@/components/Heading";
+import { SliceData } from "../../lib/data";
+import Bounded from "../../components/Bounded";
+import Heading from "../../components/Heading";
+import React from "react";
 
 /**
  * Props for `TextBlock`.
@@ -22,7 +23,7 @@ const TextBlock = ({ slice }: TextBlockProps): JSX.Element => {
       data-slice-variation={slice.variation}
       id={isContact ? "contact" : undefined}
     >
-      <div className="max-w-prose mx-auto">
+      <div className="mx-auto max-w-prose">
         {slice.primary.heading && (
           <Heading as="h2" size="lg" className="mb-6">
             {slice.primary.heading}

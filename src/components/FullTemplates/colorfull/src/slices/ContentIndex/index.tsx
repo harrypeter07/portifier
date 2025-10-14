@@ -1,9 +1,10 @@
-import Bounded from "@/components/Bounded";
-import Heading from "@/components/Heading";
+import Bounded from "../../components/Bounded";
+import Heading from "../../components/Heading";
 import ContentList from "./ContentList";
 import { JSX } from "react";
-import { SliceData } from "@/lib/data";
-import { getBlogPostsData, getProjectsData } from "@/lib/data";
+import { SliceData } from "../../lib/data";
+import { getBlogPostsData, getProjectsData } from "../../lib/data";
+import React from "react";
 /**
  * Props for `ContentIndex`.
  */
@@ -32,7 +33,7 @@ const ContentIndex = async ({ slice }: ContentIndexProps): Promise<JSX.Element> 
         {slice.primary.heading}
       </Heading>
       {slice.primary.description && (
-        <div className="prose prose-xl prose-invert mb-10">
+        <div className="mb-10 prose prose-xl prose-invert">
           <p>{slice.primary.description}</p>
         </div>
       )}
