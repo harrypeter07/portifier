@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Urbanist as UrbanistFont } from "next/font/google"; // Rename the import to avoid conflicts
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import clsx from "clsx";
 
 const urbanist = UrbanistFont({
