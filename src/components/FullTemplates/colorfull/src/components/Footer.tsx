@@ -9,11 +9,11 @@ export default async function Footer() {
   const settings = await getSettingsData();
   return (
     <Bounded as="footer" className="text-slate-600">
-      <div className="container mx-auto mt-20 flex flex-col items-center justify-between gap-6 py-8 sm:flex-row ">
-        <div className="name flex flex-col items-center justify-center gap-x-4 gap-y-2 sm:flex-row sm:justify-self-start">
+      <div className="container flex flex-col gap-6 justify-between items-center py-8 mx-auto mt-20 sm:flex-row">
+        <div className="flex flex-col gap-y-2 gap-x-4 justify-center items-center name sm:flex-row sm:justify-self-start">
           <Link
             href="/"
-            className="text-xl font-extrabold tracking-tighter text-slate-100 transition-colors duration-150 hover:text-yellow-400"
+            className="text-xl font-extrabold tracking-tighter transition-colors duration-150 text-slate-100 hover:text-yellow-400"
           >
             {settings.name}
           </Link>
@@ -23,18 +23,18 @@ export default async function Footer() {
           >
             /
           </span>
-          <p className=" text-sm text-slate-300 ">
+          <p className="text-sm  text-slate-300">
             © {new Date().getFullYear()} {settings.name}
           </p>
         </div>
         <nav className="navigation" aria-label="Footer Navigation">
-          <ul className="flex items-center gap-1">
+          <ul className="flex gap-1 items-center">
             {settings.nav_item.map(({ link, label }, index) => (
               <React.Fragment key={label}>
                 <li>
                   <Link
                     className={clsx(
-                      "group relative block overflow-hidden  rounded px-3 py-1 text-base font-bold text-slate-100 transition-colors duration-150 hover:hover:text-yellow-400",
+                      "block overflow-hidden relative px-3 py-1 text-base font-bold rounded transition-colors duration-150 group text-slate-100 hover:hover:text-yellow-400",
                     )}
                     href={link.url}
                   >
@@ -53,31 +53,31 @@ export default async function Footer() {
             ))}
           </ul>
         </nav>
-        <div className="socials inline-flex justify-center sm:justify-end">
+        <div className="inline-flex justify-center socials sm:justify-end">
           <Link
             href={settings.github_link.url}
-            className="p-2 text-2xl text-slate-300 transition-all duration-150 hover:scale-125 hover:text-yellow-400"
+            className="p-2 text-2xl transition-all duration-150 text-slate-300 hover:scale-125 hover:text-yellow-400"
             aria-label={settings.name + " on GitHub"}
           >
             <FaGithub />
           </Link>
           <Link
             href={settings.twitter_link.url}
-            className="p-2 text-2xl text-slate-300 transition-all duration-150 hover:scale-125 hover:text-yellow-400"
+            className="p-2 text-2xl transition-all duration-150 text-slate-300 hover:scale-125 hover:text-yellow-400"
             aria-label={settings.name + " on Twitter"}
           >
             <FaTwitter />
           </Link>
           <Link
             href={settings.linkdin_link.url}
-            className="p-2 text-2xl text-slate-300 transition-all duration-150 hover:scale-125 hover:text-yellow-400"
+            className="p-2 text-2xl transition-all duration-150 text-slate-300 hover:scale-125 hover:text-yellow-400"
             aria-label={settings.name + " on LinkedIn"}
           >
             <FaLinkedin/>
           </Link>
           <Link
             href={settings.intagram_link.url}
-            className="p-2 text-2xl text-slate-300 transition-all duration-150 hover:scale-125 hover:text-yellow-400"
+            className="p-2 text-2xl transition-all duration-150 text-slate-300 hover:scale-125 hover:text-yellow-400"
             aria-label={settings.name + " on Instagram"}
           >
             <FaInstagram />

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MdMenu, MdClose } from "react-icons/md";
 import Button from "./Button";
 import { usePathname } from "next/navigation";
-import { SettingsData } from "@/lib/data";
+import { SettingsData } from "../lib/data";
 
 export default function NavBar({
   settings,
