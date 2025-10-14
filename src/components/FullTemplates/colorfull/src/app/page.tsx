@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import CustomSliceZone from "@/components/CustomSliceZone";
-import { getHomepageData } from "@/lib/data";
+import CustomSliceZone from "../components/CustomSliceZone";
+import { getHomepageData } from "../lib/data";
 
 export default async function Page() {
   const page = await getHomepageData();
