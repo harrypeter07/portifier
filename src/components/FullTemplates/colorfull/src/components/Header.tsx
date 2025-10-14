@@ -1,5 +1,5 @@
 import React from "react";
-import { getSettingsData } from "@/lib/data";
+import { getSettingsData } from "../lib/data";
 import NavBar from "./Navbar";
 
 export default async function Header() {

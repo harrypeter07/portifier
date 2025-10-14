@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import React from "react";
 import Link from "next/link";
-import Bounded from "@/components/Bounded";
+import Bounded from "./Bounded";
 import { FaGithub, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa6";
-import { getSettingsData } from "@/lib/data";
+import { getSettingsData } from "../lib/data";
 
 export default async function Footer() {
   const settings = await getSettingsData();
