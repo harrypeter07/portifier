@@ -3,7 +3,7 @@
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 import CustomSliceZone from "./colorfull/src/components/CustomSliceZone";
 import HeaderClient from "./colorfull/src/components/HeaderClient";
-import Footer from "./colorfull/src/components/Footer";
+import FooterClient from "./colorfull/src/components/FooterClient";
 import { mapSchemaToSlices } from "./colorfull/src/lib/schemaMapper";
 import { setRuntimeData } from "./colorfull/src/lib/runtimeStore";
 // Scope colorfull styles when this template is used
@@ -43,8 +43,8 @@ export default function ColorfullFull({ data = EMPTY_PORTFOLIO }) {
 			<HeaderClient />
 			{/* Main content */}
 			<CustomSliceZone slices={slices} />
-			{/* Template footer */}
-			<Footer />
+			{/* Template footer (client) */}
+			<FooterClient />
 		</div>
 	);
 }
