@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// Module-scoped holder for mapped data used by sections
+let portfolioData;
+
 export default function NeoBrutalFull({ data }) {
     const mapped = mapSchemaToNeoData(data);
     return (
@@ -743,6 +746,8 @@ function App({ initialData }) {
 	}, []);
 
     // Expose mapped data to section components via module variable
+    // Ensure symbol exists in module scope
+    // eslint-disable-next-line no-undef
     portfolioData = initialData;
     return (
 		<div>

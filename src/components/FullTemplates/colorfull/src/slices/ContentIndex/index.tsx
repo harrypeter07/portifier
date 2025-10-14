@@ -3,7 +3,7 @@ import Heading from "../../components/Heading";
 import ContentList from "./ContentList";
 import { JSX } from "react";
 import { SliceData } from "../../lib/data";
-import { getBlogPostsData, getProjectsData } from "../../lib/data";
+import { getRuntimeData } from "../../lib/runtimeStore";
 import React from "react";
 /**
  * Props for `ContentIndex`.
@@ -15,9 +15,10 @@ export type ContentIndexProps = {
 /**
  * Component for "ContentIndex" Slices.
  */
-const ContentIndex = async ({ slice }: ContentIndexProps): Promise<JSX.Element> => {
-   const blogPosts = await getBlogPostsData();
-   const projects = await getProjectsData();
+const ContentIndex = ({ slice }: ContentIndexProps): JSX.Element => {
+   const rt = getRuntimeData();
+   const blogPosts = rt.blogPosts || [];
+   const projects = rt.projects || [];
 
    const contentType = slice.primary.content_type || "Blog"
    const items = contentType === "Blog" ? blogPosts : projects;
