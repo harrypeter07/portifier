@@ -2,6 +2,8 @@
 
 import { EMPTY_PORTFOLIO } from "@/data/schemas/portfolioSchema";
 import CustomSliceZone from "./colorfull/src/components/CustomSliceZone";
+import Header from "./colorfull/src/components/Header";
+import Footer from "./colorfull/src/components/Footer";
 import { mapSchemaToSlices } from "./colorfull/src/lib/schemaMapper";
 import { setRuntimeData } from "./colorfull/src/lib/runtimeStore";
 // Scope colorfull styles when this template is used
@@ -34,9 +36,15 @@ export default function ColorfullFull({ data = EMPTY_PORTFOLIO }) {
 	// Recreate their layout wrappers so colors/contrast match the original
 	return (
 		<div className="relative min-h-screen bg-slate-900 text-slate-100">
+			{/* Template background */}
 			<div className="absolute inset-0 max-h-screen -z-50 background-gradient"></div>
 			<div className="absolute pointer-events-none inset-0 -z-40 h-full bg-[url('/noisetexture.jpg')] opacity-20 mix-blend-soft-light"></div>
+			{/* Template header */}
+			<Header />
+			{/* Main content */}
 			<CustomSliceZone slices={slices} />
+			{/* Template footer */}
+			<Footer />
 		</div>
 	);
 }
