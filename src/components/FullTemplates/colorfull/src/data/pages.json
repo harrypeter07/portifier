@@ -1,0 +1,68 @@
+[
+  {
+    "uid": "about",
+    "meta_title": "About - Hassan Portfolio",
+    "meta_description": "Learn more about Hassan and his journey as a developer",
+    "slices": [
+      {
+        "slice_type": "biography",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "heading": "About Me",
+          "body": [
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "I'm a dedicated full stack developer with a passion for creating innovative web applications. My journey in software development began with a curiosity about how things work on the web, and it has evolved into a career focused on building user-centric solutions."
+              }
+            },
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "I specialize in modern JavaScript frameworks, particularly React and Next.js, and I'm always exploring new technologies to stay current with industry trends."
+              }
+            }
+          ],
+          "button_text": "Download CV",
+          "button_link": {
+            "link_type": "Web",
+            "url": "/resume.pdf"
+          },
+          "avatar": {
+            "url": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef",
+            "width": 4000,
+            "height": 6000
+          }
+        },
+        "items": []
+      }
+    ]
+  },
+  {
+    "uid": "contact",
+    "meta_title": "Contact - Hassan Portfolio",
+    "meta_description": "Get in touch with Hassan for collaboration opportunities",
+    "slices": [
+      {
+        "slice_type": "text_block",
+        "slice_label": null,
+        "variation": "default",
+        "version": "initial",
+        "primary": {
+          "heading": "Get In Touch",
+          "body": [
+            {
+              "type": "paragraph",
+              "content": {
+                "text": "I'm always interested in new opportunities and collaborations. Whether you have a project in mind or just want to connect, feel free to reach out!"
+              }
+            }
+          ]
+        },
+        "items": []
+      }
+    ]
+  }
+]

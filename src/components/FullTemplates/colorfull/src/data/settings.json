@@ -1,0 +1,61 @@
+{
+  "name": "Hassan Portfolio",
+  "nav_item": [
+    {
+      "link": {
+        "link_type": "Web",
+        "url": "/#about"
+      },
+      "label": "About"
+    },
+    {
+      "link": {
+        "link_type": "Web",
+        "url": "/#skills"
+      },
+      "label": "Skills"
+    },
+    {
+      "link": {
+        "link_type": "Web",
+        "url": "/#projects"
+      },
+      "label": "Projects"
+    },
+    {
+      "link": {
+        "link_type": "Web",
+        "url": "/#blog"
+      },
+      "label": "Blog"
+    },
+    {
+      "link": {
+        "link_type": "Web",
+        "url": "/#contact"
+      },
+      "label": "Contact"
+    }
+  ],
+  "cta_link": {
+    "link_type": "Web",
+    "url": "/#contact"
+  },
+  "cta_label": "Get In Touch",
+  "github_link": {
+    "link_type": "Web",
+    "url": "https://github.com/hassan"
+  },
+  "twitter_link": {
+    "link_type": "Web",
+    "url": "https://twitter.com/hassan"
+  },
+  "linkdin_link": {
+    "link_type": "Web",
+    "url": "https://linkedin.com/in/hassan"
+  },
+  "intagram_link": {
+    "link_type": "Web",
+    "url": "https://instagram.com/hassan"
+  }
+}
