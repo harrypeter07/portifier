@@ -3,6 +3,7 @@ import "./globals.css";
 import "@/lib/devtools-fix"; // Fix React DevTools semver errors
 import UnifiedNavbar from "@/components/common/UnifiedNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { Analytics } from "@vercel/analytics/next"
 const geistSans = Geist({
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
@@ -36,6 +37,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en" className="dark" suppressHydrationWarning>
+			<Analytics />
+					
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen`}
 			>
