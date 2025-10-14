@@ -8,11 +8,17 @@ import { mapSchemaToSlices } from "./colorfull/src/lib/schemaMapper";
 import { setRuntimeData } from "./colorfull/src/lib/runtimeStore";
 // Scope colorfull styles when this template is used
 import "./colorfull/src/app/globals.css";
+import { Urbanist as UrbanistFont } from "next/font/google";
+
+const urbanist = UrbanistFont({ weight: "300", subsets: ["latin"] });
 
 export default function ColorfullFull({ data = EMPTY_PORTFOLIO }) {
 	console.log("🎨 [COLORFULL] received data:", data?.personal, data?.theme);
 	const slices = mapSchemaToSlices(data);
-	console.log("🎨 [COLORFULL] mapped slices count:", slices.length);
+    console.log("🎨 [COLORFULL] mapped slices count:", slices.length);
+    const noisePath = "/noisetexture.jpg";
+    console.log("🎨 [COLORFULL] background noise path:", noisePath);
+    console.log("🎨 [COLORFULL] gradient class present:", typeof window !== 'undefined' ? !!document.querySelector('.background-gradient') : 'ssr');
 	// Provide runtime data objects expected by internal components
 	setRuntimeData({
 		homepage: { meta_title: '', meta_description: '', slices },
@@ -34,11 +40,11 @@ export default function ColorfullFull({ data = EMPTY_PORTFOLIO }) {
 	});
 
 	// Recreate their layout wrappers so colors/contrast match the original
-	return (
-		<div className="relative min-h-screen bg-slate-900 text-slate-100">
+    return (
+        <div className={`relative min-h-screen bg-slate-900 text-slate-100 ${urbanist.className}`}>
 			{/* Template background */}
-			<div className="absolute inset-0 max-h-screen -z-50 background-gradient"></div>
-			<div className="absolute pointer-events-none inset-0 -z-40 h-full bg-[url('/noisetexture.jpg')] opacity-20 mix-blend-soft-light"></div>
+            <div className="absolute inset-0 max-h-screen -z-50 background-gradient" />
+            <div className="absolute pointer-events-none inset-0 -z-40 h-full opacity-20 mix-blend-soft-light" style={{ backgroundImage: "url('/noisetexture.jpg')", backgroundRepeat: 'repeat' }} />
 			{/* Template header (client) */}
 			<HeaderClient />
 			{/* Main content */}
