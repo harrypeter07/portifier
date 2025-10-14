@@ -8,7 +8,9 @@ import { setRuntimeData } from "./colorfull/src/lib/runtimeStore";
 import "./colorfull/src/app/globals.css";
 
 export default function ColorfullFull({ data = EMPTY_PORTFOLIO }) {
+	console.log("🎨 [COLORFULL] received data:", data?.personal, data?.theme);
 	const slices = mapSchemaToSlices(data);
+	console.log("🎨 [COLORFULL] mapped slices count:", slices.length);
 	// Provide runtime data objects expected by internal components
 	setRuntimeData({
 		homepage: { meta_title: '', meta_description: '', slices },
@@ -28,7 +30,15 @@ export default function ColorfullFull({ data = EMPTY_PORTFOLIO }) {
 			intagram_link: { link_type: 'Web', url: data?.personal?.social?.instagram || '#' },
 		},
 	});
-	return <CustomSliceZone slices={slices} />;
+
+	// Recreate their layout wrappers so colors/contrast match the original
+	return (
+		<div className="relative min-h-screen bg-slate-900 text-slate-100">
+			<div className="absolute inset-0 -z-50 max-h-screen background-gradient"></div>
+			<div className="absolute pointer-events-none inset-0 -z-40 h-full bg-[url('/noisetexture.jpg')] opacity-20 mix-blend-soft-light"></div>
+			<CustomSliceZone slices={slices} />
+		</div>
+	);
 }
 
 

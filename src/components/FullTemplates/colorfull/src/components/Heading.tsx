@@ -13,10 +13,11 @@ export default function Heading({
   children,
   size = "lg",
 }: HeadingProps) {
+  console.log("🎨 [COLORFULL:Heading] size=", size, "class=", className);
   return (
     <Comp
       className={clsx(
-        "font-bold leading-tight tracking-tight  text-slate-300",
+        "font-bold leading-tight tracking-tight text-slate-100",
         size === "xl" && "text-7xl md:text-9xl",
         size === "lg" && "text-6xl md:text-8xl",
         size === "md" && "text-5xl md:text-6xl",
