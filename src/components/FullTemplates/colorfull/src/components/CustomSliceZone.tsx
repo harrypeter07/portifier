@@ -1,6 +1,6 @@
 import { components } from "../slices";
 import { SliceData } from "../lib/data";
-import React from "react";
+import React, { Suspense } from "react";
 
 interface CustomSliceZoneProps {
   slices: SliceData[];
@@ -17,7 +17,11 @@ export default function CustomSliceZone({ slices }: CustomSliceZoneProps) {
           return null;
         }
 
-        return <Component key={index} slice={slice} />;
+        return (
+          <Suspense key={index} fallback={null}>
+            <Component slice={slice} />
+          </Suspense>
+        );
       })}
     </>
   );
