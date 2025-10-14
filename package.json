@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/typography": "github:tailwindcss/typography",
     "eslint": "^9",
     "eslint-config-next": "15.3.4"
   },
