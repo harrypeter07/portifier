@@ -6,8 +6,8 @@ import React from "react";
 
 type Params = { uid: string };
 
-export default async function Page({ params }: { params: Promise<Params> }) {
-  const { uid } = await params;
+export default async function Page({ params }: { params: Params }) {
+  const { uid } = params;
   const page = await getPageByUID(uid);
   
   if (!page) {
@@ -20,9 +20,9 @@ export default async function Page({ params }: { params: Promise<Params> }) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<Params>;
+  params: Params;
 }): Promise<Metadata> {
-  const { uid } = await params;
+  const { uid } = params;
   const page = await getPageByUID(uid);
   
   if (!page) {
