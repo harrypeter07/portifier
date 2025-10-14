@@ -74,11 +74,11 @@ export default function Avatar({
         <div ref={component} className={clsx("relative w-full h-full" , className)}>
             <div className="overflow-hidden rounded-3xl border-2 avatar border-slate-700 opacity-1">
             <img 
-                src={image.url} 
+                src={image?.url || "/logo.png"} 
                 alt={alt || "Avatar"} 
                 className="object-fill w-full h-full avatar-image"
-                width={image.width}
-                height={image.height}
+                width={image?.width || 400}
+                height={image?.height || 400}
             />
 
             <div className="hidden absolute inset-0 w-full bg-gradient-to-tr from-transparent via-white to-transparent opacity-0 scale-110 highlight md:block"></div>
