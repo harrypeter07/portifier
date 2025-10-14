@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { siteMeta } from "@/constants/personal";
+import { siteMeta } from "../constants/personal";
 
 export const siteConfig: Metadata = {
   title: siteMeta.title,

@@ -1,5 +1,5 @@
 import { FaYoutube, FaFacebook } from "react-icons/fa";
-import { personalInfo } from "@/constants/personal";
+import { personalInfo } from "./personal";
 import {
   RxDiscordLogo,
   RxGithubLogo,
