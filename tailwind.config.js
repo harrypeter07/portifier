@@ -71,6 +71,7 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
     fluid({ checkSC144: false }),
   ],
 };
