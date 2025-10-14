@@ -53,6 +53,42 @@ export function mapSchemaToSlices(schema: any): SliceData[] {
 		});
 	}
 
+    // Education summary (map to text_block)
+    if (Array.isArray(schema?.education?.degrees) && schema.education.degrees.length > 0) {
+        const first = schema.education.degrees[0];
+        const eduText = `${first?.degree || ''} ${first?.field ? 'in ' + first.field : ''} • ${first?.institution || ''}`.trim();
+        slices.push({
+            slice_type: "text_block",
+            slice_label: null,
+            variation: "default",
+            version: "initial",
+            primary: {
+                heading: "Education",
+                body: [ { type: "paragraph", content: { text: eduText } } ],
+            },
+            items: [],
+        });
+    }
+
+    // Experience summary (map to content_index with description)
+    if (Array.isArray(schema?.experience?.jobs) && schema.experience.jobs.length > 0) {
+        const firstJob = schema.experience.jobs[0];
+        const jobLine = `${firstJob?.position || ''} • ${firstJob?.company || ''}`.trim();
+        slices.push({
+            slice_type: "content_index",
+            slice_label: null,
+            variation: "default",
+            version: "initial",
+            primary: {
+                heading: "Experience",
+                content_type: "Blog",
+                view_more_text: "View",
+                description: jobLine,
+            },
+            items: [],
+        });
+    }
+
 	// Projects index
 	if (Array.isArray(schema?.projects?.items) && schema.projects.items.length > 0) {
 		slices.push({
