@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import LottieLoading from "@/components/LottieLoading";
 import GeminiKeyModal from "@/components/common/GeminiKeyModal";
 import ContactForm from "@/components/ContactForm";
-import BugReportModal from "@/components/BugReportModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -646,11 +645,7 @@ export default function SettingsPage() {
 				onSuccess={handleApiKeySuccess}
 			/>
 
-			{/* Bug Report Modal */}
-			<BugReportModal
-				isOpen={isBugReportOpen}
-				onClose={() => setIsBugReportOpen(false)}
-			/>
+            {/* Bug Report Modal removed: inline section is used instead */}
 		</div>
 	);
 }
