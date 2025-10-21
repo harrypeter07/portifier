@@ -158,6 +158,8 @@
     background-position: center;
     background-attachment: fixed;
     min-height: 100vh;
+    /* Ensure overlay sits behind content */
+    isolation: isolate;
   }
 
   .grainy-bg::after {
@@ -165,6 +167,13 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Elevate direct children above overlay */
+  .grainy-bg > * {
+    position: relative;
+    z-index: 1;
   }
 
   /* Light mode: subtle dark overlay to reduce brightness */
