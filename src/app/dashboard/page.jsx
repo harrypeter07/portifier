@@ -135,7 +135,7 @@ export default function Dashboard() {
 							<h1 className="text-3xl font-bold text-black dark:text-white">
 								Welcome back, {user.name}! 👋
 							</h1>
-							<p className="text-black/70 dark:text-white/70 mt-1">
+							<p className="text-black/80 dark:text-white/80 mt-1">
 								Manage your resumes and portfolios
 							</p>
 						</div>
@@ -158,7 +158,7 @@ export default function Dashboard() {
 					<div className="rounded-2xl p-6 shadow-lg glass">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="text-sm font-medium text-black/70 dark:text-white/70">Total Portfolios</p>
+								<p className="text-sm font-medium text-black/80 dark:text-white/80">Total Portfolios</p>
 								<p className="text-3xl font-bold text-black dark:text-white">{portfolios.stats.total}</p>
 							</div>
 							<div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">

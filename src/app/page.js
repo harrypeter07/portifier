@@ -54,7 +54,7 @@ export default function Home() {
               in Minutes
             </h1>
             
-            <p className="mx-auto max-w-3xl text-xl leading-relaxed md:text-2xl text-white/80">
+            <p className="mx-auto max-w-3xl text-xl leading-relaxed md:text-2xl text-white/90">
               Transform your resume into a beautiful, professional portfolio with our AI-powered builder. 
               No design skills required.
             </p>
@@ -468,7 +468,7 @@ export default function Home() {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg text-white border-white/30 hover:bg-white/10">
+              <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg text-white border-white/30 bg-white/10 hover:bg-white/20">
                 <Link href="/templates-demo">
                   <Eye className="mr-2 w-5 h-5" />
                   Browse Templates

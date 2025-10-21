@@ -165,14 +165,6 @@ export default function SettingsPage() {
 									</Label>
 									<p className="font-medium text-black dark:text-white">{user.name}</p>
 								</div>
-								<div>
-									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
-										Member Since
-									</Label>
-									<p className="font-medium text-black dark:text-white">
-										{new Date(user.createdAt).toLocaleDateString()}
-									</p>
-								</div>
 							</div>
 						</CardContent>
 					</Card>

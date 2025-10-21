@@ -75,7 +75,7 @@ export default function HeroD({ data = EMPTY_PORTFOLIO, ...personalData }) {
 					{/* Subtitle */}
 					{subtitle && (
 						<motion.h2 
-							className="text-2xl md:text-3xl text-gray-300 mb-8 font-light"
+							className="text-2xl md:text-3xl text-gray-100 mb-8 font-light"
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.3, duration: 0.8 }}
@@ -87,7 +87,7 @@ export default function HeroD({ data = EMPTY_PORTFOLIO, ...personalData }) {
 					{/* Tagline */}
 					{tagline && (
 						<motion.p 
-							className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed"
+							className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed"
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.6, duration: 0.8 }}

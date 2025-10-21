@@ -217,7 +217,7 @@ function TemplatesDemoContent() {
 					<h1 className="mb-4 text-4xl font-bold text-black dark:text-white">
 						Portfolio Template System
 					</h1>
-					<p className="mx-auto max-w-3xl text-lg text-black/70 dark:text-white/70">
+					<p className="mx-auto max-w-3xl text-lg text-black/80 dark:text-white/80">
 						Choose from our collection of component-based and full-page templates. 
 						Component-based templates let you mix and match individual sections, 
 						while full-page templates provide complete, pre-designed layouts.
@@ -289,7 +289,7 @@ function TemplatesDemoContent() {
 								<h2 className="text-2xl font-bold text-gray-900 dark:text-white">
 									{currentTemplate.name}
 								</h2>
-								<p className="text-black/70 dark:text-white/70">
+								<p className="text-black/80 dark:text-white/80">
 									{currentTemplate.description}
 								</p>
 							</div>
@@ -395,7 +395,7 @@ function TemplatesDemoContent() {
 										<div className="font-medium text-gray-900 dark:text-white">
 											{template.name}
 										</div>
-										<div className="text-sm text-black/70 dark:text-white/70">
+										<div className="text-sm text-black/80 dark:text-white/80">
 											{template.category}
 										</div>
 									</div>
@@ -421,7 +421,7 @@ function TemplatesDemoContent() {
 										<div className="font-medium text-gray-900 dark:text-white">
 											{template.name}
 										</div>
-										<div className="text-sm text-black/70 dark:text-white/70">
+										<div className="text-sm text-black/80 dark:text-white/80">
 											{template.category}
 										</div>
 									</div>

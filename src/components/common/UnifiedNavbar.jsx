@@ -13,14 +13,12 @@ import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, Chevro
 const publicNavLinks = [
 	{ href: "/auth/signin", label: "Sign In", icon: User },
 	{ href: "/auth/signup", label: "Sign Up", icon: User },
-	{ href: "/shockwave", label: "ShockWave", icon: Palette },
 ];
 
 const authenticatedNavLinks = [
 	{ href: "/", label: "Home", icon: Home },
 	{ href: "/dashboard", label: "Dashboard", icon: BarChart3 },
 	{ href: "/templates-demo", label: "Templates", icon: Palette },
-	{ href: "/shockwave", label: "ShockWave", icon: Palette },
 	{ href: "/editor", label: "Create Portfolio", icon: Edit },
 	{ href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -276,7 +274,7 @@ export default function UnifiedNavbar() {
 								<span className="text-sm font-bold text-white">P</span>
 							</div>
 							<span className="hidden text-xl font-bold text-white sm:block">
-								Portfolio Maker
+								Portume
 							</span>
 						</Link>
 
