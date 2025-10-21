@@ -19,6 +19,7 @@ export default function SettingsPage() {
 	const [isRemoving, setIsRemoving] = useState(false);
 	const [message, setMessage] = useState({ type: "", text: "" });
 	const [isBugReportOpen, setIsBugReportOpen] = useState(false);
+	const [isContactSectionOpen, setIsContactSectionOpen] = useState(false);
 
 	useEffect(() => {
 		fetchUserData();
@@ -299,25 +300,86 @@ export default function SettingsPage() {
                                 </div>
                             </Button>
 
-                            {/* Contact Support Button */}
-                            <Button
-                                onClick={() => window.open('mailto:support@portifier.com?subject=Support Request', '_blank')}
-                                className="h-auto p-6 text-left justify-start bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 w-full"
-                                variant="outline"
-                            >
-                                <div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
-                                    <Mail className="w-8 h-8 text-blue-500 mt-1 flex-shrink-0" />
-                                    <div className="min-w-0 w-full">
-                                        <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400 break-words">
-                                            Contact Support
-                                        </h3>
-                                        <p className="text-sm text-blue-600 dark:text-blue-300 mt-1 break-words whitespace-normal">
-                                            Need help? Send us an email for direct support
-                                        </p>
-                                    </div>
-                                </div>
-                            </Button>
-							</div>
+							{/* Contact Support Button */}
+							<Button
+								onClick={() => setIsContactSectionOpen(!isContactSectionOpen)}
+								className="h-auto p-6 text-left justify-start bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 w-full"
+								variant="outline"
+							>
+								<div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
+									<Mail className="w-8 h-8 text-blue-500 mt-1 flex-shrink-0" />
+									<div className="min-w-0 w-full">
+										<h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400 break-words">
+											Contact Support
+										</h3>
+										<p className="text-sm text-blue-600 dark:text-blue-300 mt-1 break-words whitespace-normal">
+											Need help? Send us an email for direct support
+										</p>
+									</div>
+								</div>
+							</Button>
+						</div>
+
+						{/* Contact Section */}
+						{isContactSectionOpen && (
+							<motion.div
+								initial={{ opacity: 0, height: 0 }}
+								animate={{ opacity: 1, height: "auto" }}
+								exit={{ opacity: 0, height: 0 }}
+								transition={{ duration: 0.3 }}
+								className="mt-4 overflow-hidden"
+							>
+								<div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+									<h4 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-4">
+										📧 Contact Us
+									</h4>
+									<div className="space-y-4">
+										<div>
+											<label className="block text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+												Your Email
+											</label>
+											<input
+												type="email"
+												placeholder="your@email.com"
+												className="w-full px-4 py-2 border border-blue-300 dark:border-blue-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+											/>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+												Subject
+											</label>
+											<input
+												type="text"
+												placeholder="What's this about?"
+												className="w-full px-4 py-2 border border-blue-300 dark:border-blue-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+											/>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+												Message
+											</label>
+											<textarea
+												rows={4}
+												placeholder="Tell us what you need help with..."
+												className="w-full px-4 py-2 border border-blue-300 dark:border-blue-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+											/>
+										</div>
+										<div className="flex gap-3">
+											<Button className="bg-blue-600 hover:bg-blue-700 text-white">
+												Send Message
+											</Button>
+											<Button 
+												variant="outline" 
+												onClick={() => setIsContactSectionOpen(false)}
+												className="border-blue-300 text-blue-700 hover:bg-blue-50"
+											>
+												Cancel
+											</Button>
+										</div>
+									</div>
+								</div>
+							</motion.div>
+						)}
 
 							{/* Additional Help Info */}
 							<div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">

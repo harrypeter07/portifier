@@ -28,7 +28,7 @@ const socialLinks = [
   {
     name: "Email",
     icon: Mail,
-    href: "mailto:contact@portifier.com",
+    href: "mailto:contact@portifier.com?subject=Contact Request",
     color: "hover:bg-green-600",
     delay: 0.4
   },
