@@ -1,7 +1,33 @@
 {
-  "name": "portfolio",
-  "version": "0.1.0",
+  "name": "portifier",
+  "version": "1.0.0",
+  "description": "AI-Powered Portfolio Builder - Transform your resume into stunning, professional portfolios with AI-powered automation",
+  "author": {
+    "name": "Hassan Mansuri",
+    "email": "hassanmansuri570@gmail.com",
+    "url": "https://github.com/harrypeter07"
+  },
   "private": true,
+  "keywords": [
+    "portfolio",
+    "resume",
+    "ai",
+    "nextjs",
+    "react",
+    "tailwindcss",
+    "gemini",
+    "portfolio-builder",
+    "professional-portfolio"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harrypeter07/portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/harrypeter07/portfolio/issues"
+  },
+  "homepage": "https://github.com/harrypeter07/portfolio#readme",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
