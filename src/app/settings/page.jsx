@@ -280,43 +280,43 @@ export default function SettingsPage() {
 						</CardHeader>
 						<CardContent>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								{/* Bug Report Button */}
-								<Button
-									onClick={() => setIsBugReportOpen(true)}
-									className="h-auto p-6 text-left justify-start bg-red-500/10 hover:bg-red-500/20 border-red-500/20"
-									variant="outline"
-								>
-									<div className="flex items-start gap-4">
-										<Bug className="w-8 h-8 text-red-500 mt-1" />
-										<div>
-											<h3 className="text-lg font-semibold text-red-700 dark:text-red-400">
-												Report a Bug
-											</h3>
-											<p className="text-sm text-red-600 dark:text-red-300 mt-1">
-												Found an issue? Report it with screenshots and details
-											</p>
-										</div>
-									</div>
-								</Button>
+                            {/* Bug Report Button */}
+                            <Button
+                                onClick={() => setIsBugReportOpen(true)}
+                                className="h-auto p-6 text-left justify-start bg-red-500/10 hover:bg-red-500/20 border-red-500/20 w-full"
+                                variant="outline"
+                            >
+                                <div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
+                                    <Bug className="w-8 h-8 text-red-500 mt-1 flex-shrink-0" />
+                                    <div className="min-w-0 w-full">
+                                        <h3 className="text-lg font-semibold text-red-700 dark:text-red-400 break-words">
+                                            Report a Bug
+                                        </h3>
+                                        <p className="text-sm text-red-600 dark:text-red-300 mt-1 break-words whitespace-normal">
+                                            Found an issue? Report it with screenshots and details
+                                        </p>
+                                    </div>
+                                </div>
+                            </Button>
 
-								{/* Contact Support Button */}
-								<Button
-									onClick={() => window.open('mailto:support@portifier.com?subject=Support Request', '_blank')}
-									className="h-auto p-6 text-left justify-start bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20"
-									variant="outline"
-								>
-									<div className="flex items-start gap-4">
-										<Mail className="w-8 h-8 text-blue-500 mt-1" />
-										<div>
-											<h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400">
-												Contact Support
-											</h3>
-											<p className="text-sm text-blue-600 dark:text-blue-300 mt-1">
-												Need help? Send us an email for direct support
-											</p>
-										</div>
-									</div>
-								</Button>
+                            {/* Contact Support Button */}
+                            <Button
+                                onClick={() => window.open('mailto:support@portifier.com?subject=Support Request', '_blank')}
+                                className="h-auto p-6 text-left justify-start bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 w-full"
+                                variant="outline"
+                            >
+                                <div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
+                                    <Mail className="w-8 h-8 text-blue-500 mt-1 flex-shrink-0" />
+                                    <div className="min-w-0 w-full">
+                                        <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400 break-words">
+                                            Contact Support
+                                        </h3>
+                                        <p className="text-sm text-blue-600 dark:text-blue-300 mt-1 break-words whitespace-normal">
+                                            Need help? Send us an email for direct support
+                                        </p>
+                                    </div>
+                                </div>
+                            </Button>
 							</div>
 
 							{/* Additional Help Info */}
