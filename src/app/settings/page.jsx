@@ -439,7 +439,7 @@ export default function SettingsPage() {
                                         <div className="flex gap-3">
                                             <Button onClick={submitInlineBug} disabled={isBugSubmitting} className="text-white bg-red-600 hover:bg-red-700 disabled:opacity-50">
                                                 {isBugSubmitting ? (
-                                                    <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 border-white/80 border-t-transparent rounded-full animate-spin"/>Submitting...</span>
+                                                    <span className="flex gap-2 items-center"><span className="w-4 h-4 rounded-full border-2 animate-spin border-white/80 border-t-transparent"/>Submitting...</span>
                                                 ) : (
                                                     'Submit Bug Report'
                                                 )}
