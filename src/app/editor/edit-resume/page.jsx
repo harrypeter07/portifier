@@ -8,6 +8,7 @@ import AICompanionField from "@/components/AICompanionField";
 import { isAIEnabled, getAILabel } from "@/data/aiFieldConfig";
 import Modal from "@/components/common/Modal";
 import PortfolioUrlDisplay from "@/components/common/PortfolioUrlDisplay";
+import ImageUpload from "@/components/common/ImageUpload";
 import { motion } from "framer-motion";
 import debounce from "lodash.debounce";
 
@@ -627,32 +628,36 @@ function EditResumeContent() {
 				{/* Hero Avatar Upload */}
 				<div>
 					<label className="block text-sm font-medium mb-2">Profile Image</label>
-					<div className="flex items-center gap-3">
-						<input
-							type="file"
-							accept="image/*"
-							onChange={async (e) => {
-								const file = e.target.files?.[0];
-								if (!file) return;
-								const form = new FormData();
-								form.append("file", file);
-								form.append("purpose", "avatars");
-								try {
-									const res = await fetch("/api/media/upload", { method: "POST", body: form });
-									const j = await res.json();
-									if (j?.url) {
-										setPortfolioData({
-											...portfolioData,
-											personal: { ...portfolioData.personal, avatar: j.url }
-										});
-									}
-								} catch (_) {}
-							}}
-						/>
-						{portfolioData?.personal?.avatar ? (
-							<img src={portfolioData.personal.avatar} alt="avatar" className="h-12 w-12 rounded-full object-cover border" />
-						) : null}
-					</div>
+					<ImageUpload
+						value={portfolioData?.personal?.avatar || ""}
+						onChange={(url) => {
+							setPortfolioData({
+								...portfolioData,
+								personal: { ...portfolioData.personal, avatar: url }
+							});
+						}}
+						placeholder="Upload profile image"
+						purpose="avatars"
+						previewSize="w-16 h-16"
+						className="mb-4"
+					/>
+				</div>
+				{/* Hero Banner Image */}
+				<div>
+					<label className="block text-sm font-medium mb-2">Hero Banner Image (optional)</label>
+					<ImageUpload
+						value={portfolioData?.personal?.heroImage || ""}
+						onChange={(url) => {
+							setPortfolioData({
+								...portfolioData,
+								personal: { ...portfolioData.personal, heroImage: url }
+							});
+						}}
+						placeholder="Upload hero/banner image"
+						purpose="hero-images"
+						previewSize="w-full h-24"
+						className="mb-4"
+					/>
 				</div>
 							<AICompanionField
 								type="input"
@@ -914,6 +919,21 @@ function EditResumeContent() {
 										aiLabel={getAILabel("experience", "description")}
 										resumeData={formData}
 									/>
+									<div className="mt-3">
+										<label className="block text-sm font-medium mb-2">Company Logo</label>
+										<ImageUpload
+											value={job?.companyLogo || ""}
+											onChange={(url) =>
+												handleArrayChange("experience", "jobs", index, {
+													...job,
+													companyLogo: url,
+												})
+											}
+											placeholder="Upload company logo"
+											purpose="company-logos"
+											previewSize="w-12 h-12"
+										/>
+									</div>
 								</div>
 								<button
 									type="button"
@@ -990,6 +1010,21 @@ function EditResumeContent() {
 										aiLabel={getAILabel("education", "year")}
 										resumeData={formData}
 									/>
+									<div className="mt-3">
+										<label className="block text-sm font-medium mb-2">Institution Logo</label>
+										<ImageUpload
+											value={degree?.logo || ""}
+											onChange={(url) =>
+												handleArrayChange("education", "degrees", index, {
+													...degree,
+													logo: url,
+												})
+											}
+											placeholder="Upload institution logo"
+											purpose="company-logos"
+											previewSize="w-12 h-12"
+										/>
+									</div>
 								</div>
 								<button
 									type="button"
@@ -1103,66 +1138,31 @@ function EditResumeContent() {
 										resumeData={formData}
 									/>
 						{/* Media uploads */}
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
-								<label className="block text-sm font-medium mb-1">Project Images</label>
-								<input
-									type="file"
-									accept="image/*"
-									multiple
-									onChange={async (e) => {
-										const files = Array.from(e.target.files || []);
-										const uploaded = [];
-										for (const f of files) {
-											const form = new FormData();
-											form.append("file", f);
-											form.append("purpose", "project-images");
-											try {
-												const res = await fetch("/api/media/upload", { method: "POST", body: form });
-												const j = await res.json();
-												if (j?.url) uploaded.push(j.url);
-											} catch {}
-										}
-										handleProjectChange(index, "images", [ ...(project?.images || []), ...uploaded ]);
-									}}
+								<label className="block text-sm font-medium mb-2">Project Images</label>
+								<ImageUpload
+									value={project?.images || []}
+									onChange={(images) => handleProjectChange(index, "images", images)}
+									placeholder="Upload project images"
+									purpose="project-images"
+									multiple={true}
+									maxFiles={5}
+									previewSize="w-16 h-16"
 								/>
-								{(project?.images || []).length ? (
-									<div className="flex flex-wrap gap-2 mt-2">
-										{(project.images || []).map((img, i) => (
-											<img key={i} src={img} alt="proj" className="h-12 w-12 object-cover rounded border" />
-										))}
-									</div>
-								) : null}
 							</div>
 							<div>
-								<label className="block text-sm font-medium mb-1">Project Videos</label>
-								<input
-									type="file"
+								<label className="block text-sm font-medium mb-2">Project Videos</label>
+								<ImageUpload
+									value={project?.videos || []}
+									onChange={(videos) => handleProjectChange(index, "videos", videos)}
+									placeholder="Upload project videos"
+									purpose="project-videos"
 									accept="video/*"
-									multiple
-									onChange={async (e) => {
-										const files = Array.from(e.target.files || []);
-										const uploaded = [];
-										for (const f of files) {
-											const form = new FormData();
-											form.append("file", f);
-											form.append("purpose", "project-videos");
-											try {
-												const res = await fetch("/api/media/upload", { method: "POST", body: form });
-												const j = await res.json();
-												if (j?.url) uploaded.push(j.url);
-											} catch {}
-										}
-										handleProjectChange(index, "videos", [ ...(project?.videos || []), ...uploaded ]);
-									}}
+									multiple={true}
+									maxFiles={3}
+									previewSize="w-16 h-16"
 								/>
-								{(project?.videos || []).length ? (
-									<div className="flex flex-wrap gap-2 mt-2">
-										{(project.videos || []).map((v, i) => (
-											<video key={i} src={v} className="h-16 rounded border" controls />
-										))}
-									</div>
-								) : null}
 							</div>
 						</div>
 									<AICompanionField
@@ -1207,6 +1207,82 @@ function EditResumeContent() {
 							className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
 						>
 							Add Project
+						</button>
+					</div>
+
+					{/* Achievements */}
+					<div className="p-6 mb-8 glass rounded-lg shadow">
+						<h2 className="mb-4 text-xl font-semibold">Achievements</h2>
+						{(formData.achievements?.awards || []).map((award, index) => (
+							<div key={index} className="p-4 mb-6 rounded-lg border dark:border-gray-600">
+								<div className="grid grid-cols-1 gap-3 mb-3">
+									<AICompanionField
+										type="input"
+										placeholder="Title"
+										value={award?.title || ""}
+										onChange={(value) => {
+											const newAwards = [...(formData.achievements.awards || [])];
+											newAwards[index] = { ...award, title: value };
+											setFormData(prev => ({ ...prev, achievements: { ...prev.achievements, awards: newAwards } }));
+										}}
+										aiEnabled={isAIEnabled("achievements", "title")}
+										aiSection="achievements"
+										aiField="title"
+										aiLabel={getAILabel("achievements", "title")}
+										resumeData={formData}
+									/>
+									<AICompanionField
+										type="textarea"
+										placeholder="Description"
+										value={award?.description || ""}
+										onChange={(value) => {
+											const newAwards = [...(formData.achievements.awards || [])];
+											newAwards[index] = { ...award, description: value };
+											setFormData(prev => ({ ...prev, achievements: { ...prev.achievements, awards: newAwards } }));
+										}}
+										rows={2}
+										aiEnabled={isAIEnabled("achievements", "description")}
+										aiSection="achievements"
+										aiField="description"
+										aiLabel={getAILabel("achievements", "description")}
+										resumeData={formData}
+									/>
+									<div>
+										<label className="block text-sm font-medium mb-2">Achievement Image</label>
+										<ImageUpload
+											value={award?.image || ""}
+											onChange={(url) => {
+												const newAwards = [...(formData.achievements.awards || [])];
+												newAwards[index] = { ...award, image: url };
+												setFormData(prev => ({ ...prev, achievements: { ...prev.achievements, awards: newAwards } }));
+											}}
+											placeholder="Upload achievement image"
+											purpose="achievement-images"
+											previewSize="w-16 h-16"
+										/>
+									</div>
+								</div>
+								<button
+									type="button"
+									onClick={() => {
+										const newAwards = (formData.achievements.awards || []).filter((_, i) => i !== index);
+										setFormData(prev => ({ ...prev, achievements: { ...prev.achievements, awards: newAwards } }));
+									}}
+									className="text-red-600 hover:text-red-800"
+								>
+									Remove Achievement
+								</button>
+							</div>
+						))}
+						<button
+							type="button"
+							onClick={() => {
+							const existing = formData.achievements?.awards || [];
+							setFormData(prev => ({ ...prev, achievements: { ...prev.achievements, awards: [...existing, { title: "", description: "", image: "" }] } }));
+						}}
+						className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+						>
+							Add Achievement
 						</button>
 					</div>
 

@@ -39,6 +39,26 @@ export default function HeroA({ data = EMPTY_PORTFOLIO, ...personalData }) {
 	return (
 		<section className="py-6 sm:py-10 md:py-16 text-center bg-gradient-to-r from-black to-black text-white">
 			<div className="max-w-full px-2 sm:px-4 mx-auto">
+				{/* Optional hero image (banner/background) */}
+				{actualPersonal.heroImage && (
+					<div className="mb-6">
+						<img
+							src={actualPersonal.heroImage}
+							alt={`${fullName} hero`}
+							className="w-full max-w-4xl h-40 sm:h-56 md:h-64 object-cover rounded-xl border border-white/10 mx-auto"
+						/>
+					</div>
+				)}
+				{/* Profile Image */}
+				{actualPersonal.avatar && (
+					<div className="mb-6 flex justify-center">
+						<img
+							src={actualPersonal.avatar}
+							alt={`${fullName} profile`}
+							className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white/20 shadow-lg"
+						/>
+					</div>
+				)}
 				<h1 className="font-bold mb-2 sm:mb-4" style={{ fontSize: 'clamp(1.5rem, 6vw, 3rem)' }}>{fullName}</h1>
 				{subtitle && <h2 className="text-base sm:text-xl text-white/80 mb-2 sm:mb-6">{subtitle}</h2>}
 				{tagline && (

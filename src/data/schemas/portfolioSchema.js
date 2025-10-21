@@ -8,6 +8,7 @@ export const PORTFOLIO_SCHEMA = {
     lastName: "",
     title: "",
     subtitle: "",
+    heroImage: "",
     email: "",
     phone: "",
     location: {
@@ -270,6 +271,7 @@ export const EMPTY_PORTFOLIO = {
     lastName: "",
     title: "",
     subtitle: "",
+    heroImage: "",
     email: "",
     phone: "",
     location: { city: "", state: "", country: "" },

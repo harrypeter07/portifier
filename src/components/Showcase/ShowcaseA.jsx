@@ -27,6 +27,16 @@ export default function ShowcaseA({ projects = "", items = [] }) {
 				<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{projectsArray.map((p, i) => (
 						<div key={i} className="p-4 border rounded shadow dark:border-gray-600 bg-white dark:bg-gray-800">
+							{/* Project Image */}
+							{(p.images?.[0] || p.image) && (
+								<div className="mb-3">
+									<img
+										src={p.images?.[0] || p.image}
+										alt={p.title || p.name || `Project ${i + 1}`}
+										className="w-full h-40 object-cover rounded"
+									/>
+								</div>
+							)}
 							<h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">{p.name}</h3>
 							{p.description && <p className="text-gray-700 dark:text-gray-300 mb-3">{p.description}</p>}
 							{/* Project Technologies/Tools */}
