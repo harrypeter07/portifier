@@ -47,7 +47,7 @@ export default function Home() {
               AI-Powered Portfolio Builder
             </motion.div>
             
-            <h1 className="text-5xl font-bold text-white leadng-tight md:text:6xl lg:text-7xl font-epilogue">
+            <h1 className="text-5xl font-bold text-white leadng-tight md:text-6xl lg:text-8xl font-epilogue">
               Create Stunning
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700">
                 Portfolios
