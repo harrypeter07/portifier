@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, Linkedin, Instagram, Mail, MessageSquare } from "lucide-react";
+import { Github, Linkedin, Instagram, Mail, MessageSquare, Copy, Check } from "lucide-react";
 
 const socialLinks = [
   {
@@ -46,6 +46,8 @@ const socialLinks = [
 export default function FloatingSocialLinks() {
   const [isVisible, setIsVisible] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 1000);
@@ -65,8 +67,18 @@ export default function FloatingSocialLinks() {
       }
     } else if (link.showEmail) {
       e.preventDefault();
-      // Show email address in an alert
-      alert(link.href);
+      // Show email modal
+      setShowEmailModal(true);
+    }
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText('hassanmansuri570@gmail.com');
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy email:', err);
     }
   };
 
@@ -144,6 +156,47 @@ export default function FloatingSocialLinks() {
           </svg>
         </motion.div>
       </motion.button>
+
+      {/* Email Modal */}
+      <AnimatePresence>
+        {showEmailModal && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: 20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.8, x: 20 }}
+            className="absolute right-16 bottom-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-white/20 rounded-lg p-4 shadow-lg min-w-[200px]"
+          >
+            <div className="flex items-center gap-3">
+              <Mail className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                hassanmansuri570@gmail.com
+              </span>
+              <button
+                onClick={copyEmail}
+                className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                title={emailCopied ? "Copied!" : "Copy email"}
+              >
+                {emailCopied ? (
+                  <Check className="w-4 h-4 text-green-600" />
+                ) : (
+                  <Copy className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                )}
+              </button>
+            </div>
+            <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
+              <div className="w-0 h-0 border-l-4 border-l-white/95 dark:border-l-gray-900/95 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Click outside to close modal */}
+      {showEmailModal && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowEmailModal(false)}
+        />
+      )}
 
       {/* Contribution Message removed as requested */}
     </div>
