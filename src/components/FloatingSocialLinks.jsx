@@ -140,21 +140,7 @@ export default function FloatingSocialLinks() {
         </motion.div>
       </motion.button>
 
-      {/* Contribution Message */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        className="absolute bottom-20 right-0 w-64 p-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg text-white text-sm"
-      >
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-yellow-400">🌟</span>
-          <span className="font-semibold">Contribute!</span>
-        </div>
-        <p className="text-xs text-white/80">
-          Help us improve Portifier! Report bugs, suggest features, or contribute code on GitHub.
-        </p>
-      </motion.div>
+      {/* Contribution Message removed as requested */}
     </div>
   );
 }

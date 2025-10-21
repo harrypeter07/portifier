@@ -136,13 +136,7 @@
     @apply text-base md:text-lg;
   }
   
-  .text-sm {
-    @apply text-sm md:text-base;
-  }
-  
-  .text-xs {
-    @apply text-xs md:text-sm;
-  }
+  /* Removed custom text-sm and text-xs @apply to avoid circular dependency error */
   
   /* Page top margin for all pages */
   .page-container {

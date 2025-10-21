@@ -341,9 +341,9 @@ export default function UnifiedNavbar() {
 									</Button>
 
 									{/* User Dropdown */}
-									{dropdownOpen && (
-										<Card className="absolute right-0 z-50 mt-2 w-56 animate-fade-in">
-											<div className="p-4 border-b border-white dark:border-white">
+                                    {dropdownOpen && (
+                                        <Card className="absolute right-0 z-50 mt-2 w-56 animate-fade-in bg-white/10 backdrop-blur-xl border border-white/20">
+                                            <div className="p-4 border-b border-white/20">
 												<p className="text-sm font-medium text-white">
 													{user.name}
 												</p>
@@ -352,7 +352,7 @@ export default function UnifiedNavbar() {
 												</p>
 											</div>
 
-											<div className="p-2">
+                                            <div className="p-2">
 												<Link
 													href="/dashboard"
 													className="flex items-center px-3 py-2 text-sm text-white rounded-md transition-colors duration-200 hover:bg-white/20"

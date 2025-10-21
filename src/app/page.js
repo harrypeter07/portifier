@@ -22,7 +22,7 @@ import {
   Heart,
   Mail
 } from "lucide-react";
-import ShockwaveScene from "@/components/ShockWave";
+// Shockwave removed per request
 
 export default function Home() {
   return (
@@ -252,42 +252,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Interactive 3D Section */}
-      <section className="relative py-20">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="mb-16 text-center"
-          >
-            <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">
-              Showcase Component
-            </h2>
-            <p className="mx-auto max-w-3xl text-xl text-white/70">
-              Discover the amazing interactive 3D components available for your portfolio website
-            </p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="overflow-hidden relative rounded-2xl shadow-2xl glass"
-          >
-            <div className="h-[600px] w-full flex items-center justify-center">
-              <ShockwaveScene />
-            </div>
-            <div className="absolute top-4 left-4 px-3 py-2 rounded-lg backdrop-blur-sm bg-black/50">
-              <p className="text-sm text-white">
-                ✨ Interactive 3D Component • Double-click to create shockwaves
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* Interactive 3D Section removed per request */}
 
       {/* Features Section */}
       <section className="relative py-20">
