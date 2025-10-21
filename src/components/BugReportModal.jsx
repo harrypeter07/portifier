@@ -22,11 +22,6 @@ export default function BugReportModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    steps: "",
-    expected: "",
-    actual: "",
-    browser: "",
-    device: "",
     email: "",
     priority: "medium"
   });
@@ -78,8 +73,6 @@ export default function BugReportModal({ isOpen, onClose }) {
 
       // Add metadata
       formDataToSend.append('timestamp', new Date().toISOString());
-      formDataToSend.append('userAgent', navigator.userAgent);
-      formDataToSend.append('url', window.location.href);
 
       const response = await fetch('/api/bug-report', {
         method: 'POST',
@@ -91,11 +84,6 @@ export default function BugReportModal({ isOpen, onClose }) {
         setFormData({
           title: "",
           description: "",
-          steps: "",
-          expected: "",
-          actual: "",
-          browser: "",
-          device: "",
           email: "",
           priority: "medium"
         });
@@ -198,7 +186,7 @@ export default function BugReportModal({ isOpen, onClose }) {
                       value={formData.title}
                       onChange={handleInputChange}
                       placeholder="Brief description of the issue"
-                      className="text-lg"
+                      className="text-lg border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500"
                       required
                     />
                   </div>
@@ -211,7 +199,7 @@ export default function BugReportModal({ isOpen, onClose }) {
                       name="priority"
                       value={formData.priority}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-lg border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
+                      className="w-full px-3 py-2 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:border-blue-500"
                     >
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
@@ -232,84 +220,9 @@ export default function BugReportModal({ isOpen, onClose }) {
                     value={formData.description}
                     onChange={handleInputChange}
                     placeholder="Describe the bug in detail..."
-                    className="text-lg min-h-[120px]"
+                    className="text-lg min-h-[120px] border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500"
                     required
                   />
-                </div>
-
-                {/* Steps to Reproduce */}
-                <div className="space-y-2">
-                  <Label htmlFor="steps" className="text-base font-medium">
-                    Steps to Reproduce
-                  </Label>
-                  <Textarea
-                    id="steps"
-                    name="steps"
-                    value={formData.steps}
-                    onChange={handleInputChange}
-                    placeholder="1. Go to...&#10;2. Click on...&#10;3. See error..."
-                    className="text-lg min-h-[100px]"
-                  />
-                </div>
-
-                {/* Expected vs Actual */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="expected" className="text-base font-medium">
-                      Expected Behavior
-                    </Label>
-                    <Textarea
-                      id="expected"
-                      name="expected"
-                      value={formData.expected}
-                      onChange={handleInputChange}
-                      placeholder="What should happen?"
-                      className="text-lg min-h-[80px]"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="actual" className="text-base font-medium">
-                      Actual Behavior
-                    </Label>
-                    <Textarea
-                      id="actual"
-                      name="actual"
-                      value={formData.actual}
-                      onChange={handleInputChange}
-                      placeholder="What actually happens?"
-                      className="text-lg min-h-[80px]"
-                    />
-                  </div>
-                </div>
-
-                {/* Environment Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="browser" className="text-base font-medium">
-                      Browser & Version
-                    </Label>
-                    <Input
-                      id="browser"
-                      name="browser"
-                      value={formData.browser}
-                      onChange={handleInputChange}
-                      placeholder="e.g., Chrome 120, Firefox 119"
-                      className="text-lg"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="device" className="text-base font-medium">
-                      Device & OS
-                    </Label>
-                    <Input
-                      id="device"
-                      name="device"
-                      value={formData.device}
-                      onChange={handleInputChange}
-                      placeholder="e.g., Windows 11, macOS 14, iPhone 15"
-                      className="text-lg"
-                    />
-                  </div>
                 </div>
 
                 {/* Contact Information */}
@@ -324,7 +237,7 @@ export default function BugReportModal({ isOpen, onClose }) {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="your@email.com (for follow-up)"
-                    className="text-lg"
+                    className="text-lg border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500"
                   />
                 </div>
 

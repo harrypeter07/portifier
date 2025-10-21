@@ -68,7 +68,7 @@ export default function FloatingSocialLinks() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed right-6 bottom-6 z-50">
       <AnimatePresence>
         {isExpanded && (
           <motion.div
