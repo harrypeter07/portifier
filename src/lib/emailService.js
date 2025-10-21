@@ -2,12 +2,13 @@ import nodemailer from 'nodemailer';
 
 // Email configuration
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  // Prefer Gmail service by default; can be extended to host/port later
+  return nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
+      pass: process.env.EMAIL_PASS,
+    },
   });
 };
 
@@ -243,6 +244,7 @@ export const sendContactEmail = async (data) => {
     from: process.env.EMAIL_USER,
     to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER,
     subject: `[CONTACT] ${data.subject || 'New Contact Message'} - ${data.name || 'Anonymous'}`,
+    replyTo: data.email || undefined,
     html: emailTemplates.contact(data),
     text: `
 New Contact Message from Portifier
@@ -268,11 +270,12 @@ export const sendBugReportEmail = async (data) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: process.env.BUG_REPORT_EMAIL || process.env.EMAIL_USER,
-    subject: `[BUG REPORT] ${data.title} - Priority: ${data.priority.toUpperCase()}`,
+    subject: `[BUG REPORT] ${data.title} - Priority: ${(data.priority || 'medium').toString().toUpperCase()}`,
+    replyTo: data.email || undefined,
     html: emailTemplates.bugReport(data),
     text: `
 Bug Report: ${data.title}
-Priority: ${data.priority.toUpperCase()}
+Priority: ${(data.priority || 'medium').toString().toUpperCase()}
 
 Description:
 ${data.description}
