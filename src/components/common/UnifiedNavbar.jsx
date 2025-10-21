@@ -275,7 +275,7 @@ export default function UnifiedNavbar() {
 							<div className="flex justify-center items-center w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-lg transition-all duration-300 transform group-hover:scale-110 group-hover:shadow-xl">
 								<span className="text-lg font-bold text-white">P</span>
 							</div>
-							<span className="hidden text-xl font-bold sm:block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+							<span className="hidden text-xl font-bold sm:block bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 bg-clip-text text-transparent">
 								Portume
 							</span>
 						</Link>

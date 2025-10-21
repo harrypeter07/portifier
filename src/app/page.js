@@ -48,7 +48,7 @@ export default function Home() {
             
             <h1 className="text-6xl font-bold leading-tight text-white md:text-8xl lg:text-9xl font-epilogue">
               Create Stunning
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700">
                 Portfolios
               </span>
               in Minutes

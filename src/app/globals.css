@@ -65,7 +65,7 @@
   }
   
   body {
-    @apply text-black bg-white dark:bg-gradient-to-b dark:from-gray-950 dark:to-black dark:text-white;
+    @apply text-black bg-gray-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-950 dark:text-white;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-size: 1.1rem; /* Increased base font size */
     line-height: 1.6; /* Better line height for readability */
@@ -167,14 +167,14 @@
     pointer-events: none;
   }
 
-  /* Light mode: subtle overlay to reduce brightness */
+  /* Light mode: subtle dark overlay to reduce brightness */
   .grainy-bg::after {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.08);
   }
 
-  /* Dark mode: dark overlay preserving texture */
+  /* Dark mode: lighter overlay preserving texture */
   .dark .grainy-bg::after {
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.45);
   }
 
   /* Hide grainy background for portfolio pages */
