@@ -281,24 +281,97 @@ export default function SettingsPage() {
 						</CardHeader>
 						<CardContent>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Bug Report Button */}
-                            <Button
-                                onClick={() => setIsBugReportOpen(true)}
-                                className="h-auto p-6 text-left justify-start bg-red-500/10 hover:bg-red-500/20 border-red-500/20 w-full"
-                                variant="outline"
-                            >
-                                <div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
-                                    <Bug className="w-8 h-8 text-red-500 mt-1 flex-shrink-0" />
-                                    <div className="min-w-0 w-full">
-                                        <h3 className="text-lg font-semibold text-red-700 dark:text-red-400 break-words">
-                                            Report a Bug
-                                        </h3>
-                                        <p className="text-sm text-red-600 dark:text-red-300 mt-1 break-words whitespace-normal">
-                                            Found an issue? Report it with screenshots and details
-                                        </p>
-                                    </div>
-                                </div>
-                            </Button>
+							{/* Bug Report Button */}
+							<Button
+								onClick={() => setIsBugReportOpen(!isBugReportOpen)}
+								className="h-auto p-6 text-left justify-start bg-red-500/10 hover:bg-red-500/20 border-red-500/20 w-full"
+								variant="outline"
+							>
+								<div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
+									<Bug className="w-8 h-8 text-red-500 mt-1 flex-shrink-0" />
+									<div className="min-w-0 w-full">
+										<h3 className="text-lg font-semibold text-red-700 dark:text-red-400 break-words">
+											Report a Bug
+										</h3>
+										<p className="text-sm text-red-600 dark:text-red-300 mt-1 break-words whitespace-normal">
+											Found an issue? Report it with screenshots and details
+										</p>
+									</div>
+								</div>
+							</Button>
+						</div>
+
+						{/* Bug Report Section */}
+						{isBugReportOpen && (
+							<motion.div
+								initial={{ opacity: 0, height: 0 }}
+								animate={{ opacity: 1, height: "auto" }}
+								exit={{ opacity: 0, height: 0 }}
+								transition={{ duration: 0.3 }}
+								className="mt-4 overflow-hidden"
+							>
+								<div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-700">
+									<h4 className="text-lg font-semibold text-red-900 dark:text-red-100 mb-4">
+										🐛 Report a Bug
+									</h4>
+									<div className="space-y-4">
+										<div>
+											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+												Bug Title *
+											</label>
+											<input
+												type="text"
+												placeholder="Brief description of the issue"
+												className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+											/>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+												Priority
+											</label>
+											<select className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent">
+												<option value="low">Low</option>
+												<option value="medium" selected>Medium</option>
+												<option value="high">High</option>
+												<option value="critical">Critical</option>
+											</select>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+												Description *
+											</label>
+											<textarea
+												rows={4}
+												placeholder="Describe the bug in detail..."
+												className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+											/>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+												Email (Optional)
+											</label>
+											<input
+												type="email"
+												placeholder="your@email.com (for follow-up)"
+												className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+											/>
+										</div>
+										<div className="flex gap-3">
+											<Button className="bg-red-600 hover:bg-red-700 text-white">
+												Submit Bug Report
+											</Button>
+											<Button 
+												variant="outline" 
+												onClick={() => setIsBugReportOpen(false)}
+												className="border-red-300 text-red-700 hover:bg-red-50"
+											>
+												Cancel
+											</Button>
+										</div>
+									</div>
+								</div>
+							</motion.div>
+						)}
 
 							{/* Contact Support Button */}
 							<Button

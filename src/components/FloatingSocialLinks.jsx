@@ -14,14 +14,14 @@ const socialLinks = [
   {
     name: "LinkedIn", 
     icon: Linkedin,
-    href: "https://linkedin.com/in/harrypeter07",
+    href: "https://www.linkedin.com/in/hassanmansurii/",
     color: "hover:bg-blue-600",
     delay: 0.2
   },
   {
     name: "Instagram",
     icon: Instagram,
-    href: "https://instagram.com/harrypeter07",
+    href: "https://instagram.com/hassan._mansuri",
     color: "hover:bg-pink-600",
     delay: 0.3
   },
