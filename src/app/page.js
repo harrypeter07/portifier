@@ -46,7 +46,7 @@ export default function Home() {
               AI-Powered Portfolio Builder
             </motion.div>
             
-            <h1 className="text-6xl font-bold leading-tight text-white md:text-8xl lg:text-9xl">
+            <h1 className="text-6xl font-bold leading-tight text-white md:text-8xl lg:text-9xl font-epilogue">
               Create Stunning
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
                 Portfolios
@@ -54,7 +54,7 @@ export default function Home() {
               in Minutes
             </h1>
             
-            <p className="mx-auto max-w-3xl text-2xl leading-relaxed md:text-3xl lg:text-4xl text-white/90">
+            <p className="mx-auto max-w-3xl text-2xl leading-relaxed md:text-3xl lg:text-4xl text-white/90 font-epilogue">
               Transform your resume into a beautiful, professional portfolio with our AI-powered builder. 
               No design skills required.
             </p>
@@ -66,7 +66,7 @@ export default function Home() {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg text-white border-white/30 hover:bg-white/10">
+              <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg text-white border-white/30 bg-white/20 hover:bg-white/30 hover:text-white">
                 <Link href="/templates-demo">
                   <Eye className="mr-2 w-5 h-5" />
                   View Templates

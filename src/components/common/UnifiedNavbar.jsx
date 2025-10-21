@@ -272,10 +272,10 @@ export default function UnifiedNavbar() {
 					<div className="flex justify-between items-center h-16">
 						{/* Logo/Brand */}
 						<Link href="/" className="flex items-center space-x-2 group">
-							<div className="flex justify-center items-center w-8 h-8 bg-black rounded-lg transition-transform duration-200 transform group-hover:scale-110">
-								<span className="text-sm font-bold text-white">P</span>
+							<div className="flex justify-center items-center w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-lg transition-all duration-300 transform group-hover:scale-110 group-hover:shadow-xl">
+								<span className="text-lg font-bold text-white">P</span>
 							</div>
-							<span className="hidden text-xl font-bold text-white sm:block">
+							<span className="hidden text-xl font-bold sm:block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
 								Portume
 							</span>
 						</Link>
@@ -288,11 +288,11 @@ export default function UnifiedNavbar() {
 									<Link
 										key={link.href}
 										href={link.href}
-									className={`group flex items-center space-x-2 px-4 py-2 text-lg md:text-xl font-bold tracking-widest uppercase rounded-lg transition-all duration-300 ${
-											pathname === link.href
-												? "text-white"
-												: "text-white/80 hover:text-white"
-										}`}
+									className={`group flex items-center space-x-2 px-4 py-2 text-sm md:text-base font-medium tracking-wide uppercase rounded-lg transition-all duration-300 ${
+										pathname === link.href
+											? "text-white"
+											: "text-white/80 hover:text-white"
+									}`}
 									>
 									<IconComponent className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
 										<span>{link.label}</span>
@@ -456,7 +456,7 @@ export default function UnifiedNavbar() {
 											key={link.href}
 											href={link.href}
 											onClick={() => setMobileMenuOpen(false)}
-											className={`flex items-center space-x-3 px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+											className={`flex items-center space-x-3 px-3 py-2 text-sm font-medium tracking-wide uppercase rounded-lg transition-all duration-300 ${
 												pathname === link.href
 													? "text-white"
 													: "text-white/80 hover:text-white"

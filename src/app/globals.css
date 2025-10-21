@@ -149,7 +149,7 @@
     @apply pt-8 md:pt-12 lg:pt-16;
   }
 
-  /* Reusable grainy background using public/12.jpg with dark overlay in dark mode */
+  /* Reusable grainy background using public/12.jpg with overlays for both modes */
   .grainy-bg {
     position: relative;
     background-image: url('/12.jpg');
@@ -167,8 +167,14 @@
     pointer-events: none;
   }
 
+  /* Light mode: subtle overlay to reduce brightness */
+  .grainy-bg::after {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Dark mode: dark overlay preserving texture */
   .dark .grainy-bg::after {
-    background: rgba(0, 0, 0, 0.55); /* dark overlay preserving texture */
+    background: rgba(0, 0, 0, 0.55);
   }
 
   /* Hide grainy background for portfolio pages */
@@ -807,12 +813,12 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 /* Glassmorphism utility */
 .glass {
-  @apply bg-white/10 backdrop-blur-xl border border-white/20;
+  @apply border backdrop-blur-xl bg-white/10 border-white/20;
 }
 
 /* Glass with glow hover effect */
 .glass-glow {
-  @apply bg-white/10 backdrop-blur-xl border border-white/30 transition-shadow transition-colors;
+  @apply border backdrop-blur-xl transition-colors transition-shadow bg-white/10 border-white/30;
   box-shadow: 0 0 0px 0 rgba(255,255,255,0.0);
 }
 .glass-glow:hover {
