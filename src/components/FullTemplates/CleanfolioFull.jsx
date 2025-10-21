@@ -23,7 +23,32 @@ export default function CleanfolioFull({ data = EMPTY_PORTFOLIO }) {
 		<div className="min-h-screen bg-white dark:bg-gray-900">
 			{/* Hero Section */}
 			<section className="flex relative justify-center items-center min-h-screen text-white bg-gradient-to-br from-blue-600 to-purple-600">
-				<div className="px-6 mx-auto max-w-4xl text-center">
+				{/* Hero Background Image */}
+				{personal.heroImage && (
+					<div className="absolute inset-0 z-0">
+						<img
+							src={personal.heroImage}
+							alt="Hero background"
+							className="w-full h-full object-cover opacity-20"
+						/>
+					</div>
+				)}
+				<div className="px-6 mx-auto max-w-4xl text-center relative z-10">
+					{/* Profile Avatar */}
+					{personal.avatar && (
+						<motion.div
+							initial={{ opacity: 0, scale: 0.8 }}
+							animate={{ opacity: 1, scale: 1 }}
+							transition={{ duration: 0.8, delay: 0.2 }}
+							className="mb-8 flex justify-center"
+						>
+							<img
+								src={personal.avatar}
+								alt={`${fullName} profile`}
+								className="w-32 h-32 rounded-full border-4 border-white/30 shadow-2xl object-cover"
+							/>
+						</motion.div>
+					)}
 					<motion.h1 
 						initial={{ opacity: 0, y: 30 }}
 						animate={{ opacity: 1, y: 0 }}
@@ -220,6 +245,16 @@ export default function CleanfolioFull({ data = EMPTY_PORTFOLIO }) {
 									viewport={{ once: true }}
 									className="p-8 bg-gray-50 rounded-2xl shadow-xl dark:bg-gray-800"
 								>
+									{/* Project Image */}
+									{(project.images?.[0] || project.image) && (
+										<div className="mb-6">
+											<img
+												src={project.images?.[0] || project.image}
+												alt={project.title}
+												className="w-full h-48 object-cover rounded-xl shadow-lg"
+											/>
+										</div>
+									)}
 									<h3 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
 										{project.title}
 									</h3>

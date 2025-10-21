@@ -80,6 +80,7 @@ function mapSchemaToNeoData(schema) {
             tagline: personal.tagline || personal.subtitle || "",
             email: personal.email || "",
             phone: personal.phone || "",
+            avatar: personal.avatar || "",
             location: [personal?.location?.city, personal?.location?.state, personal?.location?.country].filter(Boolean).join(", "),
         },
         skills: skills.length ? skills : [
@@ -329,7 +330,11 @@ function HeroSection() {
 					</a>
 				</div>
 				<div style={imageContainerStyle} className="mobile-full">
-					<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face" alt="Alex Rivera" style={imageStyle} />
+					<img 
+						src={portfolioData.personal_info.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"} 
+						alt={portfolioData.personal_info.name} 
+						style={imageStyle} 
+					/>
 				</div>
 			</div>
 		</section>
