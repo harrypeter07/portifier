@@ -71,6 +71,42 @@
     line-height: 1.6; /* Better line height for readability */
   }
 
+  /* General light/dark containers */
+  .card,
+  .glass,
+  .glass-glow,
+  .backdrop-blur-xl,
+  .bg-white\/10 { /* Tailwind escaped selector */
+    /* base styles handled by utilities */
+  }
+
+  .dark .glass,
+  .dark .glass-glow,
+  .dark .card {
+    background-color: rgba(0,0,0,0.4) !important;
+    border-color: rgba(255,255,255,0.2) !important;
+  }
+
+  .dark .text-black { color: rgba(255,255,255,0.92) !important; }
+  .dark .text-black\/80 { color: rgba(255,255,255,0.8) !important; }
+  .dark .text-gray-700 { color: rgba(255,255,255,0.8) !important; }
+  .dark .bg-white { background-color: rgba(0,0,0,0.5) !important; }
+  .dark .bg-gray-100 { background-color: rgba(255,255,255,0.06) !important; }
+  .dark .border-gray-200 { border-color: rgba(255,255,255,0.18) !important; }
+
+  /* Font utility classes */
+  .epilogue {
+    font-family: var(--font-epilogue), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+
+  .bungee-regular {
+    font-family: var(--font-bungee), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    font-weight: 400;
+    font-style: normal;
+  }
+
   /* Global text size increases */
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
@@ -113,15 +149,26 @@
     @apply pt-8 md:pt-12 lg:pt-16;
   }
 
-  /* Reusable grainy background using public/gggrain.svg */
+  /* Reusable grainy background using public/12.jpg with dark overlay in dark mode */
   .grainy-bg {
+    position: relative;
     background-image: url('/12.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    /* Ensure it fills the viewport when used on containers */
     min-height: 100vh;
+  }
+
+  .grainy-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .dark .grainy-bg::after {
+    background: rgba(0, 0, 0, 0.55); /* dark overlay preserving texture */
   }
 
   /* Hide grainy background for portfolio pages */

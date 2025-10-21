@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Epilogue, Bungee } from "next/font/google";
 import "./globals.css";
 import "@/lib/devtools-fix"; // Fix React DevTools semver errors
 import UnifiedNavbar from "@/components/common/UnifiedNavbar";
@@ -12,6 +12,19 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],
+});
+
+const epilogue = Epilogue({
+	variable: "--font-epilogue",
+	subsets: ["latin"],
+	display: "swap",
+});
+
+const bungee = Bungee({
+	weight: "400",
+	variable: "--font-bungee",
+	subsets: ["latin"],
+	display: "swap",
 });
 
 export const metadata = {
@@ -40,7 +53,7 @@ export default function RootLayout({ children }) {
 			<Analytics />
 					
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen`}
+				className={`${geistSans.variable} ${geistMono.variable} ${epilogue.variable} ${bungee.variable} font-bungee antialiased bg-white dark:bg-black text-black dark:text-white min-h-screen`}
 			>
 				<ErrorBoundary>
 					<UnifiedNavbar />

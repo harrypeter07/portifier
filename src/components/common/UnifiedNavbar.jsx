@@ -266,7 +266,7 @@ export default function UnifiedNavbar() {
 		<>
 			{/* Main Navigation Bar */}
 		<nav
-			className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg z-50 w-auto px-6"
+			className="fixed top-4 left-1/2 transform -translate-x-1/2 w-auto px-6 rounded-2xl shadow-lg z-50 border transition-colors backdrop-blur-xl bg-white/10 border-white/20 dark:bg-black/40 dark:border-white/20"
 		>
 				<div className="px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
@@ -282,19 +282,19 @@ export default function UnifiedNavbar() {
 
 						{/* Desktop Navigation */}
 						<div className="hidden items-center space-x-1 md:flex">
-							{navLinks.map((link) => {
+						{navLinks.map((link) => {
 								const IconComponent = link.icon;
 								return (
 									<Link
 										key={link.href}
 										href={link.href}
-										className={`group flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+									className={`group flex items-center space-x-2 px-4 py-2 text-lg md:text-xl font-bold tracking-widest uppercase rounded-lg transition-all duration-300 ${
 											pathname === link.href
 												? "text-white"
 												: "text-white/80 hover:text-white"
 										}`}
 									>
-										<IconComponent className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+									<IconComponent className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
 										<span>{link.label}</span>
 									</Link>
 								);

@@ -49,6 +49,8 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-bowlby-sc)'],
         mono: ['var(--font-dm-mono)'],
+        epilogue: ['var(--font-epilogue)'],
+        bungee: ['var(--font-bungee)'],
       },
       screens: { xs: '20rem' },
       keyframes: {
