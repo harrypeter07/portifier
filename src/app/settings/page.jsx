@@ -298,10 +298,9 @@ export default function SettingsPage() {
 										</p>
 									</div>
 								</div>
-							</Button>
-						</div>
+                            </Button>
 
-						{/* Bug Report Section */}
+                        {/* Bug Report Section */}
 						{isBugReportOpen && (
 							<motion.div
 								initial={{ opacity: 0, height: 0 }}
