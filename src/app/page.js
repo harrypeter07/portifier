@@ -19,7 +19,8 @@ import {
   FileText,
   Download,
   Eye,
-  Heart
+  Heart,
+  Mail
 } from "lucide-react";
 import ShockwaveScene from "@/components/ShockWave";
 
@@ -46,7 +47,7 @@ export default function Home() {
               AI-Powered Portfolio Builder
             </motion.div>
             
-            <h1 className="text-6xl font-bold leading-tight text-white md:text-8xl lg:text-9xl font-epilogue">
+            <h1 className="text-4xl font-bold leading-tight text-white md:text-6xl lg:text-7xl font-epilogue">
               Create Stunning
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700">
                 Portfolios
@@ -54,7 +55,7 @@ export default function Home() {
               in Minutes
             </h1>
             
-            <p className="mx-auto max-w-3xl text-2xl leading-relaxed md:text-3xl lg:text-4xl text-white/90 font-epilogue">
+            <p className="mx-auto max-w-3xl text-xl leading-relaxed md:text-2xl lg:text-3xl text-white/90 font-epilogue">
               Transform your resume into a beautiful, professional portfolio with our AI-powered builder. 
               No design skills required.
             </p>
@@ -65,10 +66,10 @@ export default function Home() {
               transition={{ delay: 0.8 }}
               className="mx-auto max-w-2xl text-center"
             >
-              <p className="text-lg text-white/80 font-epilogue mb-4">
+              <p className="text-base text-white/80 font-epilogue mb-4">
                 🚀 <strong>More amazing templates with specific themes coming soon!</strong>
               </p>
-              <p className="text-base text-white/70 font-epilogue">
+              <p className="text-sm text-white/70 font-epilogue">
                 Help us improve Portifier! Report bugs, suggest features, or contribute to our open-source project.
               </p>
             </motion.div>
@@ -87,6 +88,19 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 }}
+              className="mt-8"
+            >
+              <Button asChild variant="ghost" size="lg" className="text-white/80 hover:text-white hover:bg-white/10">
+                <a href="#contact-section">
+                  📧 Contact Us
+                </a>
+              </Button>
+            </motion.div>
           </motion.div>
         </div>
         
@@ -488,6 +502,66 @@ export default function Home() {
                   Browse Templates
                 </Link>
               </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact-section" className="py-20 bg-white/5 backdrop-blur-xl">
+        <div className="px-4 mx-auto max-w-4xl sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+              Get in Touch
+            </h2>
+            <p className="mb-12 text-lg text-white/80">
+              Have questions or suggestions? We'd love to hear from you!
+            </p>
+            
+            <div className="grid gap-8 md:grid-cols-2">
+              <Card className="p-8 bg-white/10 backdrop-blur-xl border-white/20">
+                <CardContent className="text-center">
+                  <Mail className="w-12 h-12 mx-auto mb-4 text-blue-400" />
+                  <h3 className="mb-2 text-lg font-semibold text-white">Email Us</h3>
+                  <p className="mb-4 text-white/70">
+                    Send us a message and we'll get back to you within 24 hours.
+                  </p>
+                  <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Link href="/settings">
+                      Contact Form
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="p-8 bg-white/10 backdrop-blur-xl border-white/20">
+                <CardContent className="text-center">
+                  <Heart className="w-12 h-12 mx-auto mb-4 text-pink-400" />
+                  <h3 className="mb-2 text-lg font-semibold text-white">Report a Bug</h3>
+                  <p className="mb-4 text-white/70">
+                    Found an issue? Help us improve by reporting bugs with details.
+                  </p>
+                  <Button asChild variant="outline" className="border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white">
+                    <Link href="/settings">
+                      Report Bug
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="mt-12 p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-white/20">
+              <h4 className="mb-2 text-base font-semibold text-white">🤝 Help Us Improve!</h4>
+              <p className="text-white/80">
+                Portifier is open-source! Contribute by reporting bugs, suggesting features, 
+                or contributing code on GitHub.
+              </p>
             </div>
           </motion.div>
         </div>
