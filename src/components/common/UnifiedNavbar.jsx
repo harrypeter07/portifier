@@ -335,7 +335,7 @@ export default function UnifiedNavbar() {
 										<span className="hidden text-sm font-medium text-white sm:block">
 											{user.name || "User"}
 										</span>
-										<ChevronDown className="w-4 h-4 text-white/70" />
+										<ChevronDown className="w-4 h-4 text-white/80" />
 									</Button>
 
 									{/* User Dropdown */}
@@ -345,7 +345,7 @@ export default function UnifiedNavbar() {
 												<p className="text-sm font-medium text-white">
 													{user.name}
 												</p>
-												<p className="text-xs truncate text-white/70">
+												<p className="text-xs truncate text-white/80">
 													{user.email}
 												</p>
 											</div>
@@ -466,7 +466,7 @@ export default function UnifiedNavbar() {
 												<p className="text-sm font-medium text-white">
 													{user.name}
 												</p>
-												<p className="text-xs text-white/70">
+												<p className="text-xs text-white/80">
 													{user.email}
 												</p>
 											</div>
@@ -583,8 +583,8 @@ export default function UnifiedNavbar() {
 														: isCompleted
 														? "text-green-600 hover:bg-green-50"
 														: isClickable
-														? "text-black/70 dark:text-white/70 hover:text-black dark:text-white hover:bg-white/20 dark:bg-white/20"
-														: "cursor-not-allowed text-black/70 dark:text-white/70/50"
+														? "text-black/80 dark:text-white/80 hover:text-black dark:text-white hover:bg-white/20 dark:bg-white/20"
+														: "cursor-not-allowed text-black/80 dark:text-white/80/50"
 												}`}
 												onClick={(e) => {
 													if (!isClickable) {
@@ -598,7 +598,7 @@ export default function UnifiedNavbar() {
 														? "text-white bg-black dark:bg-white dark:text-black"
 														: isCompleted
 														? "text-green-600 bg-green-100"
-														: "bg-white/20 dark:bg-white/20 text-black/70 dark:text-white/70"
+														: "bg-white/20 dark:bg-white/20 text-black/80 dark:text-white/80"
 												}`}>
 													{isCompleted ? (
 														<span className="text-xs">✓</span>

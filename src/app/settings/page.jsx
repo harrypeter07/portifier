@@ -112,7 +112,7 @@ export default function SettingsPage() {
 			<div className="border-b shadow-sm backdrop-blur-xl border-white/20 bg-white/10 dark:bg-white/10">
 				<div className="px-4 py-6 mx-auto max-w-4xl">
 					<h1 className="text-3xl font-bold text-black dark:text-white">Settings</h1>
-					<p className="mt-2 text-black/70 dark:text-white/70">Manage your account and preferences</p>
+					<p className="mt-2 text-black/80 dark:text-white/80">Manage your account and preferences</p>
 				</div>
 			</div>
 
@@ -148,19 +148,19 @@ export default function SettingsPage() {
 						<CardContent>
 							<div className="space-y-4">
 								<div>
-									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
+									<Label className="mb-1 text-sm font-medium text-black/80 dark:text-white/80">
 										Username
 									</Label>
 									<p className="font-medium text-black dark:text-white">@{user.username}</p>
 								</div>
 								<div>
-									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
+									<Label className="mb-1 text-sm font-medium text-black/80 dark:text-white/80">
 										Email
 									</Label>
 									<p className="font-medium text-black dark:text-white">{user.email}</p>
 								</div>
 								<div>
-									<Label className="mb-1 text-sm font-medium text-black/70 dark:text-white/70">
+									<Label className="mb-1 text-sm font-medium text-black/80 dark:text-white/80">
 										Name
 									</Label>
 									<p className="font-medium text-black dark:text-white">{user.name}</p>

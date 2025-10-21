@@ -371,7 +371,7 @@ export default function ResumeUploadPage() {
 			{/* Left Panel - Upload and Navigation */}
 			<div className={`transition-all duration-500 ${parsed ? 'w-full md:w-1/2' : 'w-full'} p-4 md:p-8 overflow-y-auto order-2 md:order-1`}>
 				<h1 className="text-3xl font-extrabold mb-4 text-black dark:text-white">Start Your Portfolio</h1>
-				<div className="mb-6 text-black/70 dark:text-white/70 text-base">
+				<div className="mb-6 text-black/80 dark:text-white/80 text-base">
 					Upload your resume (PDF) to auto-fill your portfolio, or use the navigation below to explore different editing options.
 				</div>
                 <Card className="mb-6 glass">
@@ -423,7 +423,7 @@ export default function ResumeUploadPage() {
 						)}
 						{error && <div className="text-destructive mb-2">{error}</div>}
 						{!file && !parsedData && (
-							<div className="text-xs text-black/70 dark:text-white/70 bg-gray-100 dark:bg-gray-800 border rounded p-2 mt-1">
+							<div className="text-xs text-black/80 dark:text-white/80 bg-gray-100 dark:bg-gray-800 border rounded p-2 mt-1">
 								Tip: You can also start with the navigation options below!
 							</div>
 						)}
@@ -441,7 +441,7 @@ export default function ResumeUploadPage() {
 							>
 								<div className="text-2xl mb-2">🎨</div>
 								<div className="font-bold text-lg mb-1">Customize</div>
-								<div className="text-sm text-black/70 dark:text-white/70 text-center">
+								<div className="text-sm text-black/80 dark:text-white/80 text-center">
 									Choose and customize individual components
 								</div>
 							</CardContent>
@@ -454,7 +454,7 @@ export default function ResumeUploadPage() {
 							>
 								<div className="text-2xl mb-2">✏️</div>
 								<div className="font-bold text-lg mb-1">Edit Resume</div>
-								<div className="text-sm text-black/70 dark:text-white/70 text-center">
+								<div className="text-sm text-black/80 dark:text-white/80 text-center">
 									Edit your resume content and details
 								</div>
 							</CardContent>
@@ -467,7 +467,7 @@ export default function ResumeUploadPage() {
 							>
 								<div className="text-2xl mb-2">📋</div>
 								<div className="font-bold text-lg mb-1">Templates</div>
-								<div className="text-sm text-black/70 dark:text-white/70 text-center">
+								<div className="text-sm text-black/80 dark:text-white/80 text-center">
 									Browse all available templates
 								</div>
 							</CardContent>

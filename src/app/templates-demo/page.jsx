@@ -353,7 +353,7 @@ function TemplatesDemoContent() {
 										<div className="text-sm font-medium text-gray-900 capitalize dark:text-white">
 											{section}
 										</div>
-										<div className="text-xs text-black/70 dark:text-white/70">
+										<div className="text-xs text-black/80 dark:text-white/80">
 											{component}
 										</div>
 									</div>
