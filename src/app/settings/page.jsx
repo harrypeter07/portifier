@@ -495,36 +495,46 @@ export default function SettingsPage() {
 											<label className="block mb-2 text-sm font-medium text-blue-800 dark:text-blue-200">
 												Your Email
 											</label>
-											<input
+                                            <input
 												type="email"
 												placeholder="your@email.com"
-												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                value={contactEmail}
+                                                onChange={(e) => setContactEmail(e.target.value)}
+                                                className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
 											<label className="block mb-2 text-sm font-medium text-blue-800 dark:text-blue-200">
 												Subject
 											</label>
-											<input
+                                            <input
 												type="text"
 												placeholder="What's this about?"
-												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                value={contactSubject}
+                                                onChange={(e) => setContactSubject(e.target.value)}
+                                                className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
 											<label className="block mb-2 text-sm font-medium text-blue-800 dark:text-blue-200">
 												Message
 											</label>
-											<textarea
+                                            <textarea
 												rows={4}
 												placeholder="Tell us what you need help with..."
-												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 resize-none dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                value={contactMessage}
+                                                onChange={(e) => setContactMessage(e.target.value)}
+                                                className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 resize-none dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											/>
 										</div>
-										<div className="flex gap-3">
-											<Button className="text-white bg-blue-600 hover:bg-blue-700">
-												Send Message
-											</Button>
+                                        <div className="flex gap-3">
+                                            <Button onClick={submitInlineContact} disabled={isContactSubmitting} className="text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50">
+                                                {isContactSubmitting ? (
+                                                    <span className="flex gap-2 items-center"><span className="w-4 h-4 rounded-full border-2 animate-spin border-white/80 border-t-transparent"/>Sending...</span>
+                                                ) : (
+                                                    'Send Message'
+                                                )}
+                                            </Button>
 											<Button 
 												variant="outline" 
 												onClick={() => setIsContactSectionOpen(false)}
