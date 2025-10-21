@@ -352,9 +352,9 @@ export default function SettingsPage() {
 						<CardContent>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 							{/* Bug Report Button */}
-							<Button
+                            <Button
 								onClick={() => setIsBugReportOpen(!isBugReportOpen)}
-								className="justify-start p-6 w-full h-auto text-left bg-red-500/10 hover:bg-red-500/20 border-red-500/20"
+                                className="justify-start p-6 w-full h-auto text-left bg-red-500/10 hover:bg-red-500/20 border-red-500/20 moving-border"
 								variant="outline"
 							>
 								<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
@@ -457,9 +457,9 @@ export default function SettingsPage() {
 						)}
 
 							{/* Contact Support Button */}
-							<Button
+                            <Button
 								onClick={() => setIsContactSectionOpen(!isContactSectionOpen)}
-								className="justify-start p-6 w-full h-auto text-left bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20"
+                                className="justify-start p-6 w-full h-auto text-left bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 moving-border"
 								variant="outline"
 							>
 								<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
