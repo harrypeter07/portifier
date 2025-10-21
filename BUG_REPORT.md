@@ -81,7 +81,6 @@ Actionable fixes:
 ## Emailing
 - `emailService` uses Gmail transporter; ensure `EMAIL_USER`, `EMAIL_PASS` are set. No rate limit; attachments allowed in bug-report.
 - `sendWelcomeEmail` never used.
-- HTML templates embed `process.env.NEXT_PUBLIC_BASE_URL` for links; OK.
 
 Actionable fixes:
 - Add optional Resend/Postmark provider abstraction.
@@ -147,4 +146,65 @@ Actionable steps:
 - EMAIL_USER, EMAIL_PASS, (CONTACT_EMAIL, BUG_REPORT_EMAIL optional)
 - GEMINI_API_KEY
 - For Flask backend: MONGODB_URI, SECRET_KEY, JWT_SECRET_KEY, TESSERACT_CMD
+
+---
+
+# Optimization & Loading Plan
+
+This section adds concrete, prioritized steps to make the site faster and more resilient.
+
+## A. Rendering & Data
+- Convert SSR where beneficial: ensure `src/app/[username]/page.jsx` and heavy pages cache GET data (`revalidate` or `force-cache`) when safe.
+- Streaming and Suspense: add route-level `loading.js` where missing; keep skeletons minimal.
+- Client/server boundaries: keep data fetching in server components where possible; pass serialized props to client components.
+- Network timeouts and aborts: wrap `fetch` with `AbortController` and per-request timeouts (10–20s).
+
+## B. Images & Static Assets
+- Replace `<img>` with `next/image` in marketing and portfolio pages.
+- Pre-size hero images; serve WebP/AVIF; ensure `priority` only for above-the-fold images.
+- Use `public/` for critical static assets; lazy-load non-critical images via `loading="lazy"`.
+
+## C. JS Payload & Interactivity
+- Remove debug logs; guard any remaining behind `process.env.NODE_ENV !== 'production'`.
+- Code-split heavy components (full templates, PDF editor) with dynamic imports.
+- Prefer CSS-based effects over JS animations; implement reduced-motion.
+- Avoid unnecessary client state; co-locate state with components; memoize expensive computations.
+
+## D. Caching & CDN
+- Configure `vercel.json` or custom headers for long-lived static caching on `public/**` (immutable filenames).
+- Add HTTP caching for API GETs where safe (e.g., portfolio reads); leverage `NextResponse` with `Cache-Control`.
+- Introduce SWR for client GETs with sensible `dedupingInterval` and `revalidateOnFocus`.
+
+## E. Database & API
+- Use `lean()` for Mongoose read queries where possible to reduce hydration cost.
+- Ensure `dbConnect` cache works and logs are reduced; avoid connecting per request when unnecessary.
+- Add indexes on query paths used by API routes (user, portfolio username).
+
+## F. Build & CI
+- Enable `next build --profile` locally to identify heavy bundles.
+- Add Lighthouse CI to PRs; target Performance > 90 on mobile.
+- Add ESLint rule to forbid `console.log` in production builds.
+
+## G. Observability
+- Add basic request timing logs for API routes (server-only); aggregate to verify slow endpoints.
+- Add `@vercel/analytics` custom events for load milestones.
+
+## H. Infrastructure
+- Consider moving uploads to object storage (S3/Cloudinary) with CDN; generate responsive variants.
+- Enable ISR for portfolio pages (if content isn’t highly dynamic) with revalidate on updates.
+
+## Step-by-step Quick Wins (1–2 days)
+1) Replace homepage hero `<img>` with `next/image`; set sizes.
+2) Remove/guard `console.log` in `src/app/editor/*`, `Preview.jsx`, template components.
+3) Add `loading.js` for editor/preview pages and minimal skeletons.
+4) Implement reduced-motion CSS and respect `prefers-reduced-motion`.
+5) Introduce SWR for `/api/auth/me` and portfolio GETs.
+6) Add `Cache-Control` for static assets via `vercel.json` and mark `public/uploads` with long TTL.
+7) Add DB indexes: `User.username`, `Portfolio.userId`, `Portfolio.username`.
+
+## Medium Wins (1–2 weeks)
+- Code-split big templates and the PDF editor with dynamic imports.
+- Migrate media to S3/Cloudinary with `next/image` remote loader and responsive variants.
+- Add rate limiting and CSRF protection on sensitive endpoints.
+- Add `robots.txt` & `sitemap.xml` routes and fix `generateMetadata`.
 
