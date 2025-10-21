@@ -65,6 +65,21 @@ export default function CreativeFull({ data = EMPTY_PORTFOLIO, portfolioId, user
 				</div>
 				
 				<div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+					{/* Profile Avatar */}
+					{personal.avatar && (
+						<motion.div
+							initial={{ opacity: 0, scale: 0.8 }}
+							animate={{ opacity: 1, scale: 1 }}
+							transition={{ duration: 0.8, delay: 0.1 }}
+							className="mb-8 flex justify-center"
+						>
+							<img
+								src={personal.avatar}
+								alt={`${fullName} profile`}
+								className="w-32 h-32 rounded-full border-4 border-purple-500/30 shadow-2xl object-cover"
+							/>
+						</motion.div>
+					)}
 					<motion.h1 
 						initial={{ opacity: 0, y: 50 }}
 						animate={{ opacity: 1, y: 0 }}
@@ -264,6 +279,16 @@ export default function CreativeFull({ data = EMPTY_PORTFOLIO, portfolioId, user
 									viewport={{ once: true }}
 									className="bg-gray-800/50 backdrop-blur-sm rounded-3xl p-8 border border-gray-700 hover:border-purple-500/50 transition-colors"
 								>
+									{/* Project Image */}
+									{(project.images?.[0] || project.image) && (
+										<div className="mb-6">
+											<img
+												src={project.images?.[0] || project.image}
+												alt={project.title}
+												className="w-full h-48 object-cover rounded-xl shadow-lg"
+											/>
+										</div>
+									)}
 									<h3 className="text-2xl font-semibold text-white mb-4">
 										{project.title}
 									</h3>
