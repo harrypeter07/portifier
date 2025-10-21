@@ -112,7 +112,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen pt-20 page-container">
+		<div className="pt-20 min-h-screen page-container">
 			{/* Header */}
 			<div className="border-b shadow-sm backdrop-blur-xl border-white/20 bg-white/10 dark:bg-white/10">
 				<div className="px-4 py-6 mx-auto max-w-4xl">
@@ -271,7 +271,7 @@ export default function SettingsPage() {
 				>
 					<Card className="backdrop-blur-xl bg-white/10 border-white/20">
 						<CardHeader>
-							<CardTitle className="flex items-center gap-2 text-2xl">
+							<CardTitle className="flex gap-2 items-center text-2xl">
 								<Bug className="w-6 h-6 text-red-500" />
 								Report Issues & Get Help
 							</CardTitle>
@@ -280,20 +280,20 @@ export default function SettingsPage() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 							{/* Bug Report Button */}
 							<Button
 								onClick={() => setIsBugReportOpen(!isBugReportOpen)}
-								className="h-auto p-6 text-left justify-start bg-red-500/10 hover:bg-red-500/20 border-red-500/20 w-full"
+								className="justify-start p-6 w-full h-auto text-left bg-red-500/10 hover:bg-red-500/20 border-red-500/20"
 								variant="outline"
 							>
-								<div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
-									<Bug className="w-8 h-8 text-red-500 mt-1 flex-shrink-0" />
-									<div className="min-w-0 w-full">
-										<h3 className="text-lg font-semibold text-red-700 dark:text-red-400 break-words">
+								<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
+									<Bug className="flex-shrink-0 mt-1 w-8 h-8 text-red-500" />
+									<div className="w-full min-w-0">
+										<h3 className="text-lg font-semibold text-red-700 break-words dark:text-red-400">
 											Report a Bug
 										</h3>
-										<p className="text-sm text-red-600 dark:text-red-300 mt-1 break-words whitespace-normal">
+										<p className="mt-1 text-sm text-red-600 whitespace-normal break-words dark:text-red-300">
 											Found an issue? Report it with screenshots and details
 										</p>
 									</div>
@@ -308,28 +308,28 @@ export default function SettingsPage() {
 								animate={{ opacity: 1, height: "auto" }}
 								exit={{ opacity: 0, height: 0 }}
 								transition={{ duration: 0.3 }}
-								className="mt-4 overflow-hidden"
+								className="overflow-hidden mt-4"
 							>
-								<div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-700">
-									<h4 className="text-lg font-semibold text-red-900 dark:text-red-100 mb-4">
+								<div className="p-6 bg-red-50 rounded-lg border border-red-200 dark:bg-red-900/20 dark:border-red-700">
+									<h4 className="mb-4 text-lg font-semibold text-red-900 dark:text-red-100">
 										🐛 Report a Bug
 									</h4>
 									<div className="space-y-4">
 										<div>
-											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Bug Title *
 											</label>
 											<input
 												type="text"
 												placeholder="Brief description of the issue"
-												className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
-											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Priority
 											</label>
-											<select className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent">
+											<select className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent">
 												<option value="low">Low</option>
 												<option value="medium" selected>Medium</option>
 												<option value="high">High</option>
@@ -337,33 +337,33 @@ export default function SettingsPage() {
 											</select>
 										</div>
 										<div>
-											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Description *
 											</label>
 											<textarea
 												rows={4}
 												placeholder="Describe the bug in detail..."
-												className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 resize-none dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
-											<label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Email (Optional)
 											</label>
 											<input
 												type="email"
 												placeholder="your@email.com (for follow-up)"
-												className="w-full px-4 py-2 border-2 border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
 											/>
 										</div>
 										<div className="flex gap-3">
-											<Button className="bg-red-600 hover:bg-red-700 text-white">
+											<Button className="text-white bg-red-600 hover:bg-red-700">
 												Submit Bug Report
 											</Button>
 											<Button 
 												variant="outline" 
 												onClick={() => setIsBugReportOpen(false)}
-												className="border-red-300 text-red-700 hover:bg-red-50"
+												className="text-red-700 border-red-300 hover:bg-red-50"
 											>
 												Cancel
 											</Button>
@@ -376,16 +376,16 @@ export default function SettingsPage() {
 							{/* Contact Support Button */}
 							<Button
 								onClick={() => setIsContactSectionOpen(!isContactSectionOpen)}
-								className="h-auto p-6 text-left justify-start bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 w-full"
+								className="justify-start p-6 w-full h-auto text-left bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20"
 								variant="outline"
 							>
-								<div className="flex items-start gap-4 flex-wrap min-w-0 w-full">
-									<Mail className="w-8 h-8 text-blue-500 mt-1 flex-shrink-0" />
-									<div className="min-w-0 w-full">
-										<h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400 break-words">
+								<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
+									<Mail className="flex-shrink-0 mt-1 w-8 h-8 text-blue-500" />
+									<div className="w-full min-w-0">
+										<h3 className="text-lg font-semibold text-blue-700 break-words dark:text-blue-400">
 											Contact Support
 										</h3>
-										<p className="text-sm text-blue-600 dark:text-blue-300 mt-1 break-words whitespace-normal">
+										<p className="mt-1 text-sm text-blue-600 whitespace-normal break-words dark:text-blue-300">
 											Need help? Send us an email for direct support
 										</p>
 									</div>
@@ -400,51 +400,51 @@ export default function SettingsPage() {
 								animate={{ opacity: 1, height: "auto" }}
 								exit={{ opacity: 0, height: 0 }}
 								transition={{ duration: 0.3 }}
-								className="mt-4 overflow-hidden"
+								className="overflow-hidden mt-4"
 							>
-								<div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-									<h4 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-4">
+								<div className="p-6 bg-blue-50 rounded-lg border border-blue-200 dark:bg-blue-900/20 dark:border-blue-700">
+									<h4 className="mb-4 text-lg font-semibold text-blue-900 dark:text-blue-100">
 										📧 Contact Us
 									</h4>
 									<div className="space-y-4">
 										<div>
-											<label className="block text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+											<label className="block mb-2 text-sm font-medium text-blue-800 dark:text-blue-200">
 												Your Email
 											</label>
 											<input
 												type="email"
 												placeholder="your@email.com"
-												className="w-full px-4 py-2 border border-blue-300 dark:border-blue-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
-											<label className="block text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+											<label className="block mb-2 text-sm font-medium text-blue-800 dark:text-blue-200">
 												Subject
 											</label>
 											<input
 												type="text"
 												placeholder="What's this about?"
-												className="w-full px-4 py-2 border border-blue-300 dark:border-blue-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
-											<label className="block text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+											<label className="block mb-2 text-sm font-medium text-blue-800 dark:text-blue-200">
 												Message
 											</label>
 											<textarea
 												rows={4}
 												placeholder="Tell us what you need help with..."
-												className="w-full px-4 py-2 border border-blue-300 dark:border-blue-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border border-blue-300 resize-none dark:border-blue-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											/>
 										</div>
 										<div className="flex gap-3">
-											<Button className="bg-blue-600 hover:bg-blue-700 text-white">
+											<Button className="text-white bg-blue-600 hover:bg-blue-700">
 												Send Message
 											</Button>
 											<Button 
 												variant="outline" 
 												onClick={() => setIsContactSectionOpen(false)}
-												className="border-blue-300 text-blue-700 hover:bg-blue-50"
+												className="text-blue-700 border-blue-300 hover:bg-blue-50"
 											>
 												Cancel
 											</Button>
@@ -455,8 +455,8 @@ export default function SettingsPage() {
 						)}
 
 							{/* Additional Help Info */}
-							<div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-								<h4 className="text-base font-medium text-gray-900 dark:text-white mb-2">
+							<div className="p-4 mt-6 bg-gray-50 rounded-lg dark:bg-gray-800">
+								<h4 className="mb-2 text-base font-medium text-gray-900 dark:text-white">
 									Before Reporting
 								</h4>
 								<ul className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
