@@ -21,6 +21,18 @@ export default function SettingsPage() {
 	const [isBugReportOpen, setIsBugReportOpen] = useState(false);
 	const [isContactSectionOpen, setIsContactSectionOpen] = useState(false);
 
+	// Local form state for inline sections
+	const [contactEmail, setContactEmail] = useState("");
+	const [contactSubject, setContactSubject] = useState("");
+	const [contactMessage, setContactMessage] = useState("");
+	const [isContactSubmitting, setIsContactSubmitting] = useState(false);
+
+	const [bugTitle, setBugTitle] = useState("");
+	const [bugPriority, setBugPriority] = useState("medium");
+	const [bugDescription, setBugDescription] = useState("");
+	const [bugEmail, setBugEmail] = useState("");
+	const [isBugSubmitting, setIsBugSubmitting] = useState(false);
+
 	useEffect(() => {
 		fetchUserData();
 		fetchApiKeyStatus();
@@ -100,6 +112,65 @@ export default function SettingsPage() {
 			return () => clearTimeout(timer);
 		}
 	}, [message]);
+
+	const submitInlineContact = async () => {
+		if (!contactMessage) return;
+		setIsContactSubmitting(true);
+		try {
+			const res = await fetch("/api/contact", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					name: user?.name || user?.username || "User",
+					email: contactEmail,
+					subject: contactSubject,
+					message: contactMessage,
+				}),
+			});
+			if (res.ok) {
+				setMessage({ type: "success", text: "Message sent successfully." });
+				setContactEmail("");
+				setContactSubject("");
+				setContactMessage("");
+			} else {
+				const data = await res.json().catch(() => ({}));
+				setMessage({ type: "error", text: data.error || "Failed to send message" });
+			}
+		} catch (e) {
+			setMessage({ type: "error", text: "Network error sending message" });
+		} finally {
+			setIsContactSubmitting(false);
+		}
+	};
+
+	const submitInlineBug = async () => {
+		if (!bugTitle || !bugDescription) return;
+		setIsBugSubmitting(true);
+		try {
+			const fd = new FormData();
+			fd.append("title", bugTitle);
+			fd.append("description", bugDescription);
+			fd.append("priority", bugPriority);
+			if (bugEmail) fd.append("email", bugEmail);
+			fd.append("timestamp", new Date().toISOString());
+
+			const res = await fetch("/api/bug-report", { method: "POST", body: fd });
+			if (res.ok) {
+				setMessage({ type: "success", text: "Bug report submitted." });
+				setBugTitle("");
+				setBugPriority("medium");
+				setBugDescription("");
+				setBugEmail("");
+			} else {
+				const data = await res.json().catch(() => ({}));
+				setMessage({ type: "error", text: data.error || "Failed to submit bug report" });
+			}
+		} catch (e) {
+			setMessage({ type: "error", text: "Network error submitting bug report" });
+		} finally {
+			setIsBugSubmitting(false);
+		}
+	};
 
 	if (!user) {
 		return (
@@ -318,47 +389,61 @@ export default function SettingsPage() {
 											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Bug Title *
 											</label>
-											<input
+                                            <input
 												type="text"
-												placeholder="Brief description of the issue"
-												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                                placeholder="Brief description of the issue"
+                                                value={bugTitle}
+                                                onChange={(e) => setBugTitle(e.target.value)}
+                                                className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
 											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Priority
 											</label>
-											<select className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent">
-												<option value="low">Low</option>
-												<option value="medium" selected>Medium</option>
-												<option value="high">High</option>
-												<option value="critical">Critical</option>
-											</select>
+                                            <select
+                                                value={bugPriority}
+                                                onChange={(e) => setBugPriority(e.target.value)}
+                                                className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                            >
+                                                <option value="low">Low</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="high">High</option>
+                                                <option value="critical">Critical</option>
+                                            </select>
 										</div>
 										<div>
 											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Description *
 											</label>
-											<textarea
+                                            <textarea
 												rows={4}
 												placeholder="Describe the bug in detail..."
-												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 resize-none dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                                value={bugDescription}
+                                                onChange={(e) => setBugDescription(e.target.value)}
+                                                className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 resize-none dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
 											/>
 										</div>
 										<div>
 											<label className="block mb-2 text-sm font-medium text-red-800 dark:text-red-200">
 												Email (Optional)
 											</label>
-											<input
+                                            <input
 												type="email"
 												placeholder="your@email.com (for follow-up)"
-												className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                                value={bugEmail}
+                                                onChange={(e) => setBugEmail(e.target.value)}
+                                                className="px-4 py-2 w-full text-gray-900 bg-white rounded-lg border-2 border-red-300 dark:border-red-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
 											/>
 										</div>
-										<div className="flex gap-3">
-											<Button className="text-white bg-red-600 hover:bg-red-700">
-												Submit Bug Report
-											</Button>
+                                        <div className="flex gap-3">
+                                            <Button onClick={submitInlineBug} disabled={isBugSubmitting} className="text-white bg-red-600 hover:bg-red-700 disabled:opacity-50">
+                                                {isBugSubmitting ? (
+                                                    <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 border-white/80 border-t-transparent rounded-full animate-spin"/>Submitting...</span>
+                                                ) : (
+                                                    'Submit Bug Report'
+                                                )}
+                                            </Button>
 											<Button 
 												variant="outline" 
 												onClick={() => setIsBugReportOpen(false)}
