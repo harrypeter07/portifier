@@ -146,6 +146,22 @@ export default function TemplateSelector() {
 				Showing {filteredTemplates.length} {selectedType === "component" ? "component-based" : "full-page"} templates
 				{selectedCategory !== "all" && ` for ${selectedCategory}`}
 			</div>
+			
+			{/* Coming Soon Message */}
+			<div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+				<div className="flex items-center gap-3">
+					<span className="text-2xl">🚀</span>
+					<div>
+						<h3 className="font-semibold text-blue-900 dark:text-blue-100">
+							More Amazing Templates Coming Soon!
+						</h3>
+						<p className="text-sm text-blue-700 dark:text-blue-200 mt-1">
+							We're working on beautiful templates with specific themes for different industries. 
+							Help us improve by contributing to our open-source project!
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 } 

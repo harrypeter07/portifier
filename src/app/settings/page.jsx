@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import LottieLoading from "@/components/LottieLoading";
 import GeminiKeyModal from "@/components/common/GeminiKeyModal";
-import BugReportModal from "@/components/BugReportModal";
+import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -390,6 +390,24 @@ export default function SettingsPage() {
 					</div>
 				</motion.div>
 			</div>
+
+			{/* Contact Form Section */}
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ delay: 0.4 }}
+				className="mb-8"
+			>
+				<div className="mb-6 text-center">
+					<h2 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+						Get in Touch
+					</h2>
+					<p className="text-gray-600 dark:text-gray-400">
+						Have questions or suggestions? We'd love to hear from you!
+					</p>
+				</div>
+				<ContactForm />
+			</motion.div>
 
 			{/* Gemini Key Modal */}
 			<GeminiKeyModal

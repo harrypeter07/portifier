@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Epilogue, Bungee } from "next/font/google";
 import "./globals.css";
 import "@/lib/devtools-fix"; // Fix React DevTools semver errors
 import UnifiedNavbar from "@/components/common/UnifiedNavbar";
+import FloatingSocialLinks from "@/components/FloatingSocialLinks";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Analytics } from "@vercel/analytics/next"
 const geistSans = Geist({
@@ -58,6 +59,7 @@ export default function RootLayout({ children }) {
 				<ErrorBoundary>
 					<UnifiedNavbar />
 					<main className="min-h-screen app-main grainy-bg">{children}</main>
+					<FloatingSocialLinks />
 				</ErrorBoundary>
 			</body>
 		</html>

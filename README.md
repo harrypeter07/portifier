@@ -668,6 +668,52 @@ See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-applicat
 
 ---
 
+## 🔑 Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```env
+# Database
+MONGODB_URI=mongodb://localhost:27017/portifier
+
+# JWT Secret
+JWT_SECRET=your-super-secret-jwt-key-here
+
+# Gemini API Key
+GEMINI_API_KEY=your-gemini-api-key-here
+
+# Email Configuration (for contact forms and bug reports)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+CONTACT_EMAIL=contact@yourdomain.com
+BUG_REPORT_EMAIL=bugs@yourdomain.com
+
+# Application URLs
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+TEMPLATES_BASE_URL=https://your-templates-app.vercel.app
+
+# Optional: Remote Templates
+REMOTE_TEMPLATES_ENABLED=false
+SHARED_JWT_SECRET=your-shared-jwt-secret
+```
+
+### Email Setup Instructions
+
+For the email functionality to work (contact forms and bug reports), you need to set up Gmail App Passwords:
+
+1. **Enable 2-Factor Authentication** on your Gmail account
+2. **Generate App Password**:
+   - Go to Google Account settings
+   - Security → 2-Step Verification → App passwords
+   - Generate a new app password for "Mail"
+   - Use this password as `EMAIL_PASS` in your `.env.local`
+3. **Set Email Addresses**:
+   - `EMAIL_USER`: Your Gmail address
+   - `CONTACT_EMAIL`: Where contact form messages should be sent
+   - `BUG_REPORT_EMAIL`: Where bug reports should be sent
+
+---
+
 ## 🔑 Environment Variables (Remote Templates)
 
 - `SHARED_JWT_SECRET` – used to sign service-to-service JWTs

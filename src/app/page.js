@@ -59,6 +59,20 @@ export default function Home() {
               No design skills required.
             </p>
             
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="mx-auto max-w-2xl text-center"
+            >
+              <p className="text-lg text-white/80 font-epilogue mb-4">
+                🚀 <strong>More amazing templates with specific themes coming soon!</strong>
+              </p>
+              <p className="text-base text-white/70 font-epilogue">
+                Help us improve Portifier! Report bugs, suggest features, or contribute to our open-source project.
+              </p>
+            </motion.div>
+            
             <div className="flex flex-col gap-4 justify-center items-center sm:flex-row">
               <Button asChild size="lg" className="px-8 py-4 text-lg font-semibold text-black bg-white hover:bg-white/90">
                 <Link href="/auth/signup">

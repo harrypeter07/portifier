@@ -436,6 +436,37 @@ function TemplatesDemoContent() {
 						</div>
 					</div>
 				</div>
+				
+				{/* Coming Soon Section */}
+				<div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+					<div className="text-center">
+						<div className="flex justify-center mb-4">
+							<span className="text-4xl">🚀</span>
+						</div>
+						<h3 className="mb-4 text-2xl font-bold text-blue-900 dark:text-blue-100">
+							More Amazing Templates Coming Soon!
+						</h3>
+						<p className="mb-4 text-lg text-blue-700 dark:text-blue-200">
+							We're working on beautiful templates with specific themes for different industries:
+						</p>
+						<div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
+							{['Tech & Software', 'Design & Creative', 'Marketing & Sales', 'Healthcare', 'Finance', 'Education', 'E-commerce', 'Consulting'].map((theme) => (
+								<div key={theme} className="p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+									<span className="text-sm font-medium text-blue-800 dark:text-blue-200">{theme}</span>
+								</div>
+							))}
+						</div>
+						<div className="p-4 bg-white/30 dark:bg-gray-800/30 rounded-lg">
+							<h4 className="mb-2 font-semibold text-blue-900 dark:text-blue-100">
+								🤝 Help Us Improve!
+							</h4>
+							<p className="text-sm text-blue-700 dark:text-blue-200">
+								Portifier is open-source! Contribute by reporting bugs, suggesting features, 
+								creating templates, or contributing code on GitHub.
+							</p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
