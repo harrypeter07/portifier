@@ -25,7 +25,7 @@ import ShockwaveScene from "@/components/ShockWave";
 
 export default function Home() {
   return (
-    <div className="min-h-screen grainy-bg">
+    <div className="min-h-screen grainy-bg page-container">
       {/* Hero Section */}
       <section className="flex overflow-hidden relative justify-center items-center min-h-screen">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"></div>
@@ -46,7 +46,7 @@ export default function Home() {
               AI-Powered Portfolio Builder
             </motion.div>
             
-            <h1 className="text-5xl font-bold leading-tight text-white md:text-7xl">
+            <h1 className="text-6xl font-bold leading-tight text-white md:text-8xl lg:text-9xl">
               Create Stunning
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
                 Portfolios
@@ -54,7 +54,7 @@ export default function Home() {
               in Minutes
             </h1>
             
-            <p className="mx-auto max-w-3xl text-xl leading-relaxed md:text-2xl text-white/90">
+            <p className="mx-auto max-w-3xl text-2xl leading-relaxed md:text-3xl lg:text-4xl text-white/90">
               Transform your resume into a beautiful, professional portfolio with our AI-powered builder. 
               No design skills required.
             </p>

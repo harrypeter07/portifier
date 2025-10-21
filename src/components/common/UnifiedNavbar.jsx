@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, ChevronDown, Sun, Moon, Heart } from "lucide-react";
+import { Menu, X, User, Settings, LogOut, Home, BarChart3, Palette, Edit, ChevronDown, Sun, Moon, Heart, Bug } from "lucide-react";
+import BugReportModal from "@/components/BugReportModal";
 
 const publicNavLinks = [
 	{ href: "/auth/signin", label: "Sign In", icon: User },
@@ -66,6 +67,7 @@ export default function UnifiedNavbar() {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [isDark, setIsDark] = useState(false);
+	const [isBugReportOpen, setIsBugReportOpen] = useState(false);
 	
 	// Editor navbar states
 	const [isEditorNavVisible, setIsEditorNavVisible] = useState(true);
@@ -406,6 +408,15 @@ export default function UnifiedNavbar() {
 								</a>
 							</Button>
 
+							{/* Bug Report Button */}
+							<Button 
+								onClick={() => setIsBugReportOpen(true)}
+								className="hidden md:inline-flex bg-red-500/20 hover:bg-red-500/30 text-red-200 border border-red-500/30"
+							>
+								<Bug className="w-4 h-4 mr-2" />
+								Report Bug
+							</Button>
+
 							{/* Mobile menu button */}
 							<Button
 								variant="ghost"
@@ -425,6 +436,17 @@ export default function UnifiedNavbar() {
 									<Heart className="w-4 h-4 fill-white/80 text-white" />
 									<span>Star on GitHub</span>
 								</a>
+								
+								<button 
+									onClick={() => {
+										setIsBugReportOpen(true);
+										setMobileMenuOpen(false);
+									}}
+									className="flex items-center justify-center gap-2 px-4 py-3 text-white hover:bg-white/10 transition-colors"
+								>
+									<Bug className="w-4 h-4 text-red-300" />
+									<span>Report Bug</span>
+								</button>
 							
 							<div className="px-4 py-4 space-y-2">
 								{navLinks.map((link) => {
@@ -616,6 +638,12 @@ export default function UnifiedNavbar() {
 					</motion.div>
 				</AnimatePresence>
 			)}
+
+			{/* Bug Report Modal */}
+			<BugReportModal
+				isOpen={isBugReportOpen}
+				onClose={() => setIsBugReportOpen(false)}
+			/>
 		</>
 	);
 }

@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import LottieLoading from "@/components/LottieLoading";
 import GeminiKeyModal from "@/components/common/GeminiKeyModal";
+import BugReportModal from "@/components/BugReportModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Bug, Mail, MessageSquare } from "lucide-react";
 
 export default function SettingsPage() {
 	const [user, setUser] = useState(null);
@@ -15,6 +17,7 @@ export default function SettingsPage() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isRemoving, setIsRemoving] = useState(false);
 	const [message, setMessage] = useState({ type: "", text: "" });
+	const [isBugReportOpen, setIsBugReportOpen] = useState(false);
 
 	useEffect(() => {
 		fetchUserData();
@@ -107,7 +110,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className="min-h-screen pt-20">
+		<div className="min-h-screen pt-20 page-container">
 			{/* Header */}
 			<div className="border-b shadow-sm backdrop-blur-xl border-white/20 bg-white/10 dark:bg-white/10">
 				<div className="px-4 py-6 mx-auto max-w-4xl">
@@ -257,6 +260,80 @@ export default function SettingsPage() {
 					</Card>
 				</div>
 
+				{/* Bug Reporting Section */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ delay: 0.1 }}
+					className="mt-8"
+				>
+					<Card className="backdrop-blur-xl bg-white/10 border-white/20">
+						<CardHeader>
+							<CardTitle className="flex items-center gap-2 text-2xl">
+								<Bug className="w-6 h-6 text-red-500" />
+								Report Issues & Get Help
+							</CardTitle>
+							<CardDescription className="text-lg">
+								Help us improve Portifier by reporting bugs or getting support
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								{/* Bug Report Button */}
+								<Button
+									onClick={() => setIsBugReportOpen(true)}
+									className="h-auto p-6 text-left justify-start bg-red-500/10 hover:bg-red-500/20 border-red-500/20"
+									variant="outline"
+								>
+									<div className="flex items-start gap-4">
+										<Bug className="w-8 h-8 text-red-500 mt-1" />
+										<div>
+											<h3 className="text-lg font-semibold text-red-700 dark:text-red-400">
+												Report a Bug
+											</h3>
+											<p className="text-sm text-red-600 dark:text-red-300 mt-1">
+												Found an issue? Report it with screenshots and details
+											</p>
+										</div>
+									</div>
+								</Button>
+
+								{/* Contact Support Button */}
+								<Button
+									onClick={() => window.open('mailto:support@portifier.com?subject=Support Request', '_blank')}
+									className="h-auto p-6 text-left justify-start bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20"
+									variant="outline"
+								>
+									<div className="flex items-start gap-4">
+										<Mail className="w-8 h-8 text-blue-500 mt-1" />
+										<div>
+											<h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400">
+												Contact Support
+											</h3>
+											<p className="text-sm text-blue-600 dark:text-blue-300 mt-1">
+												Need help? Send us an email for direct support
+											</p>
+										</div>
+									</div>
+								</Button>
+							</div>
+
+							{/* Additional Help Info */}
+							<div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+								<h4 className="text-base font-medium text-gray-900 dark:text-white mb-2">
+									Before Reporting
+								</h4>
+								<ul className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
+									<li>• Check if the issue has been reported before</li>
+									<li>• Try refreshing the page or clearing your browser cache</li>
+									<li>• Include steps to reproduce the issue</li>
+									<li>• Attach screenshots or screen recordings if possible</li>
+								</ul>
+							</div>
+						</CardContent>
+					</Card>
+				</motion.div>
+
 				{/* Additional Settings */}
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
@@ -319,6 +396,12 @@ export default function SettingsPage() {
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				onSuccess={handleApiKeySuccess}
+			/>
+
+			{/* Bug Report Modal */}
+			<BugReportModal
+				isOpen={isBugReportOpen}
+				onClose={() => setIsBugReportOpen(false)}
 			/>
 		</div>
 	);

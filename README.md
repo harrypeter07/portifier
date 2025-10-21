@@ -1,4 +1,4 @@
-# 🚀 **Portifier: Next.js Portfolio Builder**
+# 🚀 **Portifier: AI-Powered Portfolio Builder**
 
 <p align="center">
   <img src="public/next.svg" alt="Next.js Logo" height="40"/>
@@ -8,11 +8,11 @@
 </p>
 
 <p align="center">
-  <b>Build, customize, and deploy beautiful developer portfolios with ease and AI-powered features.</b>
+  <b>Transform your resume into stunning, professional portfolios with AI-powered automation. No design skills required.</b>
 </p>
 
 <p align="center">
-  <a href="https://nextjs.org/">Next.js</a> • <a href="https://vercel.com/">Vercel</a> • <a href="https://github.com/pmndrs/zustand">Zustand</a> • <a href="#team--task-breakdown">Team</a>
+  <a href="https://nextjs.org/">Next.js</a> • <a href="https://vercel.com/">Vercel</a> • <a href="https://github.com/pmndrs/zustand">Zustand</a> • <a href="#contributing--licensing">Contributing</a>
 </p>
 
 ---
@@ -27,36 +27,82 @@
 
 ## 📑 **Table of Contents**
 
-- [Getting Started](#getting-started)
+- [Quick Start Guide](#-quick-start-guide)
+- [How to Use Portifier](#-how-to-use-portifier)
 - [Features](#features)
-- [Architecture & Customization Guide](#portfolio-builder-architecture--customization-guide)
+- [Application Architecture](#-application-architecture)
 - [Template System](#template-system)
 - [Analytics & Tracking](#analytics--tracking)
 - [Directory Structure](#4-directory-structure)
 - [Adding Templates & Components](#3-adding-new-templates-and-components)
-- [Team & Task Breakdown](#team--task-breakdown)
+- [Contributing & Licensing](#contributing--licensing)
 - [Troubleshooting](#troubleshooting)
-- [Learn More](#learn-more)
 - [Deploy](#deploy-on-vercel)
 
 ---
 
-## 🏁 **Getting Started**
+## 🚀 **Quick Start Guide**
 
+### **Prerequisites**
+- Node.js 18+ and npm/yarn
+- MongoDB database (local or cloud)
+- Gemini API key for AI features
+
+### **Installation**
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/portifier.git
+cd portifier
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your configuration
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-> **Tip:** Edit `app/page.js` to start customizing. The page auto-updates as you edit.
-> **Note:** Make sure to set up your environment variables for AI features.
+---
+
+## 📖 **How to Use Portifier**
+
+### **Step 1: Create Your Account**
+1. Visit the homepage and click "Get Started Free"
+2. Sign up with your email or social accounts
+3. Complete your profile setup
+
+### **Step 2: Upload Your Resume**
+1. Go to your dashboard
+2. Click "Create New Portfolio"
+3. Upload your resume (PDF, DOCX, or TXT)
+4. Our AI will automatically parse and extract your information
+
+### **Step 3: Choose a Template**
+1. Browse through our collection of professional templates
+2. Select a template that matches your style
+3. Preview how your content will look
+
+### **Step 4: Customize Your Portfolio**
+1. Edit your information in the live editor
+2. Add or remove sections as needed
+3. Upload your profile picture and project images
+4. Customize colors and styling
+
+### **Step 5: Publish & Share**
+1. Click "Publish Portfolio"
+2. Get your unique portfolio URL
+3. Share your professional portfolio with the world!
+
+### **Advanced Features**
+- **Analytics Dashboard**: Track visitors and engagement
+- **Multiple Portfolios**: Create different versions for different purposes
+- **Export Options**: Download as PDF or share via social media
+- **Custom Domain**: Use your own domain name
 
 ---
 
@@ -102,7 +148,31 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 
 ---
 
-## 🏗️ **Portfolio Builder Architecture & Customization Guide**
+## 🏗️ **Application Architecture**
+
+Portifier is built with a modern, scalable architecture that separates concerns and enables easy customization:
+
+### **Frontend Architecture (Next.js 14)**
+- **Framework**: Next.js 14 with App Router
+- **State Management**: Zustand for client-side state
+- **Styling**: Tailwind CSS with custom components
+- **Animations**: Framer Motion for smooth interactions
+- **AI Integration**: Google Gemini API for resume parsing
+
+### **Backend Architecture (Flask API)**
+- **Framework**: Flask with modular structure
+- **Database**: MongoDB for data persistence
+- **Authentication**: JWT-based authentication
+- **File Processing**: PDF/DOCX parsing and conversion
+- **AI Services**: Resume analysis and optimization
+
+### **Data Flow Architecture**
+1. **Resume Upload** → Flask API processes and stores files
+2. **AI Parsing** → Gemini API extracts structured data
+3. **Template Selection** → User chooses from available templates
+4. **Live Editing** → Real-time preview with Zustand state
+5. **Publishing** → Portfolio rendered and deployed
+6. **Analytics** → Visitor tracking and engagement metrics
 
 ### 1. **Flow: From Resume Parsing to Portfolio Rendering**
 
@@ -457,6 +527,89 @@ Available section categories:
 - **Unified Preview Component:** Handles both component-based and full-page templates
 - **Real-time Updates:** Live preview reflects form changes immediately
 - **Template Type Detection:** Automatically renders appropriate template type
+
+---
+
+## 🤝 **Contributing & Licensing**
+
+### **Contributing to Portifier**
+
+We welcome contributions from the community! Here's how you can help:
+
+#### **Ways to Contribute**
+- 🐛 **Report Bugs**: Use our bug reporting system (see below)
+- 💡 **Suggest Features**: Open an issue with your ideas
+- 🔧 **Submit Code**: Fork, create a feature branch, and submit a PR
+- 📖 **Improve Documentation**: Help us make the docs better
+- 🎨 **Design Templates**: Create new portfolio templates
+- 🌍 **Translations**: Help translate the interface
+
+#### **Development Setup**
+```bash
+# Fork and clone the repository
+git clone https://github.com/your-username/portifier.git
+cd portifier
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Start development servers
+npm run dev          # Frontend (port 3000)
+python backend/run.py # Backend (port 5000)
+```
+
+#### **Code Contribution Guidelines**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Add tests if applicable
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### **Bug Reporting**
+
+Found a bug? We want to fix it! Please report bugs through:
+
+1. **In-App Bug Reporter**: Use the "Report Bug" section in the app
+2. **GitHub Issues**: Create a detailed issue with:
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Screenshots/videos if applicable
+   - Browser and device information
+
+### **Licensing**
+
+#### **MIT License**
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+#### **What This Means**
+- ✅ **Free to Use**: Use Portifier for personal and commercial projects
+- ✅ **Modify**: Change the code to fit your needs
+- ✅ **Distribute**: Share your modified versions
+- ✅ **Private Use**: Use in private projects without restrictions
+- ❌ **No Warranty**: Software provided "as is" without warranty
+- 📝 **Attribution**: Include the original license and copyright notice
+
+#### **Commercial Use**
+- ✅ **Allowed**: Use Portifier in commercial applications
+- ✅ **Sell**: Create and sell products based on Portifier
+- ✅ **SaaS**: Build SaaS applications using Portifier
+- 📝 **Attribution**: Must include license notice in your application
+
+#### **Contributor Agreement**
+By contributing to Portifier, you agree that your contributions will be licensed under the same MIT License that covers the project.
+
+### **Community Guidelines**
+
+- Be respectful and inclusive
+- Help others learn and grow
+- Follow the code of conduct
+- Provide constructive feedback
+- Celebrate diversity and different perspectives
 
 ---
 
