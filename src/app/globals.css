@@ -147,23 +147,27 @@
   .moving-border {
     position: relative;
     border-radius: 0.75rem; /* match rounded-lg */
-    isolation: isolate;
+    padding: 2px; /* space for the border */
   }
   .moving-border::before {
     content: "";
     position: absolute;
-    inset: -2px; /* thickness */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: inherit;
     background: conic-gradient(from 0deg,
       rgba(255,255,255,0.95), rgba(255,255,255,0.5), rgba(255,255,255,0.95), rgba(255,255,255,0.5), rgba(255,255,255,0.95)
     );
     animation: border-spin 3s linear infinite;
     filter: blur(0.5px);
-    z-index: -2;
+    z-index: 0;
   }
   .moving-border > * {
     position: relative;
     z-index: 1;
+    border-radius: calc(0.75rem - 2px); /* slightly smaller to fit inside border */
   }
   @keyframes border-spin {
     to { transform: rotate(360deg); }

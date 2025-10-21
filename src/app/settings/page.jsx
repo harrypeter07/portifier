@@ -352,23 +352,25 @@ export default function SettingsPage() {
 						<CardContent>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 							{/* Bug Report Button */}
-                            <Button
-								onClick={() => setIsBugReportOpen(!isBugReportOpen)}
-                                className="justify-start p-6 w-full h-auto text-left bg-red-500/10 hover:bg-red-500/20 border-red-500/20 moving-border"
-								variant="outline"
-							>
-								<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
-									<Bug className="flex-shrink-0 mt-1 w-8 h-8 text-red-500" />
-									<div className="w-full min-w-0">
-										<h3 className="text-lg font-semibold text-red-700 break-words dark:text-red-400">
-											Report a Bug
-										</h3>
-										<p className="mt-1 text-sm text-red-600 whitespace-normal break-words dark:text-red-300">
-											Found an issue? Report it with screenshots and details
-										</p>
+							<div className="moving-border">
+								<Button
+									onClick={() => setIsBugReportOpen(!isBugReportOpen)}
+									className="justify-start p-6 w-full h-auto text-left bg-red-500/10 hover:bg-red-500/20 border-red-500/20"
+									variant="outline"
+								>
+									<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
+										<Bug className="flex-shrink-0 mt-1 w-8 h-8 text-red-500" />
+										<div className="w-full min-w-0">
+											<h3 className="text-lg font-semibold text-red-700 break-words dark:text-red-400">
+												Report a Bug
+											</h3>
+											<p className="mt-1 text-sm text-red-600 whitespace-normal break-words dark:text-red-300">
+												Found an issue? Report it with screenshots and details
+											</p>
+										</div>
 									</div>
-								</div>
-                            </Button>
+								</Button>
+							</div>
 
                         {/* Bug Report Section */}
 						{isBugReportOpen && (
@@ -457,23 +459,25 @@ export default function SettingsPage() {
 						)}
 
 							{/* Contact Support Button */}
-                            <Button
-								onClick={() => setIsContactSectionOpen(!isContactSectionOpen)}
-                                className="justify-start p-6 w-full h-auto text-left bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 moving-border"
-								variant="outline"
-							>
-								<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
-									<Mail className="flex-shrink-0 mt-1 w-8 h-8 text-blue-500" />
-									<div className="w-full min-w-0">
-										<h3 className="text-lg font-semibold text-blue-700 break-words dark:text-blue-400">
-											Contact Support
-										</h3>
-										<p className="mt-1 text-sm text-blue-600 whitespace-normal break-words dark:text-blue-300">
-											Need help? Send us an email for direct support
-										</p>
+							<div className="moving-border">
+								<Button
+									onClick={() => setIsContactSectionOpen(!isContactSectionOpen)}
+									className="justify-start p-6 w-full h-auto text-left bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20"
+									variant="outline"
+								>
+									<div className="flex flex-wrap gap-4 items-start w-full min-w-0">
+										<Mail className="flex-shrink-0 mt-1 w-8 h-8 text-blue-500" />
+										<div className="w-full min-w-0">
+											<h3 className="text-lg font-semibold text-blue-700 break-words dark:text-blue-400">
+												Contact Support
+											</h3>
+											<p className="mt-1 text-sm text-blue-600 whitespace-normal break-words dark:text-blue-300">
+												Need help? Send us an email for direct support
+											</p>
+										</div>
 									</div>
-								</div>
-							</Button>
+								</Button>
+							</div>
 						</div>
 
 						{/* Contact Section */}
