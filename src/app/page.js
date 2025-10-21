@@ -47,7 +47,7 @@ export default function Home() {
               AI-Powered Portfolio Builder
             </motion.div>
             
-            <h1 className="text-4xl font-bold leading-tight text-white md:text-6xl lg:text-7xl font-epilogue">
+            <h1 className="text-4xl font-bold text-white leadng-tight md:text-6xl lg:text-7xl font-epilogue">
               Create Stunning
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700">
                 Portfolios
@@ -66,7 +66,7 @@ export default function Home() {
               transition={{ delay: 0.8 }}
               className="mx-auto max-w-2xl text-center"
             >
-              <p className="text-base text-white/80 font-epilogue mb-4">
+              <p className="mb-4 text-base text-white/80 font-epilogue">
                 🚀 <strong>More amazing templates with specific themes coming soon!</strong>
               </p>
               <p className="text-sm text-white/70 font-epilogue">
@@ -146,7 +146,7 @@ export default function Home() {
       {/* About Our App Section */}
       <section className="relative py-20">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
+          <div className="grid grid-cols-1 gap-12 items-center lg:grid-cols-2">
             {/* Left Side - Text Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -212,13 +212,13 @@ export default function Home() {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl glass">
+              <div className="overflow-hidden relative rounded-2xl shadow-2xl glass">
                 <img
                   src="/hero.jpg"
                   alt="Portfolio Creation Process"
-                  className="w-full h-auto object-cover"
+                  className="object-cover w-full h-auto"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t to-transparent from-black/20"></div>
               </div>
               
               {/* Floating Stats */}
@@ -227,7 +227,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
-                className="absolute -bottom-6 -left-6 p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20"
+                className="absolute -bottom-6 -left-6 p-6 rounded-2xl border backdrop-blur-xl bg-white/10 border-white/20"
               >
                 <div className="text-center">
                   <div className="text-3xl font-bold text-white">10K+</div>
@@ -240,7 +240,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
                 viewport={{ once: true }}
-                className="absolute -top-6 -right-6 p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20"
+                className="absolute -top-6 -right-6 p-6 rounded-2xl border backdrop-blur-xl bg-white/10 border-white/20"
               >
                 <div className="text-center">
                   <div className="text-3xl font-bold text-white">50+</div>
@@ -473,7 +473,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact-section" className="py-20 bg-white/5 backdrop-blur-xl">
+      <section id="contact-section" className="py-20 backdrop-blur-xl bg-white/5">
         <div className="px-4 mx-auto max-w-4xl sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -490,14 +490,14 @@ export default function Home() {
             </p>
             
             <div className="grid gap-8 md:grid-cols-2">
-              <Card className="p-8 bg-white/10 backdrop-blur-xl border-white/20">
+              <Card className="p-8 backdrop-blur-xl bg-white/10 border-white/20">
                 <CardContent className="text-center">
-                  <Mail className="w-12 h-12 mx-auto mb-4 text-blue-400" />
+                  <Mail className="mx-auto mb-4 w-12 h-12 text-blue-400" />
                   <h3 className="mb-2 text-lg font-semibold text-white">Email Us</h3>
                   <p className="mb-4 text-white/70">
                     Send us a message and we'll get back to you within 24 hours.
                   </p>
-                  <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button asChild className="text-white bg-blue-600 hover:bg-blue-700">
                     <Link href="/settings">
                       Contact Form
                     </Link>
@@ -505,14 +505,14 @@ export default function Home() {
                 </CardContent>
               </Card>
               
-              <Card className="p-8 bg-white/10 backdrop-blur-xl border-white/20">
+              <Card className="p-8 backdrop-blur-xl bg-white/10 border-white/20">
                 <CardContent className="text-center">
-                  <Heart className="w-12 h-12 mx-auto mb-4 text-pink-400" />
+                  <Heart className="mx-auto mb-4 w-12 h-12 text-pink-400" />
                   <h3 className="mb-2 text-lg font-semibold text-white">Report a Bug</h3>
                   <p className="mb-4 text-white/70">
                     Found an issue? Help us improve by reporting bugs with details.
                   </p>
-                  <Button asChild variant="outline" className="border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white">
+                  <Button asChild variant="outline" className="text-pink-400 border-pink-400 hover:bg-pink-400 hover:text-white">
                     <Link href="/settings">
                       Report Bug
                     </Link>
@@ -521,7 +521,7 @@ export default function Home() {
               </Card>
             </div>
             
-            <div className="mt-12 p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-white/20">
+            <div className="p-6 mt-12 bg-gradient-to-r rounded-lg border from-blue-500/20 to-purple-500/20 border-white/20">
               <h4 className="mb-2 text-base font-semibold text-white">🤝 Help Us Improve!</h4>
               <p className="text-white/80">
                 Portifier is open-source! Contribute by reporting bugs, suggesting features, 
