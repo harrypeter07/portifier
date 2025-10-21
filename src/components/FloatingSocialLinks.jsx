@@ -28,9 +28,10 @@ const socialLinks = [
   {
     name: "Email",
     icon: Mail,
-    href: "mailto:contact@portifier.com?subject=Contact Request",
+    href: "hassanmansuri570@gmail.com",
     color: "hover:bg-green-600",
-    delay: 0.4
+    delay: 0.4,
+    showEmail: true
   },
   {
     name: "Contact",
@@ -62,6 +63,10 @@ export default function FloatingSocialLinks() {
         // Fallback: scroll to top for contact form
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+    } else if (link.showEmail) {
+      e.preventDefault();
+      // Show email address in an alert
+      alert(link.href);
     }
   };
 
@@ -82,7 +87,7 @@ export default function FloatingSocialLinks() {
               return (
                 <motion.a
                   key={link.name}
-                  href={link.href}
+                  href={link.showEmail ? '#' : link.href}
                   onClick={(e) => handleContactClick(e, link)}
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -93,7 +98,7 @@ export default function FloatingSocialLinks() {
                     text-white transition-all duration-300 transform
                     hover:scale-110 hover:shadow-lg ${link.color}
                   `}
-                  title={link.name}
+                  title={link.showEmail ? link.href : link.name}
                   target={link.href.startsWith('http') ? '_blank' : '_self'}
                   rel={link.href.startsWith('http') ? 'noopener noreferrer' : ''}
                 >
